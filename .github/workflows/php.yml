@@ -1,0 +1,23 @@
+name: Tests & Linter
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Run test suite
+      run: vendor/bin/phpunit --color tests/
+    
+    - name: Run linter
+      run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run 
