@@ -3,7 +3,7 @@ name: Tests & Linter
 on: [pull_request]
 
 jobs:
-  build:
+  tests:
 
     runs-on: ubuntu-latest
 
@@ -16,8 +16,11 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
+    - name: Docker setup
+      run: docker run -d -p 7700:7700 getmeili/meilisearch:v0.8.4 ./meilisearch --api-key=apiKey --no-analytics=true
+
     - name: Run test suite
       run: vendor/bin/phpunit --color tests/
-    
+
     - name: Run linter
-      run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run 
+      run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run
