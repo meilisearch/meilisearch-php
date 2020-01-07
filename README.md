@@ -1,6 +1,8 @@
 # MeiliSearch PHP Client <!-- omit in toc -->
 
 [![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://img.shields.io/badge/licence-MIT-blue.svg)
+[![Actions Status](https://github.com/meilisearch/meilisearch-php/workflows/Tests/badge.svg)](https://github.com/meilisearch/meilisearch-php/actions)
+[![Latest Stable Version](https://poser.pugx.org/meilisearch/meilisearch-php/version)](https://packagist.org/packages/meilisearch/meilisearch-php)
 
 The PHP client for MeiliSearch API.
 
@@ -21,11 +23,21 @@ Here is the [MeiliSearch documentation](https://docs.meilisearch.com/) 📖
 
 ## 🔧 Installation
 
-*WIP*
+With composer:
+
+```bash
+$ composer require meilisearch/meilisearch-php
+```
 
 ### Run MeiliSearch <!-- omit in toc -->
 
-Here is a the [documentation](https://docs.meilisearch.com/advanced_guides/binary.html) to install and run Meilisearch.
+There are many ways to run a MeiliSearch instance.
+All of them are detailed in the [documentation](https://docs.meilisearch.com/advanced_guides/binary.html).
+
+For example, if you use Docker:
+```bash
+$ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest --api-key=apiKey
+```
 
 ## 🚀 Getting started
 
@@ -116,9 +128,9 @@ $client->getIndex('indexUid');
 
 #### Fetch documents <!-- omit in toc -->
 ```php
-# Get one document
+// Get one document
 $index->getDocument(123);
-# Get documents by batch
+// Get documents by batch
 $index->getDocuments(['offset' => 10 , 'limit' => 20]);
 ```
 #### Add documents <!-- omit in toc -->
