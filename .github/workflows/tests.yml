@@ -1,4 +1,4 @@
-name: Tests & Linter
+name: Tests
 
 on: [pull_request]
 
