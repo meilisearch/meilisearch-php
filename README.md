@@ -217,4 +217,4 @@ $index->search('prince', ['limit' => 1])
 
 ## 🤖 Compatibility with MeiliSearch
 
-This gem works for MeiliSearch `v0.8.x`.
+This package works for MeiliSearch `v0.8.x`.
