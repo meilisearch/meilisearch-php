@@ -158,10 +158,10 @@ $index->deleteAllDocuments();
 
 ### Update status
 ```php
-# Get one update status
-# Parameter: the updateId got after an asynchronous request (e.g. documents addition)
+// Get one update status
+// Parameter: the updateId got after an asynchronous request (e.g. documents addition)
 $index->getUpdateStatus(1);
-# Get all update satus
+// Get all update satus
 $index->getAllUpdateStatus();
 ```
 
