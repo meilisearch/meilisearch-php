@@ -47,7 +47,8 @@ $ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest --api-key=apiKey
 use MeiliSearch\Client;
 
 $client = new Client('http://localhost:7700', 'apiKey');
-$index = $client->getIndex('indexUID');
+$index = $client->createIndex('Books', 'booksUid'); // If your index does not exist
+$index = $client->getIndex('booksUid');             // If you already created your index
 
 $documents = [
     ['id' => 123,  'title' => 'Pride and Prejudice'],
@@ -58,11 +59,11 @@ $documents = [
     ['id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
 ];
 
-$index->addOrReplaceDocuments($documents); // asynchronous
+$index->addOrReplaceDocuments($documents); // => { "updateId": 1 }
 ```
 
-⚠️ The method `addOrReplaceDocuments` is **[asynchronous](https://docs.meilisearch.com/advanced_guides/asynchronous_updates.html)**.<br/>
-It means that your new documents addition will not be taken into account if you do a request *right after* your addition in the same PHP script.
+With the `updateId`, you can check the status of your documents addition thanks to this [method](https://github.com/meilisearch/meilisearch-php#update-status).
+
 
 #### Search in index <!-- omit in toc -->
 ```php
@@ -90,15 +91,6 @@ Array
 )
 ```
 
-#### Create an index <!-- omit in toc -->
-
-If you don't have any index yet, you can create one with:
-
-```php
-$index = $client->createIndex('Books');
-echo $index->getUid();
-```
-
 ## 🎬 Examples
 
 All HTTP routes of MeiliSearch are accessible via methods in this SDK.</br>
@@ -111,7 +103,7 @@ You can check out [the API documentation](https://docs.meilisearch.com/reference
 // Create an index
 $index = $client->createIndex('Books');
 // Create an index with a specific uid (uid must be unique)
-$index = $client->createIndex('Books', 'booksUID');
+$index = $client->createIndex('Books', 'booksUid');
 ```
 
 #### List all indexes <!-- omit in toc -->
@@ -121,7 +113,7 @@ $client->getAllIndexes();
 
 #### Get an index object <!-- omit in toc -->
 ```php
-$client->getIndex('indexUid');
+$client->getIndex('booksUid');
 ```
 
 ### Documents
