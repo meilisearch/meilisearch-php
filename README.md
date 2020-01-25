@@ -31,13 +31,14 @@ $ composer require meilisearch/meilisearch-php
 
 ### Run MeiliSearch <!-- omit in toc -->
 
-There are many ways to run a MeiliSearch instance.
-All of them are detailed in the [documentation](https://docs.meilisearch.com/guides/advanced_guides/binary.html#download-and-launch).
+There are many easy ways to [download and run a MeiliSearch instance](https://docs.meilisearch.com/guides/advanced_guides/binary.html#download-and-launch).
 
 For example, if you use Docker:
 ```bash
 $ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest --api-key=apiKey
 ```
+
+NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 
 ## 🚀 Getting started
 
