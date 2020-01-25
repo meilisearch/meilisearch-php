@@ -6,7 +6,7 @@
 
 The PHP client for MeiliSearch API.
 
-MeiliSearch provides an ultra relevant and instant full-text search. Our solution is open-source and you can check out [our repository here](https://github.com/meilisearch/MeiliDB).</br>
+MeiliSearch provides an ultra relevant and instant full-text search. Our solution is open-source and you can check out [our repository here](https://github.com/meilisearch/MeiliSearch).</br>
 
 Here is the [MeiliSearch documentation](https://docs.meilisearch.com/) 📖
 
@@ -32,7 +32,7 @@ $ composer require meilisearch/meilisearch-php
 ### Run MeiliSearch <!-- omit in toc -->
 
 There are many ways to run a MeiliSearch instance.
-All of them are detailed in the [documentation](https://docs.meilisearch.com/advanced_guides/binary.html).
+All of them are detailed in the [documentation](https://docs.meilisearch.com/guides/advanced_guides/binary.html#download-and-launch).
 
 For example, if you use Docker:
 ```bash
