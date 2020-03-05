@@ -8,14 +8,17 @@ require_once 'utils.php';
 
 class SearchTest extends TestCase
 {
+    private static $client;
     private static $index;
+    private static $empty_index;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        $client = new Client('http://localhost:7700', 'apiKey');
-        deleteAllIndexes($client);
-        static::$index = $client->createIndex('Name');
+        static::$client = new Client('http://localhost:7700', 'masterKey');
+        deleteAllIndexes(static::$client);
+        static::$index = static::$client->createIndex('uid');
+        static::$empty_index = static::$client->createIndex('uid_empty');
         $documents = [
             ['id' => 123,  'title' => 'Pride and Prejudice',                    'comment' => 'A great book'],
             ['id' => 456,  'title' => 'Le Petit Prince',                        'comment' => 'A french book'],
@@ -25,8 +28,14 @@ class SearchTest extends TestCase
             ['id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince', 'comment' => 'The best book'],
             ['id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
         ];
-        static::$index->addOrUpdateDocuments($documents);
+        static::$index->updateDocuments($documents);
         usleep(10 * 1000);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        deleteAllIndexes(static::$client);
     }
 
     public function testBasicSearch()
@@ -46,10 +55,21 @@ class SearchTest extends TestCase
         $this->assertCount(1, $res['hits']);
     }
 
+    public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided()
+    {
+        $res = static::$empty_index->search('prince');
+        $this->assertArrayHasKey('hits', $res);
+        $this->assertArrayHasKey('offset', $res);
+        $this->assertArrayHasKey('limit', $res);
+        $this->assertArrayHasKey('processingTimeMs', $res);
+        $this->assertArrayHasKey('query', $res);
+        $this->assertCount(0, $res['hits']);
+    }
+
     public function testExceptionIfNoIndexWhenSearching()
     {
         static::$index->delete();
         $this->expectException(HTTPRequestException::class);
-        static::$index->search('nope');
+        static::$index->search('prince');
     }
 }
