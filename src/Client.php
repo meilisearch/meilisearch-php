@@ -26,12 +26,13 @@ class Client extends HTTPRequest
         return $this->indexInstance($uid);
     }
 
-    public function createIndex($name, $uid = null)
+    public function createIndex($attributes)
     {
-        $body = array_filter([
-            'name' => $name,
-            'uid' => $uid,
-        ]);
+        if (is_array($attributes)) {
+            $body = $attributes;
+        } else {
+            $body = ['uid' => $attributes];
+        }
         $response = $this->httpPost('/indexes', $body);
         $uid = $response['uid'];
 
@@ -66,6 +67,15 @@ class Client extends HTTPRequest
     {
         return $this->httpGet('/stats');
     }
+
+    // Keys
+
+    public function getKeys()
+    {
+        return $this->httpGet('/keys');
+    }
+
+    // Private methods
 
     private function indexInstance($uid)
     {

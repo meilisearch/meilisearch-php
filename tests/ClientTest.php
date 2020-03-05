@@ -11,20 +11,19 @@ class ClientTest extends TestCase
 {
     private static $client;
     private static $index1;
-    private static $name1;
     private static $uid1;
     private static $index2;
-    private static $name2;
     private static $uid2;
+    private static $primary_key;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'apiKey');
+        static::$client = new Client('http://localhost:7700', 'masterKey');
         deleteAllIndexes(static::$client);
-        static::$name1 = 'Index 1';
-        static::$name2 = 'Index 2';
+        static::$uid1 = 'uid1';
         static::$uid2 = 'uid2';
+        static::$primary_key = 'objectID';
     }
 
     public static function tearDownAfterClass(): void
@@ -42,21 +41,23 @@ class ClientTest extends TestCase
         $this->assertEmpty($res);
     }
 
-    public function testCreateIndexWithOnlyName()
+    public function testCreateIndexWithOnlyUid()
     {
-        static::$index1 = static::$client->createIndex(static::$name1);
-        static::$uid1 = static::$index1->getUid();
+        static::$index1 = static::$client->createIndex(static::$uid1);
         $this->assertInstanceOf(Index::class, static::$index1);
-        $this->assertSame(static::$name1, static::$index1->getName());
-        $this->assertFalse(empty(static::$index1->getUid()));
+        $this->assertSame(static::$uid1, static::$index1->getUid());
+        $this->assertNull(static::$index1->getPrimaryKey());
     }
 
-    public function testCreateIndexWithNameAndUid()
+    public function testCreateIndexWithUidAndPrimaryKey()
     {
-        static::$index2 = static::$client->createIndex(static::$name2, static::$uid2);
+        static::$index2 = static::$client->createIndex([
+            'uid' => static::$uid2,
+            'primaryKey' => static::$primary_key,
+        ]);
         $this->assertInstanceOf(Index::class, static::$index2);
-        $this->assertSame(static::$name1, static::$index1->getName());
         $this->assertSame(static::$uid2, static::$index2->getUid());
+        $this->assertSame(static::$primary_key, static::$index2->getPrimaryKey());
     }
 
     public function testGetAllIndexes()
@@ -64,19 +65,19 @@ class ClientTest extends TestCase
         $res = static::$client->getAllIndexes();
         $this->assertIsArray($res);
         $this->assertCount(2, $res);
-        $names = array_map(function ($elem) {
-            return $elem['name'];
+        $uids = array_map(function ($elem) {
+            return $elem['uid'];
         }, $res);
-        $this->assertContains(static::$name1, $names);
-        $this->assertContains(static::$name2, $names);
+        $this->assertContains(static::$uid1, $uids);
+        $this->assertContains(static::$uid2, $uids);
     }
 
     public function testShowIndex()
     {
         $res = static::$client->showIndex(static::$uid2);
         $this->assertIsArray($res);
-        $this->assertSame($res['name'], static::$name2);
-        $this->assertSame($res['uid'], static::$uid2);
+        $this->assertSame(static::$primary_key, $res['primaryKey']);
+        $this->assertSame(static::$uid2, $res['uid']);
     }
 
     public function testDeleteIndex()
@@ -91,14 +92,20 @@ class ClientTest extends TestCase
     {
         $res = static::$client->getIndex(static::$uid1);
         $this->assertInstanceOf(Index::class, static::$index1);
-        $this->assertSame(static::$name1, static::$index1->getName());
         $this->assertSame(static::$uid1, static::$index1->getUid());
+        $this->assertNull(static::$index1->getPrimaryKey());
     }
 
     public function testExceptionIfUidTakenWhenCreating()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$client->createIndex('nope', static::$uid1);
+        static::$client->createIndex(static::$uid1);
+    }
+
+    public function testExceptionIfNoUidWhenCreating()
+    {
+        $this->expectException(HTTPRequestException::class);
+        static::$client->createIndex(['primaryKey' => 'id']);
     }
 
     public function testExceptionIfNoIndexWhenShowing()

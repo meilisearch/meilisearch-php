@@ -27,11 +27,7 @@ class HTTPRequest
 
     public function httpGet($path, $query = null)
     {
-        if (isset($query)) {
-            $uri_query = '?'.http_build_query($query);
-        } else {
-            $uri_query = '';
-        }
+        $uri_query = (isset($query)) ? '?'.http_build_query($query) : '';
         $request = new GuzzleRequest(
             'GET',
             $this->base_url.$path.$uri_query,
@@ -41,11 +37,12 @@ class HTTPRequest
         return $this->sendRequestAndGetBody($request);
     }
 
-    public function httpPost($path, $body = null)
+    public function httpPost($path, $body = null, $query = null)
     {
+        $uri_query = (isset($query)) ? '?'.http_build_query($query) : '';
         $request = new GuzzleRequest(
             'POST',
-            $this->base_url.$path,
+            $this->base_url.$path.$uri_query,
             $this->headers,
             json_encode($body)
         );
@@ -53,11 +50,12 @@ class HTTPRequest
         return $this->sendRequestAndGetBody($request);
     }
 
-    public function httpPut($path, $body = null)
+    public function httpPut($path, $body = null, $query = null)
     {
+        $uri_query = (isset($query)) ? '?'.http_build_query($query) : '';
         $request = new GuzzleRequest(
             'PUT',
-            $this->base_url.$path,
+            $this->base_url.$path.$uri_query,
             $this->headers,
             json_encode($body)
         );

@@ -19,6 +19,10 @@ Here is the [MeiliSearch documentation](https://docs.meilisearch.com/) 📖
   - [Documents](#documents)
   - [Update status](#update-status)
   - [Search](#search)
+- [⚙️ Development Workflow](#️-development-workflow)
+  - [Install dependencies](#install-dependencies)
+  - [Tests and Linter](#tests-and-linter)
+  - [Release](#release)
 - [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
 
 ## 🔧 Installation
@@ -35,7 +39,7 @@ There are many easy ways to [download and run a MeiliSearch instance](https://do
 
 For example, if you use Docker:
 ```bash
-$ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest --api-key=apiKey
+$ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest --master-key=masterKey
 ```
 
 NB: you can also download MeiliSearch from **Homebrew** or **APT**.
@@ -47,29 +51,30 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 ```php
 use MeiliSearch\Client;
 
-$client = new Client('http://localhost:7700', 'apiKey');
-$index = $client->createIndex('Books', 'booksUid'); // If your index does not exist
-$index = $client->getIndex('booksUid');             // If you already created your index
+$client = new Client('http://127.0.0.1:7700', 'masterKey');
+$index = $client->createIndex('books'); // If your index does not exist
+$index = $client->getIndex('books');    // If you already created your index
 
 $documents = [
-    ['id' => 123,  'title' => 'Pride and Prejudice'],
-    ['id' => 456,  'title' => 'Le Petit Prince'],
-    ['id' => 1,    'title' => 'Alice In Wonderland'],
-    ['id' => 1344, 'title' => 'The Hobbit'],
-    ['id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince'],
-    ['id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
+    ['book_id' => 123,  'title' => 'Pride and Prejudice'],
+    ['book_id' => 456,  'title' => 'Le Petit Prince'],
+    ['book_id' => 1,    'title' => 'Alice In Wonderland'],
+    ['book_id' => 1344, 'title' => 'The Hobbit'],
+    ['book_id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince'],
+    ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
 ];
 
-$index->addOrReplaceDocuments($documents); // => { "updateId": 1 }
+$index->addDocuments($documents); // => { "updateId": 0 }
 ```
 
-With the `updateId`, you can check the status of your documents addition thanks to this [method](https://github.com/meilisearch/meilisearch-php#update-status).
+With the `updateId`, you can check the status (`processed` or `failed`) of your documents addition thanks to this [method](#update-status).
 
 
 #### Search in index <!-- omit in toc -->
+
 ```php
 // MeiliSearch is typo-tolerant:
-print_r($index->search('hary pottre'));
+print_r($index->search('harry pottre'));
 ```
 Output:
 ```php
@@ -88,7 +93,7 @@ Array
     [offset] => 0
     [limit] => 20
     [processingTimeMs] => 1
-    [query] => hary pottre
+    [query] => harry pottre
 )
 ```
 
@@ -100,35 +105,44 @@ You can check out [the API documentation](https://docs.meilisearch.com/reference
 ### Indexes
 
 #### Create an index <!-- omit in toc -->
+
 ```php
 // Create an index
-$index = $client->createIndex('Books');
-// Create an index with a specific uid (uid must be unique)
-$index = $client->createIndex('Books', 'booksUid');
+$index = $client->createIndex('books');
+// Create an index and give the primary-key
+$index = $client->createIndex([
+    'uid' => 'books',
+    'primaryKey' => 'book_id'
+]);
 ```
 
 #### List all indexes <!-- omit in toc -->
+
 ```php
 $client->getAllIndexes();
 ```
 
 #### Get an index object <!-- omit in toc -->
+
 ```php
-$client->getIndex('booksUid');
+$client->getIndex('books');
 ```
 
 ### Documents
 
 #### Fetch documents <!-- omit in toc -->
+
 ```php
 // Get one document
 $index->getDocument(123);
 // Get documents by batch
 $index->getDocuments(['offset' => 10 , 'limit' => 20]);
 ```
+
 #### Add documents <!-- omit in toc -->
+
 ```php
-$index->addOrReplaceDocuments([['id' => 2, 'title' => 'Madame Bovary']])
+$index->addDocuments([['book_id' => 2, 'title' => 'Madame Bovary']])
 ```
 
 Response:
@@ -140,6 +154,7 @@ Response:
 With this `updateId` you can track your [operation update](#update-status).
 
 #### Delete documents <!-- omit in toc -->
+
 ```php
 // Delete one document
 $index->deleteDocument(2);
@@ -150,6 +165,7 @@ $index->deleteAllDocuments();
 ```
 
 ### Update status
+
 ```php
 // Get one update status
 // Parameter: the updateId got after an asynchronous request (e.g. documents addition)
@@ -170,11 +186,11 @@ $index->search('prince');
 {
     "hits": [
         {
-            "id": 456,
+            "book_id": 456,
             "title": "Le Petit Prince"
         },
         {
-            "id": 4,
+            "book_id": 4,
             "title": "Harry Potter and the Half-Blood Prince"
         }
     ],
@@ -197,7 +213,7 @@ $index->search('prince', ['limit' => 1])
 {
     "hits": [
         {
-            "id": 456,
+            "book_id": 456,
             "title": "Le Petit Prince"
         }
     ],
@@ -208,6 +224,45 @@ $index->search('prince', ['limit' => 1])
 }
 ```
 
+## ⚙️ Development Workflow
+
+If you want to contribute, this section describes the steps to follow.
+
+Thank you for your interest in a MeiliSearch tool! ♥️
+
+### Install dependencies
+
+```bash
+$ composer install
+```
+
+### Tests and Linter
+
+Each PR should pass the tests and the linter to be accepted.
+
+```bash
+# Tests
+$ docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
+$ vendor/bin/phpunit --color tests/
+# Linter (with auto-fix)
+$ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist
+# Linter (without auto-fix)
+$ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist --dry-run
+```
+
+### Release
+
+MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
+
+You must do a PR modifying the file `src/MeiliSearch.php` with the right version.<br>
+
+```php
+const VERSION = 'X.X.X';
+```
+
+Then, you must create a release (with this name `vX.X.X`) via the GitHub interface.<br>
+A webhook will be triggered and push the new package on [Packagist](https://packagist.org/packages/meilisearch/meilisearch-php).
+
 ## 🤖 Compatibility with MeiliSearch
 
-This package works for MeiliSearch `v0.8.x`.
+This package works for MeiliSearch `v0.9.x`.

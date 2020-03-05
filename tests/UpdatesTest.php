@@ -14,9 +14,9 @@ class UpdatesTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        $client = new Client('http://localhost:7700', 'apiKey');
+        $client = new Client('http://localhost:7700', 'masterKey');
         deleteAllIndexes($client);
-        static::$index = $client->createIndex('Name');
+        static::$index = $client->createIndex('uid');
         static::$documents = [
             ['id' => 123,  'title' => 'Pride and Prejudice',                    'comment' => 'A great book'],
             ['id' => 456,  'title' => 'Le Petit Prince',                        'comment' => 'A french book'],
@@ -36,7 +36,7 @@ class UpdatesTest extends TestCase
 
     public function testGetOneUpdate()
     {
-        $update_id = static::$index->addOrUpdateDocuments(static::$documents)['updateId'];
+        $update_id = static::$index->updateDocuments(static::$documents)['updateId'];
         usleep(10 * 1000);
         $res = static::$index->getUpdateStatus($update_id);
         $this->assertIsArray($res);
@@ -52,7 +52,7 @@ class UpdatesTest extends TestCase
     public function testGetAllUpdates()
     {
         $res = static::$index->getAllUpdateStatus();
-        $this->assertCount(2, $res);
+        $this->assertCount(1, $res);
         $this->assertSame($res[0]['status'], 'processed');
         $this->assertArrayHasKey('updateId', $res[0]);
         $this->assertArrayHasKey('type', $res[0]);
@@ -65,6 +65,6 @@ class UpdatesTest extends TestCase
     public function testExceptionIfNoUpdateIdWhenGetting()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$index->getUpdateStatus('nope');
+        static::$index->getUpdateStatus(10000);
     }
 }
