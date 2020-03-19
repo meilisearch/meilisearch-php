@@ -25,7 +25,7 @@ Here is the [MeiliSearch documentation](https://docs.meilisearch.com/) 📖
 
 ### Run MeiliSearch <!-- omit in toc -->
 
-Here is a the [documentation](https://docs.meilisearch.com/advanced_guides/binary.html) to install and run Meilisearch.
+Here is a the [documentation](https://docs.meilisearch.com/advanced_guides/installation.html) to install and run Meilisearch.
 
 ## 🚀 Getting started
 
