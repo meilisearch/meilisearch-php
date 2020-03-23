@@ -49,6 +49,8 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 #### Add documents <!-- omit in toc -->
 
 ```php
+<?php
+
 use MeiliSearch\Client;
 
 $client = new Client('http://127.0.0.1:7700', 'masterKey');
