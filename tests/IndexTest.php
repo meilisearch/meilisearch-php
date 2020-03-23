@@ -8,82 +8,95 @@ require_once 'utils.php';
 
 class IndexTest extends TestCase
 {
-    private static $index;
-    private static $name;
-    private static $uid;
+    private static $index1;
+    private static $index2;
+    private static $uid1;
+    private static $uid2;
+    private static $primary_key;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::$name = 'name';
-        static::$uid = 'uid';
-        $client = new Client('http://localhost:7700', 'apiKey');
+        static::$uid1 = 'uid1';
+        static::$uid2 = 'uid2';
+        static::$primary_key = 'objectID';
+        $client = new Client('http://localhost:7700', 'masterKey');
         deleteAllIndexes($client);
-        static::$index = $client->createIndex(static::$name, static::$uid);
+        static::$index1 = $client->createIndex(static::$uid1);
+        static::$index2 = $client->createIndex([
+            'uid' => static::$uid2,
+            'primaryKey' => static::$primary_key,
+        ]);
     }
 
-    public function testGetName()
+    public function testgetPrimaryKey()
     {
-        $this->assertSame(static::$index->getName(), static::$name);
+        $this->assertNull(static::$index1->getPrimaryKey());
+        $this->assertSame(static::$primary_key, static::$index2->getPrimaryKey());
     }
 
     public function testGetUid()
     {
-        $this->assertSame(static::$index->getUid(), static::$uid);
+        $this->assertSame(static::$uid1, static::$index1->getUid());
+        $this->assertSame(static::$uid2, static::$index2->getUid());
     }
 
     public function testShow()
     {
-        $res = static::$index->show();
-        $this->assertArrayHasKey('name', $res);
+        $res = static::$index2->show();
+        $this->assertArrayHasKey('primaryKey', $res);
         $this->assertArrayHasKey('uid', $res);
         $this->assertArrayHasKey('createdAt', $res);
         $this->assertArrayHasKey('updatedAt', $res);
-        $this->assertSame($res['name'], static::$name);
-        $this->assertSame($res['uid'], static::$uid);
+        $this->assertSame($res['primaryKey'], static::$primary_key);
+        $this->assertSame($res['uid'], static::$uid2);
     }
 
-    public function testUpdateName()
+    public function testUpdate()
     {
-        $new_name = 'new name';
-        $res = static::$index->updateName($new_name);
-        $this->assertArrayHasKey('name', $res);
-        $this->assertArrayHasKey('uid', $res);
-        $this->assertArrayHasKey('createdAt', $res);
-        $this->assertArrayHasKey('updatedAt', $res);
-        $this->assertSame($res['name'], $new_name);
-        $this->assertSame($res['uid'], static::$uid);
-        $res = static::$index->show();
-        $this->assertSame($res['name'], $new_name);
+        $id = 'id';
+        $res = static::$index1->update(['primaryKey' => $id]);
+        $this->assertSame($res['primaryKey'], $id);
+        $this->assertSame($res['uid'], static::$uid1);
+    }
+
+    public function testExceptionIfPrimaryKeyIsPresentWhenUpdating()
+    {
+        $this->expectException(HTTPRequestException::class);
+        static::$index2->update(['primaryKey' => 'objectID']);
+    }
+
+    public function testIndexStats()
+    {
+        $res = static::$index1->stats();
+        $this->assertArrayHasKey('numberOfDocuments', $res);
+        $this->assertArrayHasKey('isIndexing', $res);
+        $this->assertArrayHasKey('fieldsFrequency', $res);
     }
 
     public function testDelete()
     {
-        $res = static::$index->delete();
+        $res = static::$index1->delete();
         $this->assertEmpty($res);
-    }
-
-    public function testExceptionIfNoIndexWhenGettingName()
-    {
-        $this->expectException(HTTPRequestException::class);
-        static::$index->getName();
+        $res = static::$index2->delete();
+        $this->assertEmpty($res);
     }
 
     public function testExceptionIfNoIndexWhenShowing()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$index->show();
+        static::$index1->show();
     }
 
     public function testExceptionIfNoIndexWhenUpdating()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$index->updateName('nope');
+        static::$index1->update(['primaryKey' => 'objectID']);
     }
 
     public function testExceptionIfNoIndexWhenDeleting()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$index->delete();
+        static::$index1->delete();
     }
 }

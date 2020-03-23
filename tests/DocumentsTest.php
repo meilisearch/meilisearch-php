@@ -15,9 +15,9 @@ class DocumentsTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'apiKey');
+        static::$client = new Client('http://localhost:7700', 'masterKey');
         deleteAllIndexes(static::$client);
-        static::$index = static::$client->createIndex('Name');
+        static::$index = static::$client->createIndex('uid');
         static::$documents = [
             ['id' => 123,  'title' => 'Pride and Prejudice',                    'comment' => 'A great book'],
             ['id' => 456,  'title' => 'Le Petit Prince',                        'comment' => 'A french book'],
@@ -37,7 +37,7 @@ class DocumentsTest extends TestCase
 
     public function testAddDocuments()
     {
-        $res = static::$index->addOrReplaceDocuments(static::$documents);
+        $res = static::$index->addDocuments(static::$documents);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
         usleep(10 * 1000);
@@ -56,21 +56,21 @@ class DocumentsTest extends TestCase
         $doc = $this->findDocumentWithId(static::$documents, 4);
         $res = static::$index->getDocument($doc['id']);
         $this->assertIsArray($res);
-        $this->assertSame($res['id'], $doc['id']);
-        $this->assertSame($res['title'], $doc['title']);
+        $this->assertSame($doc['id'], $res['id']);
+        $this->assertSame($doc['title'], $res['title']);
     }
 
     public function testReplaceDocuments()
     {
         $id = 2;
         $new_title = 'The Red And The Black';
-        $res = static::$index->addOrReplaceDocuments([['id' => $id, 'title' => $new_title]]);
+        $res = static::$index->addDocuments([['id' => $id, 'title' => $new_title]]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
         usleep(10 * 1000);
         $res = static::$index->getDocument($id);
-        $this->assertSame($res['id'], $id);
-        $this->assertSame($res['title'], $new_title);
+        $this->assertSame($id, $res['id']);
+        $this->assertSame($new_title, $res['title']);
         $this->assertFalse(array_search('comment', $res));
         $res = static::$index->getDocuments();
         $this->assertCount(count(static::$documents), $res);
@@ -80,29 +80,29 @@ class DocumentsTest extends TestCase
     {
         $id = 456;
         $new_title = 'The Little Prince';
-        $res = static::$index->addOrUpdateDocuments([['id' => $id, 'title' => $new_title]]);
+        $res = static::$index->updateDocuments([['id' => $id, 'title' => $new_title]]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
         usleep(10 * 1000);
         $res = static::$index->getDocument($id);
-        $this->assertSame($res['id'], $id);
-        $this->assertSame($res['title'], $new_title);
+        $this->assertSame($id, $res['id']);
+        $this->assertSame($new_title, $res['title']);
         $this->assertArrayHasKey('comment', $res);
         $res = static::$index->getDocuments();
         $this->assertCount(count(static::$documents), $res);
     }
 
-    public function testAddOrUpdateDocuments()
+    public function testAddWithUpdateDocuments()
     {
         $id = 9;
         $title = '1984';
-        $res = static::$index->addOrUpdateDocuments([['id' => $id, 'title' => $title]]);
+        $res = static::$index->updateDocuments([['id' => $id, 'title' => $title]]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
         usleep(10 * 1000);
         $res = static::$index->getDocument($id);
-        $this->assertSame($res['id'], $id);
-        $this->assertSame($res['title'], $title);
+        $this->assertSame($id, $res['id']);
+        $this->assertSame($title, $res['title']);
         $this->assertFalse(array_search('comment', $res));
         $res = static::$index->getDocuments();
         $this->assertCount(count(static::$documents) + 1, $res);
@@ -147,6 +147,40 @@ class DocumentsTest extends TestCase
     {
         $this->expectException(HTTPRequestException::class);
         static::$index->getDocument(1);
+    }
+
+    public function testAddDocumentWithPrimaryKey()
+    {
+        $documents = [
+            [
+                'id' => 1,
+                'unique' => 1,
+                'title' => 'Le Rouge et le Noir',
+            ],
+        ];
+        $index = static::$client->createIndex('addUid');
+        $res = $index->addDocuments($documents, 'unique');
+        $this->assertArrayHasKey('updateId', $res);
+        usleep(10 * 1000);
+        $this->assertSame('unique', $index->getPrimaryKey());
+        $this->assertCount(1, $index->getDocuments());
+    }
+
+    public function testUpdateDocumentWithPrimaryKey()
+    {
+        $documents = [
+            [
+                'id' => 1,
+                'unique' => 1,
+                'title' => 'Le Rouge et le Noir',
+            ],
+        ];
+        $index = static::$client->createIndex('udpateUid');
+        $res = $index->updateDocuments($documents, 'unique');
+        $this->assertArrayHasKey('updateId', $res);
+        usleep(10 * 1000);
+        $this->assertSame('unique', $index->getPrimaryKey());
+        $this->assertCount(1, $index->getDocuments());
     }
 
     private function findDocumentWithId($documents, $id)
