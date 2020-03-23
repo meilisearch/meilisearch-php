@@ -36,7 +36,7 @@ class AcceptNewFieldsTest extends TestCase
         $res = static::$index->updateAcceptNewFields(false);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        usleep(10 * 1000);
+        static::$index->waitUpdateId($res['updateId']);
         $this->assertFalse(static::$index->getAcceptNewFields());
     }
 }

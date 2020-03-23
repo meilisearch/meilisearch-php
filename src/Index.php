@@ -86,6 +86,17 @@ class Index extends HTTPRequest
         return $this->httpGet('/indexes/'.$this->uid.'/updates');
     }
 
+    public function waitUpdateId($update_id)
+    {
+        while (1) {
+            $res = $this->getUpdateStatus($update_id);
+            if ('enqueued' != $res['status']) {
+                return $res;
+            }
+            usleep(1000);
+        }
+    }
+
     // Search
 
     public function search($query, $options = null)
