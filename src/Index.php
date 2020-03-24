@@ -2,6 +2,8 @@
 
 namespace MeiliSearch;
 
+use MeiliSearch\Exceptions\TimeOutException;
+
 class Index extends HTTPRequest
 {
     private $uid = null;
@@ -86,15 +88,18 @@ class Index extends HTTPRequest
         return $this->httpGet('/indexes/'.$this->uid.'/updates');
     }
 
-    public function waitUpdateId($update_id)
+    public function waitForUpdateStatus($update_id, $timeout_in_ms = 2000, $range_in_ms = 10)
     {
-        while (1) {
+        $timeout_temp = 0;
+        while ($timeout_in_ms > $timeout_temp) {
             $res = $this->getUpdateStatus($update_id);
             if ('enqueued' != $res['status']) {
                 return $res;
             }
-            usleep(1000);
+            $timeout_temp += $range_in_ms;
+            usleep(1000 * $range_in_ms);
         }
+        throw new TimeOutException();
     }
 
     // Search

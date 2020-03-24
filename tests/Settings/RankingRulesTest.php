@@ -51,7 +51,7 @@ class RankingRulesTest extends TestCase
         $res = static::$index->updateRankingRules($new_rr);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitUpdateId($res['updateId']);
+        static::$index->waitForUpdateStatus($res['updateId']);
         $rr = static::$index->getRankingRules();
         $this->assertIsArray($rr);
         $this->assertEquals($new_rr, $rr);
@@ -62,7 +62,7 @@ class RankingRulesTest extends TestCase
         $res = static::$index->resetRankingRules();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitUpdateId($res['updateId']);
+        static::$index->waitForUpdateStatus($res['updateId']);
         $rr = static::$index->getRankingRules();
         $this->assertIsArray($rr);
         $this->assertEquals(static::$default_ranking_rules, $rr);

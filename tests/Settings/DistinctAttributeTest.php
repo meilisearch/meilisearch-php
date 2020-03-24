@@ -37,7 +37,7 @@ class DistinctAttributeTest extends TestCase
         $res = static::$index->updateDistinctAttribute($new_da);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitUpdateId($res['updateId']);
+        static::$index->waitForUpdateStatus($res['updateId']);
         $da = static::$index->getDistinctAttribute();
         $this->assertEquals($new_da, $da);
     }
@@ -47,7 +47,7 @@ class DistinctAttributeTest extends TestCase
         $res = static::$index->resetDistinctAttribute();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitUpdateId($res['updateId']);
+        static::$index->waitForUpdateStatus($res['updateId']);
         $this->assertNull(static::$index->getDistinctAttribute());
     }
 }
