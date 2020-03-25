@@ -48,7 +48,7 @@ class SearchableAttributesTest extends TestCase
         $res = static::$index1->updateSearchableAttributes($new_sa);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitUpdateId($res['updateId']);
+        static::$index1->waitForUpdateStatus($res['updateId']);
         $sa = static::$index1->getSearchableAttributes();
         $this->assertIsArray($sa);
         $this->assertEquals($new_sa, $sa);
@@ -59,7 +59,7 @@ class SearchableAttributesTest extends TestCase
         $res = static::$index1->resetSearchableAttributes();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitUpdateId($res['updateId']);
+        static::$index1->waitForUpdateStatus($res['updateId']);
         $sa = static::$index1->getSearchableAttributes();
         $this->assertIsArray($sa);
     }
