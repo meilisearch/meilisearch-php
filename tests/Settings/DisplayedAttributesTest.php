@@ -45,7 +45,7 @@ class DisplayedAttributesTest extends TestCase
         $res = static::$index1->updateDisplayedAttributes($new_da);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        usleep(10 * 1000);
+        static::$index1->waitForUpdateStatus($res['updateId']);
         $da = static::$index1->getDisplayedAttributes();
         $this->assertIsArray($da);
         $this->assertEquals($new_da, $da);
@@ -56,7 +56,7 @@ class DisplayedAttributesTest extends TestCase
         $res = static::$index1->resetDisplayedAttributes();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        usleep(10 * 1000);
+        static::$index1->waitForUpdateStatus($res['updateId']);
         $da = static::$index1->getDisplayedAttributes();
         $this->assertIsArray($da);
     }

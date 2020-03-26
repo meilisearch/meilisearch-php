@@ -28,8 +28,8 @@ class SearchTest extends TestCase
             ['id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince', 'comment' => 'The best book'],
             ['id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
         ];
-        static::$index->updateDocuments($documents);
-        usleep(10 * 1000);
+        $res = static::$index->updateDocuments($documents);
+        static::$index->waitForUpdateStatus($res['updateId']);
     }
 
     public static function tearDownAfterClass(): void

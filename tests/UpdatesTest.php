@@ -37,8 +37,7 @@ class UpdatesTest extends TestCase
     public function testGetOneUpdate()
     {
         $update_id = static::$index->updateDocuments(static::$documents)['updateId'];
-        usleep(10 * 1000);
-        $res = static::$index->getUpdateStatus($update_id);
+        $res = static::$index->waitForUpdateStatus($update_id);
         $this->assertIsArray($res);
         $this->assertSame($res['status'], 'processed');
         $this->assertSame($res['updateId'], $update_id);

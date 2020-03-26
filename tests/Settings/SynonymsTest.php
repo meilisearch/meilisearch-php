@@ -40,7 +40,7 @@ class SynonymsTest extends TestCase
         $res = static::$index->updateSynonyms($new_s);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        usleep(10 * 1000);
+        static::$index->waitForUpdateStatus($res['updateId']);
         $s = static::$index->getSynonyms();
         $this->assertIsArray($s);
         $this->assertEquals($new_s, $s);
@@ -51,7 +51,7 @@ class SynonymsTest extends TestCase
         $res = static::$index->resetSynonyms();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        usleep(10 * 1000);
+        static::$index->waitForUpdateStatus($res['updateId']);
         $s = static::$index->getSynonyms();
         $this->assertIsArray($s);
         $this->assertEmpty($s);
