@@ -31,7 +31,7 @@ class HTTPRequest
         $request = new GuzzleRequest(
             'GET',
             $this->base_url.$path.$uri_query,
-            $this->headers,
+            $this->headers
         );
 
         return $this->sendRequestAndGetBody($request);
