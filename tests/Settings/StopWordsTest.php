@@ -38,7 +38,7 @@ class StopWordsTest extends TestCase
         $res = static::$index->updateStopWords($new_sw);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $sw = static::$index->getStopWords();
         $this->assertIsArray($sw);
         $this->assertEquals($new_sw, $sw);
@@ -49,7 +49,7 @@ class StopWordsTest extends TestCase
         $res = static::$index->resetStopWords();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $sw = static::$index->getStopWords();
         $this->assertIsArray($sw);
         $this->assertEmpty($sw);
