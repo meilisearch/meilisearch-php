@@ -2,6 +2,7 @@
 
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
+
 class RankingRulesTest extends TestCase
 {
     private static $client;

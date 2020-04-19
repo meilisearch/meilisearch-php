@@ -1,9 +1,9 @@
 <?php
 
-use MeiliSearch\Index;
 use MeiliSearch\Client;
-use PHPUnit\Framework\TestCase;
 use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Index;
+use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
 {

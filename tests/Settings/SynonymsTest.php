@@ -2,6 +2,7 @@
 
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
+
 class SynonymsTest extends TestCase
 {
     private static $client;
