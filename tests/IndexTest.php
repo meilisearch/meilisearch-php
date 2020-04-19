@@ -4,8 +4,6 @@ use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use PHPUnit\Framework\TestCase;
 
-require_once 'utils.php';
-
 class IndexTest extends TestCase
 {
     private static $index1;

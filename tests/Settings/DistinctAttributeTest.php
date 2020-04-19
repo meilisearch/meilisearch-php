@@ -2,10 +2,6 @@
 
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
-
-define('__ROOT__', dirname(dirname(__FILE__)));
-require_once __ROOT__.'/utils.php';
-
 class DistinctAttributeTest extends TestCase
 {
     private static $client;
