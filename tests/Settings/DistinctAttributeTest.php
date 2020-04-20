@@ -3,11 +3,7 @@
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
 
-if (!defined('__ROOT__')) {
-    define('__ROOT__', dirname(dirname(__FILE__)));
-}
-
-require_once __ROOT__.'/utils.php';
+require_once dirname(dirname(__FILE__)).'/utils.php';
 
 class DistinctAttributeTest extends TestCase
 {
@@ -40,7 +36,7 @@ class DistinctAttributeTest extends TestCase
         $res = static::$index->updateDistinctAttribute($new_da);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $da = static::$index->getDistinctAttribute();
         $this->assertEquals($new_da, $da);
     }
@@ -50,7 +46,7 @@ class DistinctAttributeTest extends TestCase
         $res = static::$index->resetDistinctAttribute();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $this->assertNull(static::$index->getDistinctAttribute());
     }
 }

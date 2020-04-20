@@ -3,11 +3,7 @@
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
 
-if (!defined('__ROOT__')) {
-    define('__ROOT__', dirname(dirname(__FILE__)));
-}
-
-require_once __ROOT__.'/utils.php';
+require_once dirname(dirname(__FILE__)).'/utils.php';
 
 class StopWordsTest extends TestCase
 {
@@ -41,7 +37,7 @@ class StopWordsTest extends TestCase
         $res = static::$index->updateStopWords($new_sw);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $sw = static::$index->getStopWords();
         $this->assertIsArray($sw);
         $this->assertEquals($new_sw, $sw);
@@ -52,7 +48,7 @@ class StopWordsTest extends TestCase
         $res = static::$index->resetStopWords();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $sw = static::$index->getStopWords();
         $this->assertIsArray($sw);
         $this->assertEmpty($sw);

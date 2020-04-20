@@ -3,11 +3,7 @@
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
 
-if (!defined('__ROOT__')) {
-    define('__ROOT__', dirname(dirname(__FILE__)));
-}
-
-require_once __ROOT__.'/utils.php';
+require_once dirname(dirname(__FILE__)).'/utils.php';
 
 class SynonymsTest extends TestCase
 {
@@ -43,7 +39,7 @@ class SynonymsTest extends TestCase
         $res = static::$index->updateSynonyms($new_s);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $s = static::$index->getSynonyms();
         $this->assertIsArray($s);
         $this->assertEquals($new_s, $s);
@@ -54,7 +50,7 @@ class SynonymsTest extends TestCase
         $res = static::$index->resetSynonyms();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $s = static::$index->getSynonyms();
         $this->assertIsArray($s);
         $this->assertEmpty($s);
