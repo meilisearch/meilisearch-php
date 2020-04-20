@@ -13,7 +13,7 @@ class UpdatesTest extends TestCase
     {
         parent::setUpBeforeClass();
         $client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes($client);
+        $client->deleteAllIndexes();
         static::$index = $client->createIndex('uid');
         static::$documents = [
             ['id' => 123,  'title' => 'Pride and Prejudice',                    'comment' => 'A great book'],

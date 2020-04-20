@@ -13,8 +13,7 @@ class RankingRulesTest extends TestCase
     {
         parent::setUpBeforeClass();
         static::$client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes(static::$client);
-        static::$index = static::$client->createIndex('uid');
+        static::$client->deleteAllIndexes();static::$index = static::$client->createIndex('uid');
         static::$default_ranking_rules = [
             'typo',
             'words',
@@ -28,8 +27,7 @@ class RankingRulesTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        deleteAllIndexes(static::$client);
-    }
+        static::$client->deleteAllIndexes();}
 
     public function testGetDefaultRankingRules()
     {

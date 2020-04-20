@@ -20,7 +20,7 @@ class IndexTest extends TestCase
         static::$uid2 = 'uid2';
         static::$primary_key = 'objectID';
         $client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes($client);
+        $client->deleteAllIndexes();;
         static::$index1 = $client->createIndex(static::$uid1);
         static::$index2 = $client->createIndex([
             'uid' => static::$uid2,

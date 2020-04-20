@@ -21,6 +21,13 @@ class Client extends HTTPRequest
         return $this->indexInstance($uid)->delete();
     }
 
+    public function deleteAllIndexes()
+    {
+        foreach ($this->getAllIndexes() as $index) {
+            $this->deleteIndex($index['uid']);
+        }
+    }
+
     public function getIndex($uid)
     {
         return $this->indexInstance($uid);

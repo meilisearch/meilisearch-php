@@ -14,8 +14,7 @@ class SearchableAttributesTest extends TestCase
     {
         parent::setUpBeforeClass();
         static::$client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes(static::$client);
-        static::$primary_key = 'objectID';
+        static::$client->deleteAllIndexes();static::$primary_key = 'objectID';
         static::$index1 = static::$client->createIndex('uid1');
         static::$index2 = static::$client->createIndex(['uid' => 'uid2', 'primaryKey' => static::$primary_key]);
     }
@@ -23,8 +22,7 @@ class SearchableAttributesTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        deleteAllIndexes(static::$client);
-    }
+        static::$client->deleteAllIndexes();}
 
     public function testGetDefaultSearchableAttributes()
     {

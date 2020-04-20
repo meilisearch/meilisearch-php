@@ -18,7 +18,7 @@ class ClientTest extends TestCase
     {
         parent::setUpBeforeClass();
         static::$client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes(static::$client);
+        static::$client->deleteAllIndexes();
         static::$uid1 = 'uid1';
         static::$uid2 = 'uid2';
         static::$primary_key = 'objectID';
@@ -27,8 +27,7 @@ class ClientTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        deleteAllIndexes(static::$client);
-    }
+        static::$client->deleteAllIndexes();}
 
     // INDEXES
 

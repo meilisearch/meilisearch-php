@@ -23,10 +23,7 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        },
-        "files": [
-            "tests/utils.php"
-        ]
+        }
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
