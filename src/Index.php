@@ -88,7 +88,7 @@ class Index extends HTTPRequest
         return $this->httpGet('/indexes/'.$this->uid.'/updates');
     }
 
-    public function waitForPendingUpdate($update_id, $timeout_in_ms = 2000, $interval_in_ms = 10)
+    public function waitForPendingUpdate($update_id, $timeout_in_ms = 5000, $interval_in_ms = 50)
     {
         $timeout_temp = 0;
         while ($timeout_in_ms > $timeout_temp) {
