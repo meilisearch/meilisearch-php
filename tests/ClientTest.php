@@ -1,127 +1,138 @@
 <?php
 
+use Tests\TestCase;
+use MeiliSearch\Index;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
-use MeiliSearch\Index;
-use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
-    private static $client;
-    private static $index1;
-    private static $uid1;
-    private static $index2;
-    private static $uid2;
-    private static $primary_key;
+    private $client;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$client->deleteAllIndexes();
-        static::$uid1 = 'uid1';
-        static::$uid2 = 'uid2';
-        static::$primary_key = 'objectID';
+        parent::__construct();
+        $this->client = new Client('http://localhost:7700', 'masterKey');
     }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();}
 
     // INDEXES
 
     public function testGetAllIndexesWhenEmpty()
     {
-        $res = static::$client->getAllIndexes();
+        $res = $this->client->getAllIndexes();
         $this->assertIsArray($res);
         $this->assertEmpty($res);
     }
 
     public function testCreateIndexWithOnlyUid()
     {
-        static::$index1 = static::$client->createIndex(static::$uid1);
-        $this->assertInstanceOf(Index::class, static::$index1);
-        $this->assertSame(static::$uid1, static::$index1->getUid());
-        $this->assertNull(static::$index1->getPrimaryKey());
+        $index = $this->client->createIndex('index');
+        $this->assertInstanceOf(Index::class, $index);
+        $this->assertSame('index', $index->getUid());
+        $this->assertNull($index->getPrimaryKey());
     }
 
     public function testCreateIndexWithUidAndPrimaryKey()
     {
-        static::$index2 = static::$client->createIndex([
-            'uid' => static::$uid2,
-            'primaryKey' => static::$primary_key,
+        $index = $this->client->createIndex([
+            'uid'        => 'index',
+            'primaryKey' => 'ObjectId',
         ]);
-        $this->assertInstanceOf(Index::class, static::$index2);
-        $this->assertSame(static::$uid2, static::$index2->getUid());
-        $this->assertSame(static::$primary_key, static::$index2->getPrimaryKey());
+        $this->assertInstanceOf(Index::class, $index);
+        $this->assertSame('index', $index->getUid());
+        $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
     public function testGetAllIndexes()
     {
-        $res = static::$client->getAllIndexes();
-        $this->assertIsArray($res);
-        $this->assertCount(2, $res);
-        $uids = array_map(function ($elem) {
-            return $elem['uid'];
-        }, $res);
-        $this->assertContains(static::$uid1, $uids);
-        $this->assertContains(static::$uid2, $uids);
+        $indexA = 'indexA';
+        $indexB = 'indexB';
+        $this->client->createIndex($indexA);
+        $this->client->createIndex($indexB);
+
+        $response = $this->client->getAllIndexes();
+
+        $this->assertIsArray($response);
+        $this->assertCount(2, $response);
+
+        $uids = array_column($response, 'uid');
+
+        $this->assertContains($indexA, $uids);
+        $this->assertContains($indexB, $uids);
     }
 
     public function testShowIndex()
     {
-        $res = static::$client->showIndex(static::$uid2);
-        $this->assertIsArray($res);
-        $this->assertSame(static::$primary_key, $res['primaryKey']);
-        $this->assertSame(static::$uid2, $res['uid']);
+        $index = 'index';
+        $this->client->createIndex([
+            'uid'        => $index,
+            'primaryKey' => 'objectID',
+        ]);
+
+        $response = $this->client->showIndex($index);
+
+        $this->assertIsArray($response);
+        $this->assertSame('objectID', $response['primaryKey']);
+        $this->assertSame($index, $response['uid']);
     }
 
     public function testDeleteIndex()
     {
-        $res = static::$client->deleteIndex(static::$uid2);
-        $this->assertEmpty($res);
-        $res = static::$client->getAllIndexes();
-        $this->assertCount(1, $res);
+        $this->client->createIndex('index');
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(1, $response);
+
+        $response = $this->client->deleteIndex('index');
+
+        $this->assertEmpty($response);
+        $response = $this->client->getAllIndexes();
+
+        $this->assertCount(0, $response);
     }
 
     public function testGetIndex()
     {
-        $res = static::$client->getIndex(static::$uid1);
-        $this->assertInstanceOf(Index::class, static::$index1);
-        $this->assertSame(static::$uid1, static::$index1->getUid());
-        $this->assertNull(static::$index1->getPrimaryKey());
+        $this->client->createIndex('index');
+
+        $index = $this->client->getIndex('index');
+        $this->assertInstanceOf(Index::class, $index);
+        $this->assertSame('index', $index->getUid());
+        $this->assertNull($index->getPrimaryKey());
     }
 
     public function testExceptionIfUidTakenWhenCreating()
     {
+        $this->client->createIndex('index');
+
         $this->expectException(HTTPRequestException::class);
-        static::$client->createIndex(static::$uid1);
+
+        $this->client->createIndex('index');
     }
 
     public function testExceptionIfNoUidWhenCreating()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$client->createIndex(['primaryKey' => 'id']);
+        $this->client->createIndex(['primaryKey' => 'id']);
     }
 
     public function testExceptionIfNoIndexWhenShowing()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$client->showIndex(static::$uid2);
+        $this->client->showIndex('a-non-existing-index');
     }
 
     public function testExceptionIfNoIndexWhenDeleting()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$client->deleteIndex(static::$uid2);
+        $this->client->deleteIndex('a-non-existing-index');
     }
 
     // HEALTH
 
     public function testHealth()
     {
-        $res = static::$client->health();
+        $res = $this->client->health();
         $this->assertEmpty($res);
     }
 
@@ -129,7 +140,7 @@ class ClientTest extends TestCase
 
     public function testVersion()
     {
-        $res = static::$client->version();
+        $res = $this->client->version();
         $this->assertArrayHasKey('commitSha', $res);
         $this->assertArrayHasKey('buildDate', $res);
         $this->assertArrayHasKey('pkgVersion', $res);
@@ -137,7 +148,7 @@ class ClientTest extends TestCase
 
     public function testSysInfo()
     {
-        $res = static::$client->sysInfo();
+        $res = $this->client->sysInfo();
         $this->assertArrayHasKey('memoryUsage', $res);
         $this->assertArrayHasKey('processorUsage', $res);
         $this->assertArrayHasKey('global', $res);
@@ -147,7 +158,7 @@ class ClientTest extends TestCase
 
     public function testPrettySysInfo()
     {
-        $res = static::$client->prettySysInfo();
+        $res = $this->client->prettySysInfo();
         $this->assertArrayHasKey('memoryUsage', $res);
         $this->assertArrayHasKey('processorUsage', $res);
         $this->assertArrayHasKey('global', $res);
@@ -157,9 +168,15 @@ class ClientTest extends TestCase
 
     public function testStats()
     {
-        $res = static::$client->stats();
+        $res = $this->client->stats();
         $this->assertArrayHasKey('databaseSize', $res);
         $this->assertArrayHasKey('lastUpdate', $res);
         $this->assertArrayHasKey('indexes', $res);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->client->deleteAllIndexes();
+        parent::tearDown();
     }
 }
