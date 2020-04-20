@@ -3,15 +3,18 @@
 namespace MeiliSearch;
 
 use MeiliSearch\Exceptions\TimeOutException;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class Index extends HTTPRequest
 {
     private $uid = null;
 
-    public function __construct($uid, $url, $api_key = null)
+    public function __construct($uid, $url, $api_key = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
         $this->uid = $uid;
-        parent::__construct($url, $api_key);
+        parent::__construct($url, $api_key, $httpClient, $requestFactory, $streamFactory);
     }
 
     public function getPrimaryKey()
