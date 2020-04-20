@@ -2,6 +2,7 @@
 
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\TimeOutException;
 use PHPUnit\Framework\TestCase;
 
 require_once 'utils.php';
@@ -72,6 +73,55 @@ class IndexTest extends TestCase
         $this->assertArrayHasKey('numberOfDocuments', $res);
         $this->assertArrayHasKey('isIndexing', $res);
         $this->assertArrayHasKey('fieldsFrequency', $res);
+    }
+
+    public function testWaitForPendingUpdateDefault()
+    {
+        $first_upd = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $res = static::$index1->waitForPendingUpdate($first_upd['updateId']);
+        $this->assertIsArray($res);
+        $this->assertSame($res['status'], 'processed');
+        $this->assertSame($res['updateId'], $first_upd['updateId']);
+        $this->assertArrayHasKey('type', $res);
+        $this->assertIsArray($res['type']);
+        $this->assertArrayHasKey('duration', $res);
+        $this->assertArrayHasKey('enqueuedAt', $res);
+        $this->assertArrayHasKey('processedAt', $res);
+    }
+
+    public function testWaitForPendingUpdateCustom()
+    {
+        $first_upd = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $res = static::$index1->waitForPendingUpdate($first_upd['updateId'], 100, 20);
+        $this->assertIsArray($res);
+        $this->assertSame($res['status'], 'processed');
+        $this->assertSame($res['updateId'], $first_upd['updateId']);
+        $this->assertArrayHasKey('type', $res);
+        $this->assertIsArray($res['type']);
+        $this->assertArrayHasKey('duration', $res);
+        $this->assertArrayHasKey('enqueuedAt', $res);
+        $this->assertArrayHasKey('processedAt', $res);
+    }
+
+    public function testWaitForPendingUpdateCustom2()
+    {
+        $first_upd = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $res = static::$index1->waitForPendingUpdate($first_upd['updateId'], 100);
+        $this->assertIsArray($res);
+        $this->assertSame($res['status'], 'processed');
+        $this->assertSame($res['updateId'], $first_upd['updateId']);
+        $this->assertArrayHasKey('type', $res);
+        $this->assertIsArray($res['type']);
+        $this->assertArrayHasKey('duration', $res);
+        $this->assertArrayHasKey('enqueuedAt', $res);
+        $this->assertArrayHasKey('processedAt', $res);
+    }
+
+    public function testExceptionWhenPendingUpdateTimeOut()
+    {
+        $this->expectException(TimeOutException::class);
+        $res = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        static::$index1->waitForPendingUpdate($res['updateId'], 0, 20);
     }
 
     public function testDelete()

@@ -3,8 +3,7 @@
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
 
-define('__ROOT__', dirname(dirname(__FILE__)));
-require_once __ROOT__.'/utils.php';
+require_once dirname(dirname(__FILE__)).'/utils.php';
 
 class DisplayedAttributesTest extends TestCase
 {
@@ -45,7 +44,7 @@ class DisplayedAttributesTest extends TestCase
         $res = static::$index1->updateDisplayedAttributes($new_da);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForUpdateStatus($res['updateId']);
+        static::$index1->waitForPendingUpdate($res['updateId']);
         $da = static::$index1->getDisplayedAttributes();
         $this->assertIsArray($da);
         $this->assertEquals($new_da, $da);
@@ -56,7 +55,7 @@ class DisplayedAttributesTest extends TestCase
         $res = static::$index1->resetDisplayedAttributes();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForUpdateStatus($res['updateId']);
+        static::$index1->waitForPendingUpdate($res['updateId']);
         $da = static::$index1->getDisplayedAttributes();
         $this->assertIsArray($da);
     }
