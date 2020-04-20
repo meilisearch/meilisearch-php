@@ -3,8 +3,6 @@
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(dirname(__FILE__)).'/utils.php';
-
 class RankingRulesTest extends TestCase
 {
     private static $client;
