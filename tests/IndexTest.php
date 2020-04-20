@@ -3,7 +3,7 @@
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class IndexTest extends TestCase
 {

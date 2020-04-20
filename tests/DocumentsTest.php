@@ -2,7 +2,7 @@
 
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DocumentsTest extends TestCase
 {

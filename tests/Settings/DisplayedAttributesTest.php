@@ -1,9 +1,7 @@
 <?php
 
+use Tests\TestCase;
 use MeiliSearch\Client;
-use PHPUnit\Framework\TestCase;
-
-require_once dirname(dirname(__FILE__)).'/utils.php';
 
 class DisplayedAttributesTest extends TestCase
 {

@@ -3,7 +3,7 @@
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Index;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ClientTest extends TestCase
 {

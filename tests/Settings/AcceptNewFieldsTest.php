@@ -1,7 +1,7 @@
 <?php
 
 use MeiliSearch\Client;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class AcceptNewFieldsTest extends TestCase
 {
