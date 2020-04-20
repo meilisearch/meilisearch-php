@@ -73,7 +73,7 @@ class SettingsTest extends TestCase
         ]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForUpdateStatus($res['updateId']);
+        static::$index1->waitForPendingUpdate($res['updateId']);
         $settings = static::$index1->getSettings();
         $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
@@ -94,7 +94,7 @@ class SettingsTest extends TestCase
         ]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForUpdateStatus($res['updateId']);
+        static::$index1->waitForPendingUpdate($res['updateId']);
         $settings = static::$index1->getSettings();
         $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
@@ -112,7 +112,7 @@ class SettingsTest extends TestCase
         $res = static::$index1->resetSettings();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForUpdateStatus($res['updateId']);
+        static::$index1->waitForPendingUpdate($res['updateId']);
         $settings = static::$index1->getSettings();
         $this->assertEquals(static::$default_ranking_rules, $settings['rankingRules']);
         $this->assertNull($settings['distinctAttribute']);

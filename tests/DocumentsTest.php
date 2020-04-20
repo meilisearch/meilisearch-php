@@ -38,7 +38,7 @@ class DocumentsTest extends TestCase
         $res = static::$index->addDocuments(static::$documents);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
     }
 
     // DOCUMENTS
@@ -65,7 +65,7 @@ class DocumentsTest extends TestCase
         $res = static::$index->addDocuments([['id' => $id, 'title' => $new_title]]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $res = static::$index->getDocument($id);
         $this->assertSame($id, $res['id']);
         $this->assertSame($new_title, $res['title']);
@@ -81,7 +81,7 @@ class DocumentsTest extends TestCase
         $res = static::$index->updateDocuments([['id' => $id, 'title' => $new_title]]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $res = static::$index->getDocument($id);
         $this->assertSame($id, $res['id']);
         $this->assertSame($new_title, $res['title']);
@@ -97,7 +97,7 @@ class DocumentsTest extends TestCase
         $res = static::$index->updateDocuments([['id' => $id, 'title' => $title]]);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $res = static::$index->getDocument($id);
         $this->assertSame($id, $res['id']);
         $this->assertSame($title, $res['title']);
@@ -112,7 +112,7 @@ class DocumentsTest extends TestCase
         $res = static::$index->deleteDocument($id);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $res = static::$index->getDocuments();
         $this->assertCount(count(static::$documents), $res);
         $this->assertNull($this->findDocumentWithId($res, $id));
@@ -124,7 +124,7 @@ class DocumentsTest extends TestCase
         $res = static::$index->deleteDocuments($ids);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $res = static::$index->getDocuments();
         $this->assertCount(count(static::$documents) - 2, $res);
         $this->assertNull($this->findDocumentWithId($res, $ids[0]));
@@ -136,7 +136,7 @@ class DocumentsTest extends TestCase
         $res = static::$index->deleteAllDocuments();
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $res = static::$index->getDocuments();
         $this->assertCount(0, $res);
     }
@@ -159,7 +159,7 @@ class DocumentsTest extends TestCase
         $index = static::$client->createIndex('addUid');
         $res = $index->addDocuments($documents, 'unique');
         $this->assertArrayHasKey('updateId', $res);
-        $index->waitForUpdateStatus($res['updateId']);
+        $index->waitForPendingUpdate($res['updateId']);
         $this->assertSame('unique', $index->getPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
     }
@@ -176,7 +176,7 @@ class DocumentsTest extends TestCase
         $index = static::$client->createIndex('udpateUid');
         $res = $index->updateDocuments($documents, 'unique');
         $this->assertArrayHasKey('updateId', $res);
-        $index->waitForUpdateStatus($res['updateId']);
+        $index->waitForPendingUpdate($res['updateId']);
         $this->assertSame('unique', $index->getPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
     }

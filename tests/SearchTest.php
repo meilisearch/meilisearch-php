@@ -27,7 +27,7 @@ class SearchTest extends TestCase
             ['id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
         ];
         $res = static::$index->updateDocuments($documents);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
     }
 
     public static function tearDownAfterClass(): void
