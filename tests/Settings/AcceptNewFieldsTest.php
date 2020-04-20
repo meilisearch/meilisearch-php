@@ -3,8 +3,7 @@
 use MeiliSearch\Client;
 use PHPUnit\Framework\TestCase;
 
-define('__ROOT__', dirname(dirname(__FILE__)));
-require_once __ROOT__.'/utils.php';
+require_once dirname(dirname(__FILE__)).'/utils.php';
 
 class AcceptNewFieldsTest extends TestCase
 {
@@ -36,7 +35,7 @@ class AcceptNewFieldsTest extends TestCase
         $res = static::$index->updateAcceptNewFields(false);
         $this->assertIsArray($res);
         $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForUpdateStatus($res['updateId']);
+        static::$index->waitForPendingUpdate($res['updateId']);
         $this->assertFalse(static::$index->getAcceptNewFields());
     }
 }
