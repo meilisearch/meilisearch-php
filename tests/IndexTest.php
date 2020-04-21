@@ -1,150 +1,197 @@
 <?php
 
-use MeiliSearch\Client;
-use MeiliSearch\Exceptions\HTTPRequestException;
-use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
+use MeiliSearch\Client;
+use MeiliSearch\Exceptions\TimeOutException;
+use MeiliSearch\Exceptions\HTTPRequestException;
 
 class IndexTest extends TestCase
 {
-    private static $index1;
-    private static $index2;
-    private static $uid1;
-    private static $uid2;
-    private static $primary_key;
+    private $client;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$uid1 = 'uid1';
-        static::$uid2 = 'uid2';
-        static::$primary_key = 'objectID';
-        $client = new Client('http://localhost:7700', 'masterKey');
-        $client->deleteAllIndexes();
-        static::$index1 = $client->createIndex(static::$uid1);
-        static::$index2 = $client->createIndex([
-            'uid' => static::$uid2,
-            'primaryKey' => static::$primary_key,
-        ]);
+        parent::__construct();
+        $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
-    public function testgetPrimaryKey()
+    public function setUp(): void
     {
-        $this->assertNull(static::$index1->getPrimaryKey());
-        $this->assertSame(static::$primary_key, static::$index2->getPrimaryKey());
+        parent::setUp();
+        $this->client->deleteAllIndexes();
+    }
+
+    public function testGetPrimaryKey()
+    {
+        $indexA = $this->client->createIndex('indexA');
+        $indexB = $this->client->createIndex([
+            'uid' => 'indexB',
+            'primaryKey' => 'objectId',
+        ]);
+
+        $this->assertNull($indexA->getPrimaryKey());
+        $this->assertSame('objectId', $indexB->getPrimaryKey());
     }
 
     public function testGetUid()
     {
-        $this->assertSame(static::$uid1, static::$index1->getUid());
-        $this->assertSame(static::$uid2, static::$index2->getUid());
+        $indexA = $this->client->createIndex('indexA');
+        $indexB = $this->client->createIndex([
+            'uid' => 'indexB',
+            'primaryKey' => 'objectId',
+        ]);
+        $this->assertSame('indexA', $indexA->getUid());
+        $this->assertSame('indexB', $indexB->getUid());
     }
 
     public function testShow()
     {
-        $res = static::$index2->show();
-        $this->assertArrayHasKey('primaryKey', $res);
-        $this->assertArrayHasKey('uid', $res);
-        $this->assertArrayHasKey('createdAt', $res);
-        $this->assertArrayHasKey('updatedAt', $res);
-        $this->assertSame($res['primaryKey'], static::$primary_key);
-        $this->assertSame($res['uid'], static::$uid2);
+        $index = $this->client->createIndex([
+            'uid'        => 'indexB',
+            'primaryKey' => 'objectId',
+        ]);
+
+        $response = $index->show();
+
+        $this->assertArrayHasKey('primaryKey', $response);
+        $this->assertArrayHasKey('uid', $response);
+        $this->assertArrayHasKey('createdAt', $response);
+        $this->assertArrayHasKey('updatedAt', $response);
+        $this->assertSame($response['primaryKey'], 'objectId');
+        $this->assertSame($response['uid'], 'indexB');
     }
 
-    public function testUpdate()
+    public function testPrimaryKeyUpdate()
     {
-        $id = 'id';
-        $res = static::$index1->update(['primaryKey' => $id]);
-        $this->assertSame($res['primaryKey'], $id);
-        $this->assertSame($res['uid'], static::$uid1);
+        $index = $this->client->createIndex('index');
+        $primaryKey = 'id';
+
+        $response = $index->update(['primaryKey' => $primaryKey]);
+
+        $this->assertSame($response['primaryKey'], $primaryKey);
+        $this->assertSame('index', $response['uid']);
     }
 
     public function testExceptionIfPrimaryKeyIsPresentWhenUpdating()
     {
+        $index = $this->client->createIndex([
+            'uid'        => 'indexB',
+            'primaryKey' => 'objectId',
+        ]);
+
         $this->expectException(HTTPRequestException::class);
-        static::$index2->update(['primaryKey' => 'objectID']);
+
+        $index->update(['primaryKey' => 'objectID']);
     }
 
     public function testIndexStats()
     {
-        $res = static::$index1->stats();
-        $this->assertArrayHasKey('numberOfDocuments', $res);
-        $this->assertArrayHasKey('isIndexing', $res);
-        $this->assertArrayHasKey('fieldsFrequency', $res);
+        $index = $this->client->createIndex('index');
+
+        $stats = $index->stats();
+
+        $this->assertArrayHasKey('numberOfDocuments', $stats);
+        $this->assertEquals(0, $stats['numberOfDocuments']);
+        $this->assertArrayHasKey('isIndexing', $stats);
+        $this->assertArrayHasKey('fieldsFrequency', $stats);
     }
 
     public function testWaitForPendingUpdateDefault()
     {
-        $first_upd = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $res = static::$index1->waitForPendingUpdate($first_upd['updateId']);
-        $this->assertIsArray($res);
-        $this->assertSame($res['status'], 'processed');
-        $this->assertSame($res['updateId'], $first_upd['updateId']);
-        $this->assertArrayHasKey('type', $res);
-        $this->assertIsArray($res['type']);
-        $this->assertArrayHasKey('duration', $res);
-        $this->assertArrayHasKey('enqueuedAt', $res);
-        $this->assertArrayHasKey('processedAt', $res);
+        $index = $this->client->createIndex('index');
+        $promise = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+
+        $response = $index->waitForPendingUpdate($promise['updateId']);
+
+        $this->assertIsArray($response);
+        $this->assertSame($response['status'], 'processed');
+        $this->assertSame($response['updateId'], $promise['updateId']);
+        $this->assertArrayHasKey('type', $response);
+        $this->assertIsArray($response['type']);
+        $this->assertArrayHasKey('duration', $response);
+        $this->assertArrayHasKey('enqueuedAt', $response);
+        $this->assertArrayHasKey('processedAt', $response);
     }
 
-    public function testWaitForPendingUpdateCustom()
+    public function testWaitForPendingUpdateWithTimeoutAndInterval()
     {
-        $first_upd = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $res = static::$index1->waitForPendingUpdate($first_upd['updateId'], 100, 20);
-        $this->assertIsArray($res);
-        $this->assertSame($res['status'], 'processed');
-        $this->assertSame($res['updateId'], $first_upd['updateId']);
-        $this->assertArrayHasKey('type', $res);
-        $this->assertIsArray($res['type']);
-        $this->assertArrayHasKey('duration', $res);
-        $this->assertArrayHasKey('enqueuedAt', $res);
-        $this->assertArrayHasKey('processedAt', $res);
+        $index = $this->client->createIndex('index');
+
+        $promise = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $response = $index->waitForPendingUpdate($promise['updateId'], 100, 20);
+
+        $this->assertIsArray($response);
+        $this->assertSame($response['status'], 'processed');
+        $this->assertSame($response['updateId'], $promise['updateId']);
+        $this->assertArrayHasKey('type', $response);
+        $this->assertIsArray($response['type']);
+        $this->assertArrayHasKey('duration', $response);
+        $this->assertArrayHasKey('enqueuedAt', $response);
+        $this->assertArrayHasKey('processedAt', $response);
     }
 
-    public function testWaitForPendingUpdateCustom2()
+    public function testWaitForPendingUpdateWithTimeout()
     {
-        $first_upd = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $res = static::$index1->waitForPendingUpdate($first_upd['updateId'], 100);
-        $this->assertIsArray($res);
-        $this->assertSame($res['status'], 'processed');
-        $this->assertSame($res['updateId'], $first_upd['updateId']);
-        $this->assertArrayHasKey('type', $res);
-        $this->assertIsArray($res['type']);
-        $this->assertArrayHasKey('duration', $res);
-        $this->assertArrayHasKey('enqueuedAt', $res);
-        $this->assertArrayHasKey('processedAt', $res);
+        $index = $this->client->createIndex('index');
+
+        $promise = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $response = $index->waitForPendingUpdate($promise['updateId'], 100);
+
+        $this->assertIsArray($response);
+        $this->assertSame($response['status'], 'processed');
+        $this->assertSame($response['updateId'], $promise['updateId']);
+        $this->assertArrayHasKey('type', $response);
+        $this->assertIsArray($response['type']);
+        $this->assertArrayHasKey('duration', $response);
+        $this->assertArrayHasKey('enqueuedAt', $response);
+        $this->assertArrayHasKey('processedAt', $response);
     }
 
     public function testExceptionWhenPendingUpdateTimeOut()
     {
+        $index = $this->client->createIndex('index');
         $this->expectException(TimeOutException::class);
-        $res = static::$index1->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        static::$index1->waitForPendingUpdate($res['updateId'], 0, 20);
+        $res = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $index->waitForPendingUpdate($res['updateId'], 0, 20);
     }
 
-    public function testDelete()
+    public function testDeleteIndexes()
     {
-        $res = static::$index1->delete();
+        $indexA = $this->client->createIndex('indexA');
+        $indexB = $this->client->createIndex('indexB');
+
+        $res = $indexA->delete();
         $this->assertEmpty($res);
-        $res = static::$index2->delete();
+
+        $res = $indexB->delete();
         $this->assertEmpty($res);
     }
 
-    public function testExceptionIfNoIndexWhenShowing()
+    public function testExceptionIsThrownIfNoIndexWhenShowing()
     {
+        $index = $this->client->createIndex('index');
+        $index->delete();
+
         $this->expectException(HTTPRequestException::class);
-        static::$index1->show();
+
+        $index->show();
     }
 
-    public function testExceptionIfNoIndexWhenUpdating()
+    public function testExceptionIsThrownIfNoIndexWhenUpdating()
     {
+        $index = $this->client->createIndex('index');
+        $index->delete();
+
         $this->expectException(HTTPRequestException::class);
-        static::$index1->update(['primaryKey' => 'objectID']);
+        $index->update(['primaryKey' => 'objectID']);
     }
 
-    public function testExceptionIfNoIndexWhenDeleting()
+    public function testExceptionIsThrownIfNoIndexWhenDeleting()
     {
+        $index = $this->client->createIndex('index');
+        $index->delete();
+
         $this->expectException(HTTPRequestException::class);
-        static::$index1->delete();
+        $index->delete();
     }
 }
