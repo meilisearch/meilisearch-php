@@ -6,16 +6,15 @@ use Tests\TestCase;
 
 class UpdatesTest extends TestCase
 {
-    private static $index;
-    private static $documents;
+    private $index;
+    private $documents;
+    private $client;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        $client = new Client('http://localhost:7700', 'masterKey');
-        $client->deleteAllIndexes();
-        static::$index = $client->createIndex('uid');
-        static::$documents = [
+        parent::__construct();
+        $this->client = new Client('http://localhost:7700', 'masterKey');
+        $this->documents = [
             ['id' => 123,  'title' => 'Pride and Prejudice',                    'comment' => 'A great book'],
             ['id' => 456,  'title' => 'Le Petit Prince',                        'comment' => 'A french book'],
             ['id' => 2,    'title' => 'Le Rouge et le Noir',                    'comment' => 'Another french book'],
@@ -26,42 +25,54 @@ class UpdatesTest extends TestCase
         ];
     }
 
-    public static function tearDownAfterClass(): void
+    protected function setUp(): void
     {
-        parent::tearDownAfterClass();
-        static::$index->delete();
+        parent::setUp();
+        $this->client->deleteAllIndexes();
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetOneUpdate()
     {
-        $update_id = static::$index->updateDocuments(static::$documents)['updateId'];
-        $res = static::$index->waitForPendingUpdate($update_id);
-        $this->assertIsArray($res);
-        $this->assertSame($res['status'], 'processed');
-        $this->assertSame($res['updateId'], $update_id);
-        $this->assertArrayHasKey('type', $res);
-        $this->assertIsArray($res['type']);
-        $this->assertArrayHasKey('duration', $res);
-        $this->assertArrayHasKey('enqueuedAt', $res);
-        $this->assertArrayHasKey('processedAt', $res);
+        list($promise, $response) = $this->seedIndex();
+
+        $this->assertIsArray($response);
+        $this->assertSame($response['status'], 'processed');
+        $this->assertSame($response['updateId'], $promise['updateId']);
+        $this->assertArrayHasKey('type', $response);
+        $this->assertIsArray($response['type']);
+        $this->assertArrayHasKey('duration', $response);
+        $this->assertArrayHasKey('enqueuedAt', $response);
+        $this->assertArrayHasKey('processedAt', $response);
     }
 
     public function testGetAllUpdates()
     {
-        $res = static::$index->getAllUpdateStatus();
-        $this->assertCount(1, $res);
-        $this->assertSame($res[0]['status'], 'processed');
-        $this->assertArrayHasKey('updateId', $res[0]);
-        $this->assertArrayHasKey('type', $res[0]);
-        $this->assertIsArray($res[0]['type']);
-        $this->assertArrayHasKey('duration', $res[0]);
-        $this->assertArrayHasKey('enqueuedAt', $res[0]);
-        $this->assertArrayHasKey('processedAt', $res[0]);
+        $this->seedIndex();
+
+        $response = $this->index->getAllUpdateStatus();
+
+        $this->assertCount(1, $response);
+        $this->assertSame('processed', $response[0]['status']);
+        $this->assertArrayHasKey('updateId', $response[0]);
+        $this->assertArrayHasKey('type', $response[0]);
+        $this->assertIsArray($response[0]['type']);
+        $this->assertArrayHasKey('duration', $response[0]);
+        $this->assertArrayHasKey('enqueuedAt', $response[0]);
+        $this->assertArrayHasKey('processedAt', $response[0]);
     }
 
     public function testExceptionIfNoUpdateIdWhenGetting()
     {
         $this->expectException(HTTPRequestException::class);
-        static::$index->getUpdateStatus(10000);
+        $this->index->getUpdateStatus(10000);
+    }
+
+    private function seedIndex(): array
+    {
+        $promise  = $this->index->updateDocuments($this->documents);
+        $response = $this->index->waitForPendingUpdate($promise['updateId']);
+
+        return array($promise, $response);
     }
 }
