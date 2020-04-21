@@ -6,68 +6,78 @@ use Tests\TestCase;
 
 class KeysAndPermissionsTest extends TestCase
 {
-    private static $client;
-    private static $index;
-    private static $uid;
-    private static $public_key;
-    private static $private_key;
+    private $client;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$uid = 'uid';
-        static::$client->deleteAllIndexes();
-        static::$index = static::$client->createIndex(static::$uid);
+        parent::__construct();
+        $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
-    public static function tearDownAfterClass(): void
+    public function setUp(): void
     {
-        parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();
+        parent::setUp();
+        $this->client->deleteAllIndexes();
     }
 
     public function testGetKeys()
     {
-        $res = static::$client->getKeys();
-        $this->assertArrayHasKey('private', $res);
-        $this->assertArrayHasKey('public', $res);
-        static::$public_key = $res['public'];
-        static::$private_key = $res['private'];
+        $response = $this->client->getKeys();
+
+        $this->assertArrayHasKey('private', $response);
+        $this->assertArrayHasKey('public', $response);
+        $this->assertIsString($response['private']);
+        $this->assertNotNull($response['private']);
+        $this->assertIsString($response['public']);
+        $this->assertNotNull($response['public']);
     }
 
-    public function testSearchIfPublicKeyProvided()
+    public function testSearchingIfPublicKeyProvided()
     {
-        $new_client = new Client('http://localhost:7700', static::$public_key);
-        $res = $new_client->getIndex(static::$uid)->search('test');
-        $this->assertArrayHasKey('hits', $res);
+        $this->client->createIndex('index');
+        $newClient = new Client('http://localhost:7700', $this->getKeys()['public']);
+        $response = $newClient->getIndex('index')->search('test');
+        $this->assertArrayHasKey('hits', $response);
     }
 
     public function testGetSettingsIfPrivateKeyProvided()
     {
-        $new_client = new Client('http://localhost:7700', static::$private_key);
-        $res = $new_client->getIndex(static::$uid)->getSettings();
-        $this->assertTrue($res['acceptNewFields']);
+        $this->client->createIndex('index');
+        $newClient = new Client('http://localhost:7700', $this->getKeys()['private']);
+        $response = $newClient->getIndex('index')->getSettings();
+
+        $this->assertTrue($response['acceptNewFields']);
     }
 
     public function testExceptionIfNoMasterKeyProvided()
     {
+        $newClient = new Client('http://localhost:7700');
+
         $this->expectException(HTTPRequestException::class);
-        $new_client = new Client('http://localhost:7700');
-        $new_client->getIndex(static::$uid)->search('test');
+        $newClient->getIndex('index')->search('test');
     }
 
     public function testExceptionIfBadKeyProvidedToGetSettings()
     {
+        $this->client->createIndex('index');
+        $response = $this->client->getIndex('index')->getSettings();
+        $this->assertTrue($response['acceptNewFields']);
+
+        $newClient = new Client('http://localhost:7700', 'bad-key');
+
         $this->expectException(HTTPRequestException::class);
-        $new_client = new Client('http://localhost:7700', static::$public_key);
-        $new_client->getIndex(static::$uid)->getSettings();
+        $newClient->getIndex('index')->getSettings();
     }
 
     public function testExceptionIfBadKeyProvidedToGetKeys()
     {
         $this->expectException(HTTPRequestException::class);
-        $client = new Client('http://localhost:7700', static::$private_key);
+        $client = new Client('http://localhost:7700', 'bad-key');
         $client->getKeys();
+    }
+
+    private function getKeys()
+    {
+        return $this->client->getKeys();
     }
 }
