@@ -209,8 +209,8 @@ $index->search('prince');
 
 All the supported options are described in [this documentation section](https://docs.meilisearch.com/references/search.html#search-in-an-index).
 
-```ruby
-$index->search('prince', ['limit' => 1])
+```php
+$index->search('prince', ['limit' => 1]);
 ```
 
 ```json
@@ -226,6 +226,15 @@ $index->search('prince', ['limit' => 1])
     "processingTimeMs": 10,
     "query": "prince"
 }
+```
+
+With limit and filter, both single and double quotes are supported.
+```php
+// Enclosing with double quotes
+$index->search('prince', ['limit' => 1, 'filter' => "title = 'Le Petit Prince' OR book_id = 456"]);
+
+// Enclosing with single quotes
+$index->search('prince', ['limit' => 1, 'filter' => 'title = "Le Petit Prince" OR book_id = 456']);
 ```
 
 ## ⚙️ Development Workflow
