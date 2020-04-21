@@ -15,8 +15,6 @@ class ClientTest extends TestCase
         $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
-    // INDEXES
-
     public function testGetAllIndexesWhenEmpty()
     {
         $res = $this->client->getAllIndexes();
@@ -174,9 +172,9 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('indexes', $res);
     }
 
-    protected function tearDown(): void
+    protected function setUp(): void
     {
+        parent::setUp();
         $this->client->deleteAllIndexes();
-        parent::tearDown();
     }
 }
