@@ -38,8 +38,6 @@ class DocumentsTest extends TestCase
         $index->waitForPendingUpdate($response['updateId']);
     }
 
-    // DOCUMENTS
-
     public function testGetDocuments()
     {
         $index = $this->client->createIndex('documents');
@@ -67,16 +65,18 @@ class DocumentsTest extends TestCase
         $index = $this->client->createIndex('documents');
         $response=$index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
-
-        $id = 2;
-        $new_title = 'The Red And The Black';
-        $response = $index->addDocuments([['id' => $id, 'title' => $new_title]]);
+        $replacement =[
+            'id' => 2,
+            'title'=>'The Red And The Black'
+        ];
+        $response = $index->addDocuments([$replacement]);
         $this->assertIsArray($response);
         $this->assertArrayHasKey('updateId', $response);
         $index->waitForPendingUpdate($response['updateId']);
-        $response = $index->getDocument($id);
-        $this->assertSame($id, $response['id']);
-        $this->assertSame($new_title, $response['title']);
+
+        $response = $index->getDocument($replacement['id']);
+        $this->assertSame($replacement['id'], $response['id']);
+        $this->assertSame($replacement['title'], $response['title']);
         $this->assertFalse(array_search('comment', $response));
         $response = $index->getDocuments();
         $this->assertCount(count($this->documents), $response);
@@ -87,15 +87,18 @@ class DocumentsTest extends TestCase
         $index = $this->client->createIndex('documents');
         $response=$index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
-        $id = 456;
-        $new_title = 'The Little Prince';
-        $response = $index->updateDocuments([['id' => $id, 'title' => $new_title]]);
+        $replacement = [
+            'id' => 456,
+            'title' => 'The Little Prince'
+        ];
+
+        $response = $index->updateDocuments([$replacement]);
         $this->assertIsArray($response);
         $this->assertArrayHasKey('updateId', $response);
         $index->waitForPendingUpdate($response['updateId']);
-        $response = $index->getDocument($id);
-        $this->assertSame($id, $response['id']);
-        $this->assertSame($new_title, $response['title']);
+        $response = $index->getDocument($replacement['id']);
+        $this->assertSame($replacement['id'], $response['id']);
+        $this->assertSame($replacement['title'], $response['title']);
         $this->assertArrayHasKey('comment', $response);
         $response = $index->getDocuments();
         $this->assertCount(count($this->documents), $response);
@@ -106,21 +109,23 @@ class DocumentsTest extends TestCase
         $index = $this->client->createIndex('documents');
         $response=$index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
-        $id = 9;
-        $title = '1984';
-        $response = $index->updateDocuments([['id' => $id, 'title' => $title]]);
+        $document = [
+            'id' => 9,
+            'title' => '1984'
+        ];
+        $response = $index->updateDocuments([$document]);
         $this->assertIsArray($response);
         $this->assertArrayHasKey('updateId', $response);
         $index->waitForPendingUpdate($response['updateId']);
-        $response = $index->getDocument($id);
-        $this->assertSame($id, $response['id']);
-        $this->assertSame($title, $response['title']);
+        $response = $index->getDocument($document['id']);
+        $this->assertSame($document['id'], $response['id']);
+        $this->assertSame($document['title'], $response['title']);
         $this->assertFalse(array_search('comment', $response));
         $response = $index->getDocuments();
         $this->assertCount(count($this->documents) + 1, $response);
     }
 
-    public function testDeleteDocument()
+    public function testDeleteNonExistingDocument()
     {
         $index = $this->client->createIndex('documents');
         $response=$index->addDocuments($this->documents);
@@ -132,6 +137,22 @@ class DocumentsTest extends TestCase
         $index->waitForPendingUpdate($response['updateId']);
         $response = $index->getDocuments();
         $this->assertCount(count($this->documents), $response);
+        $this->assertNull($this->findDocumentWithId($response, $id));
+    }
+
+    public function testDeleteSingleExistingDocument()
+    {
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
+
+        $id = 123;
+        $response = $index->deleteDocument($id);
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->getDocuments();
+        $this->assertCount(count($this->documents) - 1, $response);
         $this->assertNull($this->findDocumentWithId($response, $id));
     }
 
