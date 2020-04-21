@@ -1,7 +1,7 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
+use MeiliSearch\Client;
 
 class AcceptNewFieldsTest extends TestCase
 {
@@ -18,16 +18,16 @@ class AcceptNewFieldsTest extends TestCase
 
     public function testGetDefaultAcceptNewFields()
     {
-        $res =$this->index->getAcceptNewFields();
-        $this->assertTrue($res);
+        $response = $this->index->getAcceptNewFields();
+        $this->assertTrue($response);
     }
 
     public function testUpdateAcceptNewFields()
     {
-        $res =$this->index->updateAcceptNewFields(false);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-       $this->index->waitForPendingUpdate($res['updateId']);
+        $promise = $this->index->updateAcceptNewFields(false);
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+        $this->index->waitForPendingUpdate($promise['updateId']);
         $this->assertFalse($this->index->getAcceptNewFields());
     }
 }

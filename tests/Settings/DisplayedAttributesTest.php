@@ -1,60 +1,75 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
+use MeiliSearch\Client;
 
 class DisplayedAttributesTest extends TestCase
 {
-    private static $client;
-    private static $index1;
-    private static $index2;
-    private static $primary_key;
+    private $client;
+    private $index1;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$client->deleteAllIndexes();
-        static::$primary_key = 'objectID';
-        static::$index1 = static::$client->createIndex('uid1');
-        static::$index2 = static::$client->createIndex(['uid' => 'uid2', 'primaryKey' => static::$primary_key]);
+        parent::__construct();
+
+        $this->client = new Client('http://localhost:7700', 'masterKey');
     }
-
-    public static function tearDownAfterClass(): void
+    protected function setUp(): void
     {
-        parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();
+        parent::setUp();
+        $this->client->deleteAllIndexes();
     }
 
     public function testGetDefaultDisplayedAttributes()
     {
-        $res = static::$index1->getDisplayedAttributes();
-        $this->assertIsArray($res);
-        $this->assertEmpty($res);
-        $res = static::$index2->getDisplayedAttributes();
-        $this->assertIsArray($res);
-        $this->assertEquals([static::$primary_key], $res);
+        $indexA = $this->client->createIndex('indexA');
+        $indexB = $this->client->createIndex(['uid' => 'indexB', 'primaryKey' => 'objectID']);
+
+        $attributesA = $indexA->getDisplayedAttributes();
+        $attributesB = $indexB->getDisplayedAttributes();
+
+        $this->assertIsArray($attributesA);
+        $this->assertEmpty($attributesA);
+
+        $this->assertIsArray($attributesB);
+        $this->assertEquals(['objectID'], $attributesB);
     }
 
     public function testUpdateDisplayedAttributes()
     {
-        $new_da = ['title'];
-        $res = static::$index1->updateDisplayedAttributes($new_da);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForPendingUpdate($res['updateId']);
-        $da = static::$index1->getDisplayedAttributes();
-        $this->assertIsArray($da);
-        $this->assertEquals($new_da, $da);
+        $newAttributes = ['title'];
+        $index = $this->client->createIndex('index');
+
+        $promise = $index->updateDisplayedAttributes($newAttributes);
+
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $displayedAttributes= $index->getDisplayedAttributes();
+
+        $this->assertIsArray($displayedAttributes);
+        $this->assertEquals($newAttributes, $displayedAttributes);
     }
 
     public function testResetDisplayedAttributes()
     {
-        $res = static::$index1->resetDisplayedAttributes();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForPendingUpdate($res['updateId']);
-        $da = static::$index1->getDisplayedAttributes();
-        $this->assertIsArray($da);
+
+        $index = $this->client->createIndex('index');
+        $newAttributes = ['title'];
+
+        $promise = $index->updateDisplayedAttributes($newAttributes);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $promise = $index->resetDisplayedAttributes();
+
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $displayedAttributes = $index->getDisplayedAttributes();
+        $this->assertIsArray($displayedAttributes);
+//        $this->assertEmpty($displayedAttributes); until issue #21 is solved
     }
 }
