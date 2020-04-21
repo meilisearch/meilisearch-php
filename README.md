@@ -231,10 +231,10 @@ $index->search('prince', ['limit' => 1]);
 With limit and filter, both single and double quotes are supported.
 ```php
 // Enclosing with double quotes
-$index->search('prince', ['limit' => 1, 'filter' => "title = 'Le Petit Prince' OR book_id = 456"]);
+$index->search('prince', ['limit' => 1, 'filters' => "title = 'Le Petit Prince' OR book_id = 456"]);
 
 // Enclosing with single quotes
-$index->search('prince', ['limit' => 1, 'filter' => 'title = "Le Petit Prince" OR book_id = 456']);
+$index->search('prince', ['limit' => 1, 'filters' => 'title = "Le Petit Prince" OR book_id = 456']);
 ```
 
 ## ⚙️ Development Workflow
