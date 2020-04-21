@@ -70,9 +70,9 @@ class UpdatesTest extends TestCase
 
     private function seedIndex(): array
     {
-        $promise  = $this->index->updateDocuments($this->documents);
+        $promise = $this->index->updateDocuments($this->documents);
         $response = $this->index->waitForPendingUpdate($promise['updateId']);
 
-        return array($promise, $response);
+        return [$promise, $response];
     }
 }

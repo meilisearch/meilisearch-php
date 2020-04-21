@@ -1,8 +1,8 @@
 <?php
 
-use Tests\TestCase;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
+use Tests\TestCase;
 
 class SearchTest extends TestCase
 {

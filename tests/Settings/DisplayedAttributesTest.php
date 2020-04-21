@@ -1,7 +1,7 @@
 <?php
 
-use Tests\TestCase;
 use MeiliSearch\Client;
+use Tests\TestCase;
 
 class DisplayedAttributesTest extends TestCase
 {
@@ -14,6 +14,7 @@ class DisplayedAttributesTest extends TestCase
 
         $this->client = new Client('http://localhost:7700', 'masterKey');
     }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,7 +47,7 @@ class DisplayedAttributesTest extends TestCase
         $this->assertArrayHasKey('updateId', $promise);
         $index->waitForPendingUpdate($promise['updateId']);
 
-        $displayedAttributes= $index->getDisplayedAttributes();
+        $displayedAttributes = $index->getDisplayedAttributes();
 
         $this->assertIsArray($displayedAttributes);
         $this->assertEquals($newAttributes, $displayedAttributes);
@@ -54,7 +55,6 @@ class DisplayedAttributesTest extends TestCase
 
     public function testResetDisplayedAttributes()
     {
-
         $index = $this->client->createIndex('index');
         $newAttributes = ['title'];
 

@@ -1,9 +1,9 @@
 <?php
 
-use Tests\TestCase;
 use MeiliSearch\Client;
-use MeiliSearch\Exceptions\TimeOutException;
 use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\TimeOutException;
+use Tests\TestCase;
 
 class IndexTest extends TestCase
 {
@@ -47,7 +47,7 @@ class IndexTest extends TestCase
     public function testShow()
     {
         $index = $this->client->createIndex([
-            'uid'        => 'indexB',
+            'uid' => 'indexB',
             'primaryKey' => 'objectId',
         ]);
 
@@ -75,7 +75,7 @@ class IndexTest extends TestCase
     public function testExceptionIfPrimaryKeyIsPresentWhenUpdating()
     {
         $index = $this->client->createIndex([
-            'uid'        => 'indexB',
+            'uid' => 'indexB',
             'primaryKey' => 'objectId',
         ]);
 
