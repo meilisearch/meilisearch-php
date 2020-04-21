@@ -6,16 +6,14 @@ use Tests\TestCase;
 
 class DocumentsTest extends TestCase
 {
-    private static $index;
-    private static $client;
-    private static $documents;
+    private $client;
+    private $documents;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$client->deleteAllIndexes();static::$index = static::$client->createIndex('uid');
-        static::$documents = [
+        parent::__construct();
+        $this->client = new Client('http://localhost:7700', 'masterKey');
+        $this->documents = [
             ['id' => 123,  'title' => 'Pride and Prejudice',                    'comment' => 'A great book'],
             ['id' => 456,  'title' => 'Le Petit Prince',                        'comment' => 'A french book'],
             ['id' => 2,    'title' => 'Le Rouge et le Noir',                    'comment' => 'Another french book'],
@@ -26,123 +24,151 @@ class DocumentsTest extends TestCase
         ];
     }
 
-    public static function tearDownAfterClass(): void
+    public function tearDown(): void
     {
-        parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();}
+        parent::tearDown();
+        $this->client->deleteAllIndexes();}
 
     public function testAddDocuments()
     {
-        $res = static::$index->addDocuments(static::$documents);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
+        $index = $this->client->createIndex('documents');
+        $response = $index->addDocuments($this->documents);
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
     }
 
     // DOCUMENTS
 
     public function testGetDocuments()
     {
-        $res = static::$index->getDocuments();
-        $this->assertCount(count(static::$documents), $res);
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
+
+        $response = $index->getDocuments();
+        $this->assertCount(count($this->documents), $response);
     }
 
     public function testGetDocument()
     {
-        $doc = $this->findDocumentWithId(static::$documents, 4);
-        $res = static::$index->getDocument($doc['id']);
-        $this->assertIsArray($res);
-        $this->assertSame($doc['id'], $res['id']);
-        $this->assertSame($doc['title'], $res['title']);
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
+        $doc = $this->findDocumentWithId($this->documents, 4);
+        $response = $index->getDocument($doc['id']);
+        $this->assertIsArray($response);
+        $this->assertSame($doc['id'], $response['id']);
+        $this->assertSame($doc['title'], $response['title']);
     }
 
     public function testReplaceDocuments()
     {
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
+
         $id = 2;
         $new_title = 'The Red And The Black';
-        $res = static::$index->addDocuments([['id' => $id, 'title' => $new_title]]);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $res = static::$index->getDocument($id);
-        $this->assertSame($id, $res['id']);
-        $this->assertSame($new_title, $res['title']);
-        $this->assertFalse(array_search('comment', $res));
-        $res = static::$index->getDocuments();
-        $this->assertCount(count(static::$documents), $res);
+        $response = $index->addDocuments([['id' => $id, 'title' => $new_title]]);
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->getDocument($id);
+        $this->assertSame($id, $response['id']);
+        $this->assertSame($new_title, $response['title']);
+        $this->assertFalse(array_search('comment', $response));
+        $response = $index->getDocuments();
+        $this->assertCount(count($this->documents), $response);
     }
 
     public function testUpdateDocuments()
     {
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
         $id = 456;
         $new_title = 'The Little Prince';
-        $res = static::$index->updateDocuments([['id' => $id, 'title' => $new_title]]);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $res = static::$index->getDocument($id);
-        $this->assertSame($id, $res['id']);
-        $this->assertSame($new_title, $res['title']);
-        $this->assertArrayHasKey('comment', $res);
-        $res = static::$index->getDocuments();
-        $this->assertCount(count(static::$documents), $res);
+        $response = $index->updateDocuments([['id' => $id, 'title' => $new_title]]);
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->getDocument($id);
+        $this->assertSame($id, $response['id']);
+        $this->assertSame($new_title, $response['title']);
+        $this->assertArrayHasKey('comment', $response);
+        $response = $index->getDocuments();
+        $this->assertCount(count($this->documents), $response);
     }
 
     public function testAddWithUpdateDocuments()
     {
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
         $id = 9;
         $title = '1984';
-        $res = static::$index->updateDocuments([['id' => $id, 'title' => $title]]);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $res = static::$index->getDocument($id);
-        $this->assertSame($id, $res['id']);
-        $this->assertSame($title, $res['title']);
-        $this->assertFalse(array_search('comment', $res));
-        $res = static::$index->getDocuments();
-        $this->assertCount(count(static::$documents) + 1, $res);
+        $response = $index->updateDocuments([['id' => $id, 'title' => $title]]);
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->getDocument($id);
+        $this->assertSame($id, $response['id']);
+        $this->assertSame($title, $response['title']);
+        $this->assertFalse(array_search('comment', $response));
+        $response = $index->getDocuments();
+        $this->assertCount(count($this->documents) + 1, $response);
     }
 
     public function testDeleteDocument()
     {
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
         $id = 9;
-        $res = static::$index->deleteDocument($id);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $res = static::$index->getDocuments();
-        $this->assertCount(count(static::$documents), $res);
-        $this->assertNull($this->findDocumentWithId($res, $id));
+        $response = $index->deleteDocument($id);
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->getDocuments();
+        $this->assertCount(count($this->documents), $response);
+        $this->assertNull($this->findDocumentWithId($response, $id));
     }
 
-    public function testDeleteDocuments()
+    public function testDeleteMultipleDocuments()
     {
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
         $ids = [1, 2];
-        $res = static::$index->deleteDocuments($ids);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $res = static::$index->getDocuments();
-        $this->assertCount(count(static::$documents) - 2, $res);
-        $this->assertNull($this->findDocumentWithId($res, $ids[0]));
-        $this->assertNull($this->findDocumentWithId($res, $ids[1]));
+        $response = $index->deleteDocuments($ids);
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->getDocuments();
+        $this->assertCount(count($this->documents) - 2, $response);
+        $this->assertNull($this->findDocumentWithId($response, $ids[0]));
+        $this->assertNull($this->findDocumentWithId($response, $ids[1]));
     }
 
     public function testDeleteAllDocuments()
     {
-        $res = static::$index->deleteAllDocuments();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $res = static::$index->getDocuments();
-        $this->assertCount(0, $res);
+        $index = $this->client->createIndex('documents');
+        $response=$index->addDocuments($this->documents);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->deleteAllDocuments();
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
+        $response = $index->getDocuments();
+        $this->assertCount(0, $response);
     }
 
     public function testExceptionIfNoDocumentIdWhenGetting()
     {
+        $index = $this->client->createIndex('new-index');
         $this->expectException(HTTPRequestException::class);
-        static::$index->getDocument(1);
+        $index->getDocument(1);
     }
 
     public function testAddDocumentWithPrimaryKey()
@@ -154,10 +180,10 @@ class DocumentsTest extends TestCase
                 'title' => 'Le Rouge et le Noir',
             ],
         ];
-        $index = static::$client->createIndex('addUid');
-        $res = $index->addDocuments($documents, 'unique');
-        $this->assertArrayHasKey('updateId', $res);
-        $index->waitForPendingUpdate($res['updateId']);
+        $index = $this->client->createIndex('an-index');
+        $response = $index->addDocuments($documents, 'unique');
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
         $this->assertSame('unique', $index->getPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
     }
@@ -171,10 +197,10 @@ class DocumentsTest extends TestCase
                 'title' => 'Le Rouge et le Noir',
             ],
         ];
-        $index = static::$client->createIndex('udpateUid');
-        $res = $index->updateDocuments($documents, 'unique');
-        $this->assertArrayHasKey('updateId', $res);
-        $index->waitForPendingUpdate($res['updateId']);
+        $index = $this->client->createIndex('udpateUid');
+        $response = $index->updateDocuments($documents, 'unique');
+        $this->assertArrayHasKey('updateId', $response);
+        $index->waitForPendingUpdate($response['updateId']);
         $this->assertSame('unique', $index->getPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
     }
