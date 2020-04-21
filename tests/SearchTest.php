@@ -33,7 +33,8 @@ class SearchTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();}
+        static::$client->deleteAllIndexes();
+    }
 
     public function testBasicSearch()
     {

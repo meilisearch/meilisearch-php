@@ -17,13 +17,15 @@ class KeysAndPermissionsTest extends TestCase
         parent::setUpBeforeClass();
         static::$client = new Client('http://localhost:7700', 'masterKey');
         static::$uid = 'uid';
-        static::$client->deleteAllIndexes();static::$index = static::$client->createIndex(static::$uid);
+        static::$client->deleteAllIndexes();
+        static::$index = static::$client->createIndex(static::$uid);
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();}
+        static::$client->deleteAllIndexes();
+    }
 
     public function testGetKeys()
     {

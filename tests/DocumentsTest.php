@@ -27,7 +27,8 @@ class DocumentsTest extends TestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        $this->client->deleteAllIndexes();}
+        $this->client->deleteAllIndexes();
+    }
 
     public function testAddDocuments()
     {
@@ -41,7 +42,7 @@ class DocumentsTest extends TestCase
     public function testGetDocuments()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
 
         $response = $index->getDocuments();
@@ -51,7 +52,7 @@ class DocumentsTest extends TestCase
     public function testGetDocument()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
         $doc = $this->findDocumentWithId($this->documents, 4);
         $response = $index->getDocument($doc['id']);
@@ -63,11 +64,11 @@ class DocumentsTest extends TestCase
     public function testReplaceDocuments()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
-        $replacement =[
+        $replacement = [
             'id' => 2,
-            'title'=>'The Red And The Black'
+            'title' => 'The Red And The Black',
         ];
         $response = $index->addDocuments([$replacement]);
         $this->assertIsArray($response);
@@ -85,11 +86,11 @@ class DocumentsTest extends TestCase
     public function testUpdateDocuments()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
         $replacement = [
             'id' => 456,
-            'title' => 'The Little Prince'
+            'title' => 'The Little Prince',
         ];
 
         $response = $index->updateDocuments([$replacement]);
@@ -107,11 +108,11 @@ class DocumentsTest extends TestCase
     public function testAddWithUpdateDocuments()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
         $document = [
             'id' => 9,
-            'title' => '1984'
+            'title' => '1984',
         ];
         $response = $index->updateDocuments([$document]);
         $this->assertIsArray($response);
@@ -128,7 +129,7 @@ class DocumentsTest extends TestCase
     public function testDeleteNonExistingDocument()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
         $id = 9;
         $response = $index->deleteDocument($id);
@@ -143,7 +144,7 @@ class DocumentsTest extends TestCase
     public function testDeleteSingleExistingDocument()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
 
         $id = 123;
@@ -159,7 +160,7 @@ class DocumentsTest extends TestCase
     public function testDeleteMultipleDocuments()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
         $ids = [1, 2];
         $response = $index->deleteDocuments($ids);
@@ -175,7 +176,7 @@ class DocumentsTest extends TestCase
     public function testDeleteAllDocuments()
     {
         $index = $this->client->createIndex('documents');
-        $response=$index->addDocuments($this->documents);
+        $response = $index->addDocuments($this->documents);
         $index->waitForPendingUpdate($response['updateId']);
         $response = $index->deleteAllDocuments();
         $this->assertIsArray($response);

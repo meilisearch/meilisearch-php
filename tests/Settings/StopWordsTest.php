@@ -12,13 +12,15 @@ class StopWordsTest extends TestCase
     {
         parent::setUpBeforeClass();
         static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$client->deleteAllIndexes();static::$index = static::$client->createIndex('uid');
+        static::$client->deleteAllIndexes();
+        static::$index = static::$client->createIndex('uid');
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();}
+        static::$client->deleteAllIndexes();
+    }
 
     public function testGetDefaultStopWords()
     {

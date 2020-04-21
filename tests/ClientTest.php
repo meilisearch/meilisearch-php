@@ -1,9 +1,9 @@
 <?php
 
-use Tests\TestCase;
-use MeiliSearch\Index;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Index;
+use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
@@ -35,7 +35,7 @@ class ClientTest extends TestCase
     public function testCreateIndexWithUidAndPrimaryKey()
     {
         $index = $this->client->createIndex([
-            'uid'        => 'index',
+            'uid' => 'index',
             'primaryKey' => 'ObjectId',
         ]);
         $this->assertInstanceOf(Index::class, $index);
@@ -65,7 +65,7 @@ class ClientTest extends TestCase
     {
         $index = 'index';
         $this->client->createIndex([
-            'uid'        => $index,
+            'uid' => $index,
             'primaryKey' => 'objectID',
         ]);
 

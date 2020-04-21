@@ -16,7 +16,8 @@ class SettingsTest extends TestCase
         parent::setUpBeforeClass();
         static::$primary_key = 'objectID';
         static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$client->deleteAllIndexes();static::$index1 = static::$client->createIndex('uid1');
+        static::$client->deleteAllIndexes();
+        static::$index1 = static::$client->createIndex('uid1');
         static::$index2 = static::$client->createIndex([
             'uid' => 'uid2',
             'primaryKey' => static::$primary_key,
@@ -34,7 +35,8 @@ class SettingsTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();}
+        static::$client->deleteAllIndexes();
+    }
 
     public function testGetDefaultSettings()
     {
