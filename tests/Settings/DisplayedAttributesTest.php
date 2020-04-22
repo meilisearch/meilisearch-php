@@ -70,6 +70,8 @@ class DisplayedAttributesTest extends TestCase
 
         $displayedAttributes = $index->getDisplayedAttributes();
         $this->assertIsArray($displayedAttributes);
-//        $this->assertEmpty($displayedAttributes); until issue #21 is solved
+        // according to issue #21 the resetDisplayedAttributes reverts back to the default keys in the index
+        $this->assertNotEmpty($displayedAttributes);
+        $this->assertContains('title', $displayedAttributes);
     }
 }
