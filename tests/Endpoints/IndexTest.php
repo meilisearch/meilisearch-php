@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Endpoints;
+
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;

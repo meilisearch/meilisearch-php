@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Settings;
+
 use Tests\TestCase;
 
 class StopWordsTest extends TestCase

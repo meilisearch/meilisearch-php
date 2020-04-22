@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Endpoints;
+
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Index;
 use Tests\TestCase;

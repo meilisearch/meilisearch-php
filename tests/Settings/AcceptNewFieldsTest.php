@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Settings;
+
 use Tests\TestCase;
 
 class AcceptNewFieldsTest extends TestCase
