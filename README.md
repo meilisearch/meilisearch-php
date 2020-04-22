@@ -1,14 +1,28 @@
-# MeiliSearch PHP Client <!-- omit in toc -->
+<p align="center">
+  <img src="https://res.cloudinary.com/meilisearch/image/upload/v1587402338/SDKs/meilisearch_php.svg" alt="MeiliSearch-PHP" width="200" height="200" />
+</p>
 
-[![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://img.shields.io/badge/licence-MIT-blue.svg)
-[![Actions Status](https://github.com/meilisearch/meilisearch-php/workflows/Tests/badge.svg)](https://github.com/meilisearch/meilisearch-php/actions)
-[![Latest Stable Version](https://poser.pugx.org/meilisearch/meilisearch-php/version)](https://packagist.org/packages/meilisearch/meilisearch-php)
+<h1 align="center">MeiliSearch PHP</h1>
 
-The PHP client for MeiliSearch API.
+<h4 align="center">
+  <a href="https://github.com/meilisearch/MeiliSearch">MeiliSearch</a> |
+  <a href="https://www.meilisearch.com">Website</a> |
+  <a href="https://blog.meilisearch.com">Blog</a> |
+  <a href="https://twitter.com/meilisearch">Twitter</a> |
+  <a href="https://docs.meilisearch.com">Documentation</a> |
+  <a href="https://docs.meilisearch.com/resources/faq.html">FAQ</a>
+</h4>
 
-MeiliSearch provides an ultra relevant and instant full-text search. Our solution is open-source and you can check out [our repository here](https://github.com/meilisearch/MeiliSearch).</br>
+<p align="center">
+  <a href="https://packagist.org/packages/meilisearch/meilisearch-php"><img src="https://img.shields.io/packagist/v/meilisearch/meilisearch-php" alt="Latest Stable Version"></a>
+  <a href="https://github.com/meilisearch/meilisearch-php/actions"><img src="https://github.com/meilisearch/meilisearch-php/workflows/Tests/badge.svg" alt="Test"></a>
+  <a href="https://github.com/meilisearch/meilisearch-php/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
+  <a href="https://slack.meilisearch.com"><img src="https://img.shields.io/badge/slack-MeiliSearch-blue.svg?logo=slack" alt="Slack"></a>
+</p>
 
-Here is the [MeiliSearch documentation](https://docs.meilisearch.com/) 📖
+<p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in PHP</p>
+
+**MeiliSearch PHP** is a client for **MeiliSearch** written in PHP. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box.
 
 ## Table of Contents <!-- omit in toc -->
 
