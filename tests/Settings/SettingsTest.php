@@ -1,80 +1,83 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
+use MeiliSearch\Client;
 
 class SettingsTest extends TestCase
 {
-    private static $client;
-    private static $index1;
-    private static $index2;
-    private static $primary_key;
-    private static $default_ranking_rules;
+    private $client;
 
-    public static function setUpBeforeClass(): void
+     const DEFAULT_RANKING_RULES = [
+        'typo',
+        'words',
+        'proximity',
+        'attribute',
+        'wordsPosition',
+        'exactness',
+    ];
+
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$primary_key = 'objectID';
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$client->deleteAllIndexes();
-        static::$index1 = static::$client->createIndex('uid1');
-        static::$index2 = static::$client->createIndex([
-            'uid' => 'uid2',
-            'primaryKey' => static::$primary_key,
-        ]);
-        static::$default_ranking_rules = [
-            'typo',
-            'words',
-            'proximity',
-            'attribute',
-            'wordsPosition',
-            'exactness',
-        ];
+        parent::__construct();
+        $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
-    public static function tearDownAfterClass(): void
+    protected function setUp():void
     {
-        parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();
+        parent::setUp();
+
+        $this->client->deleteAllIndexes();
     }
 
     public function testGetDefaultSettings()
     {
-        $res = static::$index1->getSettings();
-        $this->assertEquals(static::$default_ranking_rules, $res['rankingRules']);
-        $this->assertNull($res['distinctAttribute']);
-        $this->assertIsArray($res['searchableAttributes']);
-        $this->assertEmpty($res['searchableAttributes']);
-        $this->assertIsArray($res['displayedAttributes']);
-        $this->assertEmpty($res['displayedAttributes']);
-        $this->assertIsArray($res['stopWords']);
-        $this->assertEmpty($res['stopWords']);
-        $this->assertIsArray($res['synonyms']);
-        $this->assertEmpty($res['synonyms']);
-        $this->assertTrue($res['acceptNewFields']);
-        $res = static::$index2->getSettings();
-        $this->assertEquals(static::$default_ranking_rules, $res['rankingRules']);
-        $this->assertNull($res['distinctAttribute']);
-        $this->assertEquals([static::$primary_key], $res['searchableAttributes']);
-        $this->assertEquals([static::$primary_key], $res['displayedAttributes']);
-        $this->assertIsArray($res['stopWords']);
-        $this->assertEmpty($res['stopWords']);
-        $this->assertIsArray($res['synonyms']);
-        $this->assertEmpty($res['synonyms']);
-        $this->assertTrue($res['acceptNewFields']);
+        $primaryKey = 'ObjectID';
+        $settingA   = $this->client
+            ->createIndex('indexA')
+            ->getSettings();
+        $settingB   = $this->client
+            ->createIndex([
+                'uid'        => 'indexB',
+                'primaryKey' => $primaryKey,
+            ])->getSettings();
+
+        $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingA['rankingRules']);
+        $this->assertNull($settingA['distinctAttribute']);
+        $this->assertIsArray($settingA['searchableAttributes']);
+        $this->assertEmpty($settingA['searchableAttributes']);
+        $this->assertIsArray($settingA['displayedAttributes']);
+        $this->assertEmpty($settingA['displayedAttributes']);
+        $this->assertIsArray($settingA['stopWords']);
+        $this->assertEmpty($settingA['stopWords']);
+        $this->assertIsArray($settingA['synonyms']);
+        $this->assertEmpty($settingA['synonyms']);
+        $this->assertTrue($settingA['acceptNewFields']);
+
+        $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
+        $this->assertNull($settingB['distinctAttribute']);
+        $this->assertEquals([$primaryKey], $settingB['searchableAttributes']);
+        $this->assertEquals([$primaryKey], $settingB['displayedAttributes']);
+        $this->assertIsArray($settingB['stopWords']);
+        $this->assertEmpty($settingB['stopWords']);
+        $this->assertIsArray($settingB['synonyms']);
+        $this->assertEmpty($settingB['synonyms']);
+        $this->assertTrue($settingB['acceptNewFields']);
     }
 
     public function testUpdateSettings()
     {
-        $res = static::$index1->updateSettings([
+        $index   = $this->client->createIndex('index');
+        $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['asc(title)', 'typo'],
             'stopWords' => ['the'],
         ]);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForPendingUpdate($res['updateId']);
-        $settings = static::$index1->getSettings();
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $settings = $index->getSettings();
+
         $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertIsArray($settings['searchableAttributes']);
@@ -89,13 +92,27 @@ class SettingsTest extends TestCase
 
     public function testUpdateSettingsWithoutOverwritingThem()
     {
-        $res = static::$index1->updateSettings([
+        $index   = $this->client->createIndex('index');
+        $promise = $index->updateSettings([
+            'distinctAttribute' => 'title',
+            'rankingRules' => ['asc(title)', 'typo'],
+            'stopWords' => ['the'],
+        ]);
+
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $promise = $index->updateSettings([
             'searchableAttributes' => ['title'],
         ]);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForPendingUpdate($res['updateId']);
-        $settings = static::$index1->getSettings();
+
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $settings = $index->getSettings();
+
         $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertEquals(['title'], $settings['searchableAttributes']);
@@ -109,12 +126,25 @@ class SettingsTest extends TestCase
 
     public function testResetSettings()
     {
-        $res = static::$index1->resetSettings();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForPendingUpdate($res['updateId']);
-        $settings = static::$index1->getSettings();
-        $this->assertEquals(static::$default_ranking_rules, $settings['rankingRules']);
+        $index   = $this->client->createIndex('index');
+        $promise = $index->updateSettings([
+            'distinctAttribute' => 'title',
+            'rankingRules'      => ['asc(title)', 'typo'],
+            'stopWords'         => ['the'],
+        ]);
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $promise = $index->resetSettings();
+
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $settings = $index->getSettings();
+
+        $this->assertEquals(self::DEFAULT_RANKING_RULES, $settings['rankingRules']);
         $this->assertNull($settings['distinctAttribute']);
         $this->assertIsArray($settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
