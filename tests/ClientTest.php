@@ -167,6 +167,7 @@ class ClientTest extends TestCase
     public function testStats()
     {
         $response = $this->client->stats();
+
         $this->assertArrayHasKey('databaseSize', $response);
         $this->assertArrayHasKey('lastUpdate', $response);
         $this->assertArrayHasKey('indexes', $response);
