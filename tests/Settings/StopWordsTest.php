@@ -26,8 +26,7 @@ class StopWordsTest extends TestCase
         $newStopWords = ['the'];
         $promise = $this->index->updateStopWords($newStopWords);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
 
         $this->index->waitForPendingUpdate($promise['updateId']);
         $stopWords = $this->index->getStopWords();
@@ -43,8 +42,7 @@ class StopWordsTest extends TestCase
 
         $promise = $this->index->resetStopWords();
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $this->index->waitForPendingUpdate($promise['updateId']);
 
         $topWords = $this->index->getStopWords();

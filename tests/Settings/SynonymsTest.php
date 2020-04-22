@@ -28,8 +28,7 @@ class SynonymsTest extends TestCase
         ];
         $promise = $this->index->updateSynonyms($newSynonyms);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
 
         $this->index->waitForPendingUpdate($promise['updateId']);
         $synonyms = $this->index->getSynonyms();
@@ -46,8 +45,7 @@ class SynonymsTest extends TestCase
         $this->index->waitForPendingUpdate($promise['updateId']);
         $promise = $this->index->resetSynonyms();
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
 
         $this->index->waitForPendingUpdate($promise['updateId']);
         $synonyms = $this->index->getSynonyms();

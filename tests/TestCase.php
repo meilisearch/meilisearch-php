@@ -25,4 +25,10 @@ abstract class TestCase extends BaseTestCase
         $this->client = new Client('http://localhost:7700', 'masterKey');
         $this->client->deleteAllIndexes();
     }
+
+    public function assertIsValidPromise(array $promise)
+    {
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+    }
 }

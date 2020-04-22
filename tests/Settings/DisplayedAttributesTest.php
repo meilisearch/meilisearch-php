@@ -32,8 +32,7 @@ class DisplayedAttributesTest extends TestCase
 
         $promise = $index->updateDisplayedAttributes($newAttributes);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $index->waitForPendingUpdate($promise['updateId']);
 
         $displayedAttributes = $index->getDisplayedAttributes();
@@ -52,8 +51,7 @@ class DisplayedAttributesTest extends TestCase
 
         $promise = $index->resetDisplayedAttributes();
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
 
         $index->waitForPendingUpdate($promise['updateId']);
 

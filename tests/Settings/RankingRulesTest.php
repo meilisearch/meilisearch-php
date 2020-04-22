@@ -39,8 +39,7 @@ class RankingRulesTest extends TestCase
 
         $promise = $this->index->updateRankingRules($newRankingRules);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $this->index->waitForPendingUpdate($promise['updateId']);
 
         $rankingRules = $this->index->getRankingRules();
@@ -53,8 +52,7 @@ class RankingRulesTest extends TestCase
     {
         $promise = $this->index->resetRankingRules();
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
 
         $this->index->waitForPendingUpdate($promise['updateId']);
         $rankingRules = $this->index->getRankingRules();

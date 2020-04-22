@@ -22,8 +22,7 @@ class DistinctAttributeTest extends TestCase
     {
         $distinctAttribute = 'description';
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $this->index->waitForPendingUpdate($promise['updateId']);
         $this->assertEquals($distinctAttribute, $this->index->getDistinctAttribute());
     }
@@ -36,8 +35,7 @@ class DistinctAttributeTest extends TestCase
 
         $promise = $this->index->resetDistinctAttribute();
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $this->index->waitForPendingUpdate($promise['updateId']);
         $this->assertNull($this->index->getDistinctAttribute());
     }

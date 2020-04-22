@@ -22,8 +22,7 @@ class AcceptNewFieldsTest extends TestCase
     {
         $promise = $this->index->updateAcceptNewFields(false);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $this->index->waitForPendingUpdate($promise['updateId']);
         $this->assertFalse($this->index->getAcceptNewFields());
     }

@@ -62,8 +62,7 @@ class SettingsTest extends TestCase
             'rankingRules' => ['asc(title)', 'typo'],
             'stopWords' => ['the'],
         ]);
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $index->waitForPendingUpdate($promise['updateId']);
 
         $settings = $index->getSettings();
@@ -89,16 +88,14 @@ class SettingsTest extends TestCase
             'stopWords' => ['the'],
         ]);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $index->waitForPendingUpdate($promise['updateId']);
 
         $promise = $index->updateSettings([
             'searchableAttributes' => ['title'],
         ]);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $index->waitForPendingUpdate($promise['updateId']);
 
         $settings = $index->getSettings();
@@ -122,14 +119,12 @@ class SettingsTest extends TestCase
             'rankingRules' => ['asc(title)', 'typo'],
             'stopWords' => ['the'],
         ]);
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $index->waitForPendingUpdate($promise['updateId']);
 
         $promise = $index->resetSettings();
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
         $index->waitForPendingUpdate($promise['updateId']);
 
         $settings = $index->getSettings();

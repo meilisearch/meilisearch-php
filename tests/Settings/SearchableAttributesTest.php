@@ -34,8 +34,7 @@ class SearchableAttributesTest extends TestCase
 
         $promise = $indexA->updateSearchableAttributes($searchableAttributes);
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
 
         $indexA->waitForPendingUpdate($promise['updateId']);
         $updatedAttributes = $indexA->getSearchableAttributes();
@@ -49,8 +48,7 @@ class SearchableAttributesTest extends TestCase
         $index = $this->client->createIndex('indexA');
         $promise = $index->resetSearchableAttributes();
 
-        $this->assertIsArray($promise);
-        $this->assertArrayHasKey('updateId', $promise);
+        $this->assertIsValidPromise($promise);
 
         $index->waitForPendingUpdate($promise['updateId']);
         $searchableAttributes = $index->getSearchableAttributes();
