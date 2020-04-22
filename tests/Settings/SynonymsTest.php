@@ -1,56 +1,66 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
+use MeiliSearch\Client;
 
 class SynonymsTest extends TestCase
 {
-    private static $client;
-    private static $index;
+    private $client;
+    private $index;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        static::$client->deleteAllIndexes();
-        static::$index = static::$client->createIndex('uid');
+        parent::__construct();
+        $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
-    public static function tearDownAfterClass(): void
+    protected function setUp():void
     {
-        parent::tearDownAfterClass();
-        static::$client->deleteAllIndexes();
+        parent::setUp();
+        $this->client->deleteAllIndexes();
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetDefaultSynonyms()
     {
-        $res = static::$index->getSynonyms();
-        $this->assertIsArray($res);
-        $this->assertEmpty($res);
+        $response = $this->index->getSynonyms();
+
+        $this->assertIsArray($response);
+        $this->assertEmpty($response);
     }
 
     public function testUpdateSynonyms()
     {
-        $new_s = [
+        $newSynonyms = [
             'hp' => ['harry potter'],
         ];
-        $res = static::$index->updateSynonyms($new_s);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $s = static::$index->getSynonyms();
-        $this->assertIsArray($s);
-        $this->assertEquals($new_s, $s);
+        $promise = $this->index->updateSynonyms($newSynonyms);
+
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $synonyms = $this->index->getSynonyms();
+
+        $this->assertIsArray($synonyms);
+        $this->assertEquals($newSynonyms, $synonyms);
     }
 
     public function testResetSynonyms()
     {
-        $res = static::$index->resetSynonyms();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $s = static::$index->getSynonyms();
-        $this->assertIsArray($s);
-        $this->assertEmpty($s);
+        $promise = $this->index->updateSynonyms([
+            'hp' => ['harry potter'],
+        ]);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $promise = $this->index->resetSynonyms();
+
+        $this->assertIsArray($promise);
+        $this->assertArrayHasKey('updateId', $promise);
+
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $synonyms = $this->index->getSynonyms();
+
+        $this->assertIsArray($synonyms);
+        $this->assertEmpty($synonyms);
     }
 }
