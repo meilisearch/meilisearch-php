@@ -1,20 +1,11 @@
 <?php
 
-use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Index;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
-    private $client;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->client = new Client('http://localhost:7700', 'masterKey');
-    }
-
     protected function setUp(): void
     {
         parent::setUp();

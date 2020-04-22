@@ -1,6 +1,5 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
 
 class AcceptNewFieldsTest extends TestCase
@@ -10,10 +9,7 @@ class AcceptNewFieldsTest extends TestCase
     public function __construct()
     {
         parent::__construct();
-
-        $client = new Client('http://localhost:7700', 'masterKey');
-        $client->deleteAllIndexes();
-        $this->index = $client->createIndex('index');
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetDefaultAcceptNewFields()
@@ -25,6 +21,7 @@ class AcceptNewFieldsTest extends TestCase
     public function testUpdateAcceptNewFields()
     {
         $promise = $this->index->updateAcceptNewFields(false);
+
         $this->assertIsArray($promise);
         $this->assertArrayHasKey('updateId', $promise);
         $this->index->waitForPendingUpdate($promise['updateId']);

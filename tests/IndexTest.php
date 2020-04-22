@@ -1,46 +1,38 @@
 <?php
 
-use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
 class IndexTest extends TestCase
 {
-    private $client;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->client = new Client('http://localhost:7700', 'masterKey');
-    }
+    private $index;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->client->deleteAllIndexes();
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetPrimaryKey()
     {
-        $indexA = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex([
             'uid' => 'indexB',
             'primaryKey' => 'objectId',
         ]);
 
-        $this->assertNull($indexA->getPrimaryKey());
+        $this->assertNull($this->index->getPrimaryKey());
         $this->assertSame('objectId', $indexB->getPrimaryKey());
     }
 
     public function testGetUid()
     {
-        $indexA = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex([
             'uid' => 'indexB',
             'primaryKey' => 'objectId',
         ]);
-        $this->assertSame('indexA', $indexA->getUid());
+        $this->assertSame('index', $this->index->getUid());
         $this->assertSame('indexB', $indexB->getUid());
     }
 
@@ -63,16 +55,15 @@ class IndexTest extends TestCase
 
     public function testPrimaryKeyUpdate()
     {
-        $index = $this->client->createIndex('index');
         $primaryKey = 'id';
 
-        $response = $index->update(['primaryKey' => $primaryKey]);
+        $response = $this->index->update(['primaryKey' => $primaryKey]);
 
         $this->assertSame($response['primaryKey'], $primaryKey);
         $this->assertSame('index', $response['uid']);
     }
 
-    public function testExceptionIfPrimaryKeyIsPresentWhenUpdating()
+    public function testExceptionIsThrownWhenOverwritingPrimaryKey()
     {
         $index = $this->client->createIndex([
             'uid' => 'indexB',
@@ -86,9 +77,7 @@ class IndexTest extends TestCase
 
     public function testIndexStats()
     {
-        $index = $this->client->createIndex('index');
-
-        $stats = $index->stats();
+        $stats = $this->index->stats();
 
         $this->assertArrayHasKey('numberOfDocuments', $stats);
         $this->assertEquals(0, $stats['numberOfDocuments']);
@@ -98,10 +87,9 @@ class IndexTest extends TestCase
 
     public function testWaitForPendingUpdateDefault()
     {
-        $index = $this->client->createIndex('index');
-        $promise = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
 
-        $response = $index->waitForPendingUpdate($promise['updateId']);
+        $response = $this->index->waitForPendingUpdate($promise['updateId']);
 
         $this->assertIsArray($response);
         $this->assertSame($response['status'], 'processed');
@@ -115,10 +103,8 @@ class IndexTest extends TestCase
 
     public function testWaitForPendingUpdateWithTimeoutAndInterval()
     {
-        $index = $this->client->createIndex('index');
-
-        $promise = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $index->waitForPendingUpdate($promise['updateId'], 100, 20);
+        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $response = $this->index->waitForPendingUpdate($promise['updateId'], 100, 20);
 
         $this->assertIsArray($response);
         $this->assertSame($response['status'], 'processed');
@@ -132,10 +118,8 @@ class IndexTest extends TestCase
 
     public function testWaitForPendingUpdateWithTimeout()
     {
-        $index = $this->client->createIndex('index');
-
-        $promise = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $index->waitForPendingUpdate($promise['updateId'], 100);
+        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $response = $this->index->waitForPendingUpdate($promise['updateId'], 100);
 
         $this->assertIsArray($response);
         $this->assertSame($response['status'], 'processed');
@@ -149,18 +133,17 @@ class IndexTest extends TestCase
 
     public function testExceptionWhenPendingUpdateTimeOut()
     {
-        $index = $this->client->createIndex('index');
         $this->expectException(TimeOutException::class);
-        $res = $index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $index->waitForPendingUpdate($res['updateId'], 0, 20);
+        $res = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $this->index->waitForPendingUpdate($res['updateId'], 0, 20);
     }
 
     public function testDeleteIndexes()
     {
-        $indexA = $this->client->createIndex('indexA');
+        $this->index = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex('indexB');
 
-        $res = $indexA->delete();
+        $res = $this->index->delete();
         $this->assertEmpty($res);
 
         $res = $indexB->delete();
@@ -169,29 +152,26 @@ class IndexTest extends TestCase
 
     public function testExceptionIsThrownIfNoIndexWhenShowing()
     {
-        $index = $this->client->createIndex('index');
-        $index->delete();
+        $this->index->delete();
 
         $this->expectException(HTTPRequestException::class);
 
-        $index->show();
+        $this->index->show();
     }
 
     public function testExceptionIsThrownIfNoIndexWhenUpdating()
     {
-        $index = $this->client->createIndex('index');
-        $index->delete();
+        $this->index->delete();
 
         $this->expectException(HTTPRequestException::class);
-        $index->update(['primaryKey' => 'objectID']);
+        $this->index->update(['primaryKey' => 'objectID']);
     }
 
     public function testExceptionIsThrownIfNoIndexWhenDeleting()
     {
-        $index = $this->client->createIndex('index');
-        $index->delete();
+        $this->index->delete();
 
         $this->expectException(HTTPRequestException::class);
-        $index->delete();
+        $this->index->delete();
     }
 }

@@ -1,18 +1,9 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
 
 class SearchableAttributesTest extends TestCase
 {
-    private $client;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->client = new Client('http://localhost:7700', 'masterKey');
-    }
-
     public function setUp(): void
     {
         parent::setUp();

@@ -6,14 +6,6 @@ use Tests\TestCase;
 
 class KeysAndPermissionsTest extends TestCase
 {
-    private $client;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->client = new Client('http://localhost:7700', 'masterKey');
-    }
-
     public function setUp(): void
     {
         parent::setUp();
@@ -35,6 +27,7 @@ class KeysAndPermissionsTest extends TestCase
     public function testSearchingIfPublicKeyProvided()
     {
         $this->client->createIndex('index');
+
         $newClient = new Client('http://localhost:7700', $this->getKeys()['public']);
         $response = $newClient->getIndex('index')->search('test');
         $this->assertArrayHasKey('hits', $response);

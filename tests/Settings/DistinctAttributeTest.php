@@ -1,18 +1,14 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
 
 class DistinctAttributeTest extends TestCase
 {
-    private $client;
     private $index;
 
     public function __construct()
     {
         parent::__construct();
-        $this->client = new Client('http://localhost:7700', 'masterKey');
-        $this->client->deleteAllIndexes();
         $this->index = $this->client->createIndex('index');
     }
 

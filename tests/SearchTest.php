@@ -1,20 +1,11 @@
 <?php
 
-use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
 class SearchTest extends TestCase
 {
-    private $client;
     private $index;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->client = new Client('http://localhost:7700', 'masterKey');
-    }
 
     public function testBasicSearch()
     {

@@ -1,6 +1,5 @@
 <?php
 
-use MeiliSearch\Client;
 use Tests\TestCase;
 
 class RankingRulesTest extends TestCase
@@ -19,10 +18,7 @@ class RankingRulesTest extends TestCase
     public function __construct()
     {
         parent::__construct();
-
-        $client = new Client('http://localhost:7700', 'masterKey');
-        $client->deleteAllIndexes();
-        $this->index = $client->createIndex('index');
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetDefaultRankingRules()

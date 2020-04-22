@@ -1,29 +1,11 @@
 <?php
 
-use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
 class UpdatesTest extends TestCase
 {
     private $index;
-    private $documents;
-    private $client;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->client = new Client('http://localhost:7700', 'masterKey');
-        $this->documents = [
-            ['id' => 123,  'title' => 'Pride and Prejudice',                    'comment' => 'A great book'],
-            ['id' => 456,  'title' => 'Le Petit Prince',                        'comment' => 'A french book'],
-            ['id' => 2,    'title' => 'Le Rouge et le Noir',                    'comment' => 'Another french book'],
-            ['id' => 1,    'title' => 'Alice In Wonderland',                    'comment' => 'A weird book'],
-            ['id' => 1344, 'title' => 'The Hobbit',                             'comment' => 'An awesome book'],
-            ['id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince', 'comment' => 'The best book'],
-            ['id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
-        ];
-    }
 
     protected function setUp(): void
     {
@@ -70,7 +52,7 @@ class UpdatesTest extends TestCase
 
     private function seedIndex(): array
     {
-        $promise = $this->index->updateDocuments($this->documents);
+        $promise = $this->index->updateDocuments(self::DOCUMENTS);
         $response = $this->index->waitForPendingUpdate($promise['updateId']);
 
         return [$promise, $response];
