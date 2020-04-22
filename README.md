@@ -1,14 +1,28 @@
-# MeiliSearch PHP Client <!-- omit in toc -->
+<p align="center">
+  <img src="https://res.cloudinary.com/meilisearch/image/upload/v1587402338/SDKs/meilisearch_php.svg" alt="MeiliSearch-PHP" width="200" height="200" />
+</p>
 
-[![Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://img.shields.io/badge/licence-MIT-blue.svg)
-[![Actions Status](https://github.com/meilisearch/meilisearch-php/workflows/Tests/badge.svg)](https://github.com/meilisearch/meilisearch-php/actions)
-[![Latest Stable Version](https://poser.pugx.org/meilisearch/meilisearch-php/version)](https://packagist.org/packages/meilisearch/meilisearch-php)
+<h1 align="center">MeiliSearch PHP</h1>
 
-The PHP client for MeiliSearch API.
+<h4 align="center">
+  <a href="https://github.com/meilisearch/MeiliSearch">MeiliSearch</a> |
+  <a href="https://www.meilisearch.com">Website</a> |
+  <a href="https://blog.meilisearch.com">Blog</a> |
+  <a href="https://twitter.com/meilisearch">Twitter</a> |
+  <a href="https://docs.meilisearch.com">Documentation</a> |
+  <a href="https://docs.meilisearch.com/resources/faq.html">FAQ</a>
+</h4>
 
-MeiliSearch provides an ultra relevant and instant full-text search. Our solution is open-source and you can check out [our repository here](https://github.com/meilisearch/MeiliSearch).</br>
+<p align="center">
+  <a href="https://packagist.org/packages/meilisearch/meilisearch-php"><img src="https://img.shields.io/packagist/v/meilisearch/meilisearch-php" alt="Latest Stable Version"></a>
+  <a href="https://github.com/meilisearch/meilisearch-php/actions"><img src="https://github.com/meilisearch/meilisearch-php/workflows/Tests/badge.svg" alt="Test"></a>
+  <a href="https://github.com/meilisearch/meilisearch-php/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
+  <a href="https://slack.meilisearch.com"><img src="https://img.shields.io/badge/slack-MeiliSearch-blue.svg?logo=slack" alt="Slack"></a>
+</p>
 
-Here is the [MeiliSearch documentation](https://docs.meilisearch.com/) 📖
+<p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in PHP</p>
+
+**MeiliSearch PHP** is a client for **MeiliSearch** written in PHP. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box.
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -60,12 +74,12 @@ $index = $client->createIndex('books'); // If your index does not exist
 $index = $client->getIndex('books');    // If you already created your index
 
 $documents = [
-    ['book_id' => 123,  'title' => 'Pride and Prejudice'],
-    ['book_id' => 456,  'title' => 'Le Petit Prince'],
-    ['book_id' => 1,    'title' => 'Alice In Wonderland'],
-    ['book_id' => 1344, 'title' => 'The Hobbit'],
-    ['book_id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince'],
-    ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
+    ['book_id' => 123,  'title' => 'Pride and Prejudice', 'author' => 'Jane Austen'],
+    ['book_id' => 456,  'title' => 'Le Petit Prince', 'author' => 'Antoine de Saint-Exupéry'],
+    ['book_id' => 1,    'title' => 'Alice In Wonderland', 'author' => 'Lewis Carroll'],
+    ['book_id' => 1344, 'title' => 'The Hobbit', 'author' => 'J. R. R. Tolkien'],
+    ['book_id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince', 'author' => 'J. K. Rowling'],
+    ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy', 'author' => 'Douglas Adams, Eoin Colfer, Thomas Tidholm'],
 ];
 
 $index->addDocuments($documents); // => { "updateId": 0 }
@@ -209,8 +223,8 @@ $index->search('prince');
 
 All the supported options are described in [this documentation section](https://docs.meilisearch.com/references/search.html#search-in-an-index).
 
-```ruby
-$index->search('prince', ['limit' => 1])
+```php
+$index->search('prince', ['limit' => 1]);
 ```
 
 ```json
@@ -226,6 +240,15 @@ $index->search('prince', ['limit' => 1])
     "processingTimeMs": 10,
     "query": "prince"
 }
+```
+
+With limit and filter, both single and double quotes are supported.
+```php
+// Enclosing with double quotes
+$index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' OR author = 'J. R. R. Tolkien'"]);
+
+// Enclosing with single quotes
+$index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
 ## ⚙️ Development Workflow

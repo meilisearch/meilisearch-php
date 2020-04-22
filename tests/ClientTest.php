@@ -5,8 +5,6 @@ use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Index;
 use PHPUnit\Framework\TestCase;
 
-require_once 'utils.php';
-
 class ClientTest extends TestCase
 {
     private static $client;
