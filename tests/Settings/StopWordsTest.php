@@ -14,7 +14,7 @@ class StopWordsTest extends TestCase
         $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
-    protected function setUp():void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client->deleteAllIndexes();

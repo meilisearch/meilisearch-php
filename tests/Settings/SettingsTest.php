@@ -1,13 +1,13 @@
 <?php
 
-use Tests\TestCase;
 use MeiliSearch\Client;
+use Tests\TestCase;
 
 class SettingsTest extends TestCase
 {
     private $client;
 
-     const DEFAULT_RANKING_RULES = [
+    const DEFAULT_RANKING_RULES = [
         'typo',
         'words',
         'proximity',
@@ -22,7 +22,7 @@ class SettingsTest extends TestCase
         $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
-    protected function setUp():void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -32,12 +32,12 @@ class SettingsTest extends TestCase
     public function testGetDefaultSettings()
     {
         $primaryKey = 'ObjectID';
-        $settingA   = $this->client
+        $settingA = $this->client
             ->createIndex('indexA')
             ->getSettings();
-        $settingB   = $this->client
+        $settingB = $this->client
             ->createIndex([
-                'uid'        => 'indexB',
+                'uid' => 'indexB',
                 'primaryKey' => $primaryKey,
             ])->getSettings();
 
@@ -66,7 +66,7 @@ class SettingsTest extends TestCase
 
     public function testUpdateSettings()
     {
-        $index   = $this->client->createIndex('index');
+        $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['asc(title)', 'typo'],
@@ -92,7 +92,7 @@ class SettingsTest extends TestCase
 
     public function testUpdateSettingsWithoutOverwritingThem()
     {
-        $index   = $this->client->createIndex('index');
+        $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['asc(title)', 'typo'],
@@ -126,11 +126,11 @@ class SettingsTest extends TestCase
 
     public function testResetSettings()
     {
-        $index   = $this->client->createIndex('index');
+        $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
-            'rankingRules'      => ['asc(title)', 'typo'],
-            'stopWords'         => ['the'],
+            'rankingRules' => ['asc(title)', 'typo'],
+            'stopWords' => ['the'],
         ]);
         $this->assertIsArray($promise);
         $this->assertArrayHasKey('updateId', $promise);

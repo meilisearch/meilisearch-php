@@ -1,7 +1,7 @@
 <?php
 
-use Tests\TestCase;
 use MeiliSearch\Client;
+use Tests\TestCase;
 
 class SearchableAttributesTest extends TestCase
 {
