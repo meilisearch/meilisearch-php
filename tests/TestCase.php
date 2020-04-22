@@ -7,8 +7,6 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected $client;
-
     const DOCUMENTS = [
         ['id' => 123, 'title' => 'Pride and Prejudice', 'comment' => 'A great book'],
         ['id' => 456, 'title' => 'Le Petit Prince', 'comment' => 'A french book'],
@@ -19,10 +17,16 @@ abstract class TestCase extends BaseTestCase
         ['id' => 42, 'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
     ];
 
+    const HOST = 'http://localhost:7700';
+
+    const DEFAULT_KEY = 'masterKey';
+
+    protected $client;
+
     public function __construct()
     {
         parent::__construct();
-        $this->client = new Client('http://localhost:7700', 'masterKey');
+        $this->client = new Client(self::HOST, self::DEFAULT_KEY);
         $this->client->deleteAllIndexes();
     }
 

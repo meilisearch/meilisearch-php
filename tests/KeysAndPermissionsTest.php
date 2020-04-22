@@ -28,7 +28,7 @@ class KeysAndPermissionsTest extends TestCase
     {
         $this->client->createIndex('index');
 
-        $newClient = new Client('http://localhost:7700', $this->getKeys()['public']);
+        $newClient = new Client(self::HOST, $this->getKeys()['public']);
         $response = $newClient->getIndex('index')->search('test');
         $this->assertArrayHasKey('hits', $response);
     }
@@ -36,7 +36,7 @@ class KeysAndPermissionsTest extends TestCase
     public function testGetSettingsIfPrivateKeyProvided()
     {
         $this->client->createIndex('index');
-        $newClient = new Client('http://localhost:7700', $this->getKeys()['private']);
+        $newClient = new Client(self::HOST, $this->getKeys()['private']);
         $response = $newClient->getIndex('index')->getSettings();
 
         $this->assertTrue($response['acceptNewFields']);
@@ -44,7 +44,7 @@ class KeysAndPermissionsTest extends TestCase
 
     public function testExceptionIfNoMasterKeyProvided()
     {
-        $newClient = new Client('http://localhost:7700');
+        $newClient = new Client(self::HOST);
 
         $this->expectException(HTTPRequestException::class);
         $newClient->getIndex('index')->search('test');
@@ -56,7 +56,7 @@ class KeysAndPermissionsTest extends TestCase
         $response = $this->client->getIndex('index')->getSettings();
         $this->assertTrue($response['acceptNewFields']);
 
-        $newClient = new Client('http://localhost:7700', 'bad-key');
+        $newClient = new Client(self::HOST, 'bad-key');
 
         $this->expectException(HTTPRequestException::class);
         $newClient->getIndex('index')->getSettings();
@@ -65,7 +65,7 @@ class KeysAndPermissionsTest extends TestCase
     public function testExceptionIfBadKeyProvidedToGetKeys()
     {
         $this->expectException(HTTPRequestException::class);
-        $client = new Client('http://localhost:7700', 'bad-key');
+        $client = new Client(self::HOST, 'bad-key');
         $client->getKeys();
     }
 
