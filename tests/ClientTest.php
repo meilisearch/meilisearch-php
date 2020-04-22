@@ -15,16 +15,24 @@ class ClientTest extends TestCase
         $this->client = new Client('http://localhost:7700', 'masterKey');
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->client->deleteAllIndexes();
+    }
+
     public function testGetAllIndexesWhenEmpty()
     {
-        $res = $this->client->getAllIndexes();
-        $this->assertIsArray($res);
-        $this->assertEmpty($res);
+        $response = $this->client->getAllIndexes();
+
+        $this->assertIsArray($response);
+        $this->assertEmpty($response);
     }
 
     public function testCreateIndexWithOnlyUid()
     {
         $index = $this->client->createIndex('index');
+
         $this->assertInstanceOf(Index::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
@@ -36,6 +44,7 @@ class ClientTest extends TestCase
             'uid' => 'index',
             'primaryKey' => 'ObjectId',
         ]);
+
         $this->assertInstanceOf(Index::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
@@ -126,55 +135,49 @@ class ClientTest extends TestCase
         $this->client->deleteIndex('a-non-existing-index');
     }
 
-    // HEALTH
-
     public function testHealth()
     {
-        $res = $this->client->health();
-        $this->assertEmpty($res);
-    }
+        $response = $this->client->health();
 
-    // STATS
+        $this->assertEmpty($response);
+    }
 
     public function testVersion()
     {
-        $res = $this->client->version();
-        $this->assertArrayHasKey('commitSha', $res);
-        $this->assertArrayHasKey('buildDate', $res);
-        $this->assertArrayHasKey('pkgVersion', $res);
+        $response = $this->client->version();
+
+        $this->assertArrayHasKey('commitSha', $response);
+        $this->assertArrayHasKey('buildDate', $response);
+        $this->assertArrayHasKey('pkgVersion', $response);
     }
 
     public function testSysInfo()
     {
-        $res = $this->client->sysInfo();
-        $this->assertArrayHasKey('memoryUsage', $res);
-        $this->assertArrayHasKey('processorUsage', $res);
-        $this->assertArrayHasKey('global', $res);
-        $this->assertArrayHasKey('process', $res);
-        $this->assertIsNotString($res['processorUsage'][0]);
+        $response = $this->client->sysInfo();
+
+        $this->assertArrayHasKey('memoryUsage', $response);
+        $this->assertArrayHasKey('processorUsage', $response);
+        $this->assertArrayHasKey('global', $response);
+        $this->assertArrayHasKey('process', $response);
+        $this->assertIsNotString($response['processorUsage'][0]);
     }
 
     public function testPrettySysInfo()
     {
-        $res = $this->client->prettySysInfo();
-        $this->assertArrayHasKey('memoryUsage', $res);
-        $this->assertArrayHasKey('processorUsage', $res);
-        $this->assertArrayHasKey('global', $res);
-        $this->assertArrayHasKey('process', $res);
-        $this->assertIsString($res['processorUsage'][0]);
+        $response = $this->client->prettySysInfo();
+
+        $this->assertArrayHasKey('memoryUsage', $response);
+        $this->assertArrayHasKey('processorUsage', $response);
+        $this->assertArrayHasKey('global', $response);
+        $this->assertArrayHasKey('process', $response);
+        $this->assertIsString($response['processorUsage'][0]);
     }
 
     public function testStats()
     {
-        $res = $this->client->stats();
-        $this->assertArrayHasKey('databaseSize', $res);
-        $this->assertArrayHasKey('lastUpdate', $res);
-        $this->assertArrayHasKey('indexes', $res);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
+        $response = $this->client->stats();
+        $this->assertArrayHasKey('databaseSize', $response);
+        $this->assertArrayHasKey('lastUpdate', $response);
+        $this->assertArrayHasKey('indexes', $response);
     }
 }
