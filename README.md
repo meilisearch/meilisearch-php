@@ -60,12 +60,12 @@ $index = $client->createIndex('books'); // If your index does not exist
 $index = $client->getIndex('books');    // If you already created your index
 
 $documents = [
-    ['book_id' => 123,  'title' => 'Pride and Prejudice'],
-    ['book_id' => 456,  'title' => 'Le Petit Prince'],
-    ['book_id' => 1,    'title' => 'Alice In Wonderland'],
-    ['book_id' => 1344, 'title' => 'The Hobbit'],
-    ['book_id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince'],
-    ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
+    ['book_id' => 123,  'title' => 'Pride and Prejudice', 'author' => 'Jane Austen'],
+    ['book_id' => 456,  'title' => 'Le Petit Prince', 'author' => 'Antoine de Saint-Exupéry'],
+    ['book_id' => 1,    'title' => 'Alice In Wonderland', 'author' => 'Lewis Carroll'],
+    ['book_id' => 1344, 'title' => 'The Hobbit', 'author' => 'J. R. R. Tolkien'],
+    ['book_id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince', 'author' => 'J. K. Rowling'],
+    ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy', 'author' => 'Douglas Adams, Eoin Colfer, Thomas Tidholm'],
 ];
 
 $index->addDocuments($documents); // => { "updateId": 0 }
@@ -231,10 +231,10 @@ $index->search('prince', ['limit' => 1]);
 With limit and filter, both single and double quotes are supported.
 ```php
 // Enclosing with double quotes
-$index->search('prince', ['limit' => 1, 'filters' => "title = 'Le Petit Prince' OR book_id = 456"]);
+$index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' OR author = 'J. R. R. Tolkien'"]);
 
 // Enclosing with single quotes
-$index->search('prince', ['limit' => 1, 'filters' => 'title = "Le Petit Prince" OR book_id = 456']);
+$index->search('prince', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
 ## ⚙️ Development Workflow
