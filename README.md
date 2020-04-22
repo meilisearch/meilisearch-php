@@ -234,7 +234,7 @@ With limit and filter, both single and double quotes are supported.
 $index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' OR author = 'J. R. R. Tolkien'"]);
 
 // Enclosing with single quotes
-$index->search('prince', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
+$index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
 ## ⚙️ Development Workflow
