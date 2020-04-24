@@ -270,7 +270,7 @@ Each PR should pass the tests and the linter to be accepted.
 ```bash
 # Tests
 $ docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
-$ vendor/bin/phpunit --color tests/
+$ sh scripts/tests.sh
 # Linter (with auto-fix)
 $ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist
 # Linter (without auto-fix)
