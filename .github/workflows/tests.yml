@@ -24,7 +24,7 @@ jobs:
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
 
     - name: Run test suite
-      run: vendor/bin/phpunit --color tests/
+      run: sh scripts/tests.sh
 
     - name: Run linter
       run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run
