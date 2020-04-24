@@ -91,6 +91,31 @@ class ClientTest extends TestCase
         $this->assertCount(0, $response);
     }
 
+    public function testDeleteAllIndexes()
+    {
+        $this->client->createIndex('index-1');
+        $this->client->createIndex('index-2');
+
+        $response = $this->client->getAllIndexes();
+
+        $this->assertCount(2, $response);
+
+        $this->client->deleteAllIndexes();
+        $response = $this->client->getAllIndexes();
+
+        $this->assertCount(0, $response);
+    }
+
+    public function testDeleteAllIndexesWhenThereAreNoIndexes()
+    {
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(0, $response);
+
+        $this->client->deleteAllIndexes();
+
+        $this->assertCount(0, $response);
+    }
+
     public function testGetIndex()
     {
         $this->client->createIndex('index');
