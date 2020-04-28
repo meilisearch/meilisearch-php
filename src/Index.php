@@ -257,9 +257,10 @@ class Index extends HTTPRequest
     private function flattenOptions(array $options)
     {
         return array_map(function ($entry) {
-            if(is_array($entry)){
-                return implode(',',$entry);
+            if (is_array($entry)) {
+                return implode(',', $entry);
             }
+
             return $entry;
         }, $options);
     }

@@ -56,6 +56,72 @@ class SearchTest extends TestCase
         $index->search('prince');
     }
 
+    public function testParametersCanBeString()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->search('prince', [
+            'limit' => 5,
+            'offset' => 0,
+            'attributesToRetrieve' => 'id,title',
+            'attributesToCrop' => 'id,title',
+            'cropLength' => 6,
+            'attributesToHighlight' => 'title',
+            'filters' => 'title = "Le Petit Prince"',
+            'matches' => 'true',
+        ]);
+
+        $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
+        $this->assertArrayHasKey('title', $response['hits'][0]['_matchesInfo']);
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertArrayNotHasKey('comment', $response['hits'][0]);
+        $this->assertArrayNotHasKey('comment', $response['hits'][0]['_matchesInfo']);
+        $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersCanBeArray()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->search('prince', [
+            'limit' => 5,
+            'offset' => 0,
+            'attributesToRetrieve' => ['id', 'title'],
+            'attributesToCrop' => ['id', 'title'],
+            'cropLength' => 6,
+            'attributesToHighlight' => 'title',
+            'filters' => 'title = "Le Petit Prince"',
+            'matches' => 'true',
+        ]);
+
+        $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
+        $this->assertArrayHasKey('title', $response['hits'][0]['_matchesInfo']);
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertArrayNotHasKey('comment', $response['hits'][0]);
+        $this->assertArrayNotHasKey('comment', $response['hits'][0]['_matchesInfo']);
+        $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersCanBeAStar()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->search('prince', [
+            'limit' => 5,
+            'offset' => 0,
+            'attributesToRetrieve' => '*',
+            'attributesToCrop' => '*',
+            'cropLength' => 6,
+            'attributesToHighlight' => '*',
+            'filters' => 'title = "Le Petit Prince"',
+            'matches' => 'true',
+        ]);
+
+        $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
+        $this->assertArrayHasKey('title', $response['hits'][0]['_matchesInfo']);
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertArrayHasKey('comment', $response['hits'][0]);
+        $this->assertArrayNotHasKey('comment', $response['hits'][0]['_matchesInfo']);
+        $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
+    }
+
     private function createFreshIndexAndSeedDocuments()
     {
         $this->client->deleteAllIndexes();
