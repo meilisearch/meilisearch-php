@@ -78,6 +78,7 @@ class HTTPRequest
         );
 
         $request = $request->withBody($this->streamFactory->createStream(json_encode($body)));
+
         return $this->sendRequestAndGetBody($request);
     }
 
@@ -125,8 +126,8 @@ class HTTPRequest
         try {
             $res = $this->httpClient->sendRequest($request);
 
-            // Response was not successfully
-            if ($res->getStatusCode() > 300) {
+            // Response was not successful
+            if ($res->getStatusCode() >= 300) {
                 $body = json_decode($res->getBody()->getContents(), true);
                 throw new HTTPRequestException($res->getStatusCode(), $body);
             }

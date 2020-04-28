@@ -14,13 +14,7 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "^6.5",
-        "php-http/client-implementation": "^1.0",
-        "psr/http-message": "^1.0",
-        "php-http/httplug": "^1.0|^2.0",
-        "php-http/message-factory": "^1.0",
-        "php-http/discovery": "^1.0",
-        "guzzlehttp/psr7": "^1.6",
+        "php-http/discovery": "^1.7",
         "php-http/guzzle6-adapter": "^2.0",
         "http-interop/http-factory-guzzle": "^1.0"
     },
