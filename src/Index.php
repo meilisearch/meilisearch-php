@@ -106,13 +106,14 @@ class Index extends HTTPRequest
 
     public function search($query, $options = null)
     {
-        if (isset($options)) {
-            $paramters = array_merge(['q' => $query], $options);
+        if ($options) {
+            $options = $this->flattenOptions($options);
+            $parameters = array_merge(['q' => $query], $options);
         } else {
-            $paramters = ['q' => $query];
+            $parameters = ['q' => $query];
         }
 
-        return $this->httpGet('/indexes/'.$this->uid.'/search', $paramters);
+        return $this->httpGet('/indexes/'.$this->uid.'/search', $parameters);
     }
 
     // Stats
@@ -251,5 +252,15 @@ class Index extends HTTPRequest
     public function updateAcceptNewFields($accept_new_fields)
     {
         return $this->httpPost('/indexes/'.$this->uid.'/settings/accept-new-fields', $accept_new_fields);
+    }
+
+    private function flattenOptions(array $options)
+    {
+        return array_map(function ($entry) {
+            if(is_array($entry)){
+                return implode(',',$entry);
+            }
+            return $entry;
+        }, $options);
     }
 }
