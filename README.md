@@ -10,7 +10,7 @@
   <a href="https://blog.meilisearch.com">Blog</a> |
   <a href="https://twitter.com/meilisearch">Twitter</a> |
   <a href="https://docs.meilisearch.com">Documentation</a> |
-  <a href="https://docs.meilisearch.com/resources/faq.html">FAQ</a>
+  <a href="https://docs.meilisearch.com/faq">FAQ</a>
 </h4>
 
 <p align="center">
@@ -33,6 +33,7 @@
   - [Documents](#documents)
   - [Update status](#update-status)
   - [Search](#search)
+- [Replace HTTP client](#replace-http-client)
 - [⚙️ Development Workflow](#️-development-workflow)
   - [Install dependencies](#install-dependencies)
   - [Tests and Linter](#tests-and-linter)
@@ -249,6 +250,28 @@ $index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' 
 
 // Enclosing with single quotes
 $index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
+```
+
+## Replace HTTP client
+
+By default [Guzzle](http://docs.guzzlephp.org/en/6.5/) is used for all HTTP requests.<br>
+But you can replace the used HTTP client with any [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client.<br>
+A list with compatible HTTP clients and client adapters can be found at [php-http.org](http://docs.php-http.org/en/latest/clients.html).
+
+For example, if you want to use the [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html),
+use the following code:
+
+```bash
+$ composer require symfony/http-client
+$ composer require nyholm/psr7
+```
+
+```php
+use Symfony\Component\HttpClient\HttplugClient;
+use MeiliSearch\Client;
+
+$httpClient = new HttplugClient();
+$client = new Client('http://127.0.0.1:7700', 'masterKey', $httpClient);
 ```
 
 ## ⚙️ Development Workflow
