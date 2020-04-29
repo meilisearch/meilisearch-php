@@ -33,7 +33,7 @@
   - [Documents](#documents)
   - [Update status](#update-status)
   - [Search](#search)
-  - [Replace HTTP client](#replace-http-client)
+- [Replace HTTP client](#replace-http-client)
 - [⚙️ Development Workflow](#️-development-workflow)
   - [Install dependencies](#install-dependencies)
   - [Tests and Linter](#tests-and-linter)
@@ -252,12 +252,13 @@ $index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' 
 $index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
-### Replace HTTP client
-By default [Guzzle](http://docs.guzzlephp.org/en/6.5/) is used for all HTTP request.
-But you can replace the used HTTP client with any [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client.
+## Replace HTTP client
+
+By default [Guzzle](http://docs.guzzlephp.org/en/6.5/) is used for all HTTP requests.<br>
+But you can replace the used HTTP client with any [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client.<br>
 A list with compatible HTTP clients and client adapters can be found at [php-http.org](http://docs.php-http.org/en/latest/clients.html).
 
-For example if you want to use the [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html)
+For example, if you want to use the [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html),
 use the following code:
 
 ```bash
