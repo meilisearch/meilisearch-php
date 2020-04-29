@@ -13,7 +13,10 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.2",
-        "guzzlehttp/guzzle": "^6.5"
+        "ext-json": "*",
+        "php-http/discovery": "^1.7",
+        "php-http/guzzle6-adapter": "^2.0",
+        "http-interop/http-factory-guzzle": "^1.0"
     },
     "autoload": {
         "psr-4": {
