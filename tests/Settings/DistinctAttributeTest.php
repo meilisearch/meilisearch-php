@@ -1,50 +1,44 @@
 <?php
 
-use MeiliSearch\Client;
-use PHPUnit\Framework\TestCase;
+namespace Tests\Settings;
+
+use Tests\TestCase;
 
 class DistinctAttributeTest extends TestCase
 {
-    private static $client;
-    private static $index;
+    private $index;
 
-    public static function setUpBeforeClass(): void
+    public function __construct()
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes(static::$client);
-        static::$index = static::$client->createIndex('uid');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        deleteAllIndexes(static::$client);
+        parent::__construct();
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetDefaultDistinctAttribute()
     {
-        $res = static::$index->getDistinctAttribute();
-        $this->assertNull($res);
+        $response = $this->index->getDistinctAttribute();
+        $this->assertNull($response);
     }
 
     public function testUpdateDistinctAttribute()
     {
-        $new_da = 'description';
-        $res = static::$index->updateDistinctAttribute($new_da);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $da = static::$index->getDistinctAttribute();
-        $this->assertEquals($new_da, $da);
+        $distinctAttribute = 'description';
+        $promise = $this->index->updateDistinctAttribute($distinctAttribute);
+        $this->assertIsValidPromise($promise);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->assertEquals($distinctAttribute, $this->index->getDistinctAttribute());
     }
 
     public function testResetDistinctAttribute()
     {
-        $res = static::$index->resetDistinctAttribute();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $this->assertNull(static::$index->getDistinctAttribute());
+        $distinctAttribute = 'description';
+        $promise = $this->index->updateDistinctAttribute($distinctAttribute);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+
+        $promise = $this->index->resetDistinctAttribute();
+
+        $this->assertIsValidPromise($promise);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->assertNull($this->index->getDistinctAttribute());
     }
 }

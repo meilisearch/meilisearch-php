@@ -1,63 +1,60 @@
 <?php
 
-use MeiliSearch\Client;
-use PHPUnit\Framework\TestCase;
+namespace Tests\Settings;
+
+use Tests\TestCase;
 
 class SearchableAttributesTest extends TestCase
 {
-    private static $client;
-    private static $index1;
-    private static $index2;
-    private static $primary_key;
-
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes(static::$client);
-        static::$primary_key = 'objectID';
-        static::$index1 = static::$client->createIndex('uid1');
-        static::$index2 = static::$client->createIndex(['uid' => 'uid2', 'primaryKey' => static::$primary_key]);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        deleteAllIndexes(static::$client);
+        parent::setUp();
+        $this->client->deleteAllIndexes();
     }
 
     public function testGetDefaultSearchableAttributes()
     {
-        $res = static::$index1->getSearchableAttributes();
-        $this->assertIsArray($res);
-        $this->assertEmpty($res);
-        $res = static::$index2->getSearchableAttributes();
-        $this->assertIsArray($res);
-        $this->assertEquals([static::$primary_key], $res);
+        $indexA = $this->client->createIndex('indexA');
+        $indexB = $this->client->createIndex(['uid' => 'indexB', 'primaryKey' => 'objectID']);
+
+        $searchableAttributesA = $indexA->getSearchableAttributes();
+        $searchableAttributesB = $indexB->getSearchableAttributes();
+
+        $this->assertIsArray($searchableAttributesA);
+        $this->assertEmpty($searchableAttributesA);
+        $this->assertIsArray($searchableAttributesB);
+        $this->assertEquals(['objectID'], $searchableAttributesB);
     }
 
     public function testUpdateSearchableAttributes()
     {
-        $new_sa = [
+        $indexA = $this->client->createIndex('indexA');
+        $searchableAttributes = [
             'title',
             'description',
         ];
-        $res = static::$index1->updateSearchableAttributes($new_sa);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForPendingUpdate($res['updateId']);
-        $sa = static::$index1->getSearchableAttributes();
-        $this->assertIsArray($sa);
-        $this->assertEquals($new_sa, $sa);
+
+        $promise = $indexA->updateSearchableAttributes($searchableAttributes);
+
+        $this->assertIsValidPromise($promise);
+
+        $indexA->waitForPendingUpdate($promise['updateId']);
+        $updatedAttributes = $indexA->getSearchableAttributes();
+
+        $this->assertIsArray($updatedAttributes);
+        $this->assertEquals($searchableAttributes, $updatedAttributes);
     }
 
     public function testResetSearchableAttributes()
     {
-        $res = static::$index1->resetSearchableAttributes();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index1->waitForPendingUpdate($res['updateId']);
-        $sa = static::$index1->getSearchableAttributes();
-        $this->assertIsArray($sa);
+        $index = $this->client->createIndex('indexA');
+        $promise = $index->resetSearchableAttributes();
+
+        $this->assertIsValidPromise($promise);
+
+        $index->waitForPendingUpdate($promise['updateId']);
+        $searchableAttributes = $index->getSearchableAttributes();
+
+        $this->assertIsArray($searchableAttributes);
     }
 }

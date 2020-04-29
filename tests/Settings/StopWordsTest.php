@@ -1,54 +1,55 @@
 <?php
 
-use MeiliSearch\Client;
-use PHPUnit\Framework\TestCase;
+namespace Tests\Settings;
+
+use Tests\TestCase;
 
 class StopWordsTest extends TestCase
 {
-    private static $client;
-    private static $index;
+    private $index;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes(static::$client);
-        static::$index = static::$client->createIndex('uid');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        deleteAllIndexes(static::$client);
+        parent::setUp();
+        $this->client->deleteAllIndexes();
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetDefaultStopWords()
     {
-        $res = static::$index->getStopWords();
-        $this->assertIsArray($res);
-        $this->assertEmpty($res);
+        $response = $this->index->getStopWords();
+
+        $this->assertIsArray($response);
+        $this->assertEmpty($response);
     }
 
     public function testUpdateStopWords()
     {
-        $new_sw = ['the'];
-        $res = static::$index->updateStopWords($new_sw);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $sw = static::$index->getStopWords();
-        $this->assertIsArray($sw);
-        $this->assertEquals($new_sw, $sw);
+        $newStopWords = ['the'];
+        $promise = $this->index->updateStopWords($newStopWords);
+
+        $this->assertIsValidPromise($promise);
+
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $stopWords = $this->index->getStopWords();
+
+        $this->assertIsArray($stopWords);
+        $this->assertEquals($newStopWords, $stopWords);
     }
 
     public function testResetStopWords()
     {
-        $res = static::$index->resetStopWords();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $sw = static::$index->getStopWords();
-        $this->assertIsArray($sw);
-        $this->assertEmpty($sw);
+        $promise = $this->index->updateStopWords(['the']);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+
+        $promise = $this->index->resetStopWords();
+
+        $this->assertIsValidPromise($promise);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+
+        $topWords = $this->index->getStopWords();
+
+        $this->assertIsArray($topWords);
+        $this->assertEmpty($topWords);
     }
 }

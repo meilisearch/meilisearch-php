@@ -1,67 +1,65 @@
 <?php
 
-use MeiliSearch\Client;
-use PHPUnit\Framework\TestCase;
+namespace Tests\Settings;
+
+use Tests\TestCase;
 
 class RankingRulesTest extends TestCase
 {
-    private static $client;
-    private static $index;
-    private static $default_ranking_rules;
+    private $index;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        static::$client = new Client('http://localhost:7700', 'masterKey');
-        deleteAllIndexes(static::$client);
-        static::$index = static::$client->createIndex('uid');
-        static::$default_ranking_rules = [
-            'typo',
-            'words',
-            'proximity',
-            'attribute',
-            'wordsPosition',
-            'exactness',
-        ];
-    }
+    const DEFAULT_RANKING_RULES = [
+        'typo',
+        'words',
+        'proximity',
+        'attribute',
+        'wordsPosition',
+        'exactness',
+    ];
 
-    public static function tearDownAfterClass(): void
+    public function __construct()
     {
-        parent::tearDownAfterClass();
-        deleteAllIndexes(static::$client);
+        parent::__construct();
+        $this->index = $this->client->createIndex('index');
     }
 
     public function testGetDefaultRankingRules()
     {
-        $res = static::$index->getRankingRules();
-        $this->assertIsArray($res);
-        $this->assertEquals(static::$default_ranking_rules, $res);
+        $response = $this->index->getRankingRules();
+
+        $this->assertIsArray($response);
+        $this->assertEquals(self::DEFAULT_RANKING_RULES, $response);
     }
 
     public function testUpdateRankingRules()
     {
-        $new_rr = [
+        $newRankingRules = [
             'asc(title)',
             'typo',
             'desc(description)',
         ];
-        $res = static::$index->updateRankingRules($new_rr);
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $rr = static::$index->getRankingRules();
-        $this->assertIsArray($rr);
-        $this->assertEquals($new_rr, $rr);
+
+        $promise = $this->index->updateRankingRules($newRankingRules);
+
+        $this->assertIsValidPromise($promise);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+
+        $rankingRules = $this->index->getRankingRules();
+
+        $this->assertIsArray($rankingRules);
+        $this->assertEquals($newRankingRules, $rankingRules);
     }
 
     public function testResetRankingRules()
     {
-        $res = static::$index->resetRankingRules();
-        $this->assertIsArray($res);
-        $this->assertArrayHasKey('updateId', $res);
-        static::$index->waitForPendingUpdate($res['updateId']);
-        $rr = static::$index->getRankingRules();
-        $this->assertIsArray($rr);
-        $this->assertEquals(static::$default_ranking_rules, $rr);
+        $promise = $this->index->resetRankingRules();
+
+        $this->assertIsValidPromise($promise);
+
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $rankingRules = $this->index->getRankingRules();
+
+        $this->assertIsArray($rankingRules);
+        $this->assertEquals(self::DEFAULT_RANKING_RULES, $rankingRules);
     }
 }
