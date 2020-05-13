@@ -316,3 +316,7 @@ A webhook will be triggered and push the new package on [Packagist](https://pack
 ## 🤖 Compatibility with MeiliSearch
 
 This package works for MeiliSearch `>=v0.10`.
+
+<hr>
+
+**MeiliSearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.
