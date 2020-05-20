@@ -54,7 +54,7 @@ There are many easy ways to [download and run a MeiliSearch instance](https://do
 
 For example, if you use Docker:
 ```bash
-$ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest --master-key=masterKey
+$ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
 ```
 
 NB: you can also download MeiliSearch from **Homebrew** or **APT**.
@@ -292,7 +292,7 @@ Each PR should pass the tests and the linter to be accepted.
 
 ```bash
 # Tests
-$ docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
+$ docker run -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
 $ sh scripts/tests.sh
 # Linter (with auto-fix)
 $ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist
