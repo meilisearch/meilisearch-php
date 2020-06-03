@@ -84,7 +84,7 @@ class IndexTest extends TestCase
         $this->assertArrayHasKey('numberOfDocuments', $stats);
         $this->assertEquals(0, $stats['numberOfDocuments']);
         $this->assertArrayHasKey('isIndexing', $stats);
-        $this->assertArrayHasKey('fieldsFrequency', $stats);
+        $this->assertArrayHasKey('fieldsDistribution', $stats);
     }
 
     public function testWaitForPendingUpdateDefault()
