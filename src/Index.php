@@ -257,6 +257,25 @@ class Index extends HTTPRequest
         return $this->httpPost('/indexes/'.$this->uid.'/settings/accept-new-fields', $accept_new_fields);
     }
 
+    // Settings - Attributes for faceting
+
+    public function getAttributesForFaceting()
+    {
+        return $this->httpGet('/indexes/'.$this->uid.'/settings/attributes-for-faceting');
+    }
+
+    public function updateAttributesForFaceting($attributes_for_faceting)
+    {
+        return $this->httpPost('/indexes/'.$this->uid.'/settings/attributes-for-faceting', $attributes_for_faceting);
+    }
+
+    public function resetAttributesForFaceting()
+    {
+        return $this->httpDelete('/indexes/'.$this->uid.'/settings/attributes-for-faceting');
+    }
+
+    // PRIVATE
+
     private function flattenOptions(array $options)
     {
         return array_map(function ($entry) {
