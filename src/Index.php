@@ -107,14 +107,12 @@ class Index extends HTTPRequest
 
     // Search
 
-    public function search($query, $options = null)
+    public function search($query, array $options = [])
     {
-        if ($options) {
-            $options = $this->flattenOptions($options);
-            $parameters = array_merge(['q' => $query], $options);
-        } else {
-            $parameters = ['q' => $query];
-        }
+        $parameters = array_merge(
+            ['q' => $query],
+            $this->parseOptions($options)
+        );
 
         return $this->httpGet('/indexes/'.$this->uid.'/search', $parameters);
     }
@@ -276,14 +274,16 @@ class Index extends HTTPRequest
 
     // PRIVATE
 
-    private function flattenOptions(array $options)
+    private function parseOptions(array $options)
     {
-        return array_map(function ($entry) {
-            if (is_array($entry)) {
-                return implode(',', $entry);
+        foreach ($options as $key => $value) {
+            if ('facetsDistribution' === $key || 'facetFilters' === $key) {
+                $options[$key] = json_encode($value);
+            } elseif (is_array($value)) {
+                $options[$key] = implode(',', $value);
             }
+        }
 
-            return $entry;
-        }, $options);
+        return $options;
     }
 }
