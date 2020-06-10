@@ -33,13 +33,12 @@ class Client extends HTTPRequest
         return $this->indexInstance($uid);
     }
 
-    public function createIndex($attributes)
+    public function createIndex($index_uid, $options = [])
     {
-        if (is_array($attributes)) {
-            $body = $attributes;
-        } else {
-            $body = ['uid' => $attributes];
-        }
+        $body = array_merge(
+            ['uid' => $index_uid],
+            $options
+        );
         $response = $this->httpPost('/indexes', $body);
         $uid = $response['uid'];
 

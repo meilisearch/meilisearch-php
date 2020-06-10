@@ -134,10 +134,10 @@ You can check out [the API documentation](https://docs.meilisearch.com/reference
 // Create an index
 $index = $client->createIndex('books');
 // Create an index and give the primary-key
-$index = $client->createIndex([
-    'uid' => 'books',
-    'primaryKey' => 'book_id'
-]);
+$index = $client->createIndex(
+    'books',
+    ['primaryKey' => 'book_id']
+);
 ```
 
 #### List all indexes <!-- omit in toc -->

@@ -15,7 +15,7 @@ class DisplayedAttributesTest extends TestCase
     public function testGetDefaultDisplayedAttributes()
     {
         $indexA = $this->client->createIndex('indexA');
-        $indexB = $this->client->createIndex(['uid' => 'indexB', 'primaryKey' => 'objectID']);
+        $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
 
         $attributesA = $indexA->getDisplayedAttributes();
         $attributesB = $indexB->getDisplayedAttributes();
