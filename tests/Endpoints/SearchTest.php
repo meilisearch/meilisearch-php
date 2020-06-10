@@ -156,6 +156,21 @@ class SearchTest extends TestCase
         $this->assertSame(4, $response['hits'][0]['id']);
     }
 
+    public function testBasicSearchWithMultipleFacetFilters()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'facetFilters' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
+        ]);
+        $this->assertSame(1, $response['nbHits']);
+        $this->assertArrayNotHasKey('facetsDistribution', $response);
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
+        $this->assertSame(4, $response['hits'][0]['id']);
+    }
+
     public function testCustomSearchWithFacetFiltersAndAttributesToRetrieve()
     {
         $this->createFreshIndexAndSeedDocuments();
