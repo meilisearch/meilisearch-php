@@ -33,10 +33,10 @@ class ClientTest extends TestCase
 
     public function testCreateIndexWithUidAndPrimaryKey()
     {
-        $index = $this->client->createIndex([
-            'uid' => 'index',
-            'primaryKey' => 'ObjectId',
-        ]);
+        $index = $this->client->createIndex(
+            'index',
+            ['primaryKey' => 'ObjectId'],
+        );
 
         $this->assertInstanceOf(Index::class, $index);
         $this->assertSame('index', $index->getUid());
@@ -64,10 +64,10 @@ class ClientTest extends TestCase
     public function testShowIndex()
     {
         $index = 'index';
-        $this->client->createIndex([
-            'uid' => $index,
-            'primaryKey' => 'objectID',
-        ]);
+        $this->client->createIndex(
+            $index,
+            ['primaryKey' => 'objectID'],
+        );
 
         $response = $this->client->showIndex($index);
 
@@ -138,7 +138,7 @@ class ClientTest extends TestCase
     public function testExceptionIfNoUidWhenCreating()
     {
         $this->expectException(HTTPRequestException::class);
-        $this->client->createIndex(['primaryKey' => 'id']);
+        $this->client->createIndex(null);
     }
 
     public function testExceptionIfNoIndexWhenShowing()

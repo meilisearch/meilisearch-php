@@ -28,10 +28,10 @@ class SettingsTest extends TestCase
             ->createIndex('indexA')
             ->getSettings();
         $settingB = $this->client
-            ->createIndex([
-                'uid' => 'indexB',
-                'primaryKey' => $primaryKey,
-            ])->getSettings();
+            ->createIndex(
+                'indexB',
+                ['primaryKey' => $primaryKey],
+            )->getSettings();
 
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingA['rankingRules']);
         $this->assertNull($settingA['distinctAttribute']);
