@@ -107,14 +107,12 @@ class Index extends HTTPRequest
 
     // Search
 
-    public function search($query, $options = null)
+    public function search($query, array $options = [])
     {
-        if ($options) {
-            $options = $this->flattenOptions($options);
-            $parameters = array_merge(['q' => $query], $options);
-        } else {
-            $parameters = ['q' => $query];
-        }
+        $parameters = array_merge(
+            ['q' => $query],
+            $this->parseOptions($options)
+        );
 
         return $this->httpGet('/indexes/'.$this->uid.'/search', $parameters);
     }
@@ -257,14 +255,35 @@ class Index extends HTTPRequest
         return $this->httpPost('/indexes/'.$this->uid.'/settings/accept-new-fields', $accept_new_fields);
     }
 
-    private function flattenOptions(array $options)
-    {
-        return array_map(function ($entry) {
-            if (is_array($entry)) {
-                return implode(',', $entry);
-            }
+    // Settings - Attributes for faceting
 
-            return $entry;
-        }, $options);
+    public function getAttributesForFaceting()
+    {
+        return $this->httpGet('/indexes/'.$this->uid.'/settings/attributes-for-faceting');
+    }
+
+    public function updateAttributesForFaceting($attributes_for_faceting)
+    {
+        return $this->httpPost('/indexes/'.$this->uid.'/settings/attributes-for-faceting', $attributes_for_faceting);
+    }
+
+    public function resetAttributesForFaceting()
+    {
+        return $this->httpDelete('/indexes/'.$this->uid.'/settings/attributes-for-faceting');
+    }
+
+    // PRIVATE
+
+    private function parseOptions(array $options)
+    {
+        foreach ($options as $key => $value) {
+            if ('facetsDistribution' === $key || 'facetFilters' === $key) {
+                $options[$key] = json_encode($value);
+            } elseif (is_array($value)) {
+                $options[$key] = implode(',', $value);
+            }
+        }
+
+        return $options;
     }
 }

@@ -122,6 +122,76 @@ class SearchTest extends TestCase
         $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
+    public function testBasicSearchWithFacetsDistribution()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'facetsDistribution' => ['genre'],
+        ]);
+        $this->assertSame(2, $response['nbHits']);
+        $this->assertArrayHasKey('facetsDistribution', $response);
+        $this->assertArrayHasKey('exhaustiveFacetsCount', $response);
+        $this->assertArrayHasKey('genre', $response['facetsDistribution']);
+        $this->assertTrue($response['exhaustiveFacetsCount']);
+        $this->assertSame($response['facetsDistribution']['genre']['fantasy'], 1);
+        $this->assertSame($response['facetsDistribution']['genre']['adventure'], 1);
+        $this->assertSame($response['facetsDistribution']['genre']['romance'], 0);
+    }
+
+    public function testBasicSearchWithFacetFilters()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'facetFilters' => [['genre:fantasy']],
+        ]);
+        $this->assertSame(1, $response['nbHits']);
+        $this->assertArrayNotHasKey('facetsDistribution', $response);
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
+        $this->assertSame(4, $response['hits'][0]['id']);
+    }
+
+    public function testBasicSearchWithMultipleFacetFilters()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'facetFilters' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
+        ]);
+        $this->assertSame(1, $response['nbHits']);
+        $this->assertArrayNotHasKey('facetsDistribution', $response);
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
+        $this->assertSame(4, $response['hits'][0]['id']);
+    }
+
+    public function testCustomSearchWithFacetFiltersAndAttributesToRetrieve()
+    {
+        $this->createFreshIndexAndSeedDocuments();
+        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'facetFilters' => [['genre:fantasy']],
+            'attributesToRetrieve' => ['id', 'title'],
+        ]);
+        $this->assertSame(1, $response['nbHits']);
+        $this->assertArrayNotHasKey('facetsDistribution', $response);
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
+        $this->assertSame(4, $response['hits'][0]['id']);
+        $this->assertArrayHasKey('id', $response['hits'][0]);
+        $this->assertArrayHasKey('title', $response['hits'][0]);
+        $this->assertArrayNotHasKey('comment', $response['hits'][0]);
+    }
+
+    // PRIVATE
+
     private function createFreshIndexAndSeedDocuments()
     {
         $this->client->deleteAllIndexes();

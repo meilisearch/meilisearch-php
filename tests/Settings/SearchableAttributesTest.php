@@ -15,7 +15,7 @@ class SearchableAttributesTest extends TestCase
     public function testGetDefaultSearchableAttributes()
     {
         $indexA = $this->client->createIndex('indexA');
-        $indexB = $this->client->createIndex(['uid' => 'indexB', 'primaryKey' => 'objectID']);
+        $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
 
         $searchableAttributesA = $indexA->getSearchableAttributes();
         $searchableAttributesB = $indexB->getSearchableAttributes();

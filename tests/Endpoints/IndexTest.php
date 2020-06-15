@@ -19,10 +19,10 @@ class IndexTest extends TestCase
 
     public function testGetPrimaryKey()
     {
-        $indexB = $this->client->createIndex([
-            'uid' => 'indexB',
-            'primaryKey' => 'objectId',
-        ]);
+        $indexB = $this->client->createIndex(
+            'indexB',
+            ['primaryKey' => 'objectId'],
+        );
 
         $this->assertNull($this->index->getPrimaryKey());
         $this->assertSame('objectId', $indexB->getPrimaryKey());
@@ -30,20 +30,20 @@ class IndexTest extends TestCase
 
     public function testGetUid()
     {
-        $indexB = $this->client->createIndex([
-            'uid' => 'indexB',
-            'primaryKey' => 'objectId',
-        ]);
+        $indexB = $this->client->createIndex(
+            'indexB',
+            ['primaryKey' => 'objectId'],
+        );
         $this->assertSame('index', $this->index->getUid());
         $this->assertSame('indexB', $indexB->getUid());
     }
 
     public function testShow()
     {
-        $index = $this->client->createIndex([
-            'uid' => 'indexB',
-            'primaryKey' => 'objectId',
-        ]);
+        $index = $this->client->createIndex(
+            'indexB',
+            ['primaryKey' => 'objectId'],
+        );
 
         $response = $index->show();
 
@@ -67,10 +67,10 @@ class IndexTest extends TestCase
 
     public function testExceptionIsThrownWhenOverwritingPrimaryKey()
     {
-        $index = $this->client->createIndex([
-            'uid' => 'indexB',
-            'primaryKey' => 'objectId',
-        ]);
+        $index = $this->client->createIndex(
+            'indexB',
+            ['primaryKey' => 'objectId'],
+        );
 
         $this->expectException(HTTPRequestException::class);
 
@@ -84,7 +84,7 @@ class IndexTest extends TestCase
         $this->assertArrayHasKey('numberOfDocuments', $stats);
         $this->assertEquals(0, $stats['numberOfDocuments']);
         $this->assertArrayHasKey('isIndexing', $stats);
-        $this->assertArrayHasKey('fieldsFrequency', $stats);
+        $this->assertArrayHasKey('fieldsDistribution', $stats);
     }
 
     public function testWaitForPendingUpdateDefault()
