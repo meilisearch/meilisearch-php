@@ -36,8 +36,8 @@ class Client extends HTTPRequest
     public function createIndex($index_uid, $options = [])
     {
         $body = array_merge(
-            ['uid' => $index_uid],
-            $options
+            $options,
+            ['uid' => $index_uid]
         );
         $response = $this->httpPost('/indexes', $body);
         $uid = $response['uid'];
