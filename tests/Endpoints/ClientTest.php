@@ -43,6 +43,21 @@ class ClientTest extends TestCase
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
+    public function testCreateIndexWithUidInOptions()
+    {
+        $index = $this->client->createIndex(
+            'index',
+            [
+                'uid' => 'wrong',
+                'primaryKey' => 'ObjectId',
+            ],
+        );
+
+        $this->assertInstanceOf(Index::class, $index);
+        $this->assertSame('index', $index->getUid());
+        $this->assertSame('ObjectId', $index->getPrimaryKey());
+    }
+
     public function testGetAllIndexes()
     {
         $indexA = 'indexA';
