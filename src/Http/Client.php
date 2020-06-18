@@ -55,16 +55,15 @@ class Client implements Http
      */
     public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
-        $this->baseUrl = $url;
-        $this->apiKey = $apiKey;
-        $this->headers = array_filter([
-            'Content-type' => 'application/json',
+        $this->baseUrl        = $url;
+        $this->apiKey         = $apiKey;
+        $this->http           = $httpClient ?: HttpClientDiscovery::find();
+        $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
+        $this->streamFactory  = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
+        $this->headers        = array_filter([
+            'Content-type'    => 'application/json',
             'X-Meili-API-Key' => $this->apiKey,
         ]);
-
-        $this->http = $httpClient ?: HttpClientDiscovery::find();
-        $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
     }
 
     /**

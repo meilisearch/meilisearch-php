@@ -1,6 +1,6 @@
 <?php
 
-namespace MeiliSearch\Endpoints;
+namespace MeiliSearch;
 
 class MeiliSearch
 {

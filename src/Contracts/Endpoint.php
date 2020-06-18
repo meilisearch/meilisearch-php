@@ -4,10 +4,6 @@
 namespace MeiliSearch\Contracts;
 
 
-use MeiliSearch\Endpoints\Health;
-use MeiliSearch\Exceptions\HTTPRequestException;
-use Psr\Http\Message\ResponseInterface;
-
 abstract class Endpoint
 {
     /**
