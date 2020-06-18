@@ -26,6 +26,10 @@ class Client
      * @var SysInfo
      */
     private $sysInfo;
+    /**
+     * @var Keys
+     */
+    private $keys;
 
 
     public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
@@ -36,6 +40,7 @@ class Client
         $this->version = new Version($this->http);
         $this->sysInfo = new SysInfo($this->http);
         $this->stats = new Stats($this->http);
+        $this->keys = new Keys($this->http);
     }
 
     public function getAllIndexes()
@@ -100,17 +105,8 @@ class Client
         return $this->stats->show();
     }
 
-    // Keys
-
     public function getKeys()
     {
-        return $this->httpGet('/keys');
-    }
-
-    // Private methods
-
-    private function indexInstance($uid)
-    {
-        return new Index($uid, $this->base_url, $this->api_key);
+        return $this->keys->show();
     }
 }
