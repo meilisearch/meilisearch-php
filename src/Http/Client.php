@@ -120,10 +120,10 @@ class Client implements Http
 
     /**
      * @param ResponseInterface $response
-     * @return array
+     * @return mixed
      * @throws HTTPRequestException@
      */
-    private function parseResponse(ResponseInterface $response): ?array
+    private function parseResponse(ResponseInterface $response)
     {
         if ($response->getStatusCode() >= 300) {
             $body = json_decode($response->getBody()->getContents(), true);

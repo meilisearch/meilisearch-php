@@ -13,9 +13,8 @@ class Index extends Endpoint
 {
     const PATH = '/indexes';
 
-    private $uid = null;
+    private $uid;
 
-    private $primaryKey = null;
     /**
      * @var Http
      */
@@ -127,6 +126,13 @@ class Index extends Endpoint
         return $this->http->get(self::PATH . '/' .$this->uid.'/updates');
     }
 
+    /**
+     * @param $update_id
+     * @param int $timeout_in_ms
+     * @param int $interval_in_ms
+     * @return mixed
+     * @throws TimeOutException
+     */
     public function waitForPendingUpdate($update_id, $timeout_in_ms = 5000, $interval_in_ms = 50)
     {
         $timeout_temp = 0;
