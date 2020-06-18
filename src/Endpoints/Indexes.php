@@ -312,14 +312,12 @@ class Indexes extends Endpoint
         return $this->http->delete(self::PATH . '/' .$this->uid.'/settings/attributes-for-faceting');
     }
 
-    // PRIVATE
-
     private function parseOptions(array $options)
     {
         foreach ($options as $key => $value) {
             if ('facetsDistribution' === $key || 'facetFilters' === $key) {
                 $options[$key] = json_encode($value);
-            } elseif (is_array($value)) {
+            }elseif (is_array($value)) {
                 $options[$key] = implode(',', $value);
             }
         }
