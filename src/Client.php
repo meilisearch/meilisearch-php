@@ -6,16 +6,23 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class Client extends HTTPRequest
+class Client
 {
-    public function __construct($url, $api_key = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
+    private $http;
+    /**
+     * @var Index
+     */
+    private $index;
+
+    public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
-        parent::__construct($url, $api_key, $httpClient, $requestFactory, $streamFactory);
+        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $streamFactory);
+        $this->index = new Index($this->http);
     }
 
     public function getAllIndexes()
     {
-        return $this->httpGet('/indexes');
+        return $this->index->all();
     }
 
     public function showIndex($uid)
@@ -30,7 +37,8 @@ class Client extends HTTPRequest
 
     public function deleteAllIndexes()
     {
-        foreach ($this->getAllIndexes() as $index) {
+        $indexes = $this->getAllIndexes();
+        foreach ($indexes as $index) {
             $this->deleteIndex($index['uid']);
         }
     }
@@ -42,14 +50,15 @@ class Client extends HTTPRequest
 
     public function createIndex($index_uid, $options = [])
     {
-        $body = array_merge(
-            $options,
-            ['uid' => $index_uid]
-        );
-        $response = $this->httpPost('/indexes', $body);
-        $uid = $response['uid'];
-
-        return $this->indexInstance($uid);
+        return $this->index->create($index_uid, $options);
+//        $body = array_merge(
+//            $options,
+//            ['uid' => $index_uid]
+//        );
+//        $response = $this->httpPost('/indexes', $body);
+//        $uid = $response['uid'];
+//
+//        return $this->indexInstance($uid);
     }
 
     // Health
