@@ -48,9 +48,11 @@ class Client
         return new Index($uid);
     }
 
-    public function createIndex($index_uid, $options = [])
+    public function createIndex($uid, $options = [])
     {
-        return $this->index->create($index_uid, $options);
+        $index = $this->index->create($uid, $options);
+        return $index;
+
 //        $body = array_merge(
 //            $options,
 //            ['uid' => $index_uid]

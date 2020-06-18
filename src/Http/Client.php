@@ -59,7 +59,7 @@ class Client implements Http
         $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
     }
 
-    public function get($path, $query = []): ResponseInterface
+    public function get($path, $query = [])
     {
         $request    = $this->requestFactory->createRequest(
             'GET',
@@ -69,7 +69,7 @@ class Client implements Http
         return $this->execute($request);
     }
 
-    public function post($path, $body = null, $query = []): ResponseInterface
+    public function post($path, $body = null, $query = [])
     {
         $request = $this->requestFactory->createRequest(
             'POST',
@@ -79,17 +79,22 @@ class Client implements Http
         return $this->execute($request);
     }
 
-    public function put(): ResponseInterface
+    public function put($path, $body = null, $query = [])
     {
-        // TODO: Implement put() method.
+        $request = $this->requestFactory->createRequest(
+            'PUT',
+            $this->baseUrl . $path. $this->buildQueryString($query)
+        )->withBody($this->streamFactory->createStream(json_encode($body)));
+
+        return $this->execute($request);
     }
 
-    public function patch(): ResponseInterface
+    public function patch()
     {
         // TODO: Implement patch() method.
     }
 
-    public function delete($path, $query = []): ResponseInterface
+    public function delete($path, $query = [])
     {
         $request = $this->requestFactory->createRequest(
             'DELETE',
@@ -105,11 +110,26 @@ class Client implements Http
             $request = $request->withAddedHeader($header, $value);
         }
 
-        return $this->http->sendRequest($request);
+        return $this->parseResponse($this->http->sendRequest($request));
     }
 
     private function buildQueryString(array $queryParams = []): string
     {
         return $queryParams ? '?' . http_build_query($queryParams) : '';
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return array
+     * @throws HTTPRequestException@
+     */
+    private function parseResponse(ResponseInterface $response): ?array
+    {
+        if ($response->getStatusCode() >= 300) {
+            $body = json_decode($response->getBody()->getContents(), true);
+            throw new HTTPRequestException($response->getStatusCode(), $body);
+        }
+
+        return json_decode($response->getBody()->getContents(), true);
     }
 }
