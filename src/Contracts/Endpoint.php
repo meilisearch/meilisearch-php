@@ -4,23 +4,24 @@
 namespace MeiliSearch\Contracts;
 
 
+use MeiliSearch\Endpoints\Health;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class Endpoint
 {
     /**
-     * @param ResponseInterface $response
-     * @return array
-     * @throws HTTPRequestException@
+     * @var Http
      */
-    public function parseResponse(ResponseInterface $response): array
-    {
-        if ($response->getStatusCode() >= 300) {
-            $body = json_decode($response->getBody()->getContents(), true);
-            throw new HTTPRequestException($response->getStatusCode(), $body);
-        }
+    protected $http;
 
-        return json_decode($response->getBody()->getContents(), true);
+    public function __construct(Http $http)
+    {
+        $this->http = $http;
+    }
+
+    public function show()
+    {
+        return $this->http->get(static::PATH);
     }
 }

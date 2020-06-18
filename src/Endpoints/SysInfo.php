@@ -13,21 +13,6 @@ class SysInfo extends Endpoint
 {
     const PATH = '/sys-info';
 
-    /**
-     * @var Http
-     */
-    private $http;
-
-    public function __construct(Http $http)
-    {
-        $this->http = $http;
-    }
-
-    public function show()
-    {
-        return $this->http->get(self::PATH);
-    }
-
     public function pretty()
     {
         return $this->http->get(self::PATH . '/pretty');

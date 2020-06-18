@@ -9,21 +9,19 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class Index extends Endpoint
+class Indexes extends Endpoint
 {
     const PATH = '/indexes';
 
-    private $uid;
-
-    /**
-     * @var Http
+    /*
+     * @var string
      */
-    private $http;
+    private $uid;
 
     public function __construct(Http $http, $uid = null)
     {
         $this->uid = $uid;
-        $this->http = $http;
+        parent::__construct($http);
     }
 
     /**

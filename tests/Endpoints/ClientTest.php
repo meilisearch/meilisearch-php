@@ -3,7 +3,7 @@
 namespace Tests\Endpoints;
 
 use MeiliSearch\Exceptions\HTTPRequestException;
-use MeiliSearch\Endpoints\Index;
+use MeiliSearch\Endpoints\Indexes;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
@@ -26,7 +26,7 @@ class ClientTest extends TestCase
     {
         $index = $this->client->createIndex('index');
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -38,7 +38,7 @@ class ClientTest extends TestCase
             ['primaryKey' => 'ObjectId'],
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -53,7 +53,7 @@ class ClientTest extends TestCase
             ],
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -88,7 +88,7 @@ class ClientTest extends TestCase
 
         $response = $this->client->showIndex($uid);
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertIsArray($response);
         $this->assertSame('objectID', $response['primaryKey']);
         $this->assertSame($uid, $response['uid']);
@@ -139,7 +139,7 @@ class ClientTest extends TestCase
         $this->client->createIndex('index');
 
         $index = $this->client->getIndex('index');
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }

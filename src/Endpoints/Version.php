@@ -12,19 +12,4 @@ use Psr\Http\Message\StreamFactoryInterface;
 class Version extends Endpoint
 {
     const PATH = '/version';
-
-    /**
-     * @var Http
-     */
-    private $http;
-
-    public function __construct(Http $http)
-    {
-        $this->http = $http;
-    }
-
-    public function show()
-    {
-        return $this->http->get(self::PATH);
-    }
 }

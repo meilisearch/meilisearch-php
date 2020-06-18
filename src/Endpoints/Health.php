@@ -12,19 +12,4 @@ use Psr\Http\Message\StreamFactoryInterface;
 class Health extends Endpoint
 {
     const PATH = '/health';
-
-    /**
-     * @var Http
-     */
-    private $http;
-
-    public function __construct(Http $http)
-    {
-        $this->http = $http;
-    }
-
-    public function show()
-    {
-        return $this->http->get(self::PATH);
-    }
 }

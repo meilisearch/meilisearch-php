@@ -4,7 +4,7 @@
 namespace MeiliSearch\Delegates;
 
 
-use MeiliSearch\Endpoints\Index;
+use MeiliSearch\Endpoints\Indexes;
 
 trait handlesIndex
 {
@@ -13,14 +13,14 @@ trait handlesIndex
         return $this->index->all();
     }
 
-    public function showIndex($uid)
+    public function showIndex($uid): array
     {
-        return (new \MeiliSearch\Endpoints\Index($this->http, $uid))->show();
+        return (new Indexes($this->http, $uid))->show();
     }
 
     public function deleteIndex($uid)
     {
-        return (new Index($this->http, $uid))->delete();
+        return (new Indexes($this->http, $uid))->delete();
     }
 
     public function deleteAllIndexes()
@@ -31,12 +31,12 @@ trait handlesIndex
         }
     }
 
-    public function getIndex($uid)
+    public function getIndex($uid): Indexes
     {
-        return new Index($this->http, $uid);
+        return new Indexes($this->http, $uid);
     }
 
-    public function createIndex($uid, $options = [])
+    public function createIndex($uid, $options = []):Indexes
     {
         return $this->index->create($uid, $options);
     }
