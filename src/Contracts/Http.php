@@ -10,5 +10,5 @@ interface Http
     public function post(string $path, $body = null, $query = []);
     public function put();
     public function patch();
-    public function delete();
+    public function delete($path, $query = []);
 }

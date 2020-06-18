@@ -14,6 +14,8 @@ class Index extends Endpoint
     const PATH = '/indexes';
 
     private $uid = null;
+
+    private $primaryKey = null;
     /**
      * @var Http
      */
@@ -44,7 +46,13 @@ class Index extends Endpoint
 
     public function all()
     {
-        return $this->parseResponse($this->http->get(self::PATH));
+        $indexes = [];
+
+        foreach ($this->parseResponse($this->http->get(self::PATH)) as $index) {
+            $indexes[] = new self($this->http, $index['uid']);
+        }
+
+        return $indexes;
     }
 
     public function getPrimaryKey()
@@ -59,7 +67,7 @@ class Index extends Endpoint
 
     public function show()
     {
-        return $this->http->get(self::PATH . $this->uid);
+        return $this->parseResponse($this->http->get(self::PATH . '/' . $this->uid));
     }
 
     public function update($body)
@@ -69,7 +77,7 @@ class Index extends Endpoint
 
     public function delete()
     {
-        return $this->httpDelete('/indexes/'.$this->uid);
+        return $this->http->delete(self::PATH . '/' .$this->uid);
     }
 
     // Documents

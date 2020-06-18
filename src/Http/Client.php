@@ -89,9 +89,14 @@ class Client implements Http
         // TODO: Implement patch() method.
     }
 
-    public function delete(): ResponseInterface
+    public function delete($path, $query = []): ResponseInterface
     {
-        // TODO: Implement delete() method.
+        $request = $this->requestFactory->createRequest(
+            'DELETE',
+            $this->baseUrl . $path. $this->buildQueryString($query)
+        );
+
+        return $this->execute($request);
     }
 
     private function execute(RequestInterface $request)

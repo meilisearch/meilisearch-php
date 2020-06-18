@@ -39,13 +39,13 @@ class Client
     {
         $indexes = $this->getAllIndexes();
         foreach ($indexes as $index) {
-            $this->deleteIndex($index['uid']);
+            $index->delete();
         }
     }
 
     public function getIndex($uid)
     {
-        return $this->indexInstance($uid);
+        return new Index($uid);
     }
 
     public function createIndex($index_uid, $options = [])
