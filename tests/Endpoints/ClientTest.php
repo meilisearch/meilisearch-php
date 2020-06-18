@@ -155,8 +155,11 @@ class ClientTest extends TestCase
 
     public function testExceptionIfNoUidWhenCreating()
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(\TypeError::class);
         $this->client->createIndex(null);
+
+        $this->expectException(HTTPRequestException::class);
+        $this->client->createIndex('');
     }
 
     public function testExceptionIfNoIndexWhenShowing()
