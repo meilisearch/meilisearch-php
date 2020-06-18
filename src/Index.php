@@ -85,14 +85,14 @@ class Index extends Endpoint
         return $this->http->get(self::PATH . '/' .$this->uid.'/documents/'.$document_id);
     }
 
-    public function getDocuments($options = null)
+    public function getDocuments($query = [])
     {
-        return $this->http->get(self::PATH . '/' .$this->uid.'/documents', $options);
+        return $this->http->get(self::PATH . '/' . $this->uid . '/documents', $query);
     }
 
-    public function addDocuments($documents, $primary_key = null)
+    public function addDocuments(array $documents, $primaryKey = null)
     {
-        return $this->http->post(self::PATH . '/' .$this->uid.'/documents', $documents, ['primaryKey' => $primary_key]);
+        return $this->http->post(self::PATH . '/' .$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]);
     }
 
     public function updateDocuments($documents, $primary_key = null)
