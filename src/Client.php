@@ -2,9 +2,16 @@
 
 namespace MeiliSearch;
 
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+
 class Client extends HTTPRequest
 {
-    // Indexes
+    public function __construct($url, $api_key = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
+    {
+        parent::__construct($url, $api_key, $httpClient, $requestFactory, $streamFactory);
+    }
 
     public function getAllIndexes()
     {
