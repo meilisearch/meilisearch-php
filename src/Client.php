@@ -2,6 +2,8 @@
 
 namespace MeiliSearch;
 
+use MeiliSearch\Delegates\handlesIndex;
+use MeiliSearch\Delegates\handlesSystem;
 use MeiliSearch\Endpoints\Health;
 use MeiliSearch\Endpoints\Index;
 use MeiliSearch\Endpoints\Keys;
@@ -14,6 +16,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class Client
 {
+    use handlesIndex, handlesSystem;
+
     private $http;
     /**
      * @var Index
@@ -51,72 +55,5 @@ class Client
         $this->sysInfo = new SysInfo($this->http);
         $this->stats = new Stats($this->http);
         $this->keys = new Keys($this->http);
-    }
-
-    public function getAllIndexes()
-    {
-        return $this->index->all();
-    }
-
-    public function showIndex($uid)
-    {
-        return (new Index($this->http, $uid))->show();
-    }
-
-    public function deleteIndex($uid)
-    {
-        return (new Index($this->http, $uid))->delete();
-    }
-
-    public function deleteAllIndexes()
-    {
-        $indexes = $this->getAllIndexes();
-        foreach ($indexes as $index) {
-            $index->delete();
-        }
-    }
-
-    public function getIndex($uid)
-    {
-        return new Index($this->http, $uid);
-    }
-
-    public function createIndex($uid, $options = [])
-    {
-        return $this->index->create($uid, $options);
-    }
-
-    // Health
-
-    public function health()
-    {
-        return $this->health->show();
-    }
-
-    // Stats
-
-    public function version()
-    {
-        return $this->version->show();
-    }
-
-    public function sysInfo()
-    {
-        return $this->sysInfo->show();
-    }
-
-    public function prettySysInfo()
-    {
-        return $this->sysInfo->pretty();
-    }
-
-    public function stats()
-    {
-        return $this->stats->show();
-    }
-
-    public function getKeys()
-    {
-        return $this->keys->show();
     }
 }
