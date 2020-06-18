@@ -89,9 +89,14 @@ class Client implements Http
         return $this->execute($request);
     }
 
-    public function patch()
+    public function patch($path, $body = null, $query = [])
     {
-        // TODO: Implement patch() method.
+        $request = $this->requestFactory->createRequest(
+            'PATCH',
+            $this->baseUrl . $path. $this->buildQueryString($query)
+        )->withBody($this->streamFactory->createStream(json_encode($body)));
+
+        return $this->execute($request);
     }
 
     public function delete($path, $query = [])
