@@ -10,6 +10,6 @@ class SysInfo extends Endpoint
 
     public function pretty()
     {
-        return $this->http->get(self::PATH . '/pretty');
+        return $this->http->get(self::PATH.'/pretty');
     }
 }

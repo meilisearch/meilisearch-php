@@ -2,9 +2,9 @@
 
 namespace Tests\Endpoints;
 
-use Tests\TestCase;
-use MeiliSearch\Exceptions\TimeOutException;
 use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\TimeOutException;
+use Tests\TestCase;
 
 class IndexTest extends TestCase
 {

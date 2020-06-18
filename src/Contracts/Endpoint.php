@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MeiliSearch\Contracts;
-
 
 abstract class Endpoint
 {

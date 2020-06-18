@@ -10,7 +10,8 @@ use MeiliSearch\Exceptions\TimeOutException;
 
 class Indexes extends Endpoint
 {
-    use handlesDocuments, handlesSearchRules;
+    use handlesDocuments;
+    use handlesSearchRules;
 
     const PATH = '/indexes';
 
@@ -26,9 +27,10 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param string $uid
      * @param array $options
+     *
      * @return $this
+     *
      * @throws Exceptions\HTTPRequestException
      */
     public function create(string $uid, $options = [])
@@ -63,37 +65,38 @@ class Indexes extends Endpoint
 
     public function show()
     {
-        return $this->http->get(self::PATH . '/' . $this->uid);
+        return $this->http->get(self::PATH.'/'.$this->uid);
     }
 
     public function update($body)
     {
-        return  $this->http->put(self::PATH. '/' . $this->uid, $body);
+        return  $this->http->put(self::PATH.'/'.$this->uid, $body);
     }
 
     public function delete()
     {
-        return $this->http->delete(self::PATH . '/' .$this->uid);
+        return $this->http->delete(self::PATH.'/'.$this->uid);
     }
-
 
     // Updates
 
     public function getUpdateStatus($update_id)
     {
-        return $this->http->get(self::PATH . '/' .$this->uid.'/updates/'.$update_id);
+        return $this->http->get(self::PATH.'/'.$this->uid.'/updates/'.$update_id);
     }
 
     public function getAllUpdateStatus()
     {
-        return $this->http->get(self::PATH . '/' .$this->uid.'/updates');
+        return $this->http->get(self::PATH.'/'.$this->uid.'/updates');
     }
 
     /**
      * @param $update_id
      * @param int $timeout_in_ms
      * @param int $interval_in_ms
+     *
      * @return mixed
+     *
      * @throws TimeOutException
      */
     public function waitForPendingUpdate($update_id, $timeout_in_ms = 5000, $interval_in_ms = 50)
@@ -119,40 +122,39 @@ class Indexes extends Endpoint
             $this->parseOptions($options)
         );
 
-        return $this->http->get(self::PATH . '/' .$this->uid.'/search', $parameters);
+        return $this->http->get(self::PATH.'/'.$this->uid.'/search', $parameters);
     }
 
     // Stats
 
     public function stats()
     {
-        return $this->http->get(self::PATH . '/' . $this->uid . '/stats');
+        return $this->http->get(self::PATH.'/'.$this->uid.'/stats');
     }
 
     // Settings - Global
 
     public function getSettings()
     {
-        return $this->http->get(self::PATH . '/' .$this->uid.'/settings');
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings');
     }
 
     public function updateSettings($settings)
     {
-        return $this->http->post(self::PATH . '/' .$this->uid.'/settings', $settings);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings', $settings);
     }
 
     public function resetSettings()
     {
-        return $this->http->delete(self::PATH . '/' .$this->uid.'/settings');
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings');
     }
-
 
     private function parseOptions(array $options)
     {
         foreach ($options as $key => $value) {
             if ('facetsDistribution' === $key || 'facetFilters' === $key) {
                 $options[$key] = json_encode($value);
-            }elseif (is_array($value)) {
+            } elseif (is_array($value)) {
                 $options[$key] = implode(',', $value);
             }
         }

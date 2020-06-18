@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MeiliSearch\Delegates;
-
 
 trait handlesSystem
 {

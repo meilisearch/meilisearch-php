@@ -16,7 +16,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class Client
 {
-    use handlesIndex, handlesSystem;
+    use handlesIndex;
+    use handlesSystem;
 
     private $http;
     /**
@@ -45,15 +46,14 @@ class Client
      */
     private $stats;
 
-
     public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
-        $this->http    = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $streamFactory);
-        $this->index   = new Indexes($this->http);
-        $this->health  = new Health($this->http);
+        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $streamFactory);
+        $this->index = new Indexes($this->http);
+        $this->health = new Health($this->http);
         $this->version = new Version($this->http);
         $this->sysInfo = new SysInfo($this->http);
-        $this->stats   = new Stats($this->http);
-        $this->keys    = new Keys($this->http);
+        $this->stats = new Stats($this->http);
+        $this->keys = new Keys($this->http);
     }
 }

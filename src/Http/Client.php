@@ -1,24 +1,22 @@
 <?php
 
-
 namespace MeiliSearch\Http;
 
-
-use MeiliSearch\Contracts\Http;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Psr17FactoryDiscovery;
-use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Client\ClientExceptionInterface;
+use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\HTTPRequestException;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class Client implements Http
 {
     /**
-     * @var  Http
+     * @var Http
      */
     private $http;
 
@@ -44,24 +42,21 @@ class Client implements Http
 
     private $baseUrl;
 
-
     /**
      * Client constructor.
+     *
      * @param $url
      * @param null $apiKey
-     * @param ClientInterface|null $httpClient
-     * @param RequestFactoryInterface|null $requestFactory
-     * @param StreamFactoryInterface|null $streamFactory
      */
     public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
-        $this->baseUrl        = $url;
-        $this->apiKey         = $apiKey;
-        $this->http           = $httpClient ?: HttpClientDiscovery::find();
+        $this->baseUrl = $url;
+        $this->apiKey = $apiKey;
+        $this->http = $httpClient ?: HttpClientDiscovery::find();
         $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory  = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
-        $this->headers        = array_filter([
-            'Content-type'    => 'application/json',
+        $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
+        $this->headers = array_filter([
+            'Content-type' => 'application/json',
             'X-Meili-API-Key' => $this->apiKey,
         ]);
     }
@@ -69,15 +64,17 @@ class Client implements Http
     /**
      * @param $path
      * @param array $query
+     *
      * @return mixed
+     *
      * @throws ClientExceptionInterface
      * @throws HTTPRequestException
      */
     public function get($path, $query = [])
     {
-        $request    = $this->requestFactory->createRequest(
+        $request = $this->requestFactory->createRequest(
             'GET',
-            $this->baseUrl . $path . $this->buildQueryString($query)
+            $this->baseUrl.$path.$this->buildQueryString($query)
         );
 
         return $this->execute($request);
@@ -85,9 +82,11 @@ class Client implements Http
 
     /**
      * @param string $path
-     * @param null $body
-     * @param array $query
+     * @param null   $body
+     * @param array  $query
+     *
      * @return mixed
+     *
      * @throws ClientExceptionInterface
      * @throws HTTPRequestException
      */
@@ -95,7 +94,7 @@ class Client implements Http
     {
         $request = $this->requestFactory->createRequest(
             'POST',
-            $this->baseUrl . $path. $this->buildQueryString($query)
+            $this->baseUrl.$path.$this->buildQueryString($query)
         )->withBody($this->streamFactory->createStream(json_encode($body)));
 
         return $this->execute($request);
@@ -105,7 +104,7 @@ class Client implements Http
     {
         $request = $this->requestFactory->createRequest(
             'PUT',
-            $this->baseUrl . $path. $this->buildQueryString($query)
+            $this->baseUrl.$path.$this->buildQueryString($query)
         )->withBody($this->streamFactory->createStream(json_encode($body)));
 
         return $this->execute($request);
@@ -113,9 +112,11 @@ class Client implements Http
 
     /**
      * @param string $path
-     * @param null $body
-     * @param array $query
+     * @param null   $body
+     * @param array  $query
+     *
      * @return mixed
+     *
      * @throws ClientExceptionInterface
      * @throws HTTPRequestException
      */
@@ -123,7 +124,7 @@ class Client implements Http
     {
         $request = $this->requestFactory->createRequest(
             'PATCH',
-            $this->baseUrl . $path. $this->buildQueryString($query)
+            $this->baseUrl.$path.$this->buildQueryString($query)
         )->withBody($this->streamFactory->createStream(json_encode($body)));
 
         return $this->execute($request);
@@ -132,7 +133,9 @@ class Client implements Http
     /**
      * @param $path
      * @param array $query
+     *
      * @return mixed
+     *
      * @throws ClientExceptionInterface
      * @throws HTTPRequestException
      */
@@ -140,15 +143,15 @@ class Client implements Http
     {
         $request = $this->requestFactory->createRequest(
             'DELETE',
-            $this->baseUrl . $path. $this->buildQueryString($query)
+            $this->baseUrl.$path.$this->buildQueryString($query)
         );
 
         return $this->execute($request);
     }
 
     /**
-     * @param RequestInterface $request
      * @return mixed
+     *
      * @throws ClientExceptionInterface
      * @throws HTTPRequestException
      */
@@ -161,18 +164,14 @@ class Client implements Http
         return $this->parseResponse($this->http->sendRequest($request));
     }
 
-    /**
-     * @param array $queryParams
-     * @return string
-     */
     private function buildQueryString(array $queryParams = []): string
     {
-        return $queryParams ? '?' . http_build_query($queryParams) : '';
+        return $queryParams ? '?'.http_build_query($queryParams) : '';
     }
 
     /**
-     * @param ResponseInterface $response
      * @return mixed
+     *
      * @throws HTTPRequestException@
      */
     private function parseResponse(ResponseInterface $response)

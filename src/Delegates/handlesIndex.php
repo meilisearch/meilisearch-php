@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MeiliSearch\Delegates;
-
 
 use MeiliSearch\Endpoints\Indexes;
 
@@ -36,7 +34,7 @@ trait handlesIndex
         return new Indexes($this->http, $uid);
     }
 
-    public function createIndex($uid, $options = []):Indexes
+    public function createIndex($uid, $options = []): Indexes
     {
         return $this->index->create($uid, $options);
     }
