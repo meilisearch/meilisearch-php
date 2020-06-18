@@ -2,19 +2,49 @@
 
 namespace MeiliSearch;
 
+use MeiliSearch\Contracts\Endpoint;
+use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\TimeOutException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class Index extends HTTPRequest
+class Index extends Endpoint
 {
-    private $uid = null;
+    const PATH = '/indexes';
 
-    public function __construct($uid, $url, $api_key = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
+    private $uid = null;
+    /**
+     * @var Http
+     */
+    private $http;
+
+    public function __construct(Http $http, $uid = null)
     {
         $this->uid = $uid;
-        parent::__construct($url, $api_key, $httpClient, $requestFactory, $streamFactory);
+        $this->http = $http;
+    }
+
+    /**
+     * @param string $uid
+     * @param array $options
+     * @return $this
+     * @throws Exceptions\HTTPRequestException
+     */
+    public function create(string $uid, $options = [])
+    {
+        $options['uid'] = $uid;
+
+        $response = $this->parseResponse($this->http->post(self::PATH, $options));
+
+        $this->uid = $response['uid'];
+
+        return $this;
+    }
+
+    public function all()
+    {
+        return $this->parseResponse($this->http->get(self::PATH));
     }
 
     public function getPrimaryKey()
@@ -29,7 +59,7 @@ class Index extends HTTPRequest
 
     public function show()
     {
-        return $this->httpGet('/indexes/'.$this->uid);
+        return $this->http->get(self::PATH . $this->uid);
     }
 
     public function update($body)
