@@ -14,10 +14,28 @@ class Client
      */
     private $index;
 
+    /**
+     * @var Health
+     */
+    private $health;
+    /**
+     * @var Version
+     */
+    private $version;
+    /**
+     * @var SysInfo
+     */
+    private $sysInfo;
+
+
     public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
         $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $streamFactory);
         $this->index = new Index($this->http);
+        $this->health = new Health($this->http);
+        $this->version = new Version($this->http);
+        $this->sysInfo = new SysInfo($this->http);
+        $this->stats = new Stats($this->http);
     }
 
     public function getAllIndexes()
@@ -27,12 +45,12 @@ class Client
 
     public function showIndex($uid)
     {
-        return $this->indexInstance($uid)->show();
+        return (new Index($this->http, $uid))->show();
     }
 
     public function deleteIndex($uid)
     {
-        return $this->indexInstance($uid)->delete();
+        return (new Index($this->http, $uid))->delete();
     }
 
     public function deleteAllIndexes()
@@ -45,51 +63,41 @@ class Client
 
     public function getIndex($uid)
     {
-        return new Index($uid);
+        return new Index($this->http, $uid);
     }
 
     public function createIndex($uid, $options = [])
     {
-        $index = $this->index->create($uid, $options);
-        return $index;
-
-//        $body = array_merge(
-//            $options,
-//            ['uid' => $index_uid]
-//        );
-//        $response = $this->httpPost('/indexes', $body);
-//        $uid = $response['uid'];
-//
-//        return $this->indexInstance($uid);
+        return $this->index->create($uid, $options);
     }
 
     // Health
 
     public function health()
     {
-        return $this->httpGet('/health');
+        return $this->health->show();
     }
 
     // Stats
 
     public function version()
     {
-        return $this->httpGet('/version');
+        return $this->version->show();
     }
 
     public function sysInfo()
     {
-        return $this->httpGet('/sys-info');
+        return $this->sysInfo->show();
     }
 
     public function prettySysInfo()
     {
-        return $this->httpGet('/sys-info/pretty');
+        return $this->sysInfo->pretty();
     }
 
     public function stats()
     {
-        return $this->httpGet('/stats');
+        return $this->stats->show();
     }
 
     // Keys

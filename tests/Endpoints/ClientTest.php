@@ -70,7 +70,9 @@ class ClientTest extends TestCase
         $this->assertIsArray($response);
         $this->assertCount(2, $response);
 
-        $uids = array_column($response, 'uid');
+        $uids = array_map(function ($index) {
+            return $index->getUid();
+        }, $response);
 
         $this->assertContains($indexA, $uids);
         $this->assertContains($indexB, $uids);
@@ -78,17 +80,18 @@ class ClientTest extends TestCase
 
     public function testShowIndex()
     {
-        $index = 'index';
-        $this->client->createIndex(
-            $index,
-            ['primaryKey' => 'objectID'],
+        $uid = 'index';
+        $index = $this->client->createIndex(
+            $uid,
+            ['primaryKey' => 'objectID']
         );
 
-        $response = $this->client->showIndex($index);
+        $response = $this->client->showIndex($uid);
 
+        $this->assertInstanceOf(Index::class, $index);
         $this->assertIsArray($response);
         $this->assertSame('objectID', $response['primaryKey']);
-        $this->assertSame($index, $response['uid']);
+        $this->assertSame($uid, $response['uid']);
     }
 
     public function testDeleteIndex()
