@@ -3,7 +3,7 @@
 namespace Tests\Endpoints;
 
 use MeiliSearch\Exceptions\HTTPRequestException;
-use MeiliSearch\Index;
+use MeiliSearch\Endpoints\Index;
 use Tests\TestCase;
 
 class ClientTest extends TestCase

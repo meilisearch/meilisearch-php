@@ -1,6 +1,6 @@
 <?php
 
-namespace MeiliSearch;
+namespace MeiliSearch\Endpoints;
 
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
@@ -9,9 +9,9 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class Version extends Endpoint
+class Keys extends Endpoint
 {
-    const PATH = '/version';
+    const PATH = '/keys';
 
     /**
      * @var Http

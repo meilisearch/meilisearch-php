@@ -1,6 +1,6 @@
 <?php
 
-namespace MeiliSearch;
+namespace MeiliSearch\Endpoints;
 
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;

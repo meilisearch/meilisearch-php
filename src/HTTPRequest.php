@@ -1,6 +1,6 @@
 <?php
 
-namespace MeiliSearch;
+namespace MeiliSearch\Endpoints;
 
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Psr17FactoryDiscovery;

@@ -2,6 +2,12 @@
 
 namespace MeiliSearch;
 
+use MeiliSearch\Endpoints\Health;
+use MeiliSearch\Endpoints\Index;
+use MeiliSearch\Endpoints\Keys;
+use MeiliSearch\Endpoints\Stats;
+use MeiliSearch\Endpoints\SysInfo;
+use MeiliSearch\Endpoints\Version;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -30,6 +36,10 @@ class Client
      * @var Keys
      */
     private $keys;
+    /**
+     * @var Stats
+     */
+    private $stats;
 
 
     public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
