@@ -9,8 +9,6 @@ trait handlesSystem
         return $this->health->show();
     }
 
-    // Stats
-
     public function version()
     {
         return $this->version->show();

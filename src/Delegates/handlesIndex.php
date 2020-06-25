@@ -6,7 +6,7 @@ use MeiliSearch\Endpoints\Indexes;
 
 trait handlesIndex
 {
-    public function getAllIndexes()
+    public function getAllIndexes(): array
     {
         return $this->index->all();
     }
