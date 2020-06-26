@@ -72,9 +72,9 @@ class SettingsTest extends TestCase
         $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertIsArray($settings['searchableAttributes']);
-        $this->assertEquals(['title'], $settings['searchableAttributes']);
+        $this->assertEmpty($settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
-        $this->assertEquals(['title'], $settings['displayedAttributes']);
+        $this->assertEmpty($settings['displayedAttributes']);
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
@@ -106,7 +106,7 @@ class SettingsTest extends TestCase
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertEquals(['title'], $settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
-        $this->assertEquals(['title'], $settings['displayedAttributes']);
+        $this->assertEmpty($settings['displayedAttributes']);
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
