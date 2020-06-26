@@ -13,7 +13,7 @@ class Indexes extends Endpoint
     use HandlesDocuments;
     use HandlesSettings;
 
-    const PATH = '/indexes';
+    protected const PATH = '/indexes';
 
     /*
      * @var string
@@ -63,7 +63,7 @@ class Indexes extends Endpoint
         return $this->uid;
     }
 
-    public function show()
+    public function show(): ?array
     {
         return $this->http->get(self::PATH.'/'.$this->uid);
     }

@@ -6,5 +6,5 @@ use MeiliSearch\Contracts\Endpoint;
 
 class Health extends Endpoint
 {
-    const PATH = '/health';
+    protected const PATH = '/health';
 }

@@ -6,5 +6,5 @@ use MeiliSearch\Contracts\Endpoint;
 
 class Stats extends Endpoint
 {
-    const PATH = '/stats';
+    protected const PATH = '/stats';
 }

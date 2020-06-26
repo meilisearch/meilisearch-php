@@ -45,10 +45,13 @@ class Client implements Http
     /**
      * Client constructor.
      *
-     * @param $url
-     * @param null $apiKey
+     * @param string $url
+     * @param string $apiKey
+     * @param ClientInterface|null $httpClient
+     * @param RequestFactoryInterface|null $requestFactory
+     * @param StreamFactoryInterface|null $streamFactory
      */
-    public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
+    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
         $this->baseUrl = $url;
         $this->apiKey = $apiKey;
@@ -150,6 +153,7 @@ class Client implements Http
     }
 
     /**
+     * @param RequestInterface $request
      * @return mixed
      *
      * @throws ClientExceptionInterface
@@ -170,9 +174,10 @@ class Client implements Http
     }
 
     /**
+     * @param ResponseInterface $response
      * @return mixed
      *
-     * @throws HTTPRequestException@
+     * @throws HTTPRequestException
      */
     private function parseResponse(ResponseInterface $response)
     {

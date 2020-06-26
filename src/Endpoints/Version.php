@@ -6,5 +6,5 @@ use MeiliSearch\Contracts\Endpoint;
 
 class Version extends Endpoint
 {
-    const PATH = '/version';
+    protected const PATH = '/version';
 }

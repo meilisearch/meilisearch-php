@@ -14,7 +14,7 @@ abstract class Endpoint
         $this->http = $http;
     }
 
-    public function show()
+    public function show(): ?array
     {
         return $this->http->get(static::PATH);
     }

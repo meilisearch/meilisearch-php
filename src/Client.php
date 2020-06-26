@@ -20,6 +20,7 @@ class Client
     use handlesSystem;
 
     private $http;
+
     /**
      * @var Indexes
      */
@@ -29,24 +30,28 @@ class Client
      * @var Health
      */
     private $health;
+
     /**
      * @var Version
      */
     private $version;
+
     /**
      * @var SysInfo
      */
     private $sysInfo;
+
     /**
      * @var Keys
      */
     private $keys;
+
     /**
      * @var Stats
      */
     private $stats;
 
-    public function __construct($url, $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
+    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
         $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $streamFactory);
         $this->index = new Indexes($this->http);

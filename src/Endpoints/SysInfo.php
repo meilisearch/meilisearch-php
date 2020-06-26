@@ -6,7 +6,7 @@ use MeiliSearch\Contracts\Endpoint;
 
 class SysInfo extends Endpoint
 {
-    const PATH = '/sys-info';
+    protected const PATH = '/sys-info';
 
     public function pretty()
     {
