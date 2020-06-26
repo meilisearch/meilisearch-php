@@ -45,11 +45,7 @@ class Client implements Http
     /**
      * Client constructor.
      *
-     * @param string $url
      * @param string $apiKey
-     * @param ClientInterface|null $httpClient
-     * @param RequestFactoryInterface|null $requestFactory
-     * @param StreamFactoryInterface|null $streamFactory
      */
     public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
     {
@@ -153,7 +149,6 @@ class Client implements Http
     }
 
     /**
-     * @param RequestInterface $request
      * @return mixed
      *
      * @throws ClientExceptionInterface
@@ -174,7 +169,6 @@ class Client implements Http
     }
 
     /**
-     * @param ResponseInterface $response
      * @return mixed
      *
      * @throws HTTPRequestException
