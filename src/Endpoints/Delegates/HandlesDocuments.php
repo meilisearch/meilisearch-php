@@ -2,10 +2,8 @@
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-trait handlesDocuments
+trait HandlesDocuments
 {
-    // Documents
-
     public function getDocument($document_id)
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/documents/'.$document_id);

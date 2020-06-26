@@ -2,7 +2,7 @@
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-trait handlesSettings
+trait HandlesSettings
 {
     // Settings - Ranking rules
 

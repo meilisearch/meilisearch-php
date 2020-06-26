@@ -4,14 +4,14 @@ namespace MeiliSearch\Endpoints;
 
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
-use MeiliSearch\Endpoints\Delegates\handlesDocuments;
-use MeiliSearch\Endpoints\Delegates\handlesSettings;
+use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
+use MeiliSearch\Endpoints\Delegates\HandlesSettings;
 use MeiliSearch\Exceptions\TimeOutException;
 
 class Indexes extends Endpoint
 {
-    use handlesDocuments;
-    use handlesSettings;
+    use HandlesDocuments;
+    use HandlesSettings;
 
     const PATH = '/indexes';
 

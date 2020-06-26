@@ -4,7 +4,7 @@ namespace MeiliSearch\Delegates;
 
 use MeiliSearch\Endpoints\Indexes;
 
-trait handlesIndex
+trait HandlesIndex
 {
     public function getAllIndexes(): array
     {
