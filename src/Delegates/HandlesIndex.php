@@ -16,12 +16,12 @@ trait HandlesIndex
         return (new Indexes($this->http, $uid))->show();
     }
 
-    public function deleteIndex($uid)
+    public function deleteIndex($uid): void
     {
-        return (new Indexes($this->http, $uid))->delete();
+        (new Indexes($this->http, $uid))->delete();
     }
 
-    public function deleteAllIndexes()
+    public function deleteAllIndexes(): void
     {
         $indexes = $this->getAllIndexes();
         foreach ($indexes as $index) {
