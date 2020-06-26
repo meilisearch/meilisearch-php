@@ -58,10 +58,10 @@ class Client implements Http
         $this->http = $httpClient ?: HttpClientDiscovery::find();
         $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
-        $this->headers = array_filter([
+        $this->headers = [
             'Content-type' => 'application/json',
             'X-Meili-API-Key' => $this->apiKey,
-        ]);
+        ];
     }
 
     /**

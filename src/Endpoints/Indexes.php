@@ -33,7 +33,7 @@ class Indexes extends Endpoint
      *
      * @throws Exceptions\HTTPRequestException
      */
-    public function create(string $uid, $options = [])
+    public function create(string $uid, $options = []): self
     {
         $options['uid'] = $uid;
 
@@ -42,7 +42,7 @@ class Indexes extends Endpoint
         return new self($this->http, $response['uid']);
     }
 
-    public function all()
+    public function all(): array
     {
         $indexes = [];
 
@@ -53,12 +53,12 @@ class Indexes extends Endpoint
         return $indexes;
     }
 
-    public function getPrimaryKey()
+    public function getPrimaryKey(): ?string
     {
         return $this->show()['primaryKey'];
     }
 
-    public function getUid()
+    public function getUid(): string
     {
         return $this->uid;
     }
@@ -68,24 +68,24 @@ class Indexes extends Endpoint
         return $this->http->get(self::PATH.'/'.$this->uid);
     }
 
-    public function update($body)
+    public function update($body): array
     {
         return  $this->http->put(self::PATH.'/'.$this->uid, $body);
     }
 
-    public function delete()
+    public function delete(): void
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid);
+        $this->http->delete(self::PATH.'/'.$this->uid);
     }
 
     // Updates
 
-    public function getUpdateStatus($update_id)
+    public function getUpdateStatus($updateId): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/updates/'.$update_id);
+        return $this->http->get(self::PATH.'/'.$this->uid.'/updates/'.$updateId);
     }
 
-    public function getAllUpdateStatus()
+    public function getAllUpdateStatus(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/updates');
     }
@@ -99,7 +99,7 @@ class Indexes extends Endpoint
      *
      * @throws TimeOutException
      */
-    public function waitForPendingUpdate($update_id, $timeout_in_ms = 5000, $interval_in_ms = 50)
+    public function waitForPendingUpdate($update_id, $timeout_in_ms = 5000, $interval_in_ms = 50): array
     {
         $timeout_temp = 0;
         while ($timeout_in_ms > $timeout_temp) {
@@ -115,7 +115,7 @@ class Indexes extends Endpoint
 
     // Search
 
-    public function search($query, array $options = [])
+    public function search($query, array $options = []): array
     {
         $parameters = array_merge(
             ['q' => $query],
@@ -127,29 +127,29 @@ class Indexes extends Endpoint
 
     // Stats
 
-    public function stats()
+    public function stats(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/stats');
     }
 
     // Settings - Global
 
-    public function getSettings()
+    public function getSettings(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings');
     }
 
-    public function updateSettings($settings)
+    public function updateSettings($settings): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings', $settings);
     }
 
-    public function resetSettings()
+    public function resetSettings(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings');
     }
 
-    private function parseOptions(array $options)
+    private function parseOptions(array $options): array
     {
         foreach ($options as $key => $value) {
             if ('facetsDistribution' === $key || 'facetFilters' === $key) {

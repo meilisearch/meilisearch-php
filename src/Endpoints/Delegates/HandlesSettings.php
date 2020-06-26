@@ -6,131 +6,131 @@ trait HandlesSettings
 {
     // Settings - Ranking rules
 
-    public function getRankingRules()
+    public function getRankingRules(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/ranking-rules');
     }
 
-    public function updateRankingRules($ranking_rules)
+    public function updateRankingRules(array $rankingRules): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/ranking-rules', $ranking_rules);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/ranking-rules', $rankingRules);
     }
 
-    public function resetRankingRules()
+    public function resetRankingRules(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/ranking-rules');
     }
 
     // Settings - Distinct attribute
 
-    public function getDistinctAttribute()
+    public function getDistinctAttribute(): ?string
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/distinct-attribute');
     }
 
-    public function updateDistinctAttribute($distinct_attribute)
+    public function updateDistinctAttribute(string $distinctAttribute): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/distinct-attribute', $distinct_attribute);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/distinct-attribute', $distinctAttribute);
     }
 
-    public function resetDistinctAttribute()
+    public function resetDistinctAttribute(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/distinct-attribute');
     }
 
     // Settings - Searchable attributes
 
-    public function getSearchableAttributes()
+    public function getSearchableAttributes(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/searchable-attributes');
     }
 
-    public function updateSearchableAttributes($searchable_attributes)
+    public function updateSearchableAttributes($searchable_attributes): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchable_attributes);
     }
 
-    public function resetSearchableAttributes()
+    public function resetSearchableAttributes(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/searchable-attributes');
     }
 
     // Settings - Displayed attributes
 
-    public function getDisplayedAttributes()
+    public function getDisplayedAttributes(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
-    public function updateDisplayedAttributes($displayed_attributes)
+    public function updateDisplayedAttributes($displayedAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayed_attributes);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayedAttributes);
     }
 
-    public function resetDisplayedAttributes()
+    public function resetDisplayedAttributes(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
     // Settings - Stop-words
 
-    public function getStopWords()
+    public function getStopWords(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/stop-words');
     }
 
-    public function updateStopWords($stop_words)
+    public function updateStopWords($stopWords): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/stop-words', $stop_words);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/stop-words', $stopWords);
     }
 
-    public function resetStopWords()
+    public function resetStopWords(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/stop-words');
     }
 
     // Settings - Synonyms
 
-    public function getSynonyms()
+    public function getSynonyms(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/synonyms');
     }
 
-    public function updateSynonyms($synonyms)
+    public function updateSynonyms($synonyms): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/synonyms', $synonyms);
     }
 
-    public function resetSynonyms()
+    public function resetSynonyms(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/synonyms');
     }
 
     // Settings - AcceptNewFields
 
-    public function getAcceptNewFields()
+    public function getAcceptNewFields(): bool
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/accept-new-fields');
     }
 
-    public function updateAcceptNewFields($accept_new_fields)
+    public function updateAcceptNewFields($acceptNewFields): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/accept-new-fields', $accept_new_fields);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/accept-new-fields', $acceptNewFields);
     }
 
     // Settings - Attributes for faceting
 
-    public function getAttributesForFaceting()
+    public function getAttributesForFaceting(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/attributes-for-faceting');
     }
 
-    public function updateAttributesForFaceting($attributes_for_faceting)
+    public function updateAttributesForFaceting(array $attributesForFaceting): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/attributes-for-faceting', $attributes_for_faceting);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/attributes-for-faceting', $attributesForFaceting);
     }
 
-    public function resetAttributesForFaceting()
+    public function resetAttributesForFaceting(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/attributes-for-faceting');
     }
