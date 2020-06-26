@@ -2,34 +2,34 @@
 
 namespace MeiliSearch\Delegates;
 
-trait handlesSystem
+trait HandlesSystem
 {
-    public function health()
+    public function health(): ?array
     {
         return $this->health->show();
     }
 
-    public function version()
+    public function version(): array
     {
         return $this->version->show();
     }
 
-    public function sysInfo()
+    public function sysInfo(): array
     {
         return $this->sysInfo->show();
     }
 
-    public function prettySysInfo()
+    public function prettySysInfo(): array
     {
         return $this->sysInfo->pretty();
     }
 
-    public function stats()
+    public function stats(): array
     {
         return $this->stats->show();
     }
 
-    public function getKeys()
+    public function getKeys(): array
     {
         return $this->keys->show();
     }
