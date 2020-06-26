@@ -24,8 +24,10 @@ class DistinctAttributeTest extends TestCase
     {
         $distinctAttribute = 'description';
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);
+
         $this->assertIsValidPromise($promise);
         $this->index->waitForPendingUpdate($promise['updateId']);
+
         $this->assertEquals($distinctAttribute, $this->index->getDistinctAttribute());
     }
 
