@@ -2,8 +2,8 @@
 
 namespace MeiliSearch;
 
-use MeiliSearch\Delegates\handlesIndex;
-use MeiliSearch\Delegates\handlesSystem;
+use MeiliSearch\Delegates\HandlesIndex;
+use MeiliSearch\Delegates\HandlesSystem;
 use MeiliSearch\Endpoints\Health;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Endpoints\Keys;
@@ -16,8 +16,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class Client
 {
-    use handlesIndex;
-    use handlesSystem;
+    use HandlesIndex;
+    use HandlesSystem;
 
     private $http;
 
