@@ -1,0 +1,111 @@
+get_one_index_1: |-
+list_all_indexes_1: |-
+create_an_index_1: |-
+update_an_index_1: |-
+delete_an_index_1: |-
+get_one_document_1: |-
+get_documents_1: |-
+add_or_replace_documents_1: |-
+add_or_update_documents_1: |-
+delete_all_documents_1: |-
+delete_one_document_1: |-
+delete_documents_1: |-
+search_1: |-
+get_update_1: |-
+get_all_updates_1: |-
+get_keys_1: |-
+get_settings_1: |-
+update_settings_1: |-
+reset_settings_1: |-
+get_synonyms_1: |-
+update_synonyms_1: |-
+reset_synonyms_1: |-
+get_stop_words_1: |-
+update_stop_words_1: |-
+reset_stop_words_1: |-
+get_ranking_rules_1: |-
+update_ranking_rules_1: |-
+reset_ranking_rules_1: |-
+get_distinct_attribute_1: |-
+update_distinct_attribute_1: |-
+reset_distinct_attribute_1: |-
+get_searchable_attributes_1: |-
+update_searchable_attributes_1: |-
+reset_searchable_attributes_1: |-
+get_attributes_for_faceting_1: |-
+update_attributes_for_faceting_1: |-
+reset_attributes_for_faceting_1: |-
+get_displayed_attributes_1: |-
+update_displayed_attributes_1: |-
+reset_displayed_attributes_1: |-
+get_accept_new_fields_1: |-
+update_accept_new_fields_1: |-
+get_index_stats_1: |-
+get_indexes_stats_1: |-
+get_health_1: |-
+update_health_1: |-
+get_version_1: |-
+get_pretty_sys_info_1: |-
+get_sys_info_1: |-
+distinct_attribute_guide_1: |-
+field_properties_guide_searchable_1: |-
+field_properties_guide_displayed_1: |-
+filtering_guide_1: |-
+filtering_guide_2: |-
+filtering_guide_3: |-
+filtering_guide_4: |-
+search_parameter_guide_query_1: |-
+search_parameter_guide_offset_1: |-
+search_parameter_guide_limit_1: |-
+search_parameter_guide_retrieve_1: |-
+search_parameter_guide_crop_1: |-
+search_parameter_guide_highlight_1: |-
+search_parameter_guide_filter_1: |-
+search_parameter_guide_filter_2: |-
+search_parameter_guide_matches_1: |-
+settings_guide_stop_words_1: |-
+settings_guide_ranking_rules_1: |-
+settings_guide_distinct_1: |-
+settings_guide_searchable_1: |-
+settings_guide_displayed_1: |-
+settings_guide_accept_new_fields_1: |-
+documents_guide_add_movie_1: |-
+search_guide_1: |-
+search_guide_2: |-
+getting_started_create_index_md: |-
+  ```bash
+  $ composer require meilisearch/meilisearch-php
+  ```
+
+  ```php
+  <?php
+
+  require_once __DIR__ . '/vendor/autoload.php';
+
+  use MeiliSearch\Client;
+
+  $client = new Client('http://127.0.0.1:7700');
+  $index = $client->createIndex('movies');
+  ```
+
+  [About this package](https://github.com/meilisearch/meilisearch-php/)
+getting_started_add_documents_md: |-
+  ```php
+  $movies_json = file_get_contents('movies.json');
+  $movies = json_decode($movies_json);
+  $index->addDocuments($movies);
+  ```
+
+  [About this package](https://github.com/meilisearch/meilisearch-php/)
+getting_started_search_md: |-
+  ```php
+  $index->search('botman');
+  ```
+
+  [About this package](https://github.com/meilisearch/meilisearch-php/)
+faceted_search_update_settings_1: |-
+faceted_search_facet_filters_1: |-
+faceted_search_facets_distribution_1: |-
+faceted_search_walkthrough_attributes_for_faceting_1: |-
+faceted_search_walkthrough_facet_filters_1: |-
+faceted_search_walkthrough_facets_distribution_1: |-
