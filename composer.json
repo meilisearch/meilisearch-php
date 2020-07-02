@@ -31,5 +31,13 @@
     "require-dev": {
         "phpunit/phpunit": "^8.5",
         "friendsofphp/php-cs-fixer": "^2.16"
+    },
+    "scripts": {
+        "lint": [
+            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --dry-run --using-cache=yes --allow-risky=yes"
+        ],
+        "lint:fix": [
+            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --using-cache=no --allow-risky=yes"
+        ]
     }
 }

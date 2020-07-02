@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MeiliSearch;
 
 use MeiliSearch\Exceptions\HTTPRequestException;
@@ -57,7 +59,7 @@ class Client extends HTTPRequest
         try {
             $index = $this->createIndex($uid, $options);
         } catch (HTTPRequestException $e) {
-            if (is_array($e->http_body) && 'index_already_exists' !== $e->http_body['errorCode']) {
+            if (\is_array($e->http_body) && 'index_already_exists' !== $e->http_body['errorCode']) {
                 throw $e;
             }
         }

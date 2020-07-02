@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MeiliSearch;
 
 use MeiliSearch\Exceptions\TimeOutException;
@@ -279,7 +281,7 @@ class Index extends HTTPRequest
         foreach ($options as $key => $value) {
             if ('facetsDistribution' === $key || 'facetFilters' === $key) {
                 $options[$key] = json_encode($value);
-            } elseif (is_array($value)) {
+            } elseif (\is_array($value)) {
                 $options[$key] = implode(',', $value);
             }
         }

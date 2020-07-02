@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
@@ -30,7 +32,7 @@ class SettingsTest extends TestCase
         $settingB = $this->client
             ->createIndex(
                 'indexB',
-                ['primaryKey' => $primaryKey],
+                ['primaryKey' => $primaryKey]
             )->getSettings();
 
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingA['rankingRules']);
