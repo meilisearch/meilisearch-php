@@ -141,6 +141,28 @@ $index = $client->createIndex(
 );
 ```
 
+#### Get an index or create it if it doesn't exist <!-- omit in toc -->
+```php
+// Get or create an index
+$index = $client->getOrCreateIndex('books');
+// Get or create an index and give the primary-key
+$index = $client->getOrCreateIndex(
+    'books',
+    ['primaryKey' => 'book_id']
+);
+```
+
+#### Get an index or create it if it doesn't exist <!-- omit in toc -->
+```php
+// Get or create an index
+$index = $client->getOrCreateIndex('books');
+// Get or create an index and give the primary-key
+$index = $client->getOrCreateIndex(
+    'books',
+    ['primaryKey' => 'book_id']
+);
+```
+
 #### List all indexes <!-- omit in toc -->
 
 ```php
