@@ -54,12 +54,10 @@ trait HandlesDocuments
     private function assertValidDocumentId($documentId): void
     {
         $isString = \is_string($documentId) || (\is_object($documentId) && !\method_exists('__toString', $documentId));
-        $isInt = is_int($documentId);
+        $isInt = \is_int($documentId);
 
         if (!$isString && !$isInt) {
-            throw new InvalidArgumentException('documentId', [
-                'string', 'int', 'stringifyable object'
-            ]);
+            throw new InvalidArgumentException('documentId', ['string', 'int', 'stringifyable object']);
         }
     }
 }

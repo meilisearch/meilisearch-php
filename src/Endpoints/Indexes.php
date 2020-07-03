@@ -31,8 +31,6 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param array $options
-     *
      * @return $this
      *
      * @throws Exception|HTTPRequestException

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Delegates;
 
-use MeiliSearch\Contracts\Http;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
 
@@ -45,11 +44,6 @@ trait HandlesIndex
     }
 
     /**
-     * @param string $uid
-     * @param array  $options
-     *
-     * @return Indexes
-     *
      * @throws HTTPRequestException
      */
     public function createIndex(string $uid, array $options = []): Indexes
