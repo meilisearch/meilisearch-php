@@ -2,8 +2,10 @@
 
 namespace Tests\Endpoints;
 
+use Http\Client\Exception\NetworkException;
+use MeiliSearch\Client;
+use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
-use MeiliSearch\Index;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
@@ -26,7 +28,7 @@ class ClientTest extends TestCase
     {
         $index = $this->client->createIndex('index');
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -38,7 +40,7 @@ class ClientTest extends TestCase
             ['primaryKey' => 'ObjectId'],
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -53,7 +55,7 @@ class ClientTest extends TestCase
             ],
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -70,7 +72,9 @@ class ClientTest extends TestCase
         $this->assertIsArray($response);
         $this->assertCount(2, $response);
 
-        $uids = array_column($response, 'uid');
+        $uids = array_map(function ($index) {
+            return $index->getUid();
+        }, $response);
 
         $this->assertContains($indexA, $uids);
         $this->assertContains($indexB, $uids);
@@ -78,17 +82,18 @@ class ClientTest extends TestCase
 
     public function testShowIndex()
     {
-        $index = 'index';
-        $this->client->createIndex(
-            $index,
-            ['primaryKey' => 'objectID'],
+        $uid = 'index';
+        $index = $this->client->createIndex(
+            $uid,
+            ['primaryKey' => 'objectID']
         );
 
-        $response = $this->client->showIndex($index);
+        $response = $this->client->showIndex($uid);
 
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertIsArray($response);
         $this->assertSame('objectID', $response['primaryKey']);
-        $this->assertSame($index, $response['uid']);
+        $this->assertSame($uid, $response['uid']);
     }
 
     public function testDeleteIndex()
@@ -136,7 +141,7 @@ class ClientTest extends TestCase
         $this->client->createIndex('index');
 
         $index = $this->client->getIndex('index');
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -145,7 +150,7 @@ class ClientTest extends TestCase
     {
         $index = $this->client->getOrCreateIndex('index');
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -157,7 +162,7 @@ class ClientTest extends TestCase
             ['primaryKey' => 'ObjectId']
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -172,7 +177,7 @@ class ClientTest extends TestCase
             ]
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -206,8 +211,11 @@ class ClientTest extends TestCase
 
     public function testExceptionIfNoUidWhenCreating()
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(\TypeError::class);
         $this->client->createIndex(null);
+
+        $this->expectException(HTTPRequestException::class);
+        $this->client->createIndex('');
     }
 
     public function testExceptionIfNoIndexWhenShowing()
@@ -267,5 +275,18 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('databaseSize', $response);
         $this->assertArrayHasKey('lastUpdate', $response);
         $this->assertArrayHasKey('indexes', $response);
+    }
+
+    public function testBadClientUrl()
+    {
+        try {
+            $this->client = new Client('http://127.0.0.1.com:1234', 'some-key');
+            $this->client->createIndex('index');
+        } catch (NetworkException $e) {
+            $this->assertIsString($e->getMessage());
+
+            return;
+        }
+        $this->fail('Bad client was accepted and the exception was not thrown');
     }
 }

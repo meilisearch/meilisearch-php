@@ -18,7 +18,7 @@ class UpdatesTest extends TestCase
 
     public function testGetOneUpdate()
     {
-        list($promise, $response) = $this->seedIndex();
+        [$promise, $response] = $this->seedIndex();
 
         $this->assertIsArray($response);
         $this->assertSame($response['status'], 'processed');
