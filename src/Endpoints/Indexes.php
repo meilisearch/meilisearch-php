@@ -31,8 +31,7 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param string $uid
-     * @param array  $options
+     * @param array $options
      *
      * @return $this
      *
