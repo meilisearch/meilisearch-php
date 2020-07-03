@@ -2,10 +2,9 @@
 
 namespace MeiliSearch\Exceptions;
 
-use function array_key_exists;
-use function is_array;
+use Exception;
 
-class HTTPRequestException extends \Exception
+class HTTPRequestException extends Exception
 {
     public $httpStatus = 0;
     public $httpMessage = null;
@@ -15,8 +14,7 @@ class HTTPRequestException extends \Exception
     {
         $this->httpBody = $httpBody;
         if (!empty($this->httpBody)) {
-            $this->httpMessage = is_array($this->httpBody) && array_key_exists('message', $this->httpBody) ?
-                $this->httpBody['message'] : $this->httpBody;
+            $this->httpMessage = $this->getMessageFromHttpBody();
         }
         $this->httpStatus = $httpStatus;
         parent::__construct($this->httpMessage, $this->httpStatus, $previous);
@@ -25,10 +23,23 @@ class HTTPRequestException extends \Exception
     public function __toString()
     {
         $base = 'MeiliSearch HTTPRequestException: Http Status: '.$this->httpStatus;
-        if (isset($this->httpMessage)) {
+
+        if ($this->httpMessage) {
             return $base.' - Message: '.$this->httpMessage;
-        } else {
-            return $base;
         }
+
+        return $base;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMessageFromHttpBody(): string
+    {
+        if (is_array($this->httpBody) && array_key_exists('message', $this->httpBody)) {
+            return $this->httpBody['message'];
+        }
+
+        return $this->httpBody;
     }
 }

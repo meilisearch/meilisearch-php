@@ -148,7 +148,7 @@ class ClientTest extends TestCase
     {
         $index = $this->client->getOrCreateIndex('index');
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -160,7 +160,7 @@ class ClientTest extends TestCase
             ['primaryKey' => 'ObjectId']
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -175,7 +175,7 @@ class ClientTest extends TestCase
             ]
         );
 
-        $this->assertInstanceOf(Index::class, $index);
+        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
