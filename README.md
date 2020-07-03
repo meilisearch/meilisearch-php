@@ -119,6 +119,7 @@ Array
 ## 🤖 Compatibility with MeiliSearch
 
 This package is compatible with the following MeiliSearch versions:
+- `v0.12.X`
 - `v0.11.X`
 
 ## 🎬 Examples
@@ -135,6 +136,28 @@ You can check out [the API documentation](https://docs.meilisearch.com/reference
 $index = $client->createIndex('books');
 // Create an index and give the primary-key
 $index = $client->createIndex(
+    'books',
+    ['primaryKey' => 'book_id']
+);
+```
+
+#### Get an index or create it if it doesn't exist <!-- omit in toc -->
+```php
+// Get or create an index
+$index = $client->getOrCreateIndex('books');
+// Get or create an index and give the primary-key
+$index = $client->getOrCreateIndex(
+    'books',
+    ['primaryKey' => 'book_id']
+);
+```
+
+#### Get an index or create it if it doesn't exist <!-- omit in toc -->
+```php
+// Get or create an index
+$index = $client->getOrCreateIndex('books');
+// Get or create an index and give the primary-key
+$index = $client->getOrCreateIndex(
     'books',
     ['primaryKey' => 'book_id']
 );
