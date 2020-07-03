@@ -30,7 +30,7 @@ class HTTPRequestException extends Exception
     }
 
     /**
-     * @return array
+     * @return string|null
      */
     public function getMessageFromHttpBody(): ?string
     {
