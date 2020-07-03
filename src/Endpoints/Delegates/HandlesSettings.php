@@ -52,9 +52,9 @@ trait HandlesSettings
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/searchable-attributes');
     }
 
-    public function updateSearchableAttributes($searchable_attributes): array
+    public function updateSearchableAttributes($searchableAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchable_attributes);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchableAttributes);
     }
 
     public function resetSearchableAttributes(): array

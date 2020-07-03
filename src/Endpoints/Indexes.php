@@ -93,24 +93,24 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param $update_id
-     * @param int $timeout_in_ms
-     * @param int $interval_in_ms
+     * @param $updateId
+     * @param int $timeoutInMs
+     * @param int $intervalInMs
      *
      * @return mixed
      *
      * @throws TimeOutException
      */
-    public function waitForPendingUpdate($update_id, $timeout_in_ms = 5000, $interval_in_ms = 50): array
+    public function waitForPendingUpdate($updateId, $timeoutInMs = 5000, $intervalInMs = 50): array
     {
         $timeout_temp = 0;
-        while ($timeout_in_ms > $timeout_temp) {
-            $res = $this->getUpdateStatus($update_id);
+        while ($timeoutInMs > $timeout_temp) {
+            $res = $this->getUpdateStatus($updateId);
             if ('enqueued' != $res['status']) {
                 return $res;
             }
-            $timeout_temp += $interval_in_ms;
-            usleep(1000 * $interval_in_ms);
+            $timeout_temp += $intervalInMs;
+            usleep(1000 * $intervalInMs);
         }
         throw new TimeOutException();
     }
