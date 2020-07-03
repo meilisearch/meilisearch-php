@@ -37,7 +37,7 @@ class Indexes extends Endpoint
      *
      * @throws Exception|HTTPRequestException
      */
-    public function create(string $uid, $options = []): self
+    public function create(string $uid, array $options = []): self
     {
         $options['uid'] = $uid;
 

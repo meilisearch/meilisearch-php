@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Delegates;
 
+use MeiliSearch\Contracts\Http;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
 
+/**
+ * @property Indexes index
+ */
 trait HandlesIndex
 {
+    /**
+     * @return Indexes[]
+     */
     public function getAllIndexes(): array
     {
         return $this->index->all();
@@ -32,12 +39,20 @@ trait HandlesIndex
         }
     }
 
-    public function getIndex($uid): Indexes
+    public function getIndex(string $uid): Indexes
     {
         return new Indexes($this->http, $uid);
     }
 
-    public function createIndex($uid, $options = []): Indexes
+    /**
+     * @param string $uid
+     * @param array  $options
+     *
+     * @return Indexes
+     *
+     * @throws HTTPRequestException
+     */
+    public function createIndex(string $uid, array $options = []): Indexes
     {
         return $this->index->create($uid, $options);
     }

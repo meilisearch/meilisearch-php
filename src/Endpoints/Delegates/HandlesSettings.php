@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
+use MeiliSearch\Contracts\Http;
+
+/**
+ * @property Http http
+ */
 trait HandlesSettings
 {
     // Settings - Ranking rules
@@ -25,7 +30,7 @@ trait HandlesSettings
 
     // Settings - Distinct attribute
 
-    public function getDistinctAttribute(): ?string
+    public function getDistinctAttribute()
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/distinct-attribute');
     }
