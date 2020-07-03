@@ -10,7 +10,6 @@ use MeiliSearch\Endpoints\Keys;
 use MeiliSearch\Endpoints\Stats;
 use MeiliSearch\Endpoints\SysInfo;
 use MeiliSearch\Endpoints\Version;
-use MeiliSearch\Exceptions\HTTPRequestException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;

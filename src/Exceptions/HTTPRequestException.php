@@ -29,9 +29,6 @@ class HTTPRequestException extends Exception
         return $base;
     }
 
-    /**
-     * @return string|null
-     */
     public function getMessageFromHttpBody(): ?string
     {
         if (is_array($this->httpBody) && array_key_exists('message', $this->httpBody)) {

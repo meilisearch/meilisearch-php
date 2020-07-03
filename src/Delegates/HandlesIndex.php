@@ -41,9 +41,6 @@ trait HandlesIndex
     }
 
     /**
-     * @param string $uid
-     * @param array $options
-     * @return Indexes
      * @throws HTTPRequestException
      */
     public function getOrCreateIndex(string $uid, array $options = []): Indexes
