@@ -13,9 +13,7 @@ class HTTPRequestException extends Exception
     public function __construct($httpStatus, $httpBody, $previous = null)
     {
         $this->httpBody = $httpBody;
-        if (!empty($this->httpBody)) {
-            $this->httpMessage = $this->getMessageFromHttpBody();
-        }
+        $this->httpMessage = $this->getMessageFromHttpBody();
         $this->httpStatus = $httpStatus;
         parent::__construct($this->httpMessage, $this->httpStatus, $previous);
     }
@@ -34,7 +32,7 @@ class HTTPRequestException extends Exception
     /**
      * @return array
      */
-    public function getMessageFromHttpBody(): string
+    public function getMessageFromHttpBody(): ?string
     {
         if (is_array($this->httpBody) && array_key_exists('message', $this->httpBody)) {
             return $this->httpBody['message'];
