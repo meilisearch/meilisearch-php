@@ -2,6 +2,8 @@
 
 namespace Tests\Endpoints;
 
+use Http\Client\Exception\NetworkException;
+use MeiliSearch\Client;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
@@ -273,5 +275,18 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('databaseSize', $response);
         $this->assertArrayHasKey('lastUpdate', $response);
         $this->assertArrayHasKey('indexes', $response);
+    }
+
+    public function testBadClientUrl()
+    {
+        try {
+            $this->client = new Client('http://127.0.0.1.com:1234', 'some-key');
+            $this->client->createIndex('index');
+        } catch (NetworkException $e) {
+            $this->assertIsString($e->getMessage());
+
+            return;
+        }
+        $this->fail('Bad client was accepted and the exception was not thrown');
     }
 }

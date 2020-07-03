@@ -153,6 +153,7 @@ class Client implements Http
     }
 
     /**
+     * @param RequestInterface $request
      * @return mixed
      *
      * @throws ClientExceptionInterface
@@ -173,6 +174,7 @@ class Client implements Http
     }
 
     /**
+     * @param ResponseInterface $response
      * @return mixed
      *
      * @throws HTTPRequestException
