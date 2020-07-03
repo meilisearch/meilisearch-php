@@ -7,26 +7,26 @@ use function is_array;
 
 class HTTPRequestException extends \Exception
 {
-    public $http_status = 0;
-    public $http_message = null;
-    public $http_body = null;
+    public $httpStatus = 0;
+    public $httpMessage = null;
+    public $httpBody = null;
 
-    public function __construct($http_status, $http_body, $previous = null)
+    public function __construct($httpStatus, $httpBody, $previous = null)
     {
-        $this->http_body = $http_body;
-        if (!empty($this->http_body)) {
-            $this->http_message = is_array($this->http_body) && array_key_exists('message', $this->http_body) ?
-                $this->http_body['message'] : $this->http_body;
+        $this->httpBody = $httpBody;
+        if (!empty($this->httpBody)) {
+            $this->httpMessage = is_array($this->httpBody) && array_key_exists('message', $this->httpBody) ?
+                $this->httpBody['message'] : $this->httpBody;
         }
-        $this->http_status = $http_status;
-        parent::__construct($this->http_message, $this->http_status, $previous);
+        $this->httpStatus = $httpStatus;
+        parent::__construct($this->httpMessage, $this->httpStatus, $previous);
     }
 
     public function __toString()
     {
-        $base = 'MeiliSearch HTTPRequestException: Http Status: '.$this->http_status;
-        if (isset($this->http_message)) {
-            return $base.' - Message: '.$this->http_message;
+        $base = 'MeiliSearch HTTPRequestException: Http Status: '.$this->httpStatus;
+        if (isset($this->httpMessage)) {
+            return $base.' - Message: '.$this->httpMessage;
         } else {
             return $base;
         }
