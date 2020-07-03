@@ -5,6 +5,7 @@ namespace MeiliSearch;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use MeiliSearch\Exceptions\HTTPRequestException;
 
 class Client extends HTTPRequest
 {
@@ -50,6 +51,24 @@ class Client extends HTTPRequest
         $uid = $response['uid'];
 
         return $this->indexInstance($uid);
+    }
+
+    /**
+     * @throws HTTPRequestException
+     */
+    public function getOrCreateIndex(string $uid, array $options = []): Index
+    {
+        $index = $this->getIndex($uid);
+
+        try {
+            $index = $this->createIndex($uid, $options);
+        } catch (HTTPRequestException $e) {
+            if (is_array($e->http_body) && 'index_already_exists' !== $e->http_body['errorCode']) {
+                throw $e;
+            }
+        }
+
+        return $index;
     }
 
     // Health
