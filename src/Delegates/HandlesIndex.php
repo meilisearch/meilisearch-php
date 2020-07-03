@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MeiliSearch\Delegates;
 
 use MeiliSearch\Endpoints\Indexes;
@@ -50,7 +52,7 @@ trait HandlesIndex
         try {
             $index = $this->createIndex($uid, $options);
         } catch (HTTPRequestException $e) {
-            if (is_array($e->httpBody) && 'index_already_exists' !== $e->httpBody['errorCode']) {
+            if (\is_array($e->httpBody) && 'index_already_exists' !== $e->httpBody['errorCode']) {
                 throw $e;
             }
         }

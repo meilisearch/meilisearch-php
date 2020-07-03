@@ -12,12 +12,9 @@ indent_style             = space
 
 [*.php]
 indent_size              = 4
-indent_style             = space
 
 [*.md]
-indent_style             = space
 max_line_length          = 80
 
 [*{.yaml, yml}]
 indent_size              = 2
-indent_style             = space

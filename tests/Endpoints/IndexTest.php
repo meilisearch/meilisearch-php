@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Endpoints;
 
 use MeiliSearch\Exceptions\HTTPRequestException;
@@ -21,7 +23,7 @@ class IndexTest extends TestCase
     {
         $indexB = $this->client->createIndex(
             'indexB',
-            ['primaryKey' => 'objectId'],
+            ['primaryKey' => 'objectId']
         );
 
         $this->assertNull($this->index->getPrimaryKey());
@@ -32,7 +34,7 @@ class IndexTest extends TestCase
     {
         $indexB = $this->client->createIndex(
             'indexB',
-            ['primaryKey' => 'objectId'],
+            ['primaryKey' => 'objectId']
         );
         $this->assertSame('index', $this->index->getUid());
         $this->assertSame('indexB', $indexB->getUid());
@@ -42,7 +44,7 @@ class IndexTest extends TestCase
     {
         $index = $this->client->createIndex(
             'indexB',
-            ['primaryKey' => 'objectId'],
+            ['primaryKey' => 'objectId']
         );
 
         $response = $index->show();
@@ -69,7 +71,7 @@ class IndexTest extends TestCase
     {
         $index = $this->client->createIndex(
             'indexB',
-            ['primaryKey' => 'objectId'],
+            ['primaryKey' => 'objectId']
         );
 
         $this->expectException(HTTPRequestException::class);

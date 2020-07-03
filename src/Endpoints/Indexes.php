@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MeiliSearch\Endpoints;
 
+use Exception;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
+use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
 
 class Indexes extends Endpoint
@@ -15,8 +19,8 @@ class Indexes extends Endpoint
 
     protected const PATH = '/indexes';
 
-    /*
-     * @var string
+    /**
+     * @var string|null
      */
     private $uid;
 
@@ -27,11 +31,12 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param array $options
+     * @param string $uid
+     * @param array  $options
      *
      * @return $this
      *
-     * @throws Exceptions\HTTPRequestException
+     * @throws Exception|HTTPRequestException
      */
     public function create(string $uid, $options = []): self
     {
@@ -58,7 +63,7 @@ class Indexes extends Endpoint
         return $this->show()['primaryKey'];
     }
 
-    public function getUid(): string
+    public function getUid(): ?string
     {
         return $this->uid;
     }
@@ -154,7 +159,7 @@ class Indexes extends Endpoint
         foreach ($options as $key => $value) {
             if ('facetsDistribution' === $key || 'facetFilters' === $key) {
                 $options[$key] = json_encode($value);
-            } elseif (is_array($value)) {
+            } elseif (\is_array($value)) {
                 $options[$key] = implode(',', $value);
             }
         }
