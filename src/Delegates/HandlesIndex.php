@@ -3,6 +3,7 @@
 namespace MeiliSearch\Delegates;
 
 use MeiliSearch\Endpoints\Indexes;
+use MeiliSearch\Exceptions\HTTPRequestException;
 
 trait HandlesIndex
 {
@@ -37,5 +38,26 @@ trait HandlesIndex
     public function createIndex($uid, $options = []): Indexes
     {
         return $this->index->create($uid, $options);
+    }
+
+    /**
+     * @param string $uid
+     * @param array $options
+     * @return Indexes
+     * @throws HTTPRequestException
+     */
+    public function getOrCreateIndex(string $uid, array $options = []): Indexes
+    {
+        $index = $this->getIndex($uid);
+
+        try {
+            $index = $this->createIndex($uid, $options);
+        } catch (HTTPRequestException $e) {
+            if (is_array($e->http_body) && 'index_already_exists' !== $e->http_body['errorCode']) {
+                throw $e;
+            }
+        }
+
+        return $index;
     }
 }

@@ -62,22 +62,4 @@ class Client
         $this->stats = new Stats($this->http);
         $this->keys = new Keys($this->http);
     }
-
-    /**
-     * @throws HTTPRequestException
-     */
-    public function getOrCreateIndex(string $uid, array $options = []): Index
-    {
-        $index = $this->getIndex($uid);
-
-        try {
-            $index = $this->createIndex($uid, $options);
-        } catch (HTTPRequestException $e) {
-            if (is_array($e->http_body) && 'index_already_exists' !== $e->http_body['errorCode']) {
-                throw $e;
-            }
-        }
-
-        return $index;
-    }
 }
