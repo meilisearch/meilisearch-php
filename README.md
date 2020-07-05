@@ -34,11 +34,8 @@
   - [Documents](#documents)
   - [Update status](#update-status)
   - [Search](#search)
-- [Replace HTTP client](#replace-http-client)
-- [⚙️ Development Workflow](#️-development-workflow)
-  - [Install dependencies](#install-dependencies)
-  - [Tests and Linter](#tests-and-linter)
-  - [Release](#release)
+- [🧰 Replace HTTP client](#-replace-http-client)
+- [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
 
@@ -280,7 +277,7 @@ $index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' 
 $index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
-## Replace HTTP client
+## 🧰 Replace HTTP client
 
 By default [Guzzle](http://docs.guzzlephp.org/en/6.5/) is used for all HTTP requests.<br>
 But you can replace the used HTTP client with any [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client.<br>
@@ -302,44 +299,11 @@ $httpClient = new HttplugClient();
 $client = new Client('http://127.0.0.1:7700', 'masterKey', $httpClient);
 ```
 
-## ⚙️ Development Workflow
+## ⚙️ Development Workflow and Contributing
 
-If you want to contribute, this section describes the steps to follow.
+Any new contribution is more than welcome in this project!
 
-Thank you for your interest in a MeiliSearch tool! ♥️
-
-### Install dependencies
-
-```bash
-$ composer install
-```
-
-### Tests and Linter
-
-Each PR should pass the tests and the linter to be accepted.
-
-```bash
-# Tests
-$ docker run -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
-$ sh scripts/tests.sh
-# Linter (with auto-fix)
-$ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist
-# Linter (without auto-fix)
-$ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist --dry-run
-```
-
-### Release
-
-MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
-
-You must do a PR modifying the file `src/MeiliSearch.php` with the right version.<br>
-
-```php
-const VERSION = 'X.X.X';
-```
-
-Then, you must create a release (with this name `vX.X.X`) via the GitHub interface.<br>
-A webhook will be triggered and push the new package on [Packagist](https://packagist.org/packages/meilisearch/meilisearch-php).
+If you want to know more about the development workflow or want to contribute, please visit our [contributing guidelines](/CONTRIBUTING.md) for detailed instructions!
 
 <hr>
 
