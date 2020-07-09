@@ -37,7 +37,7 @@ class ClientTest extends TestCase
     {
         $index = $this->client->createIndex(
             'index',
-            ['primaryKey' => 'ObjectId'],
+            ['primaryKey' => 'ObjectId']
         );
 
         $this->assertInstanceOf(Indexes::class, $index);
@@ -52,7 +52,7 @@ class ClientTest extends TestCase
             [
                 'uid' => 'wrong',
                 'primaryKey' => 'ObjectId',
-            ],
+            ]
         );
 
         $this->assertInstanceOf(Indexes::class, $index);

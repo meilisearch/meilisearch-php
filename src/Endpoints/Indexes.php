@@ -2,10 +2,12 @@
 
 namespace MeiliSearch\Endpoints;
 
+use Exception;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
+use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
 
 class Indexes extends Endpoint
@@ -15,8 +17,8 @@ class Indexes extends Endpoint
 
     protected const PATH = '/indexes';
 
-    /*
-     * @var string
+    /**
+     * @var string|null
      */
     private $uid;
 
@@ -27,13 +29,11 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param array $options
-     *
      * @return $this
      *
-     * @throws Exceptions\HTTPRequestException
+     * @throws Exception|HTTPRequestException
      */
-    public function create(string $uid, $options = []): self
+    public function create(string $uid, array $options = []): self
     {
         $options['uid'] = $uid;
 
@@ -58,7 +58,7 @@ class Indexes extends Endpoint
         return $this->show()['primaryKey'];
     }
 
-    public function getUid(): string
+    public function getUid(): ?string
     {
         return $this->uid;
     }
@@ -91,24 +91,24 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param $update_id
-     * @param int $timeout_in_ms
-     * @param int $interval_in_ms
+     * @param $updateId
+     * @param int $timeoutInMs
+     * @param int $intervalInMs
      *
      * @return mixed
      *
      * @throws TimeOutException
      */
-    public function waitForPendingUpdate($update_id, $timeout_in_ms = 5000, $interval_in_ms = 50): array
+    public function waitForPendingUpdate($updateId, $timeoutInMs = 5000, $intervalInMs = 50): array
     {
         $timeout_temp = 0;
-        while ($timeout_in_ms > $timeout_temp) {
-            $res = $this->getUpdateStatus($update_id);
+        while ($timeoutInMs > $timeout_temp) {
+            $res = $this->getUpdateStatus($updateId);
             if ('enqueued' != $res['status']) {
                 return $res;
             }
-            $timeout_temp += $interval_in_ms;
-            usleep(1000 * $interval_in_ms);
+            $timeout_temp += $intervalInMs;
+            usleep(1000 * $intervalInMs);
         }
         throw new TimeOutException();
     }
@@ -154,7 +154,7 @@ class Indexes extends Endpoint
         foreach ($options as $key => $value) {
             if ('facetsDistribution' === $key || 'facetFilters' === $key) {
                 $options[$key] = json_encode($value);
-            } elseif (is_array($value)) {
+            } elseif (\is_array($value)) {
                 $options[$key] = implode(',', $value);
             }
         }

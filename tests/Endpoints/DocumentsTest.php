@@ -23,7 +23,7 @@ class DocumentsTest extends TestCase
         $index->waitForPendingUpdate($promise['updateId']);
 
         $response = $index->getDocuments();
-        $this->assertCount(count(self::DOCUMENTS), $response);
+        $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testGetSingleDocument()
@@ -59,7 +59,7 @@ class DocumentsTest extends TestCase
         $this->assertSame($replacement['title'], $response['title']);
         $this->assertFalse(array_search('comment', $response));
         $response = $index->getDocuments();
-        $this->assertCount(count(self::DOCUMENTS), $response);
+        $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testUpdateDocuments()
@@ -84,7 +84,7 @@ class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
 
-        $this->assertCount(count(self::DOCUMENTS), $response);
+        $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testAddWithUpdateDocuments()
@@ -109,7 +109,7 @@ class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
 
-        $this->assertCount(count(self::DOCUMENTS) + 1, $response);
+        $this->assertCount(\count(self::DOCUMENTS) + 1, $response);
     }
 
     public function testDeleteNonExistingDocument()
@@ -126,7 +126,7 @@ class DocumentsTest extends TestCase
         $index->waitForPendingUpdate($promise['updateId']);
         $response = $index->getDocuments();
 
-        $this->assertCount(count(self::DOCUMENTS), $response);
+        $this->assertCount(\count(self::DOCUMENTS), $response);
         $this->assertNull($this->findDocumentWithId($response, $documentId));
     }
 
@@ -144,7 +144,7 @@ class DocumentsTest extends TestCase
         $index->waitForPendingUpdate($promise['updateId']);
         $response = $index->getDocuments();
 
-        $this->assertCount(count(self::DOCUMENTS) - 1, $response);
+        $this->assertCount(\count(self::DOCUMENTS) - 1, $response);
         $this->assertNull($this->findDocumentWithId($response, $documentId));
     }
 
@@ -161,7 +161,7 @@ class DocumentsTest extends TestCase
         $index->waitForPendingUpdate($promise['updateId']);
         $response = $index->getDocuments();
 
-        $this->assertCount(count(self::DOCUMENTS) - 2, $response);
+        $this->assertCount(\count(self::DOCUMENTS) - 2, $response);
         $this->assertNull($this->findDocumentWithId($response, $documentIds[0]));
         $this->assertNull($this->findDocumentWithId($response, $documentIds[1]));
     }

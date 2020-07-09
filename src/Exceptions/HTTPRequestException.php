@@ -31,7 +31,7 @@ class HTTPRequestException extends Exception
 
     public function getMessageFromHttpBody(): ?string
     {
-        if (is_array($this->httpBody) && array_key_exists('message', $this->httpBody)) {
+        if (\is_array($this->httpBody) && \array_key_exists('message', $this->httpBody)) {
             return $this->httpBody['message'];
         }
 
