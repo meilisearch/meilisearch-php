@@ -40,7 +40,7 @@
             "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --using-cache=no --allow-risky=yes"
         ],
         "test": [
-            "./vendor/bin/phpunit "
+            "sh scripts/tests.sh"
         ]
     }
 }
