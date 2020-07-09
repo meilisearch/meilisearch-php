@@ -1,22 +1,17 @@
 <?php
 
-declare(strict_types=1);
-
 namespace MeiliSearch\Endpoints\Delegates;
 
 use MeiliSearch\Contracts\Http;
-use MeiliSearch\Exceptions\InvalidArgumentException;
 
 /**
  * @property Http http
  */
 trait HandlesDocuments
 {
-    public function getDocument($documentId)
+    public function getDocument(string $documentId)
     {
-        $this->assertValidDocumentId($documentId);
-
-        return $this->http->get(\sprintf('%s/%s/documents/%s', self::PATH, $this->uid, $documentId));
+        return $this->http->get(self::PATH.'/'.$this->uid.'/documents/'.$documentId);
     }
 
     public function getDocuments(array $query = [])
@@ -39,25 +34,13 @@ trait HandlesDocuments
         return $this->http->delete(self::PATH.'/'.$this->uid.'/documents');
     }
 
-    public function deleteDocument($documentId): array
+    public function deleteDocument(string $documentId): array
     {
-        $this->assertValidDocumentId($documentId);
-
-        return $this->http->delete(\sprintf('%s/%s/documents/%s', self::PATH, $this->uid, $documentId));
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId);
     }
 
     public function deleteDocuments(array $documents): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documents);
-    }
-
-    private function assertValidDocumentId($documentId): void
-    {
-        $isString = \is_string($documentId) || (\is_object($documentId) && !\method_exists('__toString', $documentId));
-        $isInt = \is_int($documentId);
-
-        if (!$isString && !$isInt) {
-            throw new InvalidArgumentException('documentId', ['string', 'int', 'stringifyable object']);
-        }
     }
 }
