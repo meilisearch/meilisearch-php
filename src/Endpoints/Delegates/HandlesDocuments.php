@@ -53,7 +53,7 @@ trait HandlesDocuments
 
     private function assertValidDocumentId($documentId): void
     {
-        if (!is_string($documentId) && !is_int($documentId)) {
+        if (!\is_string($documentId) && !\is_int($documentId)) {
             throw new InvalidArgumentException('documentId', ['string', 'int']);
         }
     }
