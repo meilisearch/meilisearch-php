@@ -8,12 +8,6 @@ use Tests\TestCase;
 
 class AttributesForFacetingTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
     public function testGetDefaultAttributesForFaceting()
     {
         $index = $this->client->createIndex('index');

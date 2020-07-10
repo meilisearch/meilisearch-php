@@ -8,12 +8,6 @@ use Tests\TestCase;
 
 class SearchableAttributesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
     public function testGetDefaultSearchableAttributes()
     {
         $indexA = $this->client->createIndex('indexA');

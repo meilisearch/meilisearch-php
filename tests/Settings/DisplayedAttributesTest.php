@@ -8,12 +8,6 @@ use Tests\TestCase;
 
 class DisplayedAttributesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
     public function testGetDefaultDisplayedAttributes()
     {
         $indexA = $this->client->createIndex('indexA');
