@@ -305,9 +305,10 @@ class DocumentsTest extends TestCase
         return [
             'documentId as null' => [null],
             'documentId as bool' => [true],
+            'documentId as empty string' => [''],
             'documentId as float' => [2.1],
             'documentId as array' => [[]],
-            'documentId as object' => [new \stdClass],
+            'documentId as object' => [new \stdClass()],
             'documentId as resource' => [tmpfile()],
         ];
     }

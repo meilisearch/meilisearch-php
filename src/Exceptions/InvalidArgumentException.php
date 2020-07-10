@@ -8,21 +8,21 @@ use Exception;
 
 class InvalidArgumentException extends Exception
 {
-    private $argumentName;
-
-    public function __construct(string $argumentName, array $validTypes)
+    public static function invalidType(string $argumentName, array $validTypes)
     {
-        $this->argumentName = $argumentName;
-
-        parent::__construct(
-            \sprintf('Argument "%s" is not a valid type! Please provide an argument that is of type: "%s"', $this->argumentName, \implode('","', $validTypes)),
+        return new self(
+            sprintf('Argument "%s" is not a valid type! Please provide an argument that is of type: "%s"', $argumentName, \implode('","', $validTypes)),
             400,
             null
         );
     }
 
-    public function getArgumentName(): string
+    public static function emptyArgument(string $argumentName)
     {
-        return $this->argumentName;
+        return new self(
+            sprintf('Argument "%s" is empty.', $argumentName),
+            400,
+            null
+        );
     }
 }
