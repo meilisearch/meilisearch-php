@@ -1,7 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MeiliSearch\Delegates;
 
+use MeiliSearch\Endpoints\Health;
+use MeiliSearch\Endpoints\Keys;
+use MeiliSearch\Endpoints\Stats;
+use MeiliSearch\Endpoints\SysInfo;
+use MeiliSearch\Endpoints\Version;
+
+/**
+ * @property Health health
+ * @property Version version
+ * @property SysInfo sysInfo
+ * @property Stats stats
+ * @property Keys keys
+ */
 trait HandlesSystem
 {
     public function health(): ?array
