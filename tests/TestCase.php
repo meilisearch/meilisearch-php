@@ -23,12 +23,19 @@ abstract class TestCase extends BaseTestCase
 
     const DEFAULT_KEY = 'masterKey';
 
+    /**
+     * @var Client
+     */
     protected $client;
 
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->client = new Client(self::HOST, self::DEFAULT_KEY);
+    }
+
+    public function tearDown(): void
+    {
         $this->client->deleteAllIndexes();
     }
 

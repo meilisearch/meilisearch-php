@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\InvalidArgumentException;
 use Tests\TestCase;
 
 class DocumentsTest extends TestCase
@@ -229,6 +230,29 @@ class DocumentsTest extends TestCase
 
         $this->assertSame('unique', $index->getPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
+    }
+
+    /**
+     * @dataProvider invalidDocumentIds
+     */
+    public function testFetchingDocumentWithInvalidId($documentId)
+    {
+        $index = $this->client->createIndex('an-index');
+
+        $this->expectException(InvalidArgumentException::class);
+        $index->getDocument($documentId);
+    }
+
+    public function invalidDocumentIds(): array
+    {
+        return [
+            'documentId as null' => [null],
+            'documentId as bool' => [true],
+            'documentId as float' => [2.1],
+            'documentId as array' => [[]],
+            'documentId as object' => [new \stdClass],
+            'documentId as resource' => [tmpfile()],
+        ];
     }
 
     private function findDocumentWithId($documents, $documentId)

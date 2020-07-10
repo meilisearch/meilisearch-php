@@ -12,12 +12,6 @@ use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
     public function testGetAllIndexesWhenEmpty()
     {
         $response = $this->client->getAllIndexes();
@@ -282,8 +276,8 @@ class ClientTest extends TestCase
     public function testBadClientUrl()
     {
         try {
-            $this->client = new Client('http://127.0.0.1.com:1234', 'some-key');
-            $this->client->createIndex('index');
+            $client = new Client('http://127.0.0.1.com:1234', 'some-key');
+            $client->createIndex('index');
         } catch (NetworkException $e) {
             $this->assertIsString($e->getMessage());
 

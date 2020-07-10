@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class DisplayedAttributesTest extends TestCase
 {
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->client->deleteAllIndexes();

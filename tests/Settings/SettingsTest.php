@@ -17,12 +17,6 @@ class SettingsTest extends TestCase
         'exactness',
     ];
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
     public function testGetDefaultSettings()
     {
         $primaryKey = 'ObjectID';

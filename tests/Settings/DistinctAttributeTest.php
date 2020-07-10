@@ -10,9 +10,9 @@ class DistinctAttributeTest extends TestCase
 {
     private $index;
 
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->index = $this->client->createIndex('index');
     }
 

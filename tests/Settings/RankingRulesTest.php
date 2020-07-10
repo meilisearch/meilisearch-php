@@ -19,9 +19,9 @@ class RankingRulesTest extends TestCase
         'exactness',
     ];
 
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->index = $this->client->createIndex('index');
     }
 

@@ -10,10 +10,9 @@ class SynonymsTest extends TestCase
 {
     private $index;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
-        $this->client->deleteAllIndexes();
         $this->index = $this->client->createIndex('index');
     }
 
