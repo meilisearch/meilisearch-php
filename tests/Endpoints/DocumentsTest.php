@@ -29,7 +29,7 @@ class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
-    public function testGetSingleDocument()
+    public function testGetSingleDocumentWithIntegerDocumentId()
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -40,6 +40,18 @@ class DocumentsTest extends TestCase
         $this->assertIsArray($response);
         $this->assertSame($doc['id'], $response['id']);
         $this->assertSame($doc['title'], $response['title']);
+    }
+
+    public function testGetSingleDocumentWithStringDocumentId()
+    {
+        $stringDocumentId = 'myUniqueId';
+        $index = $this->client->createIndex('documents');
+        $addDocumentResponse = $index->addDocuments([['id' => $stringDocumentId]]);
+        $index->waitForPendingUpdate($addDocumentResponse['updateId']);
+        $response = $index->getDocument($stringDocumentId);
+
+        $this->assertIsArray($response);
+        $this->assertSame($stringDocumentId, $response['id']);
     }
 
     public function testReplaceDocuments()
@@ -133,7 +145,7 @@ class DocumentsTest extends TestCase
         $this->assertNull($this->findDocumentWithId($response, $documentId));
     }
 
-    public function testDeleteSingleExistingDocument()
+    public function testDeleteSingleExistingDocumentWithDocumentIdAsInteger()
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -151,7 +163,22 @@ class DocumentsTest extends TestCase
         $this->assertNull($this->findDocumentWithId($response, $documentId));
     }
 
-    public function testDeleteMultipleDocuments()
+    public function testDeleteSingleExistingDocumentWithDocumentIdAsString()
+    {
+        $stringDocumentId = 'myUniqueId';
+        $index = $this->client->createIndex('documents');
+        $addDocumentResponse = $index->addDocuments([['id' => $stringDocumentId]]);
+        $index->waitForPendingUpdate($addDocumentResponse['updateId']);
+
+        $promise = $index->deleteDocument($stringDocumentId);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $response = $index->getDocuments();
+
+        $this->assertEmpty($response);
+    }
+
+    public function testDeleteMultipleDocumentsWithDocumentIdAsInteger()
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -167,6 +194,25 @@ class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS) - 2, $response);
         $this->assertNull($this->findDocumentWithId($response, $documentIds[0]));
         $this->assertNull($this->findDocumentWithId($response, $documentIds[1]));
+    }
+
+    public function testDeleteMultipleDocumentsWithDocumentIdAsString()
+    {
+        $documents = [
+            ['id' => 'myUniqueId1'],
+            ['id' => 'myUniqueId2'],
+            ['id' => 'myUniqueId3'],
+        ];
+        $index = $this->client->createIndex('documents');
+        $addDocumentResponse = $index->addDocuments($documents);
+        $index->waitForPendingUpdate($addDocumentResponse['updateId']);
+
+        $promise = $index->deleteDocuments(['myUniqueId1', 'myUniqueId3']);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $response = $index->getDocuments();
+        $this->assertCount(1, $response);
+        $this->assertSame([['id' => 'myUniqueId2']], $response);
     }
 
     public function testDeleteAllDocuments()
@@ -241,6 +287,17 @@ class DocumentsTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $index->getDocument($documentId);
+    }
+
+    /**
+     * @dataProvider invalidDocumentIds
+     */
+    public function testDeletingDocumentWithInvalidId($documentId)
+    {
+        $index = $this->client->createIndex('an-index');
+
+        $this->expectException(InvalidArgumentException::class);
+        $index->deleteDocument($documentId);
     }
 
     public function invalidDocumentIds(): array
