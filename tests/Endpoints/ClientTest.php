@@ -246,28 +246,6 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('pkgVersion', $response);
     }
 
-    public function testSysInfo()
-    {
-        $response = $this->client->sysInfo();
-
-        $this->assertArrayHasKey('memoryUsage', $response);
-        $this->assertArrayHasKey('processorUsage', $response);
-        $this->assertArrayHasKey('global', $response);
-        $this->assertArrayHasKey('process', $response);
-        $this->assertIsNotString($response['processorUsage'][0]);
-    }
-
-    public function testPrettySysInfo()
-    {
-        $response = $this->client->prettySysInfo();
-
-        $this->assertArrayHasKey('memoryUsage', $response);
-        $this->assertArrayHasKey('processorUsage', $response);
-        $this->assertArrayHasKey('global', $response);
-        $this->assertArrayHasKey('process', $response);
-        $this->assertIsString($response['processorUsage'][0]);
-    }
-
     public function testStats()
     {
         $response = $this->client->stats();
