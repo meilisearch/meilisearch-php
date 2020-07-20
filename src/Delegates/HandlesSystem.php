@@ -14,16 +14,6 @@ trait HandlesSystem
         return $this->version->show();
     }
 
-    public function sysInfo(): array
-    {
-        return $this->sysInfo->show();
-    }
-
-    public function prettySysInfo(): array
-    {
-        return $this->sysInfo->pretty();
-    }
-
     public function stats(): array
     {
         return $this->stats->show();
