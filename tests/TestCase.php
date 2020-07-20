@@ -28,13 +28,13 @@ abstract class TestCase extends BaseTestCase
      */
     protected $client;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = new Client(self::HOST, self::DEFAULT_KEY);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->client->deleteAllIndexes();
     }

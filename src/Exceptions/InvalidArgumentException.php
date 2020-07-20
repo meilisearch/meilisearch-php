@@ -6,7 +6,7 @@ namespace MeiliSearch\Exceptions;
 
 use Exception;
 
-class InvalidArgumentException extends Exception
+final class InvalidArgumentException extends Exception
 {
     public static function invalidType(string $argumentName, array $validTypes)
     {

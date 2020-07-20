@@ -7,7 +7,7 @@ namespace Tests\Endpoints;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
-class SearchTest extends TestCase
+final class SearchTest extends TestCase
 {
     private $index;
 

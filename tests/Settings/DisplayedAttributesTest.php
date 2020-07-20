@@ -6,7 +6,7 @@ namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class DisplayedAttributesTest extends TestCase
+final class DisplayedAttributesTest extends TestCase
 {
     public function testGetDefaultDisplayedAttributes()
     {

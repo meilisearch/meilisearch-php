@@ -6,7 +6,7 @@ namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class AttributesForFacetingTest extends TestCase
+final class AttributesForFacetingTest extends TestCase
 {
     public function testGetDefaultAttributesForFaceting()
     {

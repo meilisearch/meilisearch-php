@@ -7,11 +7,11 @@ namespace Tests\Endpoints;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
-class UpdatesTest extends TestCase
+final class UpdatesTest extends TestCase
 {
     private $index;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->index = $this->client->createIndex('index');

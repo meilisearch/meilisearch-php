@@ -8,11 +8,11 @@ use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
-class IndexTest extends TestCase
+final class IndexTest extends TestCase
 {
     private $index;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client->deleteAllIndexes();

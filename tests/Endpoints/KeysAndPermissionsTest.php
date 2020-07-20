@@ -8,9 +8,9 @@ use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
-class KeysAndPermissionsTest extends TestCase
+final class KeysAndPermissionsTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client->deleteAllIndexes();

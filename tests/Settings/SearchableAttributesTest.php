@@ -6,7 +6,7 @@ namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class SearchableAttributesTest extends TestCase
+final class SearchableAttributesTest extends TestCase
 {
     public function testGetDefaultSearchableAttributes()
     {

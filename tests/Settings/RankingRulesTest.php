@@ -6,7 +6,7 @@ namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class RankingRulesTest extends TestCase
+final class RankingRulesTest extends TestCase
 {
     private $index;
 
@@ -19,7 +19,7 @@ class RankingRulesTest extends TestCase
         'exactness',
     ];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->index = $this->client->createIndex('index');

@@ -6,7 +6,7 @@ namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class SettingsTest extends TestCase
+final class SettingsTest extends TestCase
 {
     const DEFAULT_RANKING_RULES = [
         'typo',

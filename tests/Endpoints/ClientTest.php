@@ -10,7 +10,7 @@ use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
-class ClientTest extends TestCase
+final class ClientTest extends TestCase
 {
     public function testGetAllIndexesWhenEmpty()
     {
