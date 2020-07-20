@@ -41,12 +41,13 @@ Each PR should pass the tests and the linter to be accepted.
 
 ```bash
 # Tests
+$ docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
 $ docker run -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
-$ sh scripts/tests.sh
+$ composer test
 # Linter (with auto-fix)
-$ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist
+$ composer lint:fix
 # Linter (without auto-fix)
-$ vendor/bin/php-cs-fixer fix --verbose --config=.php_cs.dist --dry-run
+$ composer lint
 ```
 
 ### Release Process
