@@ -39,7 +39,6 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settingA['stopWords']);
         $this->assertIsArray($settingA['synonyms']);
         $this->assertEmpty($settingA['synonyms']);
-        $this->assertTrue($settingA['acceptNewFields']);
 
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
         $this->assertNull($settingB['distinctAttribute']);
@@ -49,7 +48,6 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settingB['stopWords']);
         $this->assertIsArray($settingB['synonyms']);
         $this->assertEmpty($settingB['synonyms']);
-        $this->assertTrue($settingB['acceptNewFields']);
     }
 
     public function testUpdateSettings(): void
@@ -74,7 +72,6 @@ final class SettingsTest extends TestCase
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
-        $this->assertTrue($settings['acceptNewFields']);
     }
 
     public function testUpdateSettingsWithoutOverwritingThem(): void
@@ -106,7 +103,6 @@ final class SettingsTest extends TestCase
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
-        $this->assertTrue($settings['acceptNewFields']);
     }
 
     public function testResetSettings(): void
@@ -135,6 +131,5 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
-        $this->assertTrue($settings['acceptNewFields']);
     }
 }
