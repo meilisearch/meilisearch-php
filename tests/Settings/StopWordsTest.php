@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class StopWordsTest extends TestCase
+final class StopWordsTest extends TestCase
 {
     private $index;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->client->deleteAllIndexes();
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultStopWords()
+    public function testGetDefaultStopWords(): void
     {
         $response = $this->index->getStopWords();
 
@@ -23,7 +24,7 @@ class StopWordsTest extends TestCase
         $this->assertEmpty($response);
     }
 
-    public function testUpdateStopWords()
+    public function testUpdateStopWords(): void
     {
         $newStopWords = ['the'];
         $promise = $this->index->updateStopWords($newStopWords);
@@ -37,7 +38,7 @@ class StopWordsTest extends TestCase
         $this->assertEquals($newStopWords, $stopWords);
     }
 
-    public function testResetStopWords()
+    public function testResetStopWords(): void
     {
         $promise = $this->index->updateStopWords(['the']);
         $this->index->waitForPendingUpdate($promise['updateId']);

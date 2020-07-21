@@ -1,18 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class DisplayedAttributesTest extends TestCase
+final class DisplayedAttributesTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
-    public function testGetDefaultDisplayedAttributes()
+    public function testGetDefaultDisplayedAttributes(): void
     {
         $indexA = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
@@ -27,7 +23,7 @@ class DisplayedAttributesTest extends TestCase
         $this->assertEquals(['objectID'], $attributesB);
     }
 
-    public function testUpdateDisplayedAttributes()
+    public function testUpdateDisplayedAttributes(): void
     {
         $newAttributes = ['title'];
         $index = $this->client->createIndex('index');
@@ -43,7 +39,7 @@ class DisplayedAttributesTest extends TestCase
         $this->assertEquals($newAttributes, $displayedAttributes);
     }
 
-    public function testResetDisplayedAttributes()
+    public function testResetDisplayedAttributes(): void
     {
         $index = $this->client->createIndex('index');
         $newAttributes = ['title'];

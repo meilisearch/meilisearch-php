@@ -1,26 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class DistinctAttributeTest extends TestCase
+final class DistinctAttributeTest extends TestCase
 {
     private $index;
 
-    public function __construct()
+    protected function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultDistinctAttribute()
+    public function testGetDefaultDistinctAttribute(): void
     {
         $response = $this->index->getDistinctAttribute();
         $this->assertNull($response);
     }
 
-    public function testUpdateDistinctAttribute()
+    public function testUpdateDistinctAttribute(): void
     {
         $distinctAttribute = 'description';
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);
@@ -31,7 +33,7 @@ class DistinctAttributeTest extends TestCase
         $this->assertEquals($distinctAttribute, $this->index->getDistinctAttribute());
     }
 
-    public function testResetDistinctAttribute()
+    public function testResetDistinctAttribute(): void
     {
         $distinctAttribute = 'description';
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);

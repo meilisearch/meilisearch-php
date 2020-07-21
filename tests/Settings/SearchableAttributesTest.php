@@ -1,18 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class SearchableAttributesTest extends TestCase
+final class SearchableAttributesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
-    public function testGetDefaultSearchableAttributes()
+    public function testGetDefaultSearchableAttributes(): void
     {
         $indexA = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
@@ -26,7 +22,7 @@ class SearchableAttributesTest extends TestCase
         $this->assertEquals(['objectID'], $searchableAttributesB);
     }
 
-    public function testUpdateSearchableAttributes()
+    public function testUpdateSearchableAttributes(): void
     {
         $indexA = $this->client->createIndex('indexA');
         $searchableAttributes = [
@@ -45,7 +41,7 @@ class SearchableAttributesTest extends TestCase
         $this->assertEquals($searchableAttributes, $updatedAttributes);
     }
 
-    public function testResetSearchableAttributes()
+    public function testResetSearchableAttributes(): void
     {
         $index = $this->client->createIndex('indexA');
         $promise = $index->resetSearchableAttributes();
