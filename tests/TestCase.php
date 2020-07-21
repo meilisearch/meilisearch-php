@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    const DOCUMENTS = [
+    protected const DOCUMENTS = [
         ['id' => 123, 'title' => 'Pride and Prejudice', 'comment' => 'A great book', 'genre' => 'romance'],
         ['id' => 456, 'title' => 'Le Petit Prince', 'comment' => 'A french book', 'genre' => 'adventure'],
         ['id' => 2, 'title' => 'Le Rouge et le Noir', 'comment' => 'Another french book', 'genre' => 'romance'],
@@ -19,9 +19,9 @@ abstract class TestCase extends BaseTestCase
         ['id' => 42, 'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
     ];
 
-    const HOST = 'http://localhost:7700';
+    protected const HOST = 'http://localhost:7700';
 
-    const DEFAULT_KEY = 'masterKey';
+    protected const DEFAULT_KEY = 'masterKey';
 
     /**
      * @var Client
