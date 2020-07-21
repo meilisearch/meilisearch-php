@@ -8,7 +8,7 @@ use Exception;
 
 final class InvalidArgumentException extends Exception
 {
-    public static function invalidType(string $argumentName, array $validTypes)
+    public static function invalidType(string $argumentName, array $validTypes): self
     {
         return new self(
             sprintf('Argument "%s" is not a valid type! Please provide an argument that is of type: "%s"', $argumentName, \implode('","', $validTypes)),
@@ -17,7 +17,7 @@ final class InvalidArgumentException extends Exception
         );
     }
 
-    public static function emptyArgument(string $argumentName)
+    public static function emptyArgument(string $argumentName): self
     {
         return new self(
             sprintf('Argument "%s" is empty.', $argumentName),
