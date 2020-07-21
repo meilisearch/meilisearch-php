@@ -10,13 +10,7 @@ use Tests\TestCase;
 
 final class DocumentsTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
-    public function testAddDocuments()
+    public function testAddDocuments(): void
     {
         $index = $this->client->createIndex('documents');
         $promise = $index->addDocuments(self::DOCUMENTS);
@@ -29,7 +23,7 @@ final class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
-    public function testGetSingleDocumentWithIntegerDocumentId()
+    public function testGetSingleDocumentWithIntegerDocumentId(): void
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -42,7 +36,7 @@ final class DocumentsTest extends TestCase
         $this->assertSame($doc['title'], $response['title']);
     }
 
-    public function testGetSingleDocumentWithStringDocumentId()
+    public function testGetSingleDocumentWithStringDocumentId(): void
     {
         $stringDocumentId = 'myUniqueId';
         $index = $this->client->createIndex('documents');
@@ -54,7 +48,7 @@ final class DocumentsTest extends TestCase
         $this->assertSame($stringDocumentId, $response['id']);
     }
 
-    public function testReplaceDocuments()
+    public function testReplaceDocuments(): void
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -77,7 +71,7 @@ final class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
-    public function testUpdateDocuments()
+    public function testUpdateDocuments(): void
     {
         $index = $this->client->createIndex('documents');
         $promise = $index->addDocuments(self::DOCUMENTS);
@@ -102,7 +96,7 @@ final class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
-    public function testAddWithUpdateDocuments()
+    public function testAddWithUpdateDocuments(): void
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -127,7 +121,7 @@ final class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS) + 1, $response);
     }
 
-    public function testDeleteNonExistingDocument()
+    public function testDeleteNonExistingDocument(): void
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -145,7 +139,7 @@ final class DocumentsTest extends TestCase
         $this->assertNull($this->findDocumentWithId($response, $documentId));
     }
 
-    public function testDeleteSingleExistingDocumentWithDocumentIdAsInteger()
+    public function testDeleteSingleExistingDocumentWithDocumentIdAsInteger(): void
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -163,7 +157,7 @@ final class DocumentsTest extends TestCase
         $this->assertNull($this->findDocumentWithId($response, $documentId));
     }
 
-    public function testDeleteSingleExistingDocumentWithDocumentIdAsString()
+    public function testDeleteSingleExistingDocumentWithDocumentIdAsString(): void
     {
         $stringDocumentId = 'myUniqueId';
         $index = $this->client->createIndex('documents');
@@ -178,7 +172,7 @@ final class DocumentsTest extends TestCase
         $this->assertEmpty($response);
     }
 
-    public function testDeleteMultipleDocumentsWithDocumentIdAsInteger()
+    public function testDeleteMultipleDocumentsWithDocumentIdAsInteger(): void
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -196,7 +190,7 @@ final class DocumentsTest extends TestCase
         $this->assertNull($this->findDocumentWithId($response, $documentIds[1]));
     }
 
-    public function testDeleteMultipleDocumentsWithDocumentIdAsString()
+    public function testDeleteMultipleDocumentsWithDocumentIdAsString(): void
     {
         $documents = [
             ['id' => 'myUniqueId1'],
@@ -215,7 +209,7 @@ final class DocumentsTest extends TestCase
         $this->assertSame([['id' => 'myUniqueId2']], $response);
     }
 
-    public function testDeleteAllDocuments()
+    public function testDeleteAllDocuments(): void
     {
         $index = $this->client->createIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
@@ -230,7 +224,7 @@ final class DocumentsTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    public function testExceptionIfNoDocumentIdWhenGetting()
+    public function testExceptionIfNoDocumentIdWhenGetting(): void
     {
         $index = $this->client->createIndex('new-index');
 
@@ -239,7 +233,7 @@ final class DocumentsTest extends TestCase
         $index->getDocument(1);
     }
 
-    public function testAddDocumentWithPrimaryKey()
+    public function testAddDocumentWithPrimaryKey(): void
     {
         $documents = [
             [
@@ -258,7 +252,7 @@ final class DocumentsTest extends TestCase
         $this->assertCount(1, $index->getDocuments());
     }
 
-    public function testUpdateDocumentWithPrimaryKey()
+    public function testUpdateDocumentWithPrimaryKey(): void
     {
         $documents = [
             [
@@ -281,7 +275,7 @@ final class DocumentsTest extends TestCase
     /**
      * @dataProvider invalidDocumentIds
      */
-    public function testFetchingDocumentWithInvalidId($documentId)
+    public function testFetchingDocumentWithInvalidId($documentId): void
     {
         $index = $this->client->createIndex('an-index');
 
@@ -292,7 +286,7 @@ final class DocumentsTest extends TestCase
     /**
      * @dataProvider invalidDocumentIds
      */
-    public function testDeletingDocumentWithInvalidId($documentId)
+    public function testDeletingDocumentWithInvalidId($documentId): void
     {
         $index = $this->client->createIndex('an-index');
 

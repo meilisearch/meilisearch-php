@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 final class SearchableAttributesTest extends TestCase
 {
-    public function testGetDefaultSearchableAttributes()
+    public function testGetDefaultSearchableAttributes(): void
     {
         $indexA = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
@@ -22,7 +22,7 @@ final class SearchableAttributesTest extends TestCase
         $this->assertEquals(['objectID'], $searchableAttributesB);
     }
 
-    public function testUpdateSearchableAttributes()
+    public function testUpdateSearchableAttributes(): void
     {
         $indexA = $this->client->createIndex('indexA');
         $searchableAttributes = [
@@ -41,7 +41,7 @@ final class SearchableAttributesTest extends TestCase
         $this->assertEquals($searchableAttributes, $updatedAttributes);
     }
 
-    public function testResetSearchableAttributes()
+    public function testResetSearchableAttributes(): void
     {
         $index = $this->client->createIndex('indexA');
         $promise = $index->resetSearchableAttributes();

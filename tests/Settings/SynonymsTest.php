@@ -16,7 +16,7 @@ final class SynonymsTest extends TestCase
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultSynonyms()
+    public function testGetDefaultSynonyms(): void
     {
         $response = $this->index->getSynonyms();
 
@@ -24,7 +24,7 @@ final class SynonymsTest extends TestCase
         $this->assertEmpty($response);
     }
 
-    public function testUpdateSynonyms()
+    public function testUpdateSynonyms(): void
     {
         $newSynonyms = [
             'hp' => ['harry potter'],
@@ -40,7 +40,7 @@ final class SynonymsTest extends TestCase
         $this->assertEquals($newSynonyms, $synonyms);
     }
 
-    public function testResetSynonyms()
+    public function testResetSynonyms(): void
     {
         $promise = $this->index->updateSynonyms([
             'hp' => ['harry potter'],

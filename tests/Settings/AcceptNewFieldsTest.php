@@ -16,13 +16,13 @@ final class AcceptNewFieldsTest extends TestCase
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultAcceptNewFields()
+    public function testGetDefaultAcceptNewFields(): void
     {
         $response = $this->index->getAcceptNewFields();
         $this->assertTrue($response);
     }
 
-    public function testUpdateAcceptNewFields()
+    public function testUpdateAcceptNewFields(): void
     {
         $promise = $this->index->updateAcceptNewFields(false);
 

@@ -16,7 +16,7 @@ final class StopWordsTest extends TestCase
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultStopWords()
+    public function testGetDefaultStopWords(): void
     {
         $response = $this->index->getStopWords();
 
@@ -24,7 +24,7 @@ final class StopWordsTest extends TestCase
         $this->assertEmpty($response);
     }
 
-    public function testUpdateStopWords()
+    public function testUpdateStopWords(): void
     {
         $newStopWords = ['the'];
         $promise = $this->index->updateStopWords($newStopWords);
@@ -38,7 +38,7 @@ final class StopWordsTest extends TestCase
         $this->assertEquals($newStopWords, $stopWords);
     }
 
-    public function testResetStopWords()
+    public function testResetStopWords(): void
     {
         $promise = $this->index->updateStopWords(['the']);
         $this->index->waitForPendingUpdate($promise['updateId']);

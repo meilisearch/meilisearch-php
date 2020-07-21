@@ -11,10 +11,16 @@ final class SearchTest extends TestCase
 {
     private $index;
 
-    public function testBasicSearch()
+    protected function setUp(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
+        parent::setUp();
+        $this->index = $this->client->createIndex('index');
+        $promise = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->waitForPendingUpdate($promise['updateId']);
+    }
 
+    public function testBasicSearch(): void
+    {
         $response = $this->index->search('prince');
 
         $this->assertArrayHasKey('hits', $response);
@@ -25,16 +31,14 @@ final class SearchTest extends TestCase
         $this->assertCount(2, $response['hits']);
     }
 
-    public function testSearchWithOptions()
+    public function testSearchWithOptions(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
-
         $response = $this->index->search('prince', ['limit' => 1]);
 
         $this->assertCount(1, $response['hits']);
     }
 
-    public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided()
+    public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided(): void
     {
         $emptyIndex = $this->client->createIndex('empty');
 
@@ -48,7 +52,7 @@ final class SearchTest extends TestCase
         $this->assertCount(0, $res['hits']);
     }
 
-    public function testExceptionIfNoIndexWhenSearching()
+    public function testExceptionIfNoIndexWhenSearching(): void
     {
         $index = $this->client->createIndex('another-index');
         $index->delete();
@@ -58,9 +62,8 @@ final class SearchTest extends TestCase
         $index->search('prince');
     }
 
-    public function testParametersCanBeString()
+    public function testParametersCanBeString(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
@@ -80,9 +83,8 @@ final class SearchTest extends TestCase
         $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
-    public function testParametersCanBeArray()
+    public function testParametersCanBeArray(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
@@ -102,9 +104,8 @@ final class SearchTest extends TestCase
         $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
-    public function testParametersCanBeAStar()
+    public function testParametersCanBeAStar(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
@@ -124,9 +125,8 @@ final class SearchTest extends TestCase
         $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
-    public function testBasicSearchWithFacetsDistribution()
+    public function testBasicSearchWithFacetsDistribution(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
         $response = $this->index->updateAttributesForFaceting(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
@@ -143,9 +143,8 @@ final class SearchTest extends TestCase
         $this->assertSame($response['facetsDistribution']['genre']['romance'], 0);
     }
 
-    public function testBasicSearchWithFacetFilters()
+    public function testBasicSearchWithFacetFilters(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
         $response = $this->index->updateAttributesForFaceting(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
@@ -158,9 +157,8 @@ final class SearchTest extends TestCase
         $this->assertSame(4, $response['hits'][0]['id']);
     }
 
-    public function testBasicSearchWithMultipleFacetFilters()
+    public function testBasicSearchWithMultipleFacetFilters(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
         $response = $this->index->updateAttributesForFaceting(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
@@ -173,9 +171,8 @@ final class SearchTest extends TestCase
         $this->assertSame(4, $response['hits'][0]['id']);
     }
 
-    public function testCustomSearchWithFacetFiltersAndAttributesToRetrieve()
+    public function testCustomSearchWithFacetFiltersAndAttributesToRetrieve(): void
     {
-        $this->createFreshIndexAndSeedDocuments();
         $response = $this->index->updateAttributesForFaceting(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
@@ -190,16 +187,5 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('id', $response['hits'][0]);
         $this->assertArrayHasKey('title', $response['hits'][0]);
         $this->assertArrayNotHasKey('comment', $response['hits'][0]);
-    }
-
-    // PRIVATE
-
-    private function createFreshIndexAndSeedDocuments()
-    {
-        $this->client->deleteAllIndexes();
-        $this->index = $this->client->createIndex('index');
-        $promise = $this->index->updateDocuments(self::DOCUMENTS);
-
-        $this->index->waitForPendingUpdate($promise['updateId']);
     }
 }

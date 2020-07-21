@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 final class DisplayedAttributesTest extends TestCase
 {
-    public function testGetDefaultDisplayedAttributes()
+    public function testGetDefaultDisplayedAttributes(): void
     {
         $indexA = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
@@ -23,7 +23,7 @@ final class DisplayedAttributesTest extends TestCase
         $this->assertEquals(['objectID'], $attributesB);
     }
 
-    public function testUpdateDisplayedAttributes()
+    public function testUpdateDisplayedAttributes(): void
     {
         $newAttributes = ['title'];
         $index = $this->client->createIndex('index');
@@ -39,7 +39,7 @@ final class DisplayedAttributesTest extends TestCase
         $this->assertEquals($newAttributes, $displayedAttributes);
     }
 
-    public function testResetDisplayedAttributes()
+    public function testResetDisplayedAttributes(): void
     {
         $index = $this->client->createIndex('index');
         $newAttributes = ['title'];

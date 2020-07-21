@@ -17,7 +17,7 @@ final class UpdatesTest extends TestCase
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetOneUpdate()
+    public function testGetOneUpdate(): void
     {
         [$promise, $response] = $this->seedIndex();
 
@@ -31,7 +31,7 @@ final class UpdatesTest extends TestCase
         $this->assertArrayHasKey('processedAt', $response);
     }
 
-    public function testGetAllUpdates()
+    public function testGetAllUpdates(): void
     {
         $this->seedIndex();
 
@@ -47,7 +47,7 @@ final class UpdatesTest extends TestCase
         $this->assertArrayHasKey('processedAt', $response[0]);
     }
 
-    public function testExceptionIfNoUpdateIdWhenGetting()
+    public function testExceptionIfNoUpdateIdWhenGetting(): void
     {
         $this->expectException(HTTPRequestException::class);
         $this->index->getUpdateStatus(10000);

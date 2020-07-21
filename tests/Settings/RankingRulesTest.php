@@ -25,7 +25,7 @@ final class RankingRulesTest extends TestCase
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultRankingRules()
+    public function testGetDefaultRankingRules(): void
     {
         $response = $this->index->getRankingRules();
 
@@ -33,7 +33,7 @@ final class RankingRulesTest extends TestCase
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $response);
     }
 
-    public function testUpdateRankingRules()
+    public function testUpdateRankingRules(): void
     {
         $newRankingRules = [
             'asc(title)',
@@ -52,7 +52,7 @@ final class RankingRulesTest extends TestCase
         $this->assertEquals($newRankingRules, $rankingRules);
     }
 
-    public function testResetRankingRules()
+    public function testResetRankingRules(): void
     {
         $promise = $this->index->resetRankingRules();
 

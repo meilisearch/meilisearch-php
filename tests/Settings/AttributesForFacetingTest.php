@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 final class AttributesForFacetingTest extends TestCase
 {
-    public function testGetDefaultAttributesForFaceting()
+    public function testGetDefaultAttributesForFaceting(): void
     {
         $index = $this->client->createIndex('index');
 
@@ -18,7 +18,7 @@ final class AttributesForFacetingTest extends TestCase
         $this->assertEmpty($attributes);
     }
 
-    public function testUpdateAttributesForFaceting()
+    public function testUpdateAttributesForFaceting(): void
     {
         $newAttributes = ['title'];
         $index = $this->client->createIndex('index');
@@ -34,7 +34,7 @@ final class AttributesForFacetingTest extends TestCase
         $this->assertEquals($newAttributes, $attributesForFaceting);
     }
 
-    public function testResetAttributesForFaceting()
+    public function testResetAttributesForFaceting(): void
     {
         $index = $this->client->createIndex('index');
         $newAttributes = ['title'];

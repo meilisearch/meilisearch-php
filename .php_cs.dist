@@ -10,6 +10,7 @@ $finder = \PhpCsFixer\Finder::create()
 $rules = [
     '@Symfony' => true,
     'declare_strict_types' => true,
+    'void_return' => true,
     'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'namespaced'],
 ];
 

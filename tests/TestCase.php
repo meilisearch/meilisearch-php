@@ -39,7 +39,7 @@ abstract class TestCase extends BaseTestCase
         $this->client->deleteAllIndexes();
     }
 
-    public function assertIsValidPromise(array $promise)
+    public function assertIsValidPromise(array $promise): void
     {
         $this->assertIsArray($promise);
         $this->assertArrayHasKey('updateId', $promise);
