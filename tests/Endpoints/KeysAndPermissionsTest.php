@@ -37,7 +37,7 @@ final class KeysAndPermissionsTest extends TestCase
         $newClient = new Client(self::HOST, $this->getKeys()['private']);
         $response = $newClient->getIndex('index')->getSettings();
 
-        $this->assertTrue($response['searchableAttributes']);
+        $this->assertEquals(['*'], $response['searchableAttributes']);
     }
 
     public function testExceptionIfNoMasterKeyProvided(): void
@@ -52,7 +52,7 @@ final class KeysAndPermissionsTest extends TestCase
     {
         $this->client->createIndex('index');
         $response = $this->client->getIndex('index')->getSettings();
-        $this->assertTrue($response['searchableAttributes']);
+        $this->assertEquals(['*'], $response['searchableAttributes']);
 
         $newClient = new Client(self::HOST, 'bad-key');
 

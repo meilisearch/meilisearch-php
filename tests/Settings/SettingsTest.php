@@ -17,6 +17,9 @@ final class SettingsTest extends TestCase
         'exactness',
     ];
 
+    const DEFAULT_SEARCHABLE_ATTRIBUTES = ['*'];
+    const DEFAULT_DISPLAYED_ATTRIBUTES = ['*'];
+
     public function testGetDefaultSettings(): void
     {
         $primaryKey = 'ObjectID';
@@ -32,9 +35,9 @@ final class SettingsTest extends TestCase
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingA['rankingRules']);
         $this->assertNull($settingA['distinctAttribute']);
         $this->assertIsArray($settingA['searchableAttributes']);
-        $this->assertEmpty($settingA['searchableAttributes']);
+        $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingA['searchableAttributes']);
         $this->assertIsArray($settingA['displayedAttributes']);
-        $this->assertEmpty($settingA['displayedAttributes']);
+        $this->assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingA['displayedAttributes']);
         $this->assertIsArray($settingA['stopWords']);
         $this->assertEmpty($settingA['stopWords']);
         $this->assertIsArray($settingA['synonyms']);
@@ -42,8 +45,8 @@ final class SettingsTest extends TestCase
 
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
         $this->assertNull($settingB['distinctAttribute']);
-        $this->assertEquals([$primaryKey], $settingB['searchableAttributes']);
-        $this->assertEquals([$primaryKey], $settingB['displayedAttributes']);
+        $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingB['searchableAttributes']);
+        $this->assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingB['displayedAttributes']);
         $this->assertIsArray($settingB['stopWords']);
         $this->assertEmpty($settingB['stopWords']);
         $this->assertIsArray($settingB['synonyms']);
@@ -66,9 +69,9 @@ final class SettingsTest extends TestCase
         $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertIsArray($settings['searchableAttributes']);
-        $this->assertEmpty($settings['searchableAttributes']);
+        $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
-        $this->assertEmpty($settings['displayedAttributes']);
+        $this->assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settings['displayedAttributes']);
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
@@ -99,7 +102,7 @@ final class SettingsTest extends TestCase
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertEquals(['title'], $settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
-        $this->assertEmpty($settings['displayedAttributes']);
+        $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
@@ -126,7 +129,9 @@ final class SettingsTest extends TestCase
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settings['rankingRules']);
         $this->assertNull($settings['distinctAttribute']);
         $this->assertIsArray($settings['searchableAttributes']);
+        $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
+        $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
         $this->assertIsArray($settings['stopWords']);
         $this->assertEmpty($settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);

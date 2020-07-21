@@ -17,9 +17,9 @@ final class SearchableAttributesTest extends TestCase
         $searchableAttributesB = $indexB->getSearchableAttributes();
 
         $this->assertIsArray($searchableAttributesA);
-        $this->assertEmpty($searchableAttributesA);
+        $this->assertEquals(['*'], $searchableAttributesA);
         $this->assertIsArray($searchableAttributesB);
-        $this->assertEquals(['objectID'], $searchableAttributesB);
+        $this->assertEquals(['*'], $searchableAttributesB);
     }
 
     public function testUpdateSearchableAttributes(): void
@@ -52,5 +52,6 @@ final class SearchableAttributesTest extends TestCase
         $searchableAttributes = $index->getSearchableAttributes();
 
         $this->assertIsArray($searchableAttributes);
+        $this->assertEquals(['*'], $searchableAttributes);
     }
 }
