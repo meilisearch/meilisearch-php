@@ -1,18 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class AttributesForFacetingTest extends TestCase
+final class AttributesForFacetingTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
-    public function testGetDefaultAttributesForFaceting()
+    public function testGetDefaultAttributesForFaceting(): void
     {
         $index = $this->client->createIndex('index');
 
@@ -22,7 +18,7 @@ class AttributesForFacetingTest extends TestCase
         $this->assertEmpty($attributes);
     }
 
-    public function testUpdateAttributesForFaceting()
+    public function testUpdateAttributesForFaceting(): void
     {
         $newAttributes = ['title'];
         $index = $this->client->createIndex('index');
@@ -38,7 +34,7 @@ class AttributesForFacetingTest extends TestCase
         $this->assertEquals($newAttributes, $attributesForFaceting);
     }
 
-    public function testResetAttributesForFaceting()
+    public function testResetAttributesForFaceting(): void
     {
         $index = $this->client->createIndex('index');
         $newAttributes = ['title'];

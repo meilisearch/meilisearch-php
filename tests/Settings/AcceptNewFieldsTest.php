@@ -1,26 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class AcceptNewFieldsTest extends TestCase
+final class AcceptNewFieldsTest extends TestCase
 {
     private $index;
 
-    public function __construct()
+    protected function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultAcceptNewFields()
+    public function testGetDefaultAcceptNewFields(): void
     {
         $response = $this->index->getAcceptNewFields();
         $this->assertTrue($response);
     }
 
-    public function testUpdateAcceptNewFields()
+    public function testUpdateAcceptNewFields(): void
     {
         $promise = $this->index->updateAcceptNewFields(false);
 

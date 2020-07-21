@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MeiliSearch\Delegates;
 
 use MeiliSearch\Endpoints\Indexes;
@@ -18,12 +20,12 @@ trait HandlesIndex
         return $this->index->all();
     }
 
-    public function showIndex($uid): array
+    public function showIndex(string $uid): array
     {
         return (new Indexes($this->http, $uid))->show();
     }
 
-    public function deleteIndex($uid): void
+    public function deleteIndex(string $uid): void
     {
         (new Indexes($this->http, $uid))->delete();
     }
@@ -36,12 +38,12 @@ trait HandlesIndex
         }
     }
 
-    public function getIndex($uid): Indexes
+    public function getIndex(string $uid): Indexes
     {
         return new Indexes($this->http, $uid);
     }
 
-    public function createIndex($uid, $options = []): Indexes
+    public function createIndex(string $uid, array $options = []): Indexes
     {
         return $this->index->create($uid, $options);
     }

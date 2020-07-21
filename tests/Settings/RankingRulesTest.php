@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class RankingRulesTest extends TestCase
+final class RankingRulesTest extends TestCase
 {
     private $index;
 
@@ -17,13 +19,13 @@ class RankingRulesTest extends TestCase
         'exactness',
     ];
 
-    public function __construct()
+    protected function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultRankingRules()
+    public function testGetDefaultRankingRules(): void
     {
         $response = $this->index->getRankingRules();
 
@@ -31,7 +33,7 @@ class RankingRulesTest extends TestCase
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $response);
     }
 
-    public function testUpdateRankingRules()
+    public function testUpdateRankingRules(): void
     {
         $newRankingRules = [
             'asc(title)',
@@ -50,7 +52,7 @@ class RankingRulesTest extends TestCase
         $this->assertEquals($newRankingRules, $rankingRules);
     }
 
-    public function testResetRankingRules()
+    public function testResetRankingRules(): void
     {
         $promise = $this->index->resetRankingRules();
 

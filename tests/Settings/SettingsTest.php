@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class SettingsTest extends TestCase
+final class SettingsTest extends TestCase
 {
     const DEFAULT_RANKING_RULES = [
         'typo',
@@ -15,13 +17,7 @@ class SettingsTest extends TestCase
         'exactness',
     ];
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
-    public function testGetDefaultSettings()
+    public function testGetDefaultSettings(): void
     {
         $primaryKey = 'ObjectID';
         $settingA = $this->client
@@ -56,7 +52,7 @@ class SettingsTest extends TestCase
         $this->assertTrue($settingB['acceptNewFields']);
     }
 
-    public function testUpdateSettings()
+    public function testUpdateSettings(): void
     {
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
@@ -81,7 +77,7 @@ class SettingsTest extends TestCase
         $this->assertTrue($settings['acceptNewFields']);
     }
 
-    public function testUpdateSettingsWithoutOverwritingThem()
+    public function testUpdateSettingsWithoutOverwritingThem(): void
     {
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
@@ -113,7 +109,7 @@ class SettingsTest extends TestCase
         $this->assertTrue($settings['acceptNewFields']);
     }
 
-    public function testResetSettings()
+    public function testResetSettings(): void
     {
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([

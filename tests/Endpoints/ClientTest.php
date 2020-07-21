@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Endpoints;
 
 use Http\Client\Exception\NetworkException;
@@ -8,15 +10,9 @@ use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
-class ClientTest extends TestCase
+final class ClientTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
-    public function testGetAllIndexesWhenEmpty()
+    public function testGetAllIndexesWhenEmpty(): void
     {
         $response = $this->client->getAllIndexes();
 
@@ -24,7 +20,7 @@ class ClientTest extends TestCase
         $this->assertEmpty($response);
     }
 
-    public function testCreateIndexWithOnlyUid()
+    public function testCreateIndexWithOnlyUid(): void
     {
         $index = $this->client->createIndex('index');
 
@@ -33,7 +29,7 @@ class ClientTest extends TestCase
         $this->assertNull($index->getPrimaryKey());
     }
 
-    public function testCreateIndexWithUidAndPrimaryKey()
+    public function testCreateIndexWithUidAndPrimaryKey(): void
     {
         $index = $this->client->createIndex(
             'index',
@@ -45,7 +41,7 @@ class ClientTest extends TestCase
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
-    public function testCreateIndexWithUidInOptions()
+    public function testCreateIndexWithUidInOptions(): void
     {
         $index = $this->client->createIndex(
             'index',
@@ -60,7 +56,7 @@ class ClientTest extends TestCase
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
-    public function testGetAllIndexes()
+    public function testGetAllIndexes(): void
     {
         $indexA = 'indexA';
         $indexB = 'indexB';
@@ -80,7 +76,7 @@ class ClientTest extends TestCase
         $this->assertContains($indexB, $uids);
     }
 
-    public function testShowIndex()
+    public function testShowIndex(): void
     {
         $uid = 'index';
         $index = $this->client->createIndex(
@@ -96,7 +92,7 @@ class ClientTest extends TestCase
         $this->assertSame($uid, $response['uid']);
     }
 
-    public function testDeleteIndex()
+    public function testDeleteIndex(): void
     {
         $this->client->createIndex('index');
 
@@ -111,7 +107,7 @@ class ClientTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    public function testDeleteAllIndexes()
+    public function testDeleteAllIndexes(): void
     {
         $this->client->createIndex('index-1');
         $this->client->createIndex('index-2');
@@ -126,7 +122,7 @@ class ClientTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    public function testDeleteAllIndexesWhenThereAreNoIndexes()
+    public function testDeleteAllIndexesWhenThereAreNoIndexes(): void
     {
         $response = $this->client->getAllIndexes();
         $this->assertCount(0, $response);
@@ -136,7 +132,7 @@ class ClientTest extends TestCase
         $this->assertCount(0, $response);
     }
 
-    public function testGetIndex()
+    public function testGetIndex(): void
     {
         $this->client->createIndex('index');
 
@@ -146,7 +142,7 @@ class ClientTest extends TestCase
         $this->assertNull($index->getPrimaryKey());
     }
 
-    public function testGetOrCreateIndexWithOnlyUid()
+    public function testGetOrCreateIndexWithOnlyUid(): void
     {
         $index = $this->client->getOrCreateIndex('index');
 
@@ -155,7 +151,7 @@ class ClientTest extends TestCase
         $this->assertNull($index->getPrimaryKey());
     }
 
-    public function testGetOrCreateIndexWithUidAndPrimaryKey()
+    public function testGetOrCreateIndexWithUidAndPrimaryKey(): void
     {
         $index = $this->client->getOrCreateIndex(
             'index',
@@ -167,7 +163,7 @@ class ClientTest extends TestCase
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
-    public function testGetOrCreateIndexWithUidInOptions()
+    public function testGetOrCreateIndexWithUidInOptions(): void
     {
         $index = $this->client->getOrCreateIndex(
             'index',
@@ -182,7 +178,7 @@ class ClientTest extends TestCase
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
-    public function testGetOrCreateWithIndexAlreadyExists()
+    public function testGetOrCreateWithIndexAlreadyExists(): void
     {
         $index1 = $this->client->getOrCreateIndex('index');
         $index2 = $this->client->getOrCreateIndex('index');
@@ -200,7 +196,7 @@ class ClientTest extends TestCase
         $index2->delete();
     }
 
-    public function testExceptionIfUidTakenWhenCreating()
+    public function testExceptionIfUidTakenWhenCreating(): void
     {
         $this->client->createIndex('index');
 
@@ -209,7 +205,7 @@ class ClientTest extends TestCase
         $this->client->createIndex('index');
     }
 
-    public function testExceptionIfNoUidWhenCreating()
+    public function testExceptionIfNoUidWhenCreating(): void
     {
         $this->expectException(\TypeError::class);
         $this->client->createIndex(null);
@@ -218,26 +214,26 @@ class ClientTest extends TestCase
         $this->client->createIndex('');
     }
 
-    public function testExceptionIfNoIndexWhenShowing()
+    public function testExceptionIfNoIndexWhenShowing(): void
     {
         $this->expectException(HTTPRequestException::class);
         $this->client->showIndex('a-non-existing-index');
     }
 
-    public function testExceptionIfNoIndexWhenDeleting()
+    public function testExceptionIfNoIndexWhenDeleting(): void
     {
         $this->expectException(HTTPRequestException::class);
         $this->client->deleteIndex('a-non-existing-index');
     }
 
-    public function testHealth()
+    public function testHealth(): void
     {
         $response = $this->client->health();
 
         $this->assertEmpty($response);
     }
 
-    public function testVersion()
+    public function testVersion(): void
     {
         $response = $this->client->version();
 
@@ -246,7 +242,7 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('pkgVersion', $response);
     }
 
-    public function testStats()
+    public function testStats(): void
     {
         $response = $this->client->stats();
 
@@ -255,11 +251,11 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('indexes', $response);
     }
 
-    public function testBadClientUrl()
+    public function testBadClientUrl(): void
     {
         try {
-            $this->client = new Client('http://127.0.0.1.com:1234', 'some-key');
-            $this->client->createIndex('index');
+            $client = new Client('http://127.0.0.1.com:1234', 'some-key');
+            $client->createIndex('index');
         } catch (NetworkException $e) {
             $this->assertIsString($e->getMessage());
 

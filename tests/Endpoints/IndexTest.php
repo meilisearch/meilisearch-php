@@ -1,23 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Endpoints;
 
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
-class IndexTest extends TestCase
+final class IndexTest extends TestCase
 {
     private $index;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->client->deleteAllIndexes();
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetPrimaryKey()
+    public function testGetPrimaryKey(): void
     {
         $indexB = $this->client->createIndex(
             'indexB',
@@ -28,7 +29,7 @@ class IndexTest extends TestCase
         $this->assertSame('objectId', $indexB->getPrimaryKey());
     }
 
-    public function testGetUid()
+    public function testGetUid(): void
     {
         $indexB = $this->client->createIndex(
             'indexB',
@@ -38,7 +39,7 @@ class IndexTest extends TestCase
         $this->assertSame('indexB', $indexB->getUid());
     }
 
-    public function testShow()
+    public function testShow(): void
     {
         $index = $this->client->createIndex(
             'indexB',
@@ -55,7 +56,7 @@ class IndexTest extends TestCase
         $this->assertSame($response['uid'], 'indexB');
     }
 
-    public function testPrimaryKeyUpdate()
+    public function testPrimaryKeyUpdate(): void
     {
         $primaryKey = 'id';
 
@@ -65,7 +66,7 @@ class IndexTest extends TestCase
         $this->assertSame('index', $response['uid']);
     }
 
-    public function testExceptionIsThrownWhenOverwritingPrimaryKey()
+    public function testExceptionIsThrownWhenOverwritingPrimaryKey(): void
     {
         $index = $this->client->createIndex(
             'indexB',
@@ -77,7 +78,7 @@ class IndexTest extends TestCase
         $index->update(['primaryKey' => 'objectID']);
     }
 
-    public function testIndexStats()
+    public function testIndexStats(): void
     {
         $stats = $this->index->stats();
 
@@ -87,7 +88,7 @@ class IndexTest extends TestCase
         $this->assertArrayHasKey('fieldsDistribution', $stats);
     }
 
-    public function testWaitForPendingUpdateDefault()
+    public function testWaitForPendingUpdateDefault(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
 
@@ -103,7 +104,7 @@ class IndexTest extends TestCase
         $this->assertArrayHasKey('processedAt', $response);
     }
 
-    public function testWaitForPendingUpdateWithTimeoutAndInterval()
+    public function testWaitForPendingUpdateWithTimeoutAndInterval(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForPendingUpdate($promise['updateId'], 100, 20);
@@ -118,7 +119,7 @@ class IndexTest extends TestCase
         $this->assertArrayHasKey('processedAt', $response);
     }
 
-    public function testWaitForPendingUpdateWithTimeout()
+    public function testWaitForPendingUpdateWithTimeout(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForPendingUpdate($promise['updateId'], 100);
@@ -133,14 +134,14 @@ class IndexTest extends TestCase
         $this->assertArrayHasKey('processedAt', $response);
     }
 
-    public function testExceptionWhenPendingUpdateTimeOut()
+    public function testExceptionWhenPendingUpdateTimeOut(): void
     {
         $this->expectException(TimeOutException::class);
         $res = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $this->index->waitForPendingUpdate($res['updateId'], 0, 20);
     }
 
-    public function testDeleteIndexes()
+    public function testDeleteIndexes(): void
     {
         $this->index = $this->client->createIndex('indexA');
         $indexB = $this->client->createIndex('indexB');
@@ -152,7 +153,7 @@ class IndexTest extends TestCase
         $this->assertEmpty($res);
     }
 
-    public function testExceptionIsThrownIfNoIndexWhenShowing()
+    public function testExceptionIsThrownIfNoIndexWhenShowing(): void
     {
         $this->index->delete();
 
@@ -161,7 +162,7 @@ class IndexTest extends TestCase
         $this->index->show();
     }
 
-    public function testExceptionIsThrownIfNoIndexWhenUpdating()
+    public function testExceptionIsThrownIfNoIndexWhenUpdating(): void
     {
         $this->index->delete();
 
@@ -169,7 +170,7 @@ class IndexTest extends TestCase
         $this->index->update(['primaryKey' => 'objectID']);
     }
 
-    public function testExceptionIsThrownIfNoIndexWhenDeleting()
+    public function testExceptionIsThrownIfNoIndexWhenDeleting(): void
     {
         $this->index->delete();
 

@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Settings;
 
 use Tests\TestCase;
 
-class SynonymsTest extends TestCase
+final class SynonymsTest extends TestCase
 {
     private $index;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->client->deleteAllIndexes();
         $this->index = $this->client->createIndex('index');
     }
 
-    public function testGetDefaultSynonyms()
+    public function testGetDefaultSynonyms(): void
     {
         $response = $this->index->getSynonyms();
 
@@ -23,7 +24,7 @@ class SynonymsTest extends TestCase
         $this->assertEmpty($response);
     }
 
-    public function testUpdateSynonyms()
+    public function testUpdateSynonyms(): void
     {
         $newSynonyms = [
             'hp' => ['harry potter'],
@@ -39,7 +40,7 @@ class SynonymsTest extends TestCase
         $this->assertEquals($newSynonyms, $synonyms);
     }
 
-    public function testResetSynonyms()
+    public function testResetSynonyms(): void
     {
         $promise = $this->index->updateSynonyms([
             'hp' => ['harry potter'],

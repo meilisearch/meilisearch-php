@@ -1,20 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Tests\TestCase;
 
-class KeysAndPermissionsTest extends TestCase
+final class KeysAndPermissionsTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->client->deleteAllIndexes();
-    }
-
-    public function testGetKeys()
+    public function testGetKeys(): void
     {
         $response = $this->client->getKeys();
 
@@ -26,7 +22,7 @@ class KeysAndPermissionsTest extends TestCase
         $this->assertNotNull($response['public']);
     }
 
-    public function testSearchingIfPublicKeyProvided()
+    public function testSearchingIfPublicKeyProvided(): void
     {
         $this->client->createIndex('index');
 
@@ -35,7 +31,7 @@ class KeysAndPermissionsTest extends TestCase
         $this->assertArrayHasKey('hits', $response);
     }
 
-    public function testGetSettingsIfPrivateKeyProvided()
+    public function testGetSettingsIfPrivateKeyProvided(): void
     {
         $this->client->createIndex('index');
         $newClient = new Client(self::HOST, $this->getKeys()['private']);
@@ -44,7 +40,7 @@ class KeysAndPermissionsTest extends TestCase
         $this->assertTrue($response['acceptNewFields']);
     }
 
-    public function testExceptionIfNoMasterKeyProvided()
+    public function testExceptionIfNoMasterKeyProvided(): void
     {
         $newClient = new Client(self::HOST);
 
@@ -52,7 +48,7 @@ class KeysAndPermissionsTest extends TestCase
         $newClient->getIndex('index')->search('test');
     }
 
-    public function testExceptionIfBadKeyProvidedToGetSettings()
+    public function testExceptionIfBadKeyProvidedToGetSettings(): void
     {
         $this->client->createIndex('index');
         $response = $this->client->getIndex('index')->getSettings();
@@ -64,14 +60,14 @@ class KeysAndPermissionsTest extends TestCase
         $newClient->getIndex('index')->getSettings();
     }
 
-    public function testExceptionIfBadKeyProvidedToGetKeys()
+    public function testExceptionIfBadKeyProvidedToGetKeys(): void
     {
         $this->expectException(HTTPRequestException::class);
         $client = new Client(self::HOST, 'bad-key');
         $client->getKeys();
     }
 
-    private function getKeys()
+    private function getKeys(): array
     {
         return $this->client->getKeys();
     }
