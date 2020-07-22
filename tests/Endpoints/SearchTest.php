@@ -31,6 +31,30 @@ final class SearchTest extends TestCase
         $this->assertCount(2, $response['hits']);
     }
 
+    public function testBasicEmptySearch(): void
+    {
+        $response = $this->index->search('');
+
+        $this->assertArrayHasKey('hits', $response);
+        $this->assertArrayHasKey('offset', $response);
+        $this->assertArrayHasKey('limit', $response);
+        $this->assertArrayHasKey('processingTimeMs', $response);
+        $this->assertArrayHasKey('query', $response);
+        $this->assertCount(0, $response['hits']);
+    }
+
+    public function testBasicPlaceholderSearch(): void
+    {
+        $response = $this->index->search(null);
+
+        $this->assertArrayHasKey('hits', $response);
+        $this->assertArrayHasKey('offset', $response);
+        $this->assertArrayHasKey('limit', $response);
+        $this->assertArrayHasKey('processingTimeMs', $response);
+        $this->assertArrayHasKey('query', $response);
+        $this->assertCount(\count(self::DOCUMENTS), $response['hits']);
+    }
+
     public function testSearchWithOptions(): void
     {
         $response = $this->index->search('prince', ['limit' => 1]);
@@ -62,28 +86,7 @@ final class SearchTest extends TestCase
         $index->search('prince');
     }
 
-    public function testParametersCanBeString(): void
-    {
-        $response = $this->index->search('prince', [
-            'limit' => 5,
-            'offset' => 0,
-            'attributesToRetrieve' => 'id,title',
-            'attributesToCrop' => 'id,title',
-            'cropLength' => 6,
-            'attributesToHighlight' => 'title',
-            'filters' => 'title = "Le Petit Prince"',
-            'matches' => 'true',
-        ]);
-
-        $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
-        $this->assertArrayHasKey('title', $response['hits'][0]['_matchesInfo']);
-        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
-        $this->assertArrayNotHasKey('comment', $response['hits'][0]);
-        $this->assertArrayNotHasKey('comment', $response['hits'][0]['_matchesInfo']);
-        $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
-    }
-
-    public function testParametersCanBeArray(): void
+    public function testParametersArray(): void
     {
         $response = $this->index->search('prince', [
             'limit' => 5,
@@ -91,9 +94,9 @@ final class SearchTest extends TestCase
             'attributesToRetrieve' => ['id', 'title'],
             'attributesToCrop' => ['id', 'title'],
             'cropLength' => 6,
-            'attributesToHighlight' => 'title',
+            'attributesToHighlight' => ['title'],
             'filters' => 'title = "Le Petit Prince"',
-            'matches' => 'true',
+            'matches' => true,
         ]);
 
         $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
@@ -109,12 +112,12 @@ final class SearchTest extends TestCase
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
-            'attributesToRetrieve' => '*',
-            'attributesToCrop' => '*',
+            'attributesToRetrieve' => ['*'],
+            'attributesToCrop' => ['*'],
             'cropLength' => 6,
-            'attributesToHighlight' => '*',
+            'attributesToHighlight' => ['*'],
             'filters' => 'title = "Le Petit Prince"',
-            'matches' => 'true',
+            'matches' => true,
         ]);
 
         $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
