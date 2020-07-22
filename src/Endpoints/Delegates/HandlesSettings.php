@@ -113,18 +113,6 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/synonyms');
     }
 
-    // Settings - AcceptNewFields
-
-    public function getAcceptNewFields(): bool
-    {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/accept-new-fields');
-    }
-
-    public function updateAcceptNewFields($acceptNewFields): array
-    {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/accept-new-fields', $acceptNewFields);
-    }
-
     // Settings - Attributes for faceting
 
     public function getAttributesForFaceting(): array

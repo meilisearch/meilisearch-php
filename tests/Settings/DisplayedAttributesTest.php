@@ -17,10 +17,10 @@ final class DisplayedAttributesTest extends TestCase
         $attributesB = $indexB->getDisplayedAttributes();
 
         $this->assertIsArray($attributesA);
-        $this->assertEmpty($attributesA);
+        $this->assertEquals(['*'], $attributesA);
 
         $this->assertIsArray($attributesB);
-        $this->assertEquals(['objectID'], $attributesB);
+        $this->assertEquals(['*'], $attributesB);
     }
 
     public function testUpdateDisplayedAttributes(): void
@@ -55,8 +55,6 @@ final class DisplayedAttributesTest extends TestCase
 
         $displayedAttributes = $index->getDisplayedAttributes();
         $this->assertIsArray($displayedAttributes);
-        // according to issue #21 the resetDisplayedAttributes reverts back to the default keys in the index
-        $this->assertNotEmpty($displayedAttributes);
-        $this->assertContains('title', $displayedAttributes);
+        $this->assertEquals(['*'], $displayedAttributes);
     }
 }

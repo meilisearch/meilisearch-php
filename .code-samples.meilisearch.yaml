@@ -43,15 +43,11 @@ reset_attributes_for_faceting_1: |-
 get_displayed_attributes_1: |-
 update_displayed_attributes_1: |-
 reset_displayed_attributes_1: |-
-get_accept_new_fields_1: |-
-update_accept_new_fields_1: |-
 get_index_stats_1: |-
 get_indexes_stats_1: |-
 get_health_1: |-
 update_health_1: |-
 get_version_1: |-
-get_pretty_sys_info_1: |-
-get_sys_info_1: |-
 distinct_attribute_guide_1: |-
 field_properties_guide_searchable_1: |-
 field_properties_guide_displayed_1: |-
@@ -73,7 +69,6 @@ settings_guide_ranking_rules_1: |-
 settings_guide_distinct_1: |-
 settings_guide_searchable_1: |-
 settings_guide_displayed_1: |-
-settings_guide_accept_new_fields_1: |-
 documents_guide_add_movie_1: |-
 search_guide_1: |-
 search_guide_2: |-
