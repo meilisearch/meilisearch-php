@@ -121,10 +121,10 @@ class Indexes extends Endpoint
     {
         $parameters = array_merge(
             ['q' => $query],
-            $this->parseOptions($options)
+            $options
         );
 
-        return $this->http->get(self::PATH.'/'.$this->uid.'/search', $parameters);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
     }
 
     // Stats
@@ -149,18 +149,5 @@ class Indexes extends Endpoint
     public function resetSettings(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings');
-    }
-
-    private function parseOptions(array $options): array
-    {
-        foreach ($options as $key => $value) {
-            if ('facetsDistribution' === $key || 'facetFilters' === $key) {
-                $options[$key] = json_encode($value);
-            } elseif (\is_array($value)) {
-                $options[$key] = implode(',', $value);
-            }
-        }
-
-        return $options;
     }
 }
