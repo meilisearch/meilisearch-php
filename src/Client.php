@@ -10,7 +10,6 @@ use MeiliSearch\Endpoints\Health;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Endpoints\Keys;
 use MeiliSearch\Endpoints\Stats;
-use MeiliSearch\Endpoints\SysInfo;
 use MeiliSearch\Endpoints\Version;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -39,11 +38,6 @@ class Client
     private $version;
 
     /**
-     * @var SysInfo
-     */
-    private $sysInfo;
-
-    /**
      * @var Keys
      */
     private $keys;
@@ -59,7 +53,6 @@ class Client
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);
-        $this->sysInfo = new SysInfo($this->http);
         $this->stats = new Stats($this->http);
         $this->keys = new Keys($this->http);
     }
