@@ -265,6 +265,9 @@ search_parameter_guide_filter_2: |-
 search_parameter_guide_matches_1: |-
   $index = $client->getIndex('movies');
   $index->search('shifu', ['attributesToHighlight' => ['overview'], 'matches' => true]);
+settings_guide_synonyms_1: |-
+  $index = $client->getIndex('tops');
+  $index->updateSynonyms(['sweater' => ['jumper'], 'jumper' => ['sweater']]);
 settings_guide_stop_words_1: |-
   $index = $client->getIndex('movies');
   $index->updateStopWords(['the', 'a', 'an']);
@@ -303,6 +306,12 @@ settings_guide_displayed_1: |-
     'release_date',
     'rank'
   ]);
+add_movies_json_1: |-
+  $moviesJson = file_get_contents('movies.json');
+  $movies = json_decode($moviesJson);
+  
+  $index = $client->getIndex('movies');
+  $index->addDocuments($movies)
 documents_guide_add_movie_1: |-
   $index = $client->getIndex('movies');
   $index->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
