@@ -48,6 +48,11 @@ trait HandlesIndex
         return $this->index->create($uid, $options);
     }
 
+    public function updateIndex(string $uid, array $options = []): array
+    {
+        return (new Indexes($this->http, $uid))->update($options);
+    }
+
     /**
      * @throws HTTPRequestException
      */
