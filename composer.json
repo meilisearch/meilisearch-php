@@ -14,7 +14,8 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "php-http/discovery": "^1.7"
+        "php-http/discovery": "^1.7",
+        "php-http/httplug": "^2.1"
     },
     "autoload": {
         "psr-4": {
