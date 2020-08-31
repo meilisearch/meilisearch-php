@@ -10,8 +10,13 @@ list_all_indexes_1: |-
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'movie_id']);
 update_an_index_1: |-
+  $index = $client->getIndex('movies');
+  $index->update(['primaryKey' => 'movie_id']);
 delete_an_index_1: |-
   $client->deleteIndex('movies');
+  // OR
+  $index = $client->getIndex('movies');
+  $index->delete();
 get_one_document_1: |-
   $index = $client->getIndex('movies');
   $index->getDocument(25684);
@@ -309,7 +314,7 @@ settings_guide_displayed_1: |-
 add_movies_json_1: |-
   $moviesJson = file_get_contents('movies.json');
   $movies = json_decode($moviesJson);
-  
+
   $index = $client->getIndex('movies');
   $index->addDocuments($movies)
 documents_guide_add_movie_1: |-
