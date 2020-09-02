@@ -163,7 +163,7 @@ final class IndexTest extends TestCase
         $this->client->updateIndex('indexB', ['primaryKey' => 'objectID']);
     }
 
-    public function testExceptionIsThrownWhenUpdateIndexUseAnNoneExistingIndex(): void
+    public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
     {
         $this->expectException(HTTPRequestException::class);
 
