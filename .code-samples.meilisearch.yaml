@@ -10,22 +10,17 @@ list_all_indexes_1: |-
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'movie_id']);
 update_an_index_1: |-
-  $index = $client->getIndex('movies');
-  $index->update(['primaryKey' => 'movie_id']);
+  $client->getIndex('movies')->update(['primaryKey' => 'movie_id']);
 delete_an_index_1: |-
   $client->deleteIndex('movies');
   // OR
-  $index = $client->getIndex('movies');
-  $index->delete();
+  $client->getIndex('movies')->delete();
 get_one_document_1: |-
-  $index = $client->getIndex('movies');
-  $index->getDocument(25684);
+  $client->getIndex('movies')->getDocument(25684);
 get_documents_1: |-
-  $index = $client->getIndex('movies');
-  $index->getDocuments(['limit' => 2]);
+  $client->getIndex('movies')->getDocuments(['limit' => 2]);
 add_or_replace_documents_1: |-
-  $index = $client->getIndex('movies');
-  $index->addDocuments([
+  $client->getIndex('movies')->addDocuments([
     [
       'id' => 287947
       'title' => 'Shazam',
@@ -35,8 +30,7 @@ add_or_replace_documents_1: |-
     ]
   ]);
 add_or_update_documents_1: |-
-  $index = $client->getIndex('movies');
-  $index->addDocuments([
+  $client->getIndex('movies')->updateDocuments([
     [
       'id' => 287947
       'title' => 'Shazam ⚡️',
@@ -44,31 +38,23 @@ add_or_update_documents_1: |-
     ]
   ]);
 delete_all_documents_1: |-
-  $index = $client->getIndex('movies');
-  $index->deleteAllDocuments();
+  $client->getIndex('movies')->deleteAllDocuments();
 delete_one_document_1: |-
-  $index = $client->getIndex('movies');
-  $index->deleteDocument(25684);
+  $client->getIndex('movies')->deleteDocument(25684);
 delete_documents_1: |-
-  $index = $client->getIndex('movies');
-  $index->deleteDocuments([23488, 153738, 437035, 363869]);
+  $client->getIndex('movies')->deleteDocuments([23488, 153738, 437035, 363869]);
 search_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('american ninja');
+  $client->getIndex('movies')->search('american ninja');
 get_update_1: |-
-  $index = $client->getIndex('movies');
-  $index->getUpdateStatus(1);
+  $client->getIndex('movies')->getUpdateStatus(1);
 get_all_updates_1: |-
-  $index = $client->getIndex('movies');
-  $index->getAllUpdateStatus();
+  $client->getIndex('movies')->getAllUpdateStatus();
 get_keys_1: |-
   $client->getKeys();
 get_settings_1: |-
-  $index = $client->getIndex('movies');
-  $index->getSettings();
+  $client->getIndex('movies')->getSettings();
 update_settings_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateSettings([
+  $client->getIndex('movies')->updateSettings([
     'rankingRules' => [
       'typo',
       'words',
@@ -107,36 +93,27 @@ update_settings_1: |-
     ]
   ]);
 reset_settings_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetSettings();
+  $client->getIndex('movies')->resetSettings();
 get_synonyms_1: |-
-  $index = $client->getIndex('movies');
-  $index->getSynonyms();
+  $client->getIndex('movies')->getSynonyms();
 update_synonyms_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateSynonyms([
+  $client->getIndex('movies')->updateSynonyms([
     'wolverine': ['xmen', 'logan'],
     'logan': ['wolverine', 'xmen'],
     'wow': ['world of warcraft']
   ]);
 reset_synonyms_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetSynonyms();
+  $client->getIndex('movies')->resetSynonyms();
 get_stop_words_1: |-
-  $index = $client->getIndex('movies');
-  $index->getStopWords();
+  $client->getIndex('movies')->getStopWords();
 update_stop_words_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateStopWords(['the', 'of', 'to']);
+  $client->getIndex('movies')->updateStopWords(['the', 'of', 'to']);
 reset_stop_words_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetStopWords();
+  $client->getIndex('movies')->resetStopWords();
 get_ranking_rules_1: |-
-  $index = $client->getIndex('movies');
-  $index->getRankingRules();
+  $client->getIndex('movies')->getRankingRules();
 update_ranking_rules_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateRankingRules([
+  $client->getIndex('movies')->updateRankingRules([
     'typo',
     'words',
     'proximity',
@@ -147,48 +124,36 @@ update_ranking_rules_1: |-
     'desc(rank)'
   ]);
 reset_ranking_rules_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetRankingRules();
+  $client->getIndex('movies')->resetRankingRules();
 get_distinct_attribute_1: |-
-  $index = $client->getIndex('movies');
-  $index->getDistinctAttribute();
+  $client->getIndex('movies')->getDistinctAttribute();
 update_distinct_attribute_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateDistinctAttribute('movie_id');
+  $client->getIndex('movies')->updateDistinctAttribute('movie_id');
 reset_distinct_attribute_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetDistinctAttribute();
+  $client->getIndex('movies')->resetDistinctAttribute();
 get_searchable_attributes_1: |-
-  $index = $client->getIndex('movies');
-  $index->getSearchableAttributes();
+  $client->getIndex('movies')->getSearchableAttributes();
 update_searchable_attributes_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateSearchableAttributes([
+  $client->getIndex('movies')->updateSearchableAttributes([
     'title',
     'description',
     'uid'
   ]);
 reset_searchable_attributes_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetSearchableAttributes();
+  $client->getIndex('movies')->resetSearchableAttributes();
 get_attributes_for_faceting_1: |-
-  $index = $client->getIndex('movies');
-  $index->getAttributesForFaceting();
+  $client->getIndex('movies')->getAttributesForFaceting();
 update_attributes_for_faceting_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateAttributesForFaceting([
+  $client->getIndex('movies')->updateAttributesForFaceting([
     'genre',
     'director'
   ]);
 reset_attributes_for_faceting_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetAttributesForFaceting();
+  $client->getIndex('movies')->resetAttributesForFaceting();
 get_displayed_attributes_1: |-
-  $index = $client->getIndex('movies');
-  $index->getDisplayedAttributes();
+  $client->getIndex('movies')->getDisplayedAttributes();
 update_displayed_attributes_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateDisplayedAttributes([
+  $client->getIndex('movies')->updateDisplayedAttributes([
     'title',
     'description',
     'release_date',
@@ -196,11 +161,9 @@ update_displayed_attributes_1: |-
     'poster'
   ]);
 reset_displayed_attributes_1: |-
-  $index = $client->getIndex('movies');
-  $index->resetDisplayedAttributes();
+  $client->getIndex('movies')->resetDisplayedAttributes();
 get_index_stats_1: |-
-  $index = $client->getIndex('movies');
-  $index->stats();
+  $client->getIndex('movies')->stats();
 get_indexes_stats_1: |-
   $client->stats();
 get_health_1: |-
@@ -209,11 +172,9 @@ update_health_1: |-
 get_version_1: |-
   $client->version();
 distinct_attribute_guide_1: |-
-  $index = $client->getIndex('jackets');
-  $index->updateDistinctAttribute('product_id');
+  $client->getIndex('jackets')->updateDistinctAttribute('product_id');
 field_properties_guide_searchable_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateSearchableAttributes([
+  $client->getIndex('movies')->updateSearchableAttributes([
     'uid',
     'movie_id',
     'title',
@@ -223,8 +184,7 @@ field_properties_guide_searchable_1: |-
     'rank'
   ]);
 field_properties_guide_displayed_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateDisplayedAttributes([
+  $client->getIndex('movies')->updateDisplayedAttributes([
     'title',
     'description',
     'poster',
@@ -232,53 +192,37 @@ field_properties_guide_displayed_1: |-
     'rank',
   ]);
 filtering_guide_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('Avengers', ['filters' => 'release_date > 795484800']);
+  $client->getIndex('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
 filtering_guide_2: |-
-  $index = $client->getIndex('movies');
-  $index->search('Avengers', ['filters' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")']);
+  $client->getIndex('movies')->search('Avengers', ['filters' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")']);
 filtering_guide_3: |-
-  $index = $client->getIndex('movies');
-  $index->search('horror', ['filters' => 'director = "Jordan Peele"']);
+  $client->getIndex('movies')->search('horror', ['filters' => 'director = "Jordan Peele"']);
 filtering_guide_4: |-
-  $index = $client->getIndex('movies');
-  $index->search('Planet of the Apes', ['filters' => 'rating >= 3AND (NOT director = "Tim Burton")']);
+  $client->getIndex('movies')->search('Planet of the Apes', ['filters' => 'rating >= 3AND (NOT director = "Tim Burton")']);
 search_parameter_guide_query_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu');
+  $client->getIndex('movies')->search('shifu');
 search_parameter_guide_offset_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['offset' => 1]);
+  $client->getIndex('movies')->search('shifu', ['offset' => 1]);
 search_parameter_guide_limit_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['limit' => 1]);
+  $client->getIndex('movies')->search('shifu', ['limit' => 1]);
 search_parameter_guide_retrieve_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['attributesToRetrieve' => ['overview', 'title']]);
+  $client->getIndex('movies')->search('shifu', ['attributesToRetrieve' => ['overview', 'title']]);
 search_parameter_guide_crop_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['attributesToCrop' => ['overview'], 'cropLength' => 10]);
+  $client->getIndex('movies')->search('shifu', ['attributesToCrop' => ['overview'], 'cropLength' => 10]);
 search_parameter_guide_highlight_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['attributesToHighlight' => ['overview']]);
+  $client->getIndex('movies')->search('shifu', ['attributesToHighlight' => ['overview']]);
 search_parameter_guide_filter_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('n', ['filters' => 'title = Nightshift']);
+  $client->getIndex('movies')->search('n', ['filters' => 'title = Nightshift']);
 search_parameter_guide_filter_2: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['filters' => 'title="Kung Fu Panda"']);
+  $client->getIndex('movies')->search('shifu', ['filters' => 'title="Kung Fu Panda"']);
 search_parameter_guide_matches_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['attributesToHighlight' => ['overview'], 'matches' => true]);
+  $client->getIndex('movies')->search('shifu', ['attributesToHighlight' => ['overview'], 'matches' => true]);
 settings_guide_synonyms_1: |-
-  $index = $client->getIndex('tops');
-  $index->updateSynonyms(['sweater' => ['jumper'], 'jumper' => ['sweater']]);
+  $client->getIndex('tops')->updateSynonyms(['sweater' => ['jumper'], 'jumper' => ['sweater']]);
 settings_guide_stop_words_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateStopWords(['the', 'a', 'an']);
+  $client->getIndex('movies')->updateStopWords(['the', 'a', 'an']);
 settings_guide_ranking_rules_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateRankingRules([
+  $client->getIndex('movies')->updateRankingRules([
     'typo',
     'words',
     'proximity',
@@ -289,11 +233,9 @@ settings_guide_ranking_rules_1: |-
     'desc(rank)'
   ]);
 settings_guide_distinct_1: |-
-  $index = $client->getIndex('jackets');
-  $index->updateDistinctAttribute('product_id');
+  $client->getIndex('jackets')->updateDistinctAttribute('product_id');
 settings_guide_searchable_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateSearchableAttributes([
+  $client->getIndex('movies')->updateSearchableAttributes([
     'uid',
     'movie_id',
     'title',
@@ -303,8 +245,7 @@ settings_guide_searchable_1: |-
     'rank'
   ]);
 settings_guide_displayed_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateSearchableAttributes([
+  $client->getIndex('movies')->updateSearchableAttributes([
     'title',
     'description',
     'poster',
@@ -315,17 +256,13 @@ add_movies_json_1: |-
   $moviesJson = file_get_contents('movies.json');
   $movies = json_decode($moviesJson);
 
-  $index = $client->getIndex('movies');
-  $index->addDocuments($movies)
+  $client->getIndex('movies')->addDocuments($movies)
 documents_guide_add_movie_1: |-
-  $index = $client->getIndex('movies');
-  $index->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
+  $client->getIndex('movies')->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
 search_guide_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('shifu', ['limit' => 5, 'offset' => 10]);
+  $client->getIndex('movies')->search('shifu', ['limit' => 5, 'offset' => 10]);
 search_guide_2: |-
-  $index = $client->getIndex('movies');
-  $index->search('Avengers', ['filters' => 'release_date > 795484800']);
+  $client->getIndex('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
 getting_started_create_index_md: |-
   ```bash
   $ composer require meilisearch/meilisearch-php
@@ -358,25 +295,19 @@ getting_started_search_md: |-
 
   [About this package](https://github.com/meilisearch/meilisearch-php/)
 faceted_search_update_settings_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateAttributesForFaceting(['director', 'genres']);
+  $client->getIndex('movies')->updateAttributesForFaceting(['director', 'genres']);
 faceted_search_facet_filters_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"']);
+  $client->getIndex('movies')->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"']);
 faceted_search_facets_distribution_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('Batman', ['facetsDistribution' => ['genres']]);
+  $client->getIndex('movies')->search('Batman', ['facetsDistribution' => ['genres']]);
 faceted_search_walkthrough_attributes_for_faceting_1: |-
-  $index = $client->getIndex('movies');
-  $index->updateAttributesForFaceting([
+  $client->getIndex('movies')->updateAttributesForFaceting([
     'director',
     'producer',
     'genres',
     'production_companies'
   ]);
 faceted_search_walkthrough_facet_filters_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
+  $client->getIndex('movies')->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
 faceted_search_walkthrough_facets_distribution_1: |-
-  $index = $client->getIndex('movies');
-  $index->search('Batman', ['facetsDistribution' => ['genres']);
+  $client->getIndex('movies')->search('Batman', ['facetsDistribution' => ['genres']);
