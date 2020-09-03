@@ -10,6 +10,8 @@ list_all_indexes_1: |-
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'movie_id']);
 update_an_index_1: |-
+  $client->updateIndex('movies', ['primaryKey' => 'movie_id']);
+  // OR
   $client->getIndex('movies')->update(['primaryKey' => 'movie_id']);
 delete_an_index_1: |-
   $client->deleteIndex('movies');
