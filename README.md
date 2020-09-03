@@ -38,11 +38,17 @@
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
+You will have to install meilisearch-php sdk and a psr-18 compatible http client like `symfony-http` 
 
 With composer:
 
 ```bash
 $ composer require meilisearch/meilisearch-php
+```
+### Most users probably want the following
+
+```bash
+$ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0
 ```
 
 ### Run MeiliSearch <!-- omit in toc -->
