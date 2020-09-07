@@ -141,6 +141,38 @@ final class IndexTest extends TestCase
         $this->index->waitForPendingUpdate($res['updateId'], 0, 20);
     }
 
+    public function testUpdateIndex(): void
+    {
+        $this->client->createIndex('indexA');
+
+        $response = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
+
+        $this->assertSame($response['primaryKey'], 'id');
+        $this->assertSame($response['uid'], 'indexA');
+    }
+
+    public function testExceptionIsThrownWhenOverwritingPrimaryKeyUsingUpdateIndex(): void
+    {
+        $this->client->createIndex(
+            'indexB',
+            ['primaryKey' => 'objectId']
+        );
+
+        $this->expectException(HTTPRequestException::class);
+
+        $this->client->updateIndex('indexB', ['primaryKey' => 'objectID']);
+    }
+
+    public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
+    {
+        $this->expectException(HTTPRequestException::class);
+
+        $this->client->updateIndex(
+            'IndexNotExist',
+            ['primaryKey' => 'objectId']
+        );
+    }
+
     public function testDeleteIndexes(): void
     {
         $this->index = $this->client->createIndex('indexA');
