@@ -215,7 +215,7 @@ $index->deleteAllDocuments();
 // Get one update status
 // Parameter: the updateId got after an asynchronous request (e.g. documents addition)
 $index->getUpdateStatus(1);
-// Get all update satus
+// Get all update status
 $index->getAllUpdateStatus();
 ```
 
