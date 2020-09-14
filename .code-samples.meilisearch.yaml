@@ -4,74 +4,267 @@
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
 get_one_index_1: |-
+  $client->getIndex('movies');
 list_all_indexes_1: |-
+  $client->getAllIndexes();
 create_an_index_1: |-
+  $client->createIndex('movies', ['primaryKey' => 'movie_id']);
 update_an_index_1: |-
+  $client->updateIndex('movies', ['primaryKey' => 'movie_id']);
+  // OR
+  $client->getIndex('movies')->update(['primaryKey' => 'movie_id']);
 delete_an_index_1: |-
+  $client->deleteIndex('movies');
+  // OR
+  $client->getIndex('movies')->delete();
 get_one_document_1: |-
+  $client->getIndex('movies')->getDocument(25684);
 get_documents_1: |-
+  $client->getIndex('movies')->getDocuments(['limit' => 2]);
 add_or_replace_documents_1: |-
+  $client->getIndex('movies')->addDocuments([
+    [
+      'id' => 287947
+      'title' => 'Shazam',
+      'poster' => 'https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg',
+      'overview' => 'A boy is given the ability to become an adult superhero in times of need with a single magic word.',
+      'release_date' => '2019-03-23'
+    ]
+  ]);
 add_or_update_documents_1: |-
+  $client->getIndex('movies')->updateDocuments([
+    [
+      'id' => 287947
+      'title' => 'Shazam ⚡️',
+      'genre' => 'comedy'
+    ]
+  ]);
 delete_all_documents_1: |-
+  $client->getIndex('movies')->deleteAllDocuments();
 delete_one_document_1: |-
+  $client->getIndex('movies')->deleteDocument(25684);
 delete_documents_1: |-
+  $client->getIndex('movies')->deleteDocuments([23488, 153738, 437035, 363869]);
 search_1: |-
+  $client->getIndex('movies')->search('american ninja');
 get_update_1: |-
+  $client->getIndex('movies')->getUpdateStatus(1);
 get_all_updates_1: |-
+  $client->getIndex('movies')->getAllUpdateStatus();
 get_keys_1: |-
+  $client->getKeys();
 get_settings_1: |-
+  $client->getIndex('movies')->getSettings();
 update_settings_1: |-
+  $client->getIndex('movies')->updateSettings([
+    'rankingRules' => [
+      'typo',
+      'words',
+      'proximity',
+      'attribute',
+      'wordsPosition',
+      'exactness',
+      'desc(release_date)',
+      'desc(rank)'
+    ],
+    'distinctAttribute' => 'movie_id',
+    'searchableAttributes' => [
+      'uid',
+      'movie_id',
+      'title',
+      'description',
+      'poster',
+      'release_date',
+      'rank'
+    ],
+    'displayedAttributes' => [
+      'title',
+      'description',
+      'poster',
+      'release_date',
+      'rank'
+    ],
+    'stopWords' => [
+      'the',
+      'a',
+      'an'
+    ],
+    'synonyms' => [
+      'wolverine': ['xmen', 'logan'],
+      'logan': ['wolverine']
+    ]
+  ]);
 reset_settings_1: |-
+  $client->getIndex('movies')->resetSettings();
 get_synonyms_1: |-
+  $client->getIndex('movies')->getSynonyms();
 update_synonyms_1: |-
+  $client->getIndex('movies')->updateSynonyms([
+    'wolverine': ['xmen', 'logan'],
+    'logan': ['wolverine', 'xmen'],
+    'wow': ['world of warcraft']
+  ]);
 reset_synonyms_1: |-
+  $client->getIndex('movies')->resetSynonyms();
 get_stop_words_1: |-
+  $client->getIndex('movies')->getStopWords();
 update_stop_words_1: |-
+  $client->getIndex('movies')->updateStopWords(['the', 'of', 'to']);
 reset_stop_words_1: |-
+  $client->getIndex('movies')->resetStopWords();
 get_ranking_rules_1: |-
+  $client->getIndex('movies')->getRankingRules();
 update_ranking_rules_1: |-
+  $client->getIndex('movies')->updateRankingRules([
+    'typo',
+    'words',
+    'proximity',
+    'attribute',
+    'wordsPosition',
+    'exactness',
+    'asc(release_date)',
+    'desc(rank)'
+  ]);
 reset_ranking_rules_1: |-
+  $client->getIndex('movies')->resetRankingRules();
 get_distinct_attribute_1: |-
+  $client->getIndex('movies')->getDistinctAttribute();
 update_distinct_attribute_1: |-
+  $client->getIndex('movies')->updateDistinctAttribute('movie_id');
 reset_distinct_attribute_1: |-
+  $client->getIndex('movies')->resetDistinctAttribute();
 get_searchable_attributes_1: |-
+  $client->getIndex('movies')->getSearchableAttributes();
 update_searchable_attributes_1: |-
+  $client->getIndex('movies')->updateSearchableAttributes([
+    'title',
+    'description',
+    'uid'
+  ]);
 reset_searchable_attributes_1: |-
+  $client->getIndex('movies')->resetSearchableAttributes();
 get_attributes_for_faceting_1: |-
+  $client->getIndex('movies')->getAttributesForFaceting();
 update_attributes_for_faceting_1: |-
+  $client->getIndex('movies')->updateAttributesForFaceting([
+    'genre',
+    'director'
+  ]);
 reset_attributes_for_faceting_1: |-
+  $client->getIndex('movies')->resetAttributesForFaceting();
 get_displayed_attributes_1: |-
+  $client->getIndex('movies')->getDisplayedAttributes();
 update_displayed_attributes_1: |-
+  $client->getIndex('movies')->updateDisplayedAttributes([
+    'title',
+    'description',
+    'release_date',
+    'rank',
+    'poster'
+  ]);
 reset_displayed_attributes_1: |-
+  $client->getIndex('movies')->resetDisplayedAttributes();
 get_index_stats_1: |-
+  $client->getIndex('movies')->stats();
 get_indexes_stats_1: |-
+  $client->stats();
 get_health_1: |-
+  $client->health();
 update_health_1: |-
 get_version_1: |-
+  $client->version();
 distinct_attribute_guide_1: |-
+  $client->getIndex('jackets')->updateDistinctAttribute('product_id');
 field_properties_guide_searchable_1: |-
+  $client->getIndex('movies')->updateSearchableAttributes([
+    'uid',
+    'movie_id',
+    'title',
+    'description',
+    'poster',
+    'release_date',
+    'rank'
+  ]);
 field_properties_guide_displayed_1: |-
+  $client->getIndex('movies')->updateDisplayedAttributes([
+    'title',
+    'description',
+    'poster',
+    'release_date',
+    'rank',
+  ]);
 filtering_guide_1: |-
+  $client->getIndex('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
 filtering_guide_2: |-
+  $client->getIndex('movies')->search('Avengers', ['filters' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")']);
 filtering_guide_3: |-
+  $client->getIndex('movies')->search('horror', ['filters' => 'director = "Jordan Peele"']);
 filtering_guide_4: |-
+  $client->getIndex('movies')->search('Planet of the Apes', ['filters' => 'rating >= 3AND (NOT director = "Tim Burton")']);
 search_parameter_guide_query_1: |-
+  $client->getIndex('movies')->search('shifu');
 search_parameter_guide_offset_1: |-
+  $client->getIndex('movies')->search('shifu', ['offset' => 1]);
 search_parameter_guide_limit_1: |-
+  $client->getIndex('movies')->search('shifu', ['limit' => 1]);
 search_parameter_guide_retrieve_1: |-
+  $client->getIndex('movies')->search('shifu', ['attributesToRetrieve' => ['overview', 'title']]);
 search_parameter_guide_crop_1: |-
+  $client->getIndex('movies')->search('shifu', ['attributesToCrop' => ['overview'], 'cropLength' => 10]);
 search_parameter_guide_highlight_1: |-
+  $client->getIndex('movies')->search('shifu', ['attributesToHighlight' => ['overview']]);
 search_parameter_guide_filter_1: |-
+  $client->getIndex('movies')->search('n', ['filters' => 'title = Nightshift']);
 search_parameter_guide_filter_2: |-
+  $client->getIndex('movies')->search('shifu', ['filters' => 'title="Kung Fu Panda"']);
 search_parameter_guide_matches_1: |-
+  $client->getIndex('movies')->search('shifu', ['attributesToHighlight' => ['overview'], 'matches' => true]);
+settings_guide_synonyms_1: |-
+  $client->getIndex('tops')->updateSynonyms(['sweater' => ['jumper'], 'jumper' => ['sweater']]);
 settings_guide_stop_words_1: |-
+  $client->getIndex('movies')->updateStopWords(['the', 'a', 'an']);
 settings_guide_ranking_rules_1: |-
+  $client->getIndex('movies')->updateRankingRules([
+    'typo',
+    'words',
+    'proximity',
+    'attribute',
+    'wordsPosition',
+    'exactness',
+    'asc(release_date)',
+    'desc(rank)'
+  ]);
 settings_guide_distinct_1: |-
+  $client->getIndex('jackets')->updateDistinctAttribute('product_id');
 settings_guide_searchable_1: |-
+  $client->getIndex('movies')->updateSearchableAttributes([
+    'uid',
+    'movie_id',
+    'title',
+    'description',
+    'poster',
+    'release_date',
+    'rank'
+  ]);
 settings_guide_displayed_1: |-
+  $client->getIndex('movies')->updateSearchableAttributes([
+    'title',
+    'description',
+    'poster',
+    'release_date',
+    'rank'
+  ]);
+add_movies_json_1: |-
+  $moviesJson = file_get_contents('movies.json');
+  $movies = json_decode($moviesJson);
+
+  $client->getIndex('movies')->addDocuments($movies)
 documents_guide_add_movie_1: |-
+  $client->getIndex('movies')->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
 search_guide_1: |-
+  $client->getIndex('movies')->search('shifu', ['limit' => 5, 'offset' => 10]);
 search_guide_2: |-
+  $client->getIndex('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
 getting_started_create_index_md: |-
   ```bash
   $ composer require meilisearch/meilisearch-php
@@ -104,8 +297,19 @@ getting_started_search_md: |-
 
   [About this package](https://github.com/meilisearch/meilisearch-php/)
 faceted_search_update_settings_1: |-
+  $client->getIndex('movies')->updateAttributesForFaceting(['director', 'genres']);
 faceted_search_facet_filters_1: |-
+  $client->getIndex('movies')->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"']);
 faceted_search_facets_distribution_1: |-
+  $client->getIndex('movies')->search('Batman', ['facetsDistribution' => ['genres']]);
 faceted_search_walkthrough_attributes_for_faceting_1: |-
+  $client->getIndex('movies')->updateAttributesForFaceting([
+    'director',
+    'producer',
+    'genres',
+    'production_companies'
+  ]);
 faceted_search_walkthrough_facet_filters_1: |-
+  $client->getIndex('movies')->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
 faceted_search_walkthrough_facets_distribution_1: |-
+  $client->getIndex('movies')->search('Batman', ['facetsDistribution' => ['genres']);
