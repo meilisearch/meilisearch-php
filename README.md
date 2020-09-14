@@ -34,22 +34,27 @@
   - [Documents](#documents)
   - [Update status](#update-status)
   - [Search](#search)
-- [🧰 Replace HTTP client](#-replace-http-client)
+- [🧰 Use of other HTTP clients](#-replace-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
-You will have to install meilisearch-php sdk and a psr-18 compatible http client like `symfony-http` 
+You will have to install meilisearch-php sdk and a PSR-18 compatible http client to use the sdk. Since we do not ship a default http client 
+with the package to avoid package collisions with existing libraries or projects. A list with compatible HTTP clients and client adapters can be found at [php-http.org](http://docs.php-http.org/en/latest/clients.html).
 
+### Most users probably want the following.
 With composer:
-
-```bash
-$ composer require meilisearch/meilisearch-php
-```
-### Most users probably want the following
 
 ```bash
 $ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0
 ```
+
+Or with `symfony/http-client`
+
+```bash
+$ composer require meilisearch/meilisearch-php symfony/http-client
+```
+
+*More use cases can be found under [Use of other HTTP clients](#-replace-http-client)*
 
 ### Run MeiliSearch <!-- omit in toc -->
 
@@ -283,27 +288,28 @@ $index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' 
 $index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
-## 🧰 Replace HTTP client
-
-By default [Guzzle](http://docs.guzzlephp.org/en/6.5/) is used for all HTTP requests.<br>
-But you can replace the used HTTP client with any [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client.<br>
+## 🧰 Use a different http client
+you could use any [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client to use with meilisearch. No additional configurations are required<br> 
 A list with compatible HTTP clients and client adapters can be found at [php-http.org](http://docs.php-http.org/en/latest/clients.html).
 
-For example, if you want to use the [Symfony HttpClient](https://symfony.com/doc/current/components/http_client.html),
-use the following code:
+For example, if you want to use the `symfony/http-client`
 
 ```bash
-$ composer require symfony/http-client
-$ composer require nyholm/psr7
+$ composer require meilisearch/meilisearch-php symfony/http-client
 ```
 
-```php
-use Symfony\Component\HttpClient\HttplugClient;
-use MeiliSearch\Client;
+- Or with `php-http/curl-client`
 
-$httpClient = new HttplugClient();
-$client = new Client('http://127.0.0.1:7700', 'masterKey', $httpClient);
+```bash
+$ composer require meilisearch/meilisearch-php php-http/curl-client
 ```
+
+- Or with `kriswallsmith/buzz`
+```bash
+$ composer require meilisearch/meilisearch-php kriswallsmith/buzz
+```
+**Note:**
+Guzzle 7 is not yet supported, but we don't prevent you from installing Guzzle 7 in your project. 
 
 ## ⚙️ Development Workflow and Contributing
 
