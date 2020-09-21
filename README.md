@@ -34,7 +34,7 @@
   - [Documents](#documents)
   - [Update status](#update-status)
   - [Search](#search)
-- [🧰 Use of other HTTP clients](#-replace-http-client)
+- [🧰 Use of other HTTP clients](#-use-a-different-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
@@ -42,10 +42,12 @@ You will have to install meilisearch-php sdk and a PSR-18 compatible http client
 with the package to avoid package collisions with existing libraries or projects. A list with compatible HTTP clients and client adapters can be found at [php-http.org](http://docs.php-http.org/en/latest/clients.html).
 
 ### Most users probably want the following.
-With composer:
+Using composer:
+
+With `guzzle6-adapter`
 
 ```bash
-$ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0
+$ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
 ```
 
 Or with `symfony/http-client`
