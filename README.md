@@ -43,7 +43,7 @@ To get started, simply require the project using [Composer](https://getcomposer.
 You will also need to install packages that "provide" [`psr/http-client-implementation`](https://packagist.org/providers/psr/http-client-implementation) and [`psr/http-factory-implementation`](https://packagist.org/providers/psr/http-factory-implementation).<br>
 A list with compatible HTTP clients and client adapters can be found at [php-http.org](http://docs.php-http.org/en/latest/clients.html).
 
-**If you don't know what HTTP client to require, we recommend using Guzzle** with the `php-http/guzzle6-adapter`:
+**If you don't know which HTTP client to require, we recommend using Guzzle** with the `php-http/guzzle6-adapter`:
 
 ```bash
 $ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
