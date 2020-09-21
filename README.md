@@ -53,7 +53,7 @@ $ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 htt
 Or with `symfony/http-client`
 
 ```bash
-$ composer require meilisearch/meilisearch-php symfony/http-client
+$ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:"^1.0"
 ```
 
 *More use cases can be found under [Use of other HTTP clients](#-replace-http-client)*
@@ -298,18 +298,18 @@ A list with compatible HTTP clients and client adapters can be found at [php-htt
 For example, if you want to use the `symfony/http-client`
 
 ```bash
-$ composer require meilisearch/meilisearch-php symfony/http-client
+$ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7: "^1.0"
 ```
 
 - Or with `php-http/curl-client`
 
 ```bash
-$ composer require meilisearch/meilisearch-php php-http/curl-client
+$ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7: "^1.0"
 ```
 
 - Or with `kriswallsmith/buzz`
 ```bash
-$ composer require meilisearch/meilisearch-php kriswallsmith/buzz
+$ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7: "^1.0"
 ```
 **Note:**
 Guzzle 7 is not yet supported, but we don't prevent you from installing Guzzle 7 in your project. 
