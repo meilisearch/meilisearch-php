@@ -15,8 +15,8 @@
         "php": "^7.2",
         "ext-json": "*",
         "php-http/discovery": "^1.7",
-        "php-http/guzzle6-adapter": "^2.0",
-        "http-interop/http-factory-guzzle": "^1.0"
+        "php-http/httplug": "^2.1",
+        "php-http/client-common": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -28,9 +28,14 @@
             "Tests\\": "tests/"
         }
     },
+    "suggest": {
+        "php-http/guzzle6-adapter": "^2.0 Allows http calls via guzzle 6"
+    },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "http-interop/http-factory-guzzle": "^1.0",
+        "php-http/guzzle6-adapter": "^2.0"
     },
     "scripts": {
         "lint": [
