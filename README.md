@@ -315,6 +315,12 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
 
+- with 'guzzlehttp/guzzle', run:
+
+```base
+composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle
+```
+
 ## ⚙️ Development Workflow and Contributing
 
 Any new contribution is more than welcome in this project!
