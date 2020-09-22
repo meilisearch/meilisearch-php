@@ -318,7 +318,7 @@ $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1
 - with 'guzzlehttp/guzzle', run:
 
 ```base
-composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle
+composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
 ```
 
 ## ⚙️ Development Workflow and Contributing
