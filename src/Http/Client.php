@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Http;
 
-use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -53,7 +53,7 @@ class Client implements Http
     {
         $this->baseUrl = $url;
         $this->apiKey = $apiKey;
-        $this->http = $httpClient ?: HttpClientDiscovery::find();
+        $this->http = $httpClient ?: Psr18ClientDiscovery::find();
         $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
         $this->headers = array_filter([
