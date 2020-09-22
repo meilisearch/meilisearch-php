@@ -315,8 +315,6 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
 
-⚠️ Guzzle 7 is not yet supported, but we don't prevent you from installing Guzzle 7 in your project.
-
 ## ⚙️ Development Workflow and Contributing
 
 Any new contribution is more than welcome in this project!
