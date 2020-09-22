@@ -310,7 +310,7 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 ```
 
 - with `kriswallsmith/buzz`, run:
--
+
 ```bash
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
