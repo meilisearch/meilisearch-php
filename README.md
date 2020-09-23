@@ -310,12 +310,16 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 ```
 
 - with `kriswallsmith/buzz`, run:
--
+
 ```bash
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
 
-⚠️ Guzzle 7 is not yet supported, but we don't prevent you from installing Guzzle 7 in your project.
+- with 'guzzlehttp/guzzle', run:
+
+```base
+composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
+```
 
 ## ⚙️ Development Workflow and Contributing
 

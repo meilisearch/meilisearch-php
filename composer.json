@@ -29,7 +29,8 @@
         }
     },
     "suggest": {
-        "php-http/guzzle6-adapter": "^2.0 Allows http calls via guzzle 6"
+        "php-http/guzzle6-adapter": "^2.0 Allows http calls via guzzle 6",
+        "http-interop/http-factory-guzzle": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
