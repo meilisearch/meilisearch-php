@@ -43,10 +43,10 @@ To get started, simply require the project using [Composer](https://getcomposer.
 You will also need to install packages that "provide" [`psr/http-client-implementation`](https://packagist.org/providers/psr/http-client-implementation) and [`psr/http-factory-implementation`](https://packagist.org/providers/psr/http-factory-implementation).<br>
 A list with compatible HTTP clients and client adapters can be found at [php-http.org](http://docs.php-http.org/en/latest/clients.html).
 
-**If you don't know which HTTP client to use, we recommend using Guzzle** with the `php-http/guzzle6-adapter`:
+**If you don't know which HTTP client to use, we recommend using Guzzle 7**:
 
 ```bash
-$ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
+$ composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
 ```
 
 Here is an example of installation with the `symfony/http-client`:
@@ -55,7 +55,7 @@ Here is an example of installation with the `symfony/http-client`:
 $ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
 ```
 
-*More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities).*
+💡 *More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities).*
 
 ### Run MeiliSearch <!-- omit in toc -->
 
@@ -297,6 +297,18 @@ A list of compatible HTTP clients and client adapters can be found at [php-http.
 
 If you want to use this `meilisearch-php`:
 
+- with `guzzlehttp/guzzle` (Guzzle 7), run:
+
+```bash
+$ composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
+```
+
+- with `php-http/guzzle6-adapter` (Guzzle < 7), run:
+
+```bash
+$ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
+```
+
 - with `symfony/http-client`, run:
 
 ```bash
@@ -313,12 +325,6 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 
 ```bash
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
-```
-
-- with `guzzlehttp/guzzle`, run:
-
-```base
-composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
 ```
 
 ## ⚙️ Development Workflow and Contributing
