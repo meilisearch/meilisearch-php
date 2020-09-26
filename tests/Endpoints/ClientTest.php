@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use Http\Client\Exception\NetworkException;
 use MeiliSearch\Client;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
@@ -256,7 +255,7 @@ final class ClientTest extends TestCase
         try {
             $client = new Client('http://127.0.0.1.com:1234', 'some-key');
             $client->createIndex('index');
-        } catch (NetworkException $e) {
+        } catch (\Exception $e) {
             $this->assertIsString($e->getMessage());
 
             return;

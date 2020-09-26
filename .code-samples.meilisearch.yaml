@@ -269,7 +269,7 @@ getting_started_create_index_md: |-
   Using `meilisearch-php` with the Guzzle HTTP client:
 
   ```bash
-  $ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
+  $ composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
   ```
 
   ```php
