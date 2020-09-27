@@ -247,7 +247,7 @@ settings_guide_searchable_1: |-
     'rank'
   ]);
 settings_guide_displayed_1: |-
-  $client->getIndex('movies')->updateSearchableAttributes([
+  $client->getIndex('movies')->updateDisplayedAttributes([
     'title',
     'description',
     'poster',
