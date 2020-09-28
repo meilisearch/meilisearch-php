@@ -9,7 +9,6 @@ use Http\Discovery\Psr18ClientDiscovery;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -49,13 +48,13 @@ class Client implements Http
      *
      * @param string $apiKey
      */
-    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null, StreamFactoryInterface $streamFactory = null)
+    public function __construct(string $url, string $apiKey = null)
     {
         $this->baseUrl = $url;
         $this->apiKey = $apiKey;
-        $this->http = $httpClient ?: Psr18ClientDiscovery::find();
-        $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
+        $this->http = Psr18ClientDiscovery::find();
+        $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
+        $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         $this->headers = array_filter([
             'Content-type' => 'application/json',
             'X-Meili-API-Key' => $this->apiKey,
