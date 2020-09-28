@@ -178,7 +178,7 @@ class Client implements Http
     private function parseResponse(ResponseInterface $response)
     {
         if ($response->getStatusCode() >= 300) {
-            $body = json_decode($response->getBody()->getContents(), true);
+            $body = json_decode($response->getBody()->getContents(), true) ?? $response->getReasonPhrase();
             throw new HTTPRequestException($response->getStatusCode(), $body);
         }
 
