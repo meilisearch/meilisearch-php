@@ -18,6 +18,11 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+
     - name: Validate composer.json and composer.lock
       run: composer validate
 
@@ -30,5 +35,31 @@ jobs:
     - name: Docker setup
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
 
-    - name: Run test suite
-      run: sh scripts/tests.sh
+    - name: Run test suite - default HTTP client (Guzzle 7)
+      run: |
+        sh scripts/tests.sh
+        composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
+
+    - name: Run test suite - php-http/guzzle6-adapter
+      run: |
+        composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+        sh scripts/tests.sh
+        composer remove --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+
+    - name: Run test suite - symfony/http-client
+      run: |
+        composer require --dev symfony/http-client nyholm/psr7
+        sh scripts/tests.sh
+        composer remove --dev symfony/http-client nyholm/psr7
+
+    - name: Run test suite - php-http/curl-client
+      run: |
+        composer require --dev php-http/curl-client nyholm/psr7
+        sh scripts/tests.sh
+        composer remove --dev php-http/curl-client nyholm/psr7
+
+    - name: Run test suite - kriswallsmith/buzz
+      run: |
+        composer require --dev kriswallsmith/buzz nyholm/psr7
+        sh scripts/tests.sh
+        composer remove --dev kriswallsmith/buzz nyholm/psr7
