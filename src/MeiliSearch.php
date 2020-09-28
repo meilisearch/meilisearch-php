@@ -6,5 +6,5 @@ namespace MeiliSearch;
 
 class MeiliSearch
 {
-    const VERSION = '0.14.1';
+    const VERSION = '0.14.2';
 }
