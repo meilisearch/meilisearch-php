@@ -40,7 +40,7 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('limit', $response);
         $this->assertArrayHasKey('processingTimeMs', $response);
         $this->assertArrayHasKey('query', $response);
-        $this->assertCount(0, $response['hits']);
+        $this->assertCount(7, $response['hits']);
     }
 
     public function testBasicPlaceholderSearch(): void
