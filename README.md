@@ -29,13 +29,9 @@
 - [🔧 Installation](#-installation)
 - [🚀 Getting started](#-getting-started)
 - [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
-- [🎬 Examples](#-examples)
-  - [Indexes](#indexes)
-  - [Documents](#documents)
-  - [Update status](#update-status)
-  - [Search](#search)
+- [📖 Documentation and Examples](#-documentation-and-examples)
 - [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
-    - [Replacing Http Client](#-replacing-http-client)
+  - [Replacing http client](#replacing-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
@@ -97,10 +93,10 @@ $documents = [
 $index->addDocuments($documents); // => { "updateId": 0 }
 ```
 
-With the `updateId`, you can check the status (`processed` or `failed`) of your documents addition thanks to this [method](#update-status).
+With the `updateId`, you can check the status (`processed` or `failed`) of your documents addition thanks to this [method](https://docs.meilisearch.com/references/updates.html#get-an-update-status).
 
 
-#### Search in index <!-- omit in toc -->
+#### Basic search <!-- omit in toc -->
 
 ```php
 // MeiliSearch is typo-tolerant:
@@ -125,138 +121,6 @@ Array
     [processingTimeMs] => 1
     [query] => harry pottre
 )
-```
-
-## 🤖 Compatibility with MeiliSearch
-
-This package is compatible with the following MeiliSearch versions:
-- `v0.14.X`
-- `v0.13.X`
-
-## 🎬 Examples
-
-All HTTP routes of MeiliSearch are accessible via methods in this SDK.</br>
-You can check out [the API documentation](https://docs.meilisearch.com/references/).
-
-### Indexes
-
-#### Create an index <!-- omit in toc -->
-
-```php
-// Create an index
-$index = $client->createIndex('books');
-// Create an index and give the primary-key
-$index = $client->createIndex(
-    'books',
-    ['primaryKey' => 'book_id']
-);
-```
-
-#### Get an index or create it if it doesn't exist <!-- omit in toc -->
-```php
-// Get or create an index
-$index = $client->getOrCreateIndex('books');
-// Get or create an index and give the primary-key
-$index = $client->getOrCreateIndex(
-    'books',
-    ['primaryKey' => 'book_id']
-);
-```
-
-#### Get an index or create it if it doesn't exist <!-- omit in toc -->
-```php
-// Get or create an index
-$index = $client->getOrCreateIndex('books');
-// Get or create an index and give the primary-key
-$index = $client->getOrCreateIndex(
-    'books',
-    ['primaryKey' => 'book_id']
-);
-```
-
-#### List all indexes <!-- omit in toc -->
-
-```php
-$client->getAllIndexes();
-```
-
-#### Get an index object <!-- omit in toc -->
-
-```php
-$client->getIndex('books');
-```
-
-### Documents
-
-#### Fetch documents <!-- omit in toc -->
-
-```php
-// Get one document
-$index->getDocument(123);
-// Get documents by batch
-$index->getDocuments(['offset' => 10 , 'limit' => 20]);
-```
-
-#### Add documents <!-- omit in toc -->
-
-```php
-$index->addDocuments([['book_id' => 2, 'title' => 'Madame Bovary']])
-```
-
-Response:
-```json
-{
-    "updateId": 1
-}
-```
-With this `updateId` you can track your [operation update](#update-status).
-
-#### Delete documents <!-- omit in toc -->
-
-```php
-// Delete one document
-$index->deleteDocument(2);
-// Delete several documents
-$index->deleteDocuments([1, 42]);
-// Delete all documents /!\
-$index->deleteAllDocuments();
-```
-
-### Update status
-
-```php
-// Get one update status
-// Parameter: the updateId got after an asynchronous request (e.g. documents addition)
-$index->getUpdateStatus(1);
-// Get all update status
-$index->getAllUpdateStatus();
-```
-
-### Search
-
-#### Basic search <!-- omit in toc -->
-
-```php
-$index->search('prince');
-```
-
-```json
-{
-    "hits": [
-        {
-            "book_id": 456,
-            "title": "Le Petit Prince"
-        },
-        {
-            "book_id": 4,
-            "title": "Harry Potter and the Half-Blood Prince"
-        }
-    ],
-    "offset": 0,
-    "limit": 20,
-    "processingTimeMs": 13,
-    "query": "prince"
-}
 ```
 
 #### Custom search <!-- omit in toc -->
@@ -290,6 +154,25 @@ $index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' 
 // Enclosing with single quotes
 $index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
+
+## 🤖 Compatibility with MeiliSearch
+
+This package is compatible with the following MeiliSearch versions:
+- `v0.14.X`
+- `v0.13.X`
+
+## 📖 Documentation and Examples
+
+MeiliSearch documentation provides **examples** and a detailed explanation of every one of its features and functionalities, including examples on how to implement them **using this SDK**.
+
+Please read the [guides available in the documentation](https://docs.meilisearch.com/guides/) or check the [API references](https://docs.meilisearch.com/references/) to find the one that you need!
+
+The following sections may interest you:
+
+- [Manipulate documents](https://docs.meilisearch.com/references/documents.html)
+- [Search](https://docs.meilisearch.com/references/search.html)
+- [Manage the indexes](https://docs.meilisearch.com/references/indexes.html)
+- [Configure the index settings](https://docs.meilisearch.com/references/settings.html)
 
 ## 🧰 HTTP Client Compatibilities
 
@@ -328,11 +211,11 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
 ### Replacing http client
-For some reason you want to pass in your own http client with a custom configuration, you could make use of this feature. Make sure you have a psr 18 compatible client when you initialize the Meilisearch client. 
+For some reason you want to pass in your own http client with a custom configuration, you could make use of this feature. Make sure you have a psr 18 compatible client when you initialize the Meilisearch client.
 
 A good use case can be found [here](https://github.com/meilisearch/meilisearch-php/pull/100#issuecomment-700577627)
 
-Pass in your client as the third argument to the `Meilisearch/Client` constructor 
+Pass in your client as the third argument to the `Meilisearch/Client` constructor
 
 eg:
 
