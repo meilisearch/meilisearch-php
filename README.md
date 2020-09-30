@@ -31,7 +31,7 @@
 - [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
 - [📖 Documentation and Examples](#-documentation-and-examples)
 - [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
-  - [Replacing http client](#replacing-http-client)
+  - [Custom the HTTP Client](#custom-the-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
@@ -210,18 +210,18 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 ```bash
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
-### Replacing http client
-For some reason you want to pass in your own http client with a custom configuration, you could make use of this feature. Make sure you have a psr 18 compatible client when you initialize the Meilisearch client.
 
-A good use case can be found [here](https://github.com/meilisearch/meilisearch-php/pull/100#issuecomment-700577627)
+### Custom the HTTP Client
 
-Pass in your client as the third argument to the `Meilisearch/Client` constructor
+For some reason, you might want to pass a custom configuration to your own HTTP client.<br>
+Make sure you have a [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client when you initialize the MeiliSearch client.
 
-eg:
+Following with the example in the [Getting Started](#-getting-started) section, with the Guzzle HTTP client:
 
 ```php
-new Client(MEILISEARCH_ENDPOINT, MEILISEARCH_API_KEY, new GuzzleHttpClient(['timeout' => 2]));
+new Client('http://127.0.0.1:7700', 'masterKey', new GuzzleHttpClient(['timeout' => 2]));
 ```
+
 ## ⚙️ Development Workflow and Contributing
 
 Any new contribution is more than welcome in this project!
