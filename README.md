@@ -31,7 +31,7 @@
 - [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
 - [📖 Documentation and Examples](#-documentation-and-examples)
 - [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
-  - [Customize HTTP Client](#customize-http-client)
+  - [Customize your HTTP Client](#customize-your-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
