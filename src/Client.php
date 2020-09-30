@@ -11,6 +11,7 @@ use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Endpoints\Keys;
 use MeiliSearch\Endpoints\Stats;
 use MeiliSearch\Endpoints\Version;
+use Psr\Http\Client\ClientInterface;
 
 class Client
 {
@@ -44,9 +45,9 @@ class Client
      */
     private $stats;
 
-    public function __construct(string $url, string $apiKey = null)
+    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null)
     {
-        $this->http = new Http\Client($url, $apiKey);
+        $this->http = new Http\Client($url, $apiKey, $httpClient);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);
