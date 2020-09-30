@@ -216,7 +216,7 @@ $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1
 For some reason, you might want to pass a custom configuration to your own HTTP client.<br>
 Make sure you have a [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client when you initialize the MeiliSearch client.
 
-Following with the example in the [Getting Started](#-getting-started) section, with the Guzzle HTTP client:
+Following the example in the [Getting Started](#-getting-started) section, with the Guzzle HTTP client:
 
 ```php
 new Client('http://127.0.0.1:7700', 'masterKey', new GuzzleHttpClient(['timeout' => 2]));
