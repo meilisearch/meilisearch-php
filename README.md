@@ -211,7 +211,7 @@ $ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:
 $ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
 
-### Custom the HTTP Client
+### Customize your HTTP Client
 
 For some reason, you might want to pass a custom configuration to your own HTTP client.<br>
 Make sure you have a [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client when you initialize the MeiliSearch client.
