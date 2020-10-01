@@ -75,9 +75,9 @@ class Indexes extends Endpoint
         return  $this->http->put(self::PATH.'/'.$this->uid, $body);
     }
 
-    public function delete(): void
+    public function delete(): array
     {
-        $this->http->delete(self::PATH.'/'.$this->uid);
+        return $this->http->delete(self::PATH.'/'.$this->uid) ?? [];
     }
 
     // Updates
