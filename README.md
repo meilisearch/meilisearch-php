@@ -157,9 +157,7 @@ $index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s
 
 ## 🤖 Compatibility with MeiliSearch
 
-This package is compatible with the following MeiliSearch versions:
-- `v0.14.X`
-- `v0.13.X`
+This package only guarantees the compatibility with the [version v0.15.0 of MeiliSearch](https://github.com/meilisearch/MeiliSearch/releases/tag/v0.15.0).
 
 ## 📖 Documentation and Examples
 
