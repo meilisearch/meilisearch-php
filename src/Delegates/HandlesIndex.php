@@ -25,9 +25,9 @@ trait HandlesIndex
         return (new Indexes($this->http, $uid))->show();
     }
 
-    public function deleteIndex(string $uid): void
+    public function deleteIndex(string $uid): array
     {
-        (new Indexes($this->http, $uid))->delete();
+        return (new Indexes($this->http, $uid))->delete();
     }
 
     public function deleteAllIndexes(): void
