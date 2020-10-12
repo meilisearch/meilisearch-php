@@ -6,6 +6,8 @@ namespace MeiliSearch;
 
 use MeiliSearch\Delegates\HandlesIndex;
 use MeiliSearch\Delegates\HandlesSystem;
+use MeiliSearch\Endpoints\Delegates\HandlesDumps;
+use MeiliSearch\Endpoints\Dumps;
 use MeiliSearch\Endpoints\Health;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Endpoints\Keys;
@@ -17,6 +19,7 @@ class Client
 {
     use HandlesIndex;
     use HandlesSystem;
+    use HandlesDumps;
 
     private $http;
 
@@ -45,6 +48,11 @@ class Client
      */
     private $stats;
 
+    /**
+     * @var Dumps
+     */
+    private $dumps;
+
     public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null)
     {
         $this->http = new Http\Client($url, $apiKey, $httpClient);
@@ -53,5 +61,6 @@ class Client
         $this->version = new Version($this->http);
         $this->stats = new Stats($this->http);
         $this->keys = new Keys($this->http);
+        $this->dumps = new Dumps($this->http);
     }
 }
