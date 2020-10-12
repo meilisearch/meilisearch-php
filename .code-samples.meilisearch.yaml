@@ -318,4 +318,4 @@ faceted_search_walkthrough_facets_distribution_1: |-
 post_dump_1: |-
   $client->createDump();
 get_dump_status_1: |-
-  $client->getDumpStatus('dump_uid');
+  $client->getDumpStatus('20201101-110357260');
