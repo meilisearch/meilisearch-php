@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 final class DumpTest extends TestCase
 {
-    public function testCreateDump()
+    public function testCreateDump(): void
     {
         $dump = $this->client->createDump();
 
@@ -18,7 +18,7 @@ final class DumpTest extends TestCase
         $this->assertEquals('processing', $dump['status']);
     }
 
-    public function testGetDumpStatus()
+    public function testGetDumpStatus(): void
     {
         $newDump = $this->client->createDump();
         $dump = $this->client->getDumpStatus($newDump['uid']);
@@ -27,7 +27,7 @@ final class DumpTest extends TestCase
         $this->assertArrayHasKey('status', $dump);
     }
 
-    public function testDumpNotFound()
+    public function testDumpNotFound(): void
     {
         $this->expectException(HTTPRequestException::class);
 
