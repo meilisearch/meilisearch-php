@@ -9,19 +9,15 @@ use Tests\TestCase;
 
 final class DumpTest extends TestCase
 {
-    public function testCreateDump(): void
+    public function testCreateDumpAndGetStatus(): void
     {
         $dump = $this->client->createDump();
 
         $this->assertArrayHasKey('uid', $dump);
         $this->assertArrayHasKey('status', $dump);
         $this->assertEquals('processing', $dump['status']);
-    }
 
-    public function testGetDumpStatus(): void
-    {
-        $newDump = $this->client->createDump();
-        $dump = $this->client->getDumpStatus($newDump['uid']);
+        $dump = $this->client->getDumpStatus($dump['uid']);
 
         $this->assertArrayHasKey('uid', $dump);
         $this->assertArrayHasKey('status', $dump);
