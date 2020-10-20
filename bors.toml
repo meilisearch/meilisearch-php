@@ -1,0 +1,3 @@
+status = ["PHP 7.2 Test", "PHP 7.3 Test", "PHP 7.4 Test"]
+# 1 hour timeout
+timeout-sec = 3600
