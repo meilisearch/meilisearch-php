@@ -6,10 +6,10 @@
 
 <h4 align="center">
   <a href="https://github.com/meilisearch/MeiliSearch">MeiliSearch</a> |
+  <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://www.meilisearch.com">Website</a> |
   <a href="https://blog.meilisearch.com">Blog</a> |
   <a href="https://twitter.com/meilisearch">Twitter</a> |
-  <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://docs.meilisearch.com/faq">FAQ</a>
 </h4>
 
@@ -20,19 +20,24 @@
   <a href="https://slack.meilisearch.com"><img src="https://img.shields.io/badge/slack-MeiliSearch-blue.svg?logo=slack" alt="Slack"></a>
 </p>
 
-<p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in PHP</p>
+<p align="center">⚡ The MeiliSearch API client written for PHP 🐘</p>
 
-**MeiliSearch PHP** is a client for **MeiliSearch** written in PHP. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box.
+**MeiliSearch PHP** is the MeiliSearch API client for PHP developers. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, facets, and synonyms are provided out-of-the-box.
 
 ## Table of Contents <!-- omit in toc -->
 
+- [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
-- [🚀 Getting started](#-getting-started)
+- [🚀 Getting Started](#-getting-started)
 - [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
-- [📖 Documentation and Examples](#-documentation-and-examples)
+- [💡 Learn More](#-learn-more)
 - [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
   - [Customize your HTTP Client](#customize-your-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
+
+## 📖 Documentation
+
+See our [Documentation](https://docs.meilisearch.com/guides/introduction/quick_start_guide.html) or our [API References](https://docs.meilisearch.com/references/).
 
 ## 🔧 Installation
 
@@ -59,6 +64,7 @@ $ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^
 There are many easy ways to [download and run a MeiliSearch instance](https://docs.meilisearch.com/guides/advanced_guides/installation.html#download-and-launch).
 
 For example, if you use Docker:
+
 ```bash
 $ docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
 $ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
@@ -66,7 +72,7 @@ $ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --m
 
 NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 
-## 🚀 Getting started
+## 🚀 Getting Started
 
 #### Add documents <!-- omit in toc -->
 
@@ -93,16 +99,18 @@ $documents = [
 $index->addDocuments($documents); // => { "updateId": 0 }
 ```
 
-With the `updateId`, you can check the status (`processed` or `failed`) of your documents addition thanks to this [method](https://docs.meilisearch.com/references/updates.html#get-an-update-status).
+With the `updateId`, you can check the status (`enqueued`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/references/updates.html#get-an-update-status).
 
 
-#### Basic search <!-- omit in toc -->
+#### Basic Search <!-- omit in toc -->
 
 ```php
 // MeiliSearch is typo-tolerant:
 print_r($index->search('harry pottre'));
 ```
+
 Output:
+
 ```php
 Array
 (
@@ -123,12 +131,17 @@ Array
 )
 ```
 
-#### Custom search <!-- omit in toc -->
+#### Custom Search <!-- omit in toc -->
 
 All the supported options are described in the [search parameters](https://docs.meilisearch.com/guides/advanced_guides/search_parameters.html) section of the documentation.
 
 ```php
-$index->search('prince', ['limit' => 1]);
+$index->search('prince',
+    [
+        'attributesToHighlight' => ['*'],
+        'filters' => 'book_id > 10'
+    ]
+);
 ```
 
 ```json
@@ -140,37 +153,33 @@ $index->search('prince', ['limit' => 1]);
         }
     ],
     "offset": 0,
-    "limit": 1,
+    "limit": 20,
     "processingTimeMs": 10,
     "query": "prince"
 }
 ```
 
-With limit and filter, both single and double quotes are supported.
+With `filters`, both single and double quotes are supported.
 ```php
 // Enclosing with double quotes
-$index->search('prince', ['limit' => 2, 'filters' => "title = 'Le Petit Prince' OR author = 'J. R. R. Tolkien'"]);
+$index->search('prince', ['filters' => "title = 'Le Petit Prince' OR author = 'J. R. R. Tolkien'"]);
 
 // Enclosing with single quotes
-$index->search('hobbit', ['limit' => 2, 'filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
+$index->search('hobbit', ['filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
 ## 🤖 Compatibility with MeiliSearch
 
 This package only guarantees the compatibility with the [version v0.15.0 of MeiliSearch](https://github.com/meilisearch/MeiliSearch/releases/tag/v0.15.0).
 
-## 📖 Documentation and Examples
-
-MeiliSearch documentation provides **examples** and a detailed explanation of every one of its features and functionalities, including examples on how to implement them **using this SDK**.
-
-Please read the [guides available in the documentation](https://docs.meilisearch.com/guides/) or check the [API references](https://docs.meilisearch.com/references/) to find the one that you need!
+## 💡 Learn More
 
 The following sections may interest you:
 
-- [Manipulate documents](https://docs.meilisearch.com/references/documents.html)
-- [Search](https://docs.meilisearch.com/references/search.html)
-- [Manage the indexes](https://docs.meilisearch.com/references/indexes.html)
-- [Configure the index settings](https://docs.meilisearch.com/references/settings.html)
+- **Manipulate documents**: see the [API references](https://docs.meilisearch.com/references/documents.html) or read more about [documents](https://docs.meilisearch.com/guides/main_concepts/documents.html).
+- **Search**: see the [API references](https://docs.meilisearch.com/references/search.html) or follow our guide on [search parameters](https://docs.meilisearch.com/guides/advanced_guides/search_parameters.html).
+- **Manage the indexes**: see the [API references](https://docs.meilisearch.com/references/indexes.html) or read more about [indexes](https://docs.meilisearch.com/guides/main_concepts/indexes.html).
+- **Configure the index settings**: see the [API references](https://docs.meilisearch.com/references/settings.html) or follow our guide on [settings parameters](https://docs.meilisearch.com/guides/advanced_guides/settings.html).
 
 ## 🧰 HTTP Client Compatibilities
 
