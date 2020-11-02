@@ -120,7 +120,7 @@ class Indexes extends Endpoint
     public function search($query, array $options = []): array
     {
         $parameters = array_merge(
-            ['q' => $query],
+            array_filter(['q' => $query]),
             $options
         );
 
