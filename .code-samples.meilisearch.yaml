@@ -36,7 +36,7 @@ add_or_update_documents_1: |-
     [
       'id' => 287947
       'title' => 'Shazam ⚡️',
-      'genre' => 'comedy'
+      'genres' => 'comedy'
     ]
   ]);
 delete_all_documents_1: |-
@@ -147,7 +147,7 @@ get_attributes_for_faceting_1: |-
   $client->getIndex('movies')->getAttributesForFaceting();
 update_attributes_for_faceting_1: |-
   $client->getIndex('movies')->updateAttributesForFaceting([
-    'genre',
+    'genres',
     'director'
   ]);
 reset_attributes_for_faceting_1: |-
