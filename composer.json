@@ -12,7 +12,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "ext-json": "*",
         "php-http/discovery": "^1.7",
         "php-http/httplug": "^2.1",
@@ -33,17 +33,19 @@
         "http-interop/http-factory-guzzle": "Factory for guzzlehttp/guzzle"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5",
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "phpunit/phpunit": "^9.0",
+        "bamarni/composer-bin-plugin": "^1.4.1",
         "guzzlehttp/guzzle": "^7.1",
         "http-interop/http-factory-guzzle": "^1.0"
     },
     "scripts": {
         "lint": [
-            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --dry-run --using-cache=yes --allow-risky=yes"
+            "@composer bin linting install",
+            "./vendor/bin/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --dry-run --using-cache=yes --allow-risky=yes"
         ],
         "lint:fix": [
-            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --using-cache=no --allow-risky=yes"
+            "@composer bin linting install",
+            "./vendor/bin/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --using-cache=no --allow-risky=yes"
         ],
         "test": [
             "sh scripts/tests.sh"
