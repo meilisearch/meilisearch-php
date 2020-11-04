@@ -21,9 +21,7 @@ jobs:
         uses: shivammathur/setup-php@v2
 
       - name: Install dependencies
-        run: |
-          composer install --prefer-dist --no-progress --no-suggest
-          composer bin linting install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run linter
         run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run --allow-risky=yes
@@ -46,7 +44,9 @@ jobs:
       run: composer validate
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: |
+        composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
+        composer install --prefer-dist --no-progress --no-suggest
 
     - name: Docker setup
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
