@@ -40,10 +40,10 @@
     },
     "scripts": {
         "lint": [
-            "./vendor/bin/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --dry-run --using-cache=yes --allow-risky=yes"
+            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --dry-run --using-cache=yes --allow-risky=yes"
         ],
         "lint:fix": [
-            "./vendor/bin/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --using-cache=no --allow-risky=yes"
+            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=./.php_cs.dist --diff --show-progress=estimating --using-cache=no --allow-risky=yes"
         ],
         "test": [
             "sh scripts/tests.sh"
