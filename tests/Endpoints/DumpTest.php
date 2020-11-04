@@ -15,7 +15,7 @@ final class DumpTest extends TestCase
 
         $this->assertArrayHasKey('uid', $dump);
         $this->assertArrayHasKey('status', $dump);
-        $this->assertEquals('processing', $dump['status']);
+        $this->assertEquals('in_progress', $dump['status']);
 
         $dump = $this->client->getDumpStatus($dump['uid']);
 
