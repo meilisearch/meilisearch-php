@@ -1,3 +1,9 @@
-status = ["Lint Codebase", "PHP 7.2 Test", "PHP 7.3 Test", "PHP 7.4 Test", "PHP 8.0 Test"]
+status = [
+    'linter-check',
+    'integration-tests (PHP 7.2)',
+    'integration-tests (PHP 7.3)',
+    'integration-tests (PHP 7.4)',
+    'integration-tests (PHP 8.0)'
+]
 # 1 hour timeout
 timeout-sec = 3600
