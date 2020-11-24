@@ -17,9 +17,9 @@ use Psr\Http\Client\ClientInterface;
 
 class Client
 {
+    use HandlesDumps;
     use HandlesIndex;
     use HandlesSystem;
-    use HandlesDumps;
 
     private $http;
 
