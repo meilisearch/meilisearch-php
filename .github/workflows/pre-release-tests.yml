@@ -1,36 +1,20 @@
-name: Tests
+# Testing the code base against the MeiliSearch pre-releases
+name: Pre-Release Tests
 
+# Will only run for PRs and pushes to bump-meilisearch-v*
 on:
-  pull_request:
   push:
-    # trying and staging branches are for BORS config
-    branches:
-      - trying
-      - staging
-      - master
+    branches: bump-meilisearch-v*
+  pull_request:
+    branches: bump-meilisearch-v*
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    name: linter-check
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-      - name: Run linter
-        run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run --allow-risky=yes
-
   tests:
-    # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)
-    # Will still run for each push to bump-meilisearch-v*
-    if: github.event_name != 'pull_request' || !startsWith(github.base_ref, 'bump-meilisearch-v')
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php-versions: ['7.2', '7.3', '7.4', '8.0']
-    name: integration-tests (PHP ${{ matrix.php-versions }})
+    name: integration-tests-against-rc (PHP ${{ matrix.php-versions }})
     steps:
     - uses: actions/checkout@v1
     - name: Install PHP
@@ -43,8 +27,10 @@ jobs:
       run: |
         composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
         composer install --prefer-dist --no-progress --no-suggest
-    - name: MeiliSearch (latest version) setup with Docker
-      run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
+    - name: Get the latest MeiliSearch RC
+      run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/master/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
+    - name: MeiliSearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
+      run: docker run -d -p 7700:7700 getmeili/meilisearch:${{ env.MEILISEARCH_VERSION }} ./meilisearch --master-key=masterKey --no-analytics=true
     - name: Run test suite - default HTTP client (Guzzle 7)
       run: |
         sh scripts/tests.sh
