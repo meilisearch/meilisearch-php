@@ -17,8 +17,10 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install PHP
         uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer update --prefer-dist --no-progress
       - name: Run linter
         run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run --allow-risky=yes
 
@@ -42,7 +44,7 @@ jobs:
     - name: Install dependencies
       run: |
         composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
-        composer install --prefer-dist --no-progress --no-suggest
+        composer update --prefer-dist --no-progress
     - name: MeiliSearch (latest version) setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
     - name: Run test suite - default HTTP client (Guzzle 7)
