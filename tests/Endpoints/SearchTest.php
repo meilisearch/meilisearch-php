@@ -23,43 +23,83 @@ final class SearchTest extends TestCase
     {
         $response = $this->index->search('prince');
 
+        $this->assertArrayHasKey('hits', $response->toArray());
+        $this->assertArrayHasKey('offset', $response->toArray());
+        $this->assertArrayHasKey('limit', $response->toArray());
+        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
+        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertSame(2, $response->getNbHits());
+        $this->assertCount(2, $response->getHits());
+
+        $response = $this->index->search('prince', [], [
+            'raw' => true,
+        ]);
+
         $this->assertArrayHasKey('hits', $response);
         $this->assertArrayHasKey('offset', $response);
         $this->assertArrayHasKey('limit', $response);
         $this->assertArrayHasKey('processingTimeMs', $response);
         $this->assertArrayHasKey('query', $response);
-        $this->assertCount(2, $response['hits']);
+        $this->assertSame(2, $response['nbHits']);
     }
 
     public function testBasicEmptySearch(): void
     {
         $response = $this->index->search('');
 
+        $this->assertArrayHasKey('hits', $response->toArray());
+        $this->assertArrayHasKey('offset', $response->toArray());
+        $this->assertArrayHasKey('limit', $response->toArray());
+        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
+        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertCount(7, $response->getHits());
+
+        $response = $this->index->search('', [], [
+            'raw' => true,
+        ]);
+
         $this->assertArrayHasKey('hits', $response);
         $this->assertArrayHasKey('offset', $response);
         $this->assertArrayHasKey('limit', $response);
         $this->assertArrayHasKey('processingTimeMs', $response);
         $this->assertArrayHasKey('query', $response);
-        $this->assertCount(7, $response['hits']);
+        $this->assertSame(7, $response['nbHits']);
     }
 
     public function testBasicPlaceholderSearch(): void
     {
         $response = $this->index->search(null);
 
+        $this->assertArrayHasKey('hits', $response->toArray());
+        $this->assertArrayHasKey('offset', $response->toArray());
+        $this->assertArrayHasKey('limit', $response->toArray());
+        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
+        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertCount(\count(self::DOCUMENTS), $response->getHits());
+
+        $response = $this->index->search(null, [], [
+            'raw' => true,
+        ]);
+
         $this->assertArrayHasKey('hits', $response);
         $this->assertArrayHasKey('offset', $response);
         $this->assertArrayHasKey('limit', $response);
         $this->assertArrayHasKey('processingTimeMs', $response);
         $this->assertArrayHasKey('query', $response);
-        $this->assertCount(\count(self::DOCUMENTS), $response['hits']);
+        $this->assertSame(\count(self::DOCUMENTS), $response['nbHits']);
     }
 
     public function testSearchWithOptions(): void
     {
         $response = $this->index->search('prince', ['limit' => 1]);
 
-        $this->assertCount(1, $response['hits']);
+        $this->assertCount(1, $response->getHits());
+
+        $response = $this->index->search('prince', ['limit' => 1], [
+            'raw' => true,
+        ]);
+
+        $this->assertSame(1, \count($response['hits']));
     }
 
     public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided(): void
@@ -68,12 +108,23 @@ final class SearchTest extends TestCase
 
         $res = $emptyIndex->search('prince');
 
+        $this->assertArrayHasKey('hits', $res->toArray());
+        $this->assertArrayHasKey('offset', $res->toArray());
+        $this->assertArrayHasKey('limit', $res->toArray());
+        $this->assertArrayHasKey('processingTimeMs', $res->toArray());
+        $this->assertArrayHasKey('query', $res->toArray());
+        $this->assertCount(0, $res->getHits());
+
+        $res = $emptyIndex->search('prince', [], [
+            'raw' => true,
+        ]);
+
         $this->assertArrayHasKey('hits', $res);
         $this->assertArrayHasKey('offset', $res);
         $this->assertArrayHasKey('limit', $res);
         $this->assertArrayHasKey('processingTimeMs', $res);
         $this->assertArrayHasKey('query', $res);
-        $this->assertCount(0, $res['hits']);
+        $this->assertSame(0, $res['nbHits']);
     }
 
     public function testExceptionIfNoIndexWhenSearching(): void
@@ -99,6 +150,26 @@ final class SearchTest extends TestCase
             'matches' => true,
         ]);
 
+        $this->assertArrayHasKey('_matchesInfo', $response->getHit(0));
+        $this->assertArrayHasKey('title', $response->getHit(0)['_matchesInfo']);
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertArrayNotHasKey('comment', $response->getHit(0));
+        $this->assertArrayNotHasKey('comment', $response->getHit(0)['_matchesInfo']);
+        $this->assertSame('Petit <em>Prince</em>', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('prince', [
+            'limit' => 5,
+            'offset' => 0,
+            'attributesToRetrieve' => ['id', 'title'],
+            'attributesToCrop' => ['id', 'title'],
+            'cropLength' => 6,
+            'attributesToHighlight' => ['title'],
+            'filters' => 'title = "Le Petit Prince"',
+            'matches' => true,
+        ], [
+            'raw' => true,
+        ]);
+
         $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
         $this->assertArrayHasKey('title', $response['hits'][0]['_matchesInfo']);
         $this->assertArrayHasKey('_formatted', $response['hits'][0]);
@@ -120,6 +191,26 @@ final class SearchTest extends TestCase
             'matches' => true,
         ]);
 
+        $this->assertArrayHasKey('_matchesInfo', $response->getHit(0));
+        $this->assertArrayHasKey('title', $response->getHit(0)['_matchesInfo']);
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertArrayHasKey('comment', $response->getHit(0));
+        $this->assertArrayNotHasKey('comment', $response->getHit(0)['_matchesInfo']);
+        $this->assertSame('Petit <em>Prince</em>', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('prince', [
+            'limit' => 5,
+            'offset' => 0,
+            'attributesToRetrieve' => ['*'],
+            'attributesToCrop' => ['*'],
+            'cropLength' => 6,
+            'attributesToHighlight' => ['*'],
+            'filters' => 'title = "Le Petit Prince"',
+            'matches' => true,
+        ], [
+            'raw' => true,
+        ]);
+
         $this->assertArrayHasKey('_matchesInfo', $response['hits'][0]);
         $this->assertArrayHasKey('title', $response['hits'][0]['_matchesInfo']);
         $this->assertArrayHasKey('_formatted', $response['hits'][0]);
@@ -135,6 +226,20 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('prince', [
             'facetsDistribution' => ['genre'],
+        ]);
+        $this->assertSame(2, $response->getHitsCount());
+        $this->assertArrayHasKey('facetsDistribution', $response->toArray());
+        $this->assertArrayHasKey('exhaustiveFacetsCount', $response->toArray());
+        $this->assertArrayHasKey('genre', $response->getFacetsDistribution());
+        $this->assertTrue($response->getExhaustiveFacetsCount());
+        $this->assertSame($response->getFacetsDistribution()['genre']['fantasy'], 1);
+        $this->assertSame($response->getFacetsDistribution()['genre']['adventure'], 1);
+        $this->assertSame($response->getFacetsDistribution()['genre']['romance'], 0);
+
+        $response = $this->index->search('prince', [
+            'facetsDistribution' => ['genre'],
+        ], [
+            'raw' => true,
         ]);
         $this->assertSame(2, $response['nbHits']);
         $this->assertArrayHasKey('facetsDistribution', $response);
@@ -154,6 +259,16 @@ final class SearchTest extends TestCase
         $response = $this->index->search('prince', [
             'facetFilters' => [['genre:fantasy']],
         ]);
+        $this->assertSame(1, $response->getHitsCount());
+        $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response->getRaw());
+        $this->assertSame(4, $response->getHit(0)['id']);
+
+        $response = $this->index->search('prince', [
+            'facetFilters' => [['genre:fantasy']],
+        ], [
+            'raw' => true,
+        ]);
         $this->assertSame(1, $response['nbHits']);
         $this->assertArrayNotHasKey('facetsDistribution', $response);
         $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
@@ -167,6 +282,16 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('prince', [
             'facetFilters' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
+        ]);
+        $this->assertSame(1, $response->getHitsCount());
+        $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response->getRaw());
+        $this->assertSame(4, $response->getHit(0)['id']);
+
+        $response = $this->index->search('prince', [
+            'facetFilters' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
+        ], [
+            'raw' => true,
         ]);
         $this->assertSame(1, $response['nbHits']);
         $this->assertArrayNotHasKey('facetsDistribution', $response);
@@ -183,6 +308,20 @@ final class SearchTest extends TestCase
             'facetFilters' => [['genre:fantasy']],
             'attributesToRetrieve' => ['id', 'title'],
         ]);
+        $this->assertSame(1, $response->getHitsCount());
+        $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response->getRaw());
+        $this->assertSame(4, $response->getHit(0)['id']);
+        $this->assertArrayHasKey('id', $response->getHit(0));
+        $this->assertArrayHasKey('title', $response->getHit(0));
+        $this->assertArrayNotHasKey('comment', $response->getHit(0));
+
+        $response = $this->index->search('prince', [
+            'facetFilters' => [['genre:fantasy']],
+            'attributesToRetrieve' => ['id', 'title'],
+        ], [
+            'raw' => true,
+        ]);
         $this->assertSame(1, $response['nbHits']);
         $this->assertArrayNotHasKey('facetsDistribution', $response);
         $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
@@ -190,5 +329,39 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('id', $response['hits'][0]);
         $this->assertArrayHasKey('title', $response['hits'][0]);
         $this->assertArrayNotHasKey('comment', $response['hits'][0]);
+    }
+
+    public function testBasicSearchCanBeFiltered(): void
+    {
+        $response = $this->index->search('prince', [], [
+            'transformHits' => function (array $hit, int $_): bool {
+                return 'AMERICAN SNIPER' === strtoupper($hit['title']);
+            },
+        ]);
+
+        $this->assertArrayHasKey('hits', $response->toArray());
+        $this->assertArrayHasKey('offset', $response->toArray());
+        $this->assertArrayHasKey('limit', $response->toArray());
+        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
+        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertSame(0, $response->getNbHits());
+        $this->assertCount(0, $response->getHits());
+    }
+
+    public function testBasicSearchCannotBeFilteredOnRawResult(): void
+    {
+        $response = $this->index->search('prince', [], [
+            'raw' => true,
+            'transformHits' => function (array $hit, int $_): bool {
+                return 'AMERICAN SNIPER' === strtoupper($hit['title']);
+            },
+        ]);
+
+        $this->assertArrayHasKey('hits', $response);
+        $this->assertArrayHasKey('offset', $response);
+        $this->assertArrayHasKey('limit', $response);
+        $this->assertArrayHasKey('processingTimeMs', $response);
+        $this->assertArrayHasKey('query', $response);
+        $this->assertSame(2, $response['nbHits']);
     }
 }

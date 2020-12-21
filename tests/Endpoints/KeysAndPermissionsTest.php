@@ -28,7 +28,7 @@ final class KeysAndPermissionsTest extends TestCase
 
         $newClient = new Client(self::HOST, $this->getKeys()['public']);
         $response = $newClient->getIndex('index')->search('test');
-        $this->assertArrayHasKey('hits', $response);
+        $this->assertArrayHasKey('hits', $response->toArray());
     }
 
     public function testGetSettingsIfPrivateKeyProvided(): void

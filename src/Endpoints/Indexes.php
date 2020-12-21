@@ -11,6 +11,7 @@ use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
+use MeiliSearch\Search\SearchResult;
 
 class Indexes extends Endpoint
 {
@@ -72,7 +73,7 @@ class Indexes extends Endpoint
 
     public function update($body): array
     {
-        return  $this->http->put(self::PATH.'/'.$this->uid, $body);
+        return $this->http->put(self::PATH.'/'.$this->uid, $body);
     }
 
     public function delete(): array
@@ -117,14 +118,31 @@ class Indexes extends Endpoint
 
     // Search
 
-    public function search($query, array $options = []): array
+    /**
+     * @param string $query
+     *
+     * @return SearchResult|array
+     */
+    public function search($query, array $searchParams = [], array $options = [])
     {
         $parameters = array_merge(
             ['q' => $query],
-            $options
+            $searchParams
         );
 
-        return $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
+        $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
+
+        if (\array_key_exists('raw', $options) && $options['raw']) {
+            return $result;
+        }
+
+        $searchResult = new SearchResult($result);
+
+        if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
+            $searchResult = $searchResult->filter($options['transformHits']);
+        }
+
+        return $searchResult;
     }
 
     // Stats
