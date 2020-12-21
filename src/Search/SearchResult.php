@@ -117,7 +117,7 @@ class SearchResult implements Countable, IteratorAggregate
         return $this->limit;
     }
 
-    public function getMatches(): int
+    public function getHitsCount(): int
     {
         return $this->nbHits;
     }
@@ -171,8 +171,8 @@ class SearchResult implements Countable, IteratorAggregate
             'hits' => $this->hits,
             'offset' => $this->offset,
             'limit' => $this->limit,
-            'matches' => $this->nbHits,
-            'nbHits' => \count($this->hits),
+            'nbHits' => $this->nbHits,
+            'hitsCount' => \count($this->hits),
             'exhaustiveNbHits' => $this->exhaustiveNbHits,
             'processingTimeMs' => $this->processingTimeMs,
             'query' => $this->query,
@@ -181,7 +181,7 @@ class SearchResult implements Countable, IteratorAggregate
         ];
     }
 
-    public function json(): string
+    public function toJson(): string
     {
         return \json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }

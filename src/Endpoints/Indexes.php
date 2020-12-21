@@ -138,8 +138,8 @@ class Indexes extends Endpoint
 
         $searchResult = new SearchResult($result);
 
-        if (\array_key_exists('filteringHits', $options) && \is_callable($options['filteringHits'])) {
-            $searchResult = $searchResult->filter($options['filteringHits']);
+        if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
+            $searchResult = $searchResult->filter($options['transformHits']);
         }
 
         return $searchResult;

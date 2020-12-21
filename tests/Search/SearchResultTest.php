@@ -56,7 +56,7 @@ final class SearchResultTest extends TestCase
         static::assertSame(0, $result->getOffset());
         static::assertSame(20, $result->getLimit());
         static::assertSame(2, $result->getNbHits());
-        static::assertSame(976, $result->getMatches());
+        static::assertSame(976, $result->getHitsCount());
         static::assertFalse($result->getExhaustiveNbHits());
         static::assertSame(35, $result->getProcessingTimeMs());
         static::assertSame('american', $result->getQuery());
@@ -142,12 +142,12 @@ final class SearchResultTest extends TestCase
             'query' => 'american',
         ]);
 
-        $json = $result->json();
+        $json = $result->toJson();
 
         static::assertStringContainsString('hits', $json);
         static::assertStringContainsString('offset', $json);
         static::assertStringContainsString('limit', $json);
-        static::assertStringContainsString('matches', $json);
+        static::assertStringContainsString('hitsCount', $json);
         static::assertStringContainsString('nbHits', $json);
         static::assertStringContainsString('exhaustiveNbHits', $json);
         static::assertStringContainsString('processingTimeMs', $json);
