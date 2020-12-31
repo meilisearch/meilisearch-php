@@ -40,14 +40,14 @@ final class IndexTest extends TestCase
         $this->assertSame('indexB', $indexB->getUid());
     }
 
-    public function testGetRaw(): void
+    public function testfetchRawInfo(): void
     {
         $index = $this->client->createIndex(
             'indexB',
             ['primaryKey' => 'objectId']
         );
 
-        $response = $index->getRaw();
+        $response = $index->fetchRawInfo();
 
         $this->assertArrayHasKey('primaryKey', $response);
         $this->assertArrayHasKey('uid', $response);

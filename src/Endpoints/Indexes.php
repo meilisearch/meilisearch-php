@@ -73,14 +73,14 @@ class Indexes extends Endpoint
         return $this->uid;
     }
 
-    public function getRaw(): ?array
+    public function fetchRawInfo(): ?array
     {
         return $this->http->get(self::PATH.'/'.$this->uid);
     }
 
     public function fetchInfo(): self
     {
-        $response = $this->getRaw();
+        $response = $this->fetchRawInfo();
         $this->uid = $response['uid'];
         $this->primaryKey = $response['primaryKey'];
 
