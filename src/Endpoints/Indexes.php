@@ -24,10 +24,12 @@ class Indexes extends Endpoint
      * @var string|null
      */
     private $uid;
+    private $primaryKey;
 
-    public function __construct(Http $http, $uid = null)
+    public function __construct(Http $http, $uid = null, $primaryKey = null)
     {
         $this->uid = $uid;
+        $this->primaryKey = $primaryKey;
         parent::__construct($http);
     }
 
@@ -42,7 +44,7 @@ class Indexes extends Endpoint
 
         $response = $this->http->post(self::PATH, $options);
 
-        return new self($this->http, $response['uid']);
+        return new self($this->http, $response['uid'], $response['primaryKey']);
     }
 
     public function all(): array
@@ -58,7 +60,12 @@ class Indexes extends Endpoint
 
     public function getPrimaryKey(): ?string
     {
-        return $this->show()['primaryKey'];
+        return $this->primaryKey;
+    }
+
+    public function fetchPrimaryKey(): ?string
+    {
+        return $this->fetchInfo()->getPrimaryKey();
     }
 
     public function getUid(): ?string
@@ -66,14 +73,27 @@ class Indexes extends Endpoint
         return $this->uid;
     }
 
-    public function show(): ?array
+    public function fetchRawInfo(): ?array
     {
         return $this->http->get(self::PATH.'/'.$this->uid);
     }
 
-    public function update($body): array
+    public function fetchInfo(): self
     {
-        return $this->http->put(self::PATH.'/'.$this->uid, $body);
+        $response = $this->fetchRawInfo();
+        $this->uid = $response['uid'];
+        $this->primaryKey = $response['primaryKey'];
+
+        return $this;
+    }
+
+    public function update($body): self
+    {
+        $response = $this->http->put(self::PATH.'/'.$this->uid, $body);
+        $this->uid = $response['uid'];
+        $this->primaryKey = $response['primaryKey'];
+
+        return $this;
     }
 
     public function delete(): array

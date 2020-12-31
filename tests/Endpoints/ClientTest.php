@@ -75,20 +75,15 @@ final class ClientTest extends TestCase
         $this->assertContains($indexB, $uids);
     }
 
-    public function testShowIndex(): void
+    public function testUpdateIndex(): void
     {
-        $uid = 'index';
-        $index = $this->client->createIndex(
-            $uid,
-            ['primaryKey' => 'objectID']
-        );
+        $this->client->createIndex('indexA');
 
-        $response = $this->client->showIndex($uid);
+        $index = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
 
         $this->assertInstanceOf(Indexes::class, $index);
-        $this->assertIsArray($response);
-        $this->assertSame('objectID', $response['primaryKey']);
-        $this->assertSame($uid, $response['uid']);
+        $this->assertSame($index->getPrimaryKey(), 'id');
+        $this->assertSame($index->getUid(), 'indexA');
     }
 
     public function testDeleteIndex(): void
@@ -136,6 +131,16 @@ final class ClientTest extends TestCase
         $this->client->createIndex('index');
 
         $index = $this->client->getIndex('index');
+        $this->assertInstanceOf(Indexes::class, $index);
+        $this->assertSame('index', $index->getUid());
+        $this->assertNull($index->getPrimaryKey());
+    }
+
+    public function testIndex(): void
+    {
+        $this->client->createIndex('index');
+
+        $index = $this->client->index('index');
         $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
@@ -195,6 +200,28 @@ final class ClientTest extends TestCase
         $index2->delete();
     }
 
+    public function testExceptionIsThrownWhenOverwritingPrimaryKeyUsingUpdateIndex(): void
+    {
+        $this->client->createIndex(
+            'indexB',
+            ['primaryKey' => 'objectId']
+        );
+
+        $this->expectException(HTTPRequestException::class);
+
+        $this->client->updateIndex('indexB', ['primaryKey' => 'objectID']);
+    }
+
+    public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
+    {
+        $this->expectException(HTTPRequestException::class);
+
+        $this->client->updateIndex(
+            'IndexNotExist',
+            ['primaryKey' => 'objectId']
+        );
+    }
+
     public function testExceptionIfUidTakenWhenCreating(): void
     {
         $this->client->createIndex('index');
@@ -216,7 +243,7 @@ final class ClientTest extends TestCase
     public function testExceptionIfNoIndexWhenShowing(): void
     {
         $this->expectException(HTTPRequestException::class);
-        $this->client->showIndex('a-non-existing-index');
+        $this->client->getIndex('a-non-existing-index');
     }
 
     public function testExceptionIfNoIndexWhenDeleting(): void

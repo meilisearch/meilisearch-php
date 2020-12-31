@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\HTTPRequestException;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
@@ -39,14 +40,14 @@ final class IndexTest extends TestCase
         $this->assertSame('indexB', $indexB->getUid());
     }
 
-    public function testShow(): void
+    public function testfetchRawInfo(): void
     {
         $index = $this->client->createIndex(
             'indexB',
             ['primaryKey' => 'objectId']
         );
 
-        $response = $index->show();
+        $response = $index->fetchRawInfo();
 
         $this->assertArrayHasKey('primaryKey', $response);
         $this->assertArrayHasKey('uid', $response);
@@ -60,10 +61,13 @@ final class IndexTest extends TestCase
     {
         $primaryKey = 'id';
 
-        $response = $this->index->update(['primaryKey' => $primaryKey]);
+        $index = $this->index->update(['primaryKey' => $primaryKey]);
 
-        $this->assertSame($response['primaryKey'], $primaryKey);
-        $this->assertSame('index', $response['uid']);
+        $this->assertInstanceOf(Indexes::class, $index);
+        $this->assertSame($index->getPrimaryKey(), $primaryKey);
+        $this->assertSame($index->getUid(), 'index');
+        $this->assertSame($this->index->getPrimaryKey(), $primaryKey);
+        $this->assertSame($this->index->getUid(), 'index');
     }
 
     public function testExceptionIsThrownWhenOverwritingPrimaryKey(): void
@@ -86,6 +90,37 @@ final class IndexTest extends TestCase
         $this->assertEquals(0, $stats['numberOfDocuments']);
         $this->assertArrayHasKey('isIndexing', $stats);
         $this->assertArrayHasKey('fieldsDistribution', $stats);
+    }
+
+    public function testFetchInfo(): void
+    {
+        $uid = 'indexA';
+        $this->client->createIndex(
+            $uid,
+            ['primaryKey' => 'objectID']
+        );
+
+        $index = $this->client->index($uid);
+        $this->assertInstanceOf(Indexes::class, $index);
+        $this->assertNull($index->getPrimaryKey());
+
+        $index = $index->fetchInfo();
+        $this->assertInstanceOf(Indexes::class, $index);
+        $this->assertSame('objectID', $index->getPrimaryKey());
+    }
+
+    public function testGetAndFetchPrimaryKey(): void
+    {
+        $uid = 'indexA';
+        $this->client->createIndex(
+            $uid,
+            ['primaryKey' => 'objectID']
+        );
+
+        $index = $this->client->index($uid);
+        $this->assertNull($index->getPrimaryKey());
+        $this->assertSame('objectID', $index->fetchPrimaryKey());
+        $this->assertSame('objectID', $index->getPrimaryKey());
     }
 
     public function testWaitForPendingUpdateDefault(): void
@@ -141,38 +176,6 @@ final class IndexTest extends TestCase
         $this->index->waitForPendingUpdate($res['updateId'], 0, 20);
     }
 
-    public function testUpdateIndex(): void
-    {
-        $this->client->createIndex('indexA');
-
-        $response = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
-
-        $this->assertSame($response['primaryKey'], 'id');
-        $this->assertSame($response['uid'], 'indexA');
-    }
-
-    public function testExceptionIsThrownWhenOverwritingPrimaryKeyUsingUpdateIndex(): void
-    {
-        $this->client->createIndex(
-            'indexB',
-            ['primaryKey' => 'objectId']
-        );
-
-        $this->expectException(HTTPRequestException::class);
-
-        $this->client->updateIndex('indexB', ['primaryKey' => 'objectID']);
-    }
-
-    public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
-    {
-        $this->expectException(HTTPRequestException::class);
-
-        $this->client->updateIndex(
-            'IndexNotExist',
-            ['primaryKey' => 'objectId']
-        );
-    }
-
     public function testDeleteIndexes(): void
     {
         $this->index = $this->client->createIndex('indexA');
@@ -191,7 +194,7 @@ final class IndexTest extends TestCase
 
         $this->expectException(HTTPRequestException::class);
 
-        $this->index->show();
+        $this->index->fetchInfo();
     }
 
     public function testExceptionIsThrownIfNoIndexWhenUpdating(): void

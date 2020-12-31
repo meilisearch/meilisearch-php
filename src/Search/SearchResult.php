@@ -160,7 +160,7 @@ class SearchResult implements Countable, IteratorAggregate
      *
      * @return array<string, mixed>
      */
-    public function getRaw(): array
+    public function fetchRawInfo(): array
     {
         return $this->raw;
     }

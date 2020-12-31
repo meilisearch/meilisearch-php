@@ -27,7 +27,7 @@ final class KeysAndPermissionsTest extends TestCase
         $this->client->createIndex('index');
 
         $newClient = new Client(self::HOST, $this->getKeys()['public']);
-        $response = $newClient->getIndex('index')->search('test');
+        $response = $newClient->index('index')->search('test');
         $this->assertArrayHasKey('hits', $response->toArray());
     }
 
@@ -35,7 +35,7 @@ final class KeysAndPermissionsTest extends TestCase
     {
         $this->client->createIndex('index');
         $newClient = new Client(self::HOST, $this->getKeys()['private']);
-        $response = $newClient->getIndex('index')->getSettings();
+        $response = $newClient->index('index')->getSettings();
 
         $this->assertEquals(['*'], $response['searchableAttributes']);
     }
@@ -45,19 +45,19 @@ final class KeysAndPermissionsTest extends TestCase
         $newClient = new Client(self::HOST);
 
         $this->expectException(HTTPRequestException::class);
-        $newClient->getIndex('index')->search('test');
+        $newClient->index('index')->search('test');
     }
 
     public function testExceptionIfBadKeyProvidedToGetSettings(): void
     {
         $this->client->createIndex('index');
-        $response = $this->client->getIndex('index')->getSettings();
+        $response = $this->client->index('index')->getSettings();
         $this->assertEquals(['*'], $response['searchableAttributes']);
 
         $newClient = new Client(self::HOST, 'bad-key');
 
         $this->expectException(HTTPRequestException::class);
-        $newClient->getIndex('index')->getSettings();
+        $newClient->index('index')->getSettings();
     }
 
     public function testExceptionIfBadKeyProvidedToGetKeys(): void

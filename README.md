@@ -86,8 +86,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 use MeiliSearch\Client;
 
 $client = new Client('http://127.0.0.1:7700', 'masterKey');
-$index = $client->createIndex('books'); // If your index does not exist
-$index = $client->getIndex('books');    // If you already created your index
+
+# An index is where the documents are stored.
+$index = $client->index('books');
 
 $documents = [
     ['book_id' => 123,  'title' => 'Pride and Prejudice', 'author' => 'Jane Austen'],
@@ -98,6 +99,7 @@ $documents = [
     ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy', 'author' => 'Douglas Adams, Eoin Colfer, Thomas Tidholm'],
 ];
 
+# If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
 $index->addDocuments($documents); // => { "updateId": 0 }
 ```
 

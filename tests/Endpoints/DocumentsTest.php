@@ -248,7 +248,7 @@ final class DocumentsTest extends TestCase
         $this->assertArrayHasKey('updateId', $response);
         $index->waitForPendingUpdate($response['updateId']);
 
-        $this->assertSame('unique', $index->getPrimaryKey());
+        $this->assertSame('unique', $index->fetchPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
     }
 
@@ -268,7 +268,7 @@ final class DocumentsTest extends TestCase
 
         $index->waitForPendingUpdate($promise['updateId']);
 
-        $this->assertSame('unique', $index->getPrimaryKey());
+        $this->assertSame('unique', $index->fetchPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
     }
 

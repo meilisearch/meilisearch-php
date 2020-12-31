@@ -20,14 +20,19 @@ trait HandlesIndex
         return $this->index->all();
     }
 
-    public function showIndex(string $uid): array
+    public function index(string $uid): Indexes
     {
-        return (new Indexes($this->http, $uid))->show();
+        return new Indexes($this->http, $uid);
+    }
+
+    public function getIndex(string $uid): Indexes
+    {
+        return $this->index($uid)->fetchInfo();
     }
 
     public function deleteIndex(string $uid): array
     {
-        return (new Indexes($this->http, $uid))->delete();
+        return $this->index($uid)->delete();
     }
 
     public function deleteAllIndexes(): void
@@ -38,19 +43,14 @@ trait HandlesIndex
         }
     }
 
-    public function getIndex(string $uid): Indexes
-    {
-        return new Indexes($this->http, $uid);
-    }
-
     public function createIndex(string $uid, array $options = []): Indexes
     {
         return $this->index->create($uid, $options);
     }
 
-    public function updateIndex(string $uid, array $options = []): array
+    public function updateIndex(string $uid, array $options = []): Indexes
     {
-        return (new Indexes($this->http, $uid))->update($options);
+        return $this->index($uid)->update($options);
     }
 
     /**
@@ -58,14 +58,13 @@ trait HandlesIndex
      */
     public function getOrCreateIndex(string $uid, array $options = []): Indexes
     {
-        $index = $this->getIndex($uid);
-
         try {
-            $index = $this->createIndex($uid, $options);
+            $index = $this->getIndex($uid, $options);
         } catch (HTTPRequestException $e) {
-            if (\is_array($e->httpBody) && 'index_already_exists' !== $e->httpBody['errorCode']) {
+            if (\is_array($e->httpBody) && 'index_not_found' !== $e->httpBody['errorCode']) {
                 throw $e;
             }
+            $index = $this->createIndex($uid, $options);
         }
 
         return $index;
