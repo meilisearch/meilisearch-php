@@ -28,8 +28,16 @@ class SearchResult implements Countable, IteratorAggregate
 
     /**
      * @var int
+     * `nbHits` is the attributes returned by the MeiliSearch server
+     * and its value will not be modified by the methods in this class.
+     * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
      */
     private $nbHits;
+
+    /**
+     * @var int
+     */
+    private $hitsCount;
 
     /**
      * @var bool
@@ -67,6 +75,7 @@ class SearchResult implements Countable, IteratorAggregate
         $this->offset = $body['offset'];
         $this->limit = $body['limit'];
         $this->nbHits = $body['nbHits'];
+        $this->hitsCount = \count($body['hits']);
         $this->exhaustiveNbHits = $body['exhaustiveNbHits'] ?? false;
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->query = $body['query'];
@@ -84,14 +93,48 @@ class SearchResult implements Countable, IteratorAggregate
      *
      * @return SearchResult
      */
-    public function filter(callable $callback): self
+    public function applyOptions($options): self
     {
-        $results = array_filter($this->hits, $callback, ARRAY_FILTER_USE_BOTH);
-
-        $this->hits = $results;
-        $this->nbHits = \count($results);
+        if (\array_key_exists('removeZeroFacets', $options) && $options['removeZeroFacets'] === true) {
+            $this->removeZeroFacets();
+        }
+        if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
+            $this->transformHits($options['transformHits']);
+        }
+        if (\array_key_exists('transformFacetsDistribution', $options) && \is_callable($options['transformFacetsDistribution'])) {
+            $this->transformFacetsDistribution($options['transformFacetsDistribution']);
+        }
 
         return $this;
+    }
+
+    public function transformHits(callable $callback): self
+    {
+        $this->hits = $callback($this->hits);
+        $this->hitsCount = \count($this->hits);
+        return $this;
+    }
+
+    public function transformFacetsDistribution(callable $callback): self
+    {
+        $this->facetsDistribution = $callback($this->facetsDistribution);
+        return $this;
+    }
+
+    public function removeZeroFacets(): self
+    {
+        $filterAllFacets = function (array $facets) {
+            $filterOneFacet = function (array $facet) {
+                return array_filter(
+                    $facet,
+                    function($v, $k) { return $v !== 0; },
+                    ARRAY_FILTER_USE_BOTH
+                );
+            };
+            return array_map($filterOneFacet, $facets);
+        };
+
+        return $this->transformFacetsDistribution($filterAllFacets);
     }
 
     public function getHit(int $key, $default = null)
@@ -119,12 +162,17 @@ class SearchResult implements Countable, IteratorAggregate
 
     public function getHitsCount(): int
     {
-        return $this->nbHits;
+        return $this->hitsCount;
+    }
+
+    public function count(): int
+    {
+        return $this->hitsCount;
     }
 
     public function getNbHits(): int
     {
-        return \count($this->hits);
+        return $this->nbHits;
     }
 
     public function getExhaustiveNbHits(): bool
@@ -160,7 +208,7 @@ class SearchResult implements Countable, IteratorAggregate
      *
      * @return array<string, mixed>
      */
-    public function fetchRawInfo(): array
+    public function getRaw(): array
     {
         return $this->raw;
     }
@@ -172,7 +220,7 @@ class SearchResult implements Countable, IteratorAggregate
             'offset' => $this->offset,
             'limit' => $this->limit,
             'nbHits' => $this->nbHits,
-            'hitsCount' => \count($this->hits),
+            'hitsCount' => $this->hitsCount,
             'exhaustiveNbHits' => $this->exhaustiveNbHits,
             'processingTimeMs' => $this->processingTimeMs,
             'query' => $this->query,
@@ -181,7 +229,7 @@ class SearchResult implements Countable, IteratorAggregate
         ];
     }
 
-    public function toJson(): string
+    public function toJSON(): string
     {
         return \json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }
@@ -191,8 +239,4 @@ class SearchResult implements Countable, IteratorAggregate
         return new ArrayIterator($this->hits);
     }
 
-    public function count(): int
-    {
-        return \count($this->hits);
-    }
 }

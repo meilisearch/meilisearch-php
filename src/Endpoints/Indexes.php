@@ -140,29 +140,39 @@ class Indexes extends Endpoint
 
     /**
      * @param string $query
+     * @param array $searchParams
+     * @param array $options
      *
      * @return SearchResult|array
      */
     public function search($query, array $searchParams = [], array $options = [])
     {
-        $parameters = array_merge(
-            ['q' => $query],
-            $searchParams
-        );
-
-        $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
+        $result = $this->rawSearch($query, $searchParams);
 
         if (\array_key_exists('raw', $options) && $options['raw']) {
             return $result;
         }
 
         $searchResult = new SearchResult($result);
-
-        if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
-            $searchResult = $searchResult->filter($options['transformHits']);
-        }
+        $searchResult = $searchResult->applyOptions($options);
 
         return $searchResult;
+    }
+
+    /**
+     * @param string $query
+     * @param array $searchParams
+     *
+     * @return array
+     */
+    public function rawSearch($query, array $searchParams = [])
+    {
+        $parameters = array_merge(
+            ['q' => $query],
+            $searchParams
+        );
+
+        return $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
     }
 
     // Stats

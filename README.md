@@ -110,7 +110,7 @@ With the `updateId`, you can check the status (`enqueued`, `processed` or `faile
 
 ```php
 // MeiliSearch is typo-tolerant:
-print_r($index->search('harry pottre'));
+print_r($index->search('harry pottre')->getHits());
 ```
 
 Output:
@@ -118,20 +118,11 @@ Output:
 ```php
 Array
 (
-    [hits] => Array
+    [0] => Array
         (
-            [0] => Array
-                (
-                    [id] => 4
-                    [title] => Harry Potter and the Half-Blood Prince
-                )
-
+            [id] => 4
+            [title] => Harry Potter and the Half-Blood Prince
         )
-
-    [offset] => 0
-    [limit] => 20
-    [processingTimeMs] => 1
-    [query] => harry pottre
 )
 ```
 
@@ -139,14 +130,19 @@ Array
 
 All the supported options are described in the [search parameters](https://docs.meilisearch.com/guides/advanced_guides/search_parameters.html) section of the documentation.
 
+💡 **More about the `search()` method in [the Wiki](https://github.com/meilisearch/meilisearch-php/wiki/Search).**
+
 ```php
-$index->search('prince',
+$index->search(
+    'prince',
     [
         'attributesToHighlight' => ['*'],
         'filters' => 'book_id > 10'
     ]
-);
+)->getRaw();
 ```
+
+JSON output:
 
 ```json
 {
@@ -161,15 +157,6 @@ $index->search('prince',
     "processingTimeMs": 10,
     "query": "prince"
 }
-```
-
-With `filters`, both single and double quotes are supported.
-```php
-// Enclosing with double quotes
-$index->search('prince', ['filters' => "title = 'Le Petit Prince' OR author = 'J. R. R. Tolkien'"]);
-
-// Enclosing with single quotes
-$index->search('hobbit', ['filters' => 'title = "The Hitchhiker\'s Guide to the Galaxy" OR author = "J. R. R. Tolkien"']);
 ```
 
 ## 🤖 Compatibility with MeiliSearch
