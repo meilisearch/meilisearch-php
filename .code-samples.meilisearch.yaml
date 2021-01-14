@@ -264,7 +264,7 @@ search_guide_1: |-
   $client->index('movies')->search('shifu', ['limit' => 5, 'offset' => 10]);
 search_guide_2: |-
   $client->index('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
-getting_started_create_index_md: |-
+getting_started_add_documents_md: |-
   Using `meilisearch-php` with the Guzzle HTTP client:
 
   ```bash
@@ -279,15 +279,11 @@ getting_started_create_index_md: |-
   use MeiliSearch\Client;
 
   $client = new Client('http://127.0.0.1:7700');
-  $index = $client->createIndex('movies');
-  ```
 
-  [About this package](https://github.com/meilisearch/meilisearch-php/)
-getting_started_add_documents_md: |-
-  ```php
   $movies_json = file_get_contents('movies.json');
   $movies = json_decode($movies_json);
-  $index->addDocuments($movies);
+
+  $client->index('movies')->addDocuments($movies);
   ```
 
   [About this package](https://github.com/meilisearch/meilisearch-php/)
