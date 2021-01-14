@@ -69,20 +69,15 @@ update_settings_1: |-
     ],
     'distinctAttribute' => 'movie_id',
     'searchableAttributes' => [
-      'uid',
-      'movie_id',
       'title',
       'description',
-      'poster',
-      'release_date',
-      'rank'
+      'genre'
     ],
     'displayedAttributes' => [
       'title',
       'description',
-      'poster',
-      'release_date',
-      'rank'
+      'genre',
+      'release_date'
     ],
     'stopWords' => [
       'the',
@@ -139,7 +134,7 @@ update_searchable_attributes_1: |-
   $client->index('movies')->updateSearchableAttributes([
     'title',
     'description',
-    'uid'
+    'genre'
   ]);
 reset_searchable_attributes_1: |-
   $client->index('movies')->resetSearchableAttributes();
@@ -158,9 +153,8 @@ update_displayed_attributes_1: |-
   $client->index('movies')->updateDisplayedAttributes([
     'title',
     'description',
-    'release_date',
-    'rank',
-    'poster'
+    'genre',
+    'release_date'
   ]);
 reset_displayed_attributes_1: |-
   $client->index('movies')->resetDisplayedAttributes();
@@ -176,21 +170,16 @@ distinct_attribute_guide_1: |-
   $client->index('jackets')->updateDistinctAttribute('product_id');
 field_properties_guide_searchable_1: |-
   $client->index('movies')->updateSearchableAttributes([
-    'uid',
-    'movie_id',
     'title',
     'description',
-    'poster',
-    'release_date',
-    'rank'
+    'genre'
   ]);
 field_properties_guide_displayed_1: |-
   $client->index('movies')->updateDisplayedAttributes([
     'title',
     'description',
-    'poster',
-    'release_date',
-    'rank',
+    'genre',
+    'release_date'
   ]);
 filtering_guide_1: |-
   $client->index('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
@@ -237,21 +226,16 @@ settings_guide_distinct_1: |-
   $client->index('jackets')->updateDistinctAttribute('product_id');
 settings_guide_searchable_1: |-
   $client->index('movies')->updateSearchableAttributes([
-    'uid',
-    'movie_id',
     'title',
     'description',
-    'poster',
-    'release_date',
-    'rank'
+    'genre'
   ]);
 settings_guide_displayed_1: |-
   $client->index('movies')->updateDisplayedAttributes([
     'title',
     'description',
-    'poster',
-    'release_date',
-    'rank'
+    'genre',
+    'release_date'
   ]);
 add_movies_json_1: |-
   $moviesJson = file_get_contents('movies.json');
