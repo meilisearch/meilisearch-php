@@ -140,8 +140,6 @@ class Indexes extends Endpoint
 
     /**
      * @param string $query
-     * @param array $searchParams
-     * @param array $options
      *
      * @return SearchResult|array
      */
@@ -161,7 +159,6 @@ class Indexes extends Endpoint
 
     /**
      * @param string $query
-     * @param array $searchParams
      *
      * @return array
      */

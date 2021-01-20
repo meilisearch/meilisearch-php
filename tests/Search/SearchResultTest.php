@@ -35,7 +35,7 @@ final class SearchResultTest extends TestCase
             'nbHits' => 976,
             'exhaustiveNbHits' => false,
             'processingTimeMs' => 35,
-            'query' => 'american'
+            'query' => 'american',
         ];
         $this->basicResult = new SearchResult($this->basicServerResponse);
         $this->serverResponseWithFacets = [
@@ -44,14 +44,14 @@ final class SearchResultTest extends TestCase
                     'genre' => 'adventure',
                     'id' => 456,
                     'title' => 'Le Petit Prince',
-                    'author' => 'Antoine de Saint-Exupéry'
+                    'author' => 'Antoine de Saint-Exupéry',
                 ],
                 [
                     'genre' => 'fantasy',
                     'id' => 4,
                     'title' => 'Harry Potter and the Half-Blood Prince',
-                    'author' => 'J. K. Rowling'
-                ]
+                    'author' => 'J. K. Rowling',
+                ],
             ],
             'offset' => 0,
             'limit' => 20,
@@ -63,10 +63,10 @@ final class SearchResultTest extends TestCase
                 'genre' => [
                     'fantasy' => 1,
                     'romance' => 0,
-                    'adventure' => 1
-                ]
+                    'adventure' => 1,
+                ],
             ],
-            'exhaustiveFacetsCount' => true
+            'exhaustiveFacetsCount' => true,
         ];
         $this->resultWithFacets = new SearchResult($this->serverResponseWithFacets);
     }
@@ -190,8 +190,10 @@ final class SearchResultTest extends TestCase
                 foreach ($facet as $k => $v) {
                     $result[strtoupper($k)] = $v;
                 }
+
                 return $result;
             };
+
             return array_map($changeOneFacet, $facets);
         };
 

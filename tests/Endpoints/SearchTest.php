@@ -367,7 +367,7 @@ final class SearchTest extends TestCase
             );
         };
 
-        $response = $this->index->search('prince', [], $options = ['transformHits' => $keepLePetitPrinceFunc ]);
+        $response = $this->index->search('prince', [], $options = ['transformHits' => $keepLePetitPrinceFunc]);
 
         $this->assertArrayHasKey('hits', $response->toArray());
         $this->assertArrayHasKey('offset', $response->toArray());
@@ -386,6 +386,7 @@ final class SearchTest extends TestCase
             return array_map(
                 function (array $hit) {
                     $hit['title'] = strtoupper($hit['title']);
+
                     return $hit;
                 },
                 $hits
@@ -416,7 +417,7 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('prince', [], [
             'raw' => true,
-            'transformHits' => $keepLePetitPrinceFunc
+            'transformHits' => $keepLePetitPrinceFunc,
         ]);
 
         $this->assertArrayHasKey('hits', $response);
@@ -500,10 +501,11 @@ final class SearchTest extends TestCase
             $filterOneFacet = function (array $facet) {
                 return array_filter(
                     $facet,
-                    function($v, $k) { return $v > 1; },
+                    function ($v, $k) { return $v > 1; },
                     ARRAY_FILTER_USE_BOTH
                 );
             };
+
             return array_map($filterOneFacet, $facets);
         };
 
@@ -538,8 +540,10 @@ final class SearchTest extends TestCase
                 foreach ($facet as $k => $v) {
                     $result[strtoupper($k)] = $v;
                 }
+
                 return $result;
             };
+
             return array_map($changeOneFacet, $facets);
         };
 
@@ -571,8 +575,10 @@ final class SearchTest extends TestCase
         $facetsToUpperFunc = function (array $facets) {
             $sortOneFacet = function (array $facet) {
                 ksort($facet);
+
                 return $facet;
             };
+
             return array_map($sortOneFacet, $facets);
         };
 
@@ -596,5 +602,4 @@ final class SearchTest extends TestCase
         $this->assertEquals(2, $response->getFacetsDistribution()['genre']['fantasy']);
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['adventure']);
     }
-
 }

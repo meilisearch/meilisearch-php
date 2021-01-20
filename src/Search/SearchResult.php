@@ -27,10 +27,11 @@ class SearchResult implements Countable, IteratorAggregate
     private $limit;
 
     /**
-     * @var int
      * `nbHits` is the attributes returned by the MeiliSearch server
      * and its value will not be modified by the methods in this class.
      * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
+     *
+     * @var int
      */
     private $nbHits;
 
@@ -95,7 +96,7 @@ class SearchResult implements Countable, IteratorAggregate
      */
     public function applyOptions($options): self
     {
-        if (\array_key_exists('removeZeroFacets', $options) && $options['removeZeroFacets'] === true) {
+        if (\array_key_exists('removeZeroFacets', $options) && true === $options['removeZeroFacets']) {
             $this->removeZeroFacets();
         }
         if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
@@ -112,12 +113,14 @@ class SearchResult implements Countable, IteratorAggregate
     {
         $this->hits = $callback($this->hits);
         $this->hitsCount = \count($this->hits);
+
         return $this;
     }
 
     public function transformFacetsDistribution(callable $callback): self
     {
         $this->facetsDistribution = $callback($this->facetsDistribution);
+
         return $this;
     }
 
@@ -127,10 +130,11 @@ class SearchResult implements Countable, IteratorAggregate
             $filterOneFacet = function (array $facet) {
                 return array_filter(
                     $facet,
-                    function($v, $k) { return $v !== 0; },
+                    function ($v, $k) { return 0 !== $v; },
                     ARRAY_FILTER_USE_BOTH
                 );
             };
+
             return array_map($filterOneFacet, $facets);
         };
 
@@ -238,5 +242,4 @@ class SearchResult implements Countable, IteratorAggregate
     {
         return new ArrayIterator($this->hits);
     }
-
 }
