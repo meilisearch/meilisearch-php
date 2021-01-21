@@ -110,7 +110,8 @@ With the `updateId`, you can check the status (`enqueued`, `processed` or `faile
 
 ```php
 // MeiliSearch is typo-tolerant:
-print_r($index->search('harry pottre')->getHits());
+$hits = $index->search('harry pottre')->getHits();
+print_r($hits);
 ```
 
 Output:
