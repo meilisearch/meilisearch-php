@@ -86,11 +86,14 @@ class SearchResult implements Countable, IteratorAggregate
     }
 
     /**
-     * Return a new {@see SearchResult} instance with the hits filtered using `array_filter($this->hits, $callback, ARRAY_FILTER_USE_BOTH)`.
+     * Return a new {@see SearchResult} instance.
      *
-     * The $callback receives both the current hit and the key, in that order.
+     * The $options parameter is an array, and the following keys are accepted:
+     * - removeZeroFacets (boolean)
+     * - transformFacetsDistribution (callable)
+     * - transformHits (callable)
      *
-     * The method DOES not trigger a new search.
+     * The method does NOT trigger a new search.
      *
      * @return SearchResult
      */

@@ -152,7 +152,7 @@ class Indexes extends Endpoint
         }
 
         $searchResult = new SearchResult($result);
-        $searchResult = $searchResult->applyOptions($options);
+        $searchResult->applyOptions($options);
 
         return $searchResult;
     }
