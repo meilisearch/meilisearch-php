@@ -139,7 +139,7 @@ $index->search(
         'attributesToHighlight' => ['*'],
         'filters' => 'book_id > 10'
     ]
-)->getRaw();
+)->getRaw(); // Return in Array format
 ```
 
 JSON output:
