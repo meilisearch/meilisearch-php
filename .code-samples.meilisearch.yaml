@@ -46,10 +46,14 @@ delete_one_document_1: |-
 delete_documents_1: |-
   $client->index('movies')->deleteDocuments([23488, 153738, 437035, 363869]);
 search_1: |-
-  $searchResults = $client->index('movies')->search('american ninja')
-  $searchResults->getHits();
-  $searchResults->getFacetsDistribution();
-  $searchResults->getRaw(); // The JSON response returned by MeiliSearch
+  // Do a search
+  $searchResults = $client->index('movies')->search('american ninja');
+
+  // Get results in an Array using a getter
+  $hits = $searchResults->getHits();
+
+  // Get the decoded response of MeiliSearch, see response below
+  $response = $searchResults->getRaw();
 get_update_1: |-
   $client->index('movies')->getUpdateStatus(1);
 get_all_updates_1: |-
