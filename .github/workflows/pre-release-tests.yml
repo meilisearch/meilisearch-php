@@ -28,7 +28,7 @@ jobs:
         composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
         composer install --prefer-dist --no-progress --no-suggest
     - name: Get the latest MeiliSearch RC
-      run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/master/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
+      run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/main/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
     - name: MeiliSearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:${{ env.MEILISEARCH_VERSION }} ./meilisearch --master-key=masterKey --no-analytics=true
     - name: Run test suite - default HTTP client (Guzzle 7)
