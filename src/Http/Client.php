@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Http;
 
+use GuzzleHttp\Exception\ConnectException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\ApiException;
+use MeiliSearch\Exceptions\CommunicationException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -153,8 +155,9 @@ class Client implements Http
     /**
      * @return mixed
      *
-     * @throws ClientExceptionInterface
      * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
      */
     private function execute(RequestInterface $request)
     {
@@ -162,7 +165,11 @@ class Client implements Http
             $request = $request->withAddedHeader($header, $value);
         }
 
-        return $this->parseResponse($this->http->sendRequest($request));
+        try {
+            return $this->parseResponse($this->http->sendRequest($request));
+        } catch (ConnectException $e) {
+            throw new CommunicationException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     private function buildQueryString(array $queryParams = []): string
