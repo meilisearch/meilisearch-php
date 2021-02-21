@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class DumpTest extends TestCase
@@ -25,7 +25,7 @@ final class DumpTest extends TestCase
 
     public function testDumpNotFound(): void
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $this->client->getDumpStatus('not-found');
     }

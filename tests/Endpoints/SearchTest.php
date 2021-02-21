@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class SearchTest extends TestCase
@@ -132,7 +132,7 @@ final class SearchTest extends TestCase
         $index = $this->client->createIndex('another-index');
         $index->delete();
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $index->search('prince');
     }

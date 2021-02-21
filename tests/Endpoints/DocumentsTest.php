@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\InvalidArgumentException;
 use Tests\TestCase;
 
@@ -228,7 +228,7 @@ final class DocumentsTest extends TestCase
     {
         $index = $this->client->createIndex('new-index');
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $index->getDocument(1);
     }

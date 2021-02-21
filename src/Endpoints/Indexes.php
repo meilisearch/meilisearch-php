@@ -9,7 +9,7 @@ use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\TimeOutException;
 use MeiliSearch\Search\SearchResult;
 
@@ -36,7 +36,7 @@ class Indexes extends Endpoint
     /**
      * @return $this
      *
-     * @throws Exception|HTTPRequestException
+     * @throws Exception|ApiException
      */
     public function create(string $uid, array $options = []): self
     {

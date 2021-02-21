@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class KeysAndPermissionsTest extends TestCase
@@ -44,7 +44,7 @@ final class KeysAndPermissionsTest extends TestCase
     {
         $newClient = new Client(self::HOST);
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $newClient->index('index')->search('test');
     }
 
@@ -56,13 +56,13 @@ final class KeysAndPermissionsTest extends TestCase
 
         $newClient = new Client(self::HOST, 'bad-key');
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $newClient->index('index')->getSettings();
     }
 
     public function testExceptionIfBadKeyProvidedToGetKeys(): void
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $client = new Client(self::HOST, 'bad-key');
         $client->getKeys();
     }
