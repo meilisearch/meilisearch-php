@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MeiliSearch\Delegates;
 
 use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 
 /**
  * @property Indexes index
@@ -54,13 +54,13 @@ trait HandlesIndex
     }
 
     /**
-     * @throws HTTPRequestException
+     * @throws ApiException
      */
     public function getOrCreateIndex(string $uid, array $options = []): Indexes
     {
         try {
             $index = $this->getIndex($uid, $options);
-        } catch (HTTPRequestException $e) {
+        } catch (ApiException $e) {
             if (\is_array($e->httpBody) && 'index_not_found' !== $e->httpBody['errorCode']) {
                 throw $e;
             }

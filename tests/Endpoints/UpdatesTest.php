@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class UpdatesTest extends TestCase
@@ -49,7 +49,7 @@ final class UpdatesTest extends TestCase
 
     public function testExceptionIfNoUpdateIdWhenGetting(): void
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $this->index->getUpdateStatus(10000);
     }
 

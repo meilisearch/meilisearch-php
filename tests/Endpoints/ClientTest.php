@@ -6,7 +6,7 @@ namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
 use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class ClientTest extends TestCase
@@ -207,14 +207,14 @@ final class ClientTest extends TestCase
             ['primaryKey' => 'objectId']
         );
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $this->client->updateIndex('indexB', ['primaryKey' => 'objectID']);
     }
 
     public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $this->client->updateIndex(
             'IndexNotExist',
@@ -226,7 +226,7 @@ final class ClientTest extends TestCase
     {
         $this->client->createIndex('index');
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $this->client->createIndex('index');
     }
@@ -236,19 +236,19 @@ final class ClientTest extends TestCase
         $this->expectException(\TypeError::class);
         $this->client->createIndex(null);
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $this->client->createIndex('');
     }
 
     public function testExceptionIfNoIndexWhenShowing(): void
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $this->client->getIndex('a-non-existing-index');
     }
 
     public function testExceptionIfNoIndexWhenDeleting(): void
     {
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $this->client->deleteIndex('a-non-existing-index');
     }
 
