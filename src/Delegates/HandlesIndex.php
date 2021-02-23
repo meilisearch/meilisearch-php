@@ -61,10 +61,11 @@ trait HandlesIndex
         try {
             $index = $this->getIndex($uid, $options);
         } catch (HTTPRequestException $e) {
-            if (\is_array($e->httpBody) && 'index_not_found' !== $e->httpBody['errorCode']) {
+            if (\is_array($e->httpBody) && 'index_not_found' === $e->httpBody['errorCode']) {
+                $index = $this->createIndex($uid, $options);
+            } else {
                 throw $e;
             }
-            $index = $this->createIndex($uid, $options);
         }
 
         return $index;
