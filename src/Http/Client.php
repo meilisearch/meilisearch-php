@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Http;
 
-use GuzzleHttp\Exception\ConnectException;
+use Http\Client\Exception\NetworkException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use MeiliSearch\Contracts\Http;
@@ -167,7 +167,7 @@ class Client implements Http
 
         try {
             return $this->parseResponse($this->http->sendRequest($request));
-        } catch (ConnectException $e) {
+        } catch (NetworkException $e) {
             throw new CommunicationException($e->getMessage(), $e->getCode(), $e);
         }
     }

@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Tests\Http;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Request;
+use Http\Client\Exception\NetworkException;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\CommunicationException;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
     public function testThrowCommunicationException(): void
     {
-        $mock = new MockHandler([
-            new ConnectException('MeiliSearch instance is unreachable', new Request('POST', '/dumps')),
-        ]);
-        $mockedHttpClient = new GuzzleClient(['handler' => HandlerStack::create($mock)]);
+        $request = $this->getMockBuilder(RequestInterface::class)->getMock();
+        $networkException = new NetworkException('testThrowCommunicationException', $request);
+        $mockedHttpClient = $this->getMockBuilder(ClientInterface::class)->getMock();
+        $mockedHttpClient
+            ->method('sendRequest')
+            ->willThrowException($networkException);
         $client = new Client(self::HOST, self::DEFAULT_KEY, $mockedHttpClient);
 
         $this->expectException(CommunicationException::class);
-        $this->expectErrorMessage('MeiliSearch instance is unreachable');
+        $this->expectErrorMessage('testThrowCommunicationException');
         $client->health();
     }
 }
