@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Http;
 
-use Http\Client\Exception\NetworkException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use MeiliSearch\Contracts\Http;
@@ -12,6 +11,7 @@ use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\CommunicationException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -167,7 +167,7 @@ class Client implements Http
 
         try {
             return $this->parseResponse($this->http->sendRequest($request));
-        } catch (NetworkException $e) {
+        } catch (NetworkExceptionInterface $e) {
             throw new CommunicationException($e->getMessage(), $e->getCode(), $e);
         }
     }
