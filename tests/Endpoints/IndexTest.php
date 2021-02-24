@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
@@ -77,7 +77,7 @@ final class IndexTest extends TestCase
             ['primaryKey' => 'objectId']
         );
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $index->update(['primaryKey' => 'objectID']);
     }
@@ -192,7 +192,7 @@ final class IndexTest extends TestCase
     {
         $this->index->delete();
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
 
         $this->index->fetchInfo();
     }
@@ -201,7 +201,7 @@ final class IndexTest extends TestCase
     {
         $this->index->delete();
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $this->index->update(['primaryKey' => 'objectID']);
     }
 
@@ -209,7 +209,7 @@ final class IndexTest extends TestCase
     {
         $this->index->delete();
 
-        $this->expectException(HTTPRequestException::class);
+        $this->expectException(ApiException::class);
         $this->index->delete();
     }
 }

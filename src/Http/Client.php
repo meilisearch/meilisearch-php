@@ -7,7 +7,7 @@ namespace MeiliSearch\Http;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use MeiliSearch\Contracts\Http;
-use MeiliSearch\Exceptions\HTTPRequestException;
+use MeiliSearch\Exceptions\ApiException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -69,7 +69,7 @@ class Client implements Http
      * @return mixed
      *
      * @throws ClientExceptionInterface
-     * @throws HTTPRequestException
+     * @throws ApiException
      */
     public function get($path, $query = [])
     {
@@ -89,7 +89,7 @@ class Client implements Http
      * @return mixed
      *
      * @throws ClientExceptionInterface
-     * @throws HTTPRequestException
+     * @throws ApiException
      */
     public function post($path, $body = null, $query = [])
     {
@@ -119,7 +119,7 @@ class Client implements Http
      * @return mixed
      *
      * @throws ClientExceptionInterface
-     * @throws HTTPRequestException
+     * @throws ApiException
      */
     public function patch($path, $body = null, $query = [])
     {
@@ -138,7 +138,7 @@ class Client implements Http
      * @return mixed
      *
      * @throws ClientExceptionInterface
-     * @throws HTTPRequestException
+     * @throws ApiException
      */
     public function delete($path, $query = [])
     {
@@ -154,7 +154,7 @@ class Client implements Http
      * @return mixed
      *
      * @throws ClientExceptionInterface
-     * @throws HTTPRequestException
+     * @throws ApiException
      */
     private function execute(RequestInterface $request)
     {
@@ -173,13 +173,13 @@ class Client implements Http
     /**
      * @return mixed
      *
-     * @throws HTTPRequestException
+     * @throws ApiException
      */
     private function parseResponse(ResponseInterface $response)
     {
         if ($response->getStatusCode() >= 300) {
             $body = json_decode($response->getBody()->getContents(), true) ?? $response->getReasonPhrase();
-            throw new HTTPRequestException($response->getStatusCode(), $body);
+            throw new ApiException($response->getStatusCode(), $body);
         }
 
         return json_decode($response->getBody()->getContents(), true);

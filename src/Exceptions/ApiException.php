@@ -6,7 +6,7 @@ namespace MeiliSearch\Exceptions;
 
 use Exception;
 
-class HTTPRequestException extends Exception
+class ApiException extends Exception
 {
     public $httpStatus = 0;
     public $httpMessage = null;
