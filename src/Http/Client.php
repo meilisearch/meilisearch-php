@@ -158,6 +158,7 @@ class Client implements Http
      * @throws ApiException
      * @throws ClientExceptionInterface
      * @throws CommunicationException
+     * @throws ApiException
      */
     private function execute(RequestInterface $request)
     {
