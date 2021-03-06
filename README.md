@@ -99,7 +99,7 @@ $documents = [
     ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy', 'author' => 'Douglas Adams, Eoin Colfer, Thomas Tidholm'],
 ];
 
-# If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
+# If the index 'books' does not exist, MeiliSearch creates it when you first add the documents.
 $index->addDocuments($documents); // => { "updateId": 0 }
 ```
 
