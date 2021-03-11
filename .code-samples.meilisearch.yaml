@@ -279,13 +279,13 @@ getting_started_add_documents_md: |-
   $client->index('movies')->addDocuments($movies);
   ```
 
-  [About this package](https://github.com/meilisearch/meilisearch-php/)
+  [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 getting_started_search_md: |-
   ```php
   $index->search('botman');
   ```
 
-  [About this package](https://github.com/meilisearch/meilisearch-php/)
+  [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 faceted_search_update_settings_1: |-
   $client->index('movies')->updateAttributesForFaceting(['director', 'genres']);
 faceted_search_facet_filters_1: |-
