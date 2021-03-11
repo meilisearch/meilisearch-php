@@ -50,13 +50,13 @@ A list with compatible HTTP clients and client adapters can be found at [php-htt
 **If you don't know which HTTP client to use, we recommend using Guzzle 7**:
 
 ```bash
-$ composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
+composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
 ```
 
 Here is an example of installation with the `symfony/http-client`:
 
 ```bash
-$ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
+composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
 ```
 
 💡 *More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities).*
@@ -68,8 +68,8 @@ There are many easy ways to [download and run a MeiliSearch instance](https://do
 For example, if you use Docker:
 
 ```bash
-$ docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
-$ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
+docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
+docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
 ```
 
 NB: you can also download MeiliSearch from **Homebrew** or **APT**.
@@ -183,31 +183,31 @@ If you want to use this `meilisearch-php`:
 - with `guzzlehttp/guzzle` (Guzzle 7), run:
 
 ```bash
-$ composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
+composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
 ```
 
 - with `php-http/guzzle6-adapter` (Guzzle < 7), run:
 
 ```bash
-$ composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
+composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
 ```
 
 - with `symfony/http-client`, run:
 
 ```bash
-$ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
+composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
 ```
 
 - with `php-http/curl-client`, run:
 
 ```bash
-$ composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:^1.0
+composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:^1.0
 ```
 
 - with `kriswallsmith/buzz`, run:
 
 ```bash
-$ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
+composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ```
 
 ### Customize your HTTP Client
