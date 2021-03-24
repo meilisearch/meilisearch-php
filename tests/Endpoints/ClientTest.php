@@ -256,7 +256,7 @@ final class ClientTest extends TestCase
     {
         $response = $this->client->health();
 
-        $this->assertEmpty($response);
+        $this->assertEquals('available', $response['status']);
     }
 
     public function testVersion(): void
