@@ -231,11 +231,14 @@ final class ClientTest extends TestCase
         $this->client->createIndex('index');
     }
 
-    public function testExceptionIfNoUidWhenCreating(): void
+    public function testExceptionIfUidIsNullWhenCreating(): void
     {
         $this->expectException(\TypeError::class);
         $this->client->createIndex(null);
+    }
 
+    public function testExceptionIfUidIsEmptyStringWhenCreating(): void
+    {
         $this->expectException(ApiException::class);
         $this->client->createIndex('');
     }
