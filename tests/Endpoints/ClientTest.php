@@ -262,6 +262,21 @@ final class ClientTest extends TestCase
         $this->assertEquals('available', $response['status']);
     }
 
+    public function testIsHealthyIsTrue(): void
+    {
+        $response = $this->client->isHealthy();
+
+        $this->assertTrue($response);
+    }
+
+    public function testIsHealthyIsFalse(): void
+    {
+        $client = new Client('http://127.0.0.1.com:1234', 'masterKey');
+        $response = $client->isHealthy();
+
+        $this->assertFalse($response);
+    }
+
     public function testVersion(): void
     {
         $response = $this->client->version();
