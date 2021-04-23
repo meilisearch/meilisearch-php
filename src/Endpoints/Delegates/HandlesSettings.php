@@ -52,7 +52,7 @@ trait HandlesSettings
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/searchable-attributes');
     }
 
-    public function updateSearchableAttributes($searchableAttributes): array
+    public function updateSearchableAttributes(array $searchableAttributes): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchableAttributes);
     }
@@ -69,7 +69,7 @@ trait HandlesSettings
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
-    public function updateDisplayedAttributes($displayedAttributes): array
+    public function updateDisplayedAttributes(array $displayedAttributes): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayedAttributes);
     }
@@ -86,7 +86,7 @@ trait HandlesSettings
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/stop-words');
     }
 
-    public function updateStopWords($stopWords): array
+    public function updateStopWords(array $stopWords): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/stop-words', $stopWords);
     }
@@ -103,7 +103,7 @@ trait HandlesSettings
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/synonyms');
     }
 
-    public function updateSynonyms($synonyms): array
+    public function updateSynonyms(array $synonyms): array
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/synonyms', $synonyms);
     }
