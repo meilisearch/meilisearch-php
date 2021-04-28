@@ -52,9 +52,6 @@ jobs:
         sh scripts/tests.sh
         composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
     - name: Run test suite - php-http/guzzle6-adapter
-      # Don't run on PHP 8
-      # Guzzle 6 is not compatible with PHP 8.0
-      if: ${{ !startsWith(matrix.php-versions, '8.') }}
       run: |
         composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
         sh scripts/tests.sh
