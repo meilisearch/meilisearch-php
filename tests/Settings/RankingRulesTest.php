@@ -10,7 +10,7 @@ final class RankingRulesTest extends TestCase
 {
     private $index;
 
-    const DEFAULT_RANKING_RULES = [
+    public const DEFAULT_RANKING_RULES = [
         'typo',
         'words',
         'proximity',

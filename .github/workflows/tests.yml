@@ -18,11 +18,11 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.0
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress
       - name: Run linter
-        run: vendor/bin/php-cs-fixer fix -v --config=.php_cs.dist --using-cache=no --dry-run --allow-risky=yes
+        run: vendor/bin/php-cs-fixer fix -v --config=.php-cs-fixer.dist.php --using-cache=no --dry-run --allow-risky=yes
 
   tests:
     # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)

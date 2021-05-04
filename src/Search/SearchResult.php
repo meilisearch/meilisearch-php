@@ -238,7 +238,7 @@ class SearchResult implements Countable, IteratorAggregate
 
     public function toJSON(): string
     {
-        return \json_encode($this->toArray(), JSON_PRETTY_PRINT);
+        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }
 
     public function getIterator(): ArrayIterator

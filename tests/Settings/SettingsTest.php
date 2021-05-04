@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 final class SettingsTest extends TestCase
 {
-    const DEFAULT_RANKING_RULES = [
+    public const DEFAULT_RANKING_RULES = [
         'typo',
         'words',
         'proximity',
@@ -17,8 +17,8 @@ final class SettingsTest extends TestCase
         'exactness',
     ];
 
-    const DEFAULT_SEARCHABLE_ATTRIBUTES = ['*'];
-    const DEFAULT_DISPLAYED_ATTRIBUTES = ['*'];
+    public const DEFAULT_SEARCHABLE_ATTRIBUTES = ['*'];
+    public const DEFAULT_DISPLAYED_ATTRIBUTES = ['*'];
 
     public function testGetDefaultSettings(): void
     {
