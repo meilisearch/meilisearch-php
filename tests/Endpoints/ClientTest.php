@@ -67,7 +67,7 @@ final class ClientTest extends TestCase
         $this->assertIsArray($response);
         $this->assertCount(2, $response);
 
-        $uids = array_map(function ($index) {
+        $uids = array_map(function ($index): ?string {
             return $index->getUid();
         }, $response);
 

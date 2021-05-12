@@ -10,6 +10,21 @@ use function strtoupper;
 
 final class SearchResultTest extends TestCase
 {
+    /**
+     * @var array
+     */
+    private $basicServerResponse = [];
+
+    /**
+     * @var SearchResult
+     */
+    private $resultWithFacets;
+
+    /**
+     * @var SearchResult
+     */
+    private $basicResult;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,7 +53,7 @@ final class SearchResultTest extends TestCase
             'query' => 'american',
         ];
         $this->basicResult = new SearchResult($this->basicServerResponse);
-        $this->serverResponseWithFacets = [
+        $serverResponseWithFacets = [
             'hits' => [
                 [
                     'genre' => 'adventure',
@@ -68,12 +83,12 @@ final class SearchResultTest extends TestCase
             ],
             'exhaustiveFacetsCount' => true,
         ];
-        $this->resultWithFacets = new SearchResult($this->serverResponseWithFacets);
+        $this->resultWithFacets = new SearchResult($serverResponseWithFacets);
     }
 
     public function testResultCanBeBuilt(): void
     {
-        $this->assertSame(2, $this->basicResult->count());
+        $this->assertCount(2, $this->basicResult);
         $this->assertNotEmpty($this->basicResult->getHits());
 
         $this->assertEquals([
@@ -100,7 +115,7 @@ final class SearchResultTest extends TestCase
         $this->assertSame('american', $this->basicResult->getQuery());
         $this->assertNull($this->basicResult->getExhaustiveFacetsCount());
         $this->assertEmpty($this->basicResult->getFacetsDistribution());
-        $this->assertSame(2, $this->basicResult->getIterator()->count());
+        $this->assertCount(2, $this->basicResult);
 
         $this->assertArrayHasKey('hits', $this->basicResult->toArray());
         $this->assertArrayHasKey('offset', $this->basicResult->toArray());
@@ -116,10 +131,10 @@ final class SearchResultTest extends TestCase
 
     public function testSearchResultCanBeFiltered(): void
     {
-        $keepAmericanSniperFunc = function (array $hits) {
+        $keepAmericanSniperFunc = function (array $hits): array {
             return array_filter(
                 $hits,
-                function (array $hit) { return 'American Sniper' === $hit['title']; }
+                function (array $hit): bool { return 'American Sniper' === $hit['title']; }
             );
         };
 
@@ -127,7 +142,7 @@ final class SearchResultTest extends TestCase
 
         $filteredResults = $this->basicResult->applyOptions($options);
 
-        $this->assertSame(1, $filteredResults->count());
+        $this->assertCount(1, $filteredResults);
         $this->assertSame(1, $filteredResults->getHitsCount());
         $this->assertSame(976, $filteredResults->getNbHits());
         $this->assertEquals([
@@ -162,10 +177,10 @@ final class SearchResultTest extends TestCase
 
     public function testTransformHitsMethod(): void
     {
-        $keepAmericanSniperFunc = function (array $hits) {
+        $keepAmericanSniperFunc = function (array $hits): array {
             return array_filter(
                 $hits,
-                function (array $hit) { return 'American Sniper' === $hit['title']; }
+                function (array $hit): bool { return 'American Sniper' === $hit['title']; }
             );
         };
 
@@ -179,13 +194,13 @@ final class SearchResultTest extends TestCase
         $this->assertSame('American Sniper', $response->getHit(1)['title']); // Not getHits(0) because array_filter() does not reorder the indexes after filtering.
         $this->assertSame(976, $response->getNbHits());
         $this->assertSame(1, $response->getHitsCount());
-        $this->assertSame(1, $response->count());
+        $this->assertCount(1, $response);
     }
 
     public function testTransformFacetsDritributionMethod(): void
     {
-        $facetsToUpperFunc = function (array $facets) {
-            $changeOneFacet = function (array $facet) {
+        $facetsToUpperFunc = function (array $facets): array {
+            $changeOneFacet = function (array $facet): array {
                 $result = [];
                 foreach ($facet as $k => $v) {
                     $result[strtoupper($k)] = $v;

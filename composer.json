@@ -36,7 +36,12 @@
         "phpunit/phpunit": "^9.5",
         "friendsofphp/php-cs-fixer": "^3.0",
         "guzzlehttp/guzzle": "^7.1",
-        "http-interop/http-factory-guzzle": "^1.0"
+        "http-interop/http-factory-guzzle": "^1.0",
+        "phpstan/phpstan": "^0.12.87",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-strict-rules": "^0.12.9",
+        "phpstan/phpstan-phpunit": "^0.12.19",
+        "phpstan/phpstan-deprecation-rules": "^0.12.6"
     },
     "scripts": {
         "lint": [

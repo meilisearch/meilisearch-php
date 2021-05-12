@@ -65,13 +65,13 @@ class Client implements Http
     }
 
     /**
-     * @param $path
      * @param array $query
      *
      * @return mixed
      *
      * @throws ClientExceptionInterface
      * @throws ApiException
+     * @throws CommunicationException
      */
     public function get($path, $query = [])
     {
@@ -175,7 +175,7 @@ class Client implements Http
 
     private function buildQueryString(array $queryParams = []): string
     {
-        return $queryParams ? '?'.http_build_query($queryParams) : '';
+        return count($queryParams) > 0 ? '?'.http_build_query($queryParams) : '';
     }
 
     /**
