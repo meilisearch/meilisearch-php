@@ -175,7 +175,7 @@ class Client implements Http
 
     private function buildQueryString(array $queryParams = []): string
     {
-        return count($queryParams) > 0 ? '?'.http_build_query($queryParams) : '';
+        return \count($queryParams) > 0 ? '?'.http_build_query($queryParams) : '';
     }
 
     /**

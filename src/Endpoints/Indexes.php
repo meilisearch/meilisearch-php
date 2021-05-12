@@ -115,10 +115,8 @@ class Indexes extends Endpoint
 
     /**
      * @param string $updateId
-     * @param int $timeoutInMs
-     * @param int $intervalInMs
-     *
-     * @return array
+     * @param int    $timeoutInMs
+     * @param int    $intervalInMs
      *
      * @throws TimeOutException
      */
@@ -157,12 +155,6 @@ class Indexes extends Endpoint
         return $searchResult;
     }
 
-    /**
-     * @param string|null $query
-     * @param array $searchParams
-     *
-     * @return array
-     */
     public function rawSearch(?string $query, array $searchParams = []): array
     {
         $parameters = array_merge(
