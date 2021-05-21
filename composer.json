@@ -50,7 +50,7 @@
         "lint:fix": [
             "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
         ],
-        "types": [
+        "phpstan": [
             "php ./vendor/bin/phpstan"
         ],
         "test": [
