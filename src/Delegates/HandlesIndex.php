@@ -59,7 +59,7 @@ trait HandlesIndex
     public function getOrCreateIndex(string $uid, array $options = []): Indexes
     {
         try {
-            $index = $this->getIndex($uid, $options);
+            $index = $this->getIndex($uid);
         } catch (ApiException $e) {
             if (\is_array($e->httpBody) && 'index_not_found' === $e->httpBody['errorCode']) {
                 $index = $this->createIndex($uid, $options);

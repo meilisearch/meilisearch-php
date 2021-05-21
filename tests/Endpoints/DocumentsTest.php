@@ -66,7 +66,7 @@ final class DocumentsTest extends TestCase
 
         $this->assertSame($replacement['id'], $response['id']);
         $this->assertSame($replacement['title'], $response['title']);
-        $this->assertFalse(array_search('comment', $response));
+        $this->assertFalse(array_search('comment', $response, true));
         $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
@@ -114,7 +114,7 @@ final class DocumentsTest extends TestCase
 
         $this->assertSame($document['id'], $response['id']);
         $this->assertSame($document['title'], $response['title']);
-        $this->assertFalse(array_search('comment', $response));
+        $this->assertFalse(array_search('comment', $response, true));
 
         $response = $index->getDocuments();
 
