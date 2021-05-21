@@ -72,4 +72,4 @@ jobs:
         sh scripts/tests.sh
         composer remove --dev kriswallsmith/buzz nyholm/psr7
     - name: Run types tests with PHPStan
-      run: php ./vendor/bin/phpstan
+      run: composer types
