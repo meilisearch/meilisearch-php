@@ -501,7 +501,7 @@ final class SearchTest extends TestCase
             $filterOneFacet = function (array $facet): array {
                 return array_filter(
                     $facet,
-                    function ($v, $k): bool { return $v > 1; },
+                    function (int $facetValue): bool { return 1 < $facetValue; },
                     ARRAY_FILTER_USE_BOTH
                 );
             };

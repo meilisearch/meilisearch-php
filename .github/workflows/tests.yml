@@ -71,5 +71,5 @@ jobs:
         composer require --dev kriswallsmith/buzz nyholm/psr7
         sh scripts/tests.sh
         composer remove --dev kriswallsmith/buzz nyholm/psr7
-    - name: PHPStan
+    - name: Run types tests with PHPStan
       run: php ./vendor/bin/phpstan

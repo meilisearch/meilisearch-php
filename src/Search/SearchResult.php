@@ -133,7 +133,7 @@ class SearchResult implements Countable, IteratorAggregate
             $filterOneFacet = function (array $facet): array {
                 return array_filter(
                     $facet,
-                    function ($v, $k): bool { return 0 !== $v; },
+                    function (int $facetValue): bool { return 0 !== $facetValue; },
                     ARRAY_FILTER_USE_BOTH
                 );
             };
