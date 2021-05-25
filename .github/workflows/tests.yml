@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress
       - name: Run linter
-        run: vendor/bin/php-cs-fixer fix -v --config=.php-cs-fixer.dist.php --using-cache=no --dry-run --allow-risky=yes
+        run: composer lint
 
   tests:
     # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)
@@ -71,5 +71,5 @@ jobs:
         composer require --dev kriswallsmith/buzz nyholm/psr7
         sh scripts/tests.sh
         composer remove --dev kriswallsmith/buzz nyholm/psr7
-    - name: PHPStan
-      run: php ./vendor/bin/phpstan
+    - name: Run types tests with PHPStan
+      run: composer phpstan
