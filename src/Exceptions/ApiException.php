@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MeiliSearch\Exceptions;
 
 use Exception;
+use Psr\Http\Message\ResponseInterface;
 
 class ApiException extends Exception
 {
@@ -15,11 +16,11 @@ class ApiException extends Exception
     public $errorLink = null;
     public $httpBody = null;
 
-    public function __construct($httpStatus, $httpBody, $previous = null)
+    public function __construct(ResponseInterface $response, $httpBody, $previous = null)
     {
         $this->httpBody = $httpBody;
-        $this->httpStatus = $httpStatus;
-        $this->message = $this->getMessageFromHttpBody();
+        $this->httpStatus = $response->getStatusCode();
+        $this->message = $this->getMessageFromHttpBody() ?? $response->getReasonPhrase();
         $this->errorCode = $this->getErrorCodeFromHttpBody();
         $this->errorLink = $this->getErrorLinkFromHttpBody();
         $this->errorType = $this->getErrorTypeFromHttpBody();
