@@ -187,7 +187,7 @@ class Client implements Http
     {
         if ($response->getStatusCode() >= 300) {
             $body = json_decode($response->getBody()->getContents(), true) ?? $response->getReasonPhrase();
-            throw new ApiException($response->getStatusCode(), $body);
+            throw new ApiException($response, $body);
         }
 
         return json_decode($response->getBody()->getContents(), true);

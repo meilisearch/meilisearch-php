@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Exceptions;
 
+use Http\Discovery\Psr17FactoryDiscovery;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
@@ -20,11 +21,16 @@ final class ApiExceptionTest extends TestCase
         $statusCode = 400;
 
         try {
-            throw new ApiException($statusCode, $httpBodyExample);
+            $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+            $responseBodyStream = $streamFactory->createStream(json_encode($httpBodyExample));
+
+            $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
+            $response = $responseFactory->createResponse($statusCode)->withBody($responseBodyStream);
+
+            throw new ApiException($response, $httpBodyExample);
         } catch (ApiException $apiException) {
             $this->assertEquals($statusCode, $apiException->httpStatus);
-            $this->assertEquals($httpBodyExample['message'],
-                $apiException->message);
+            $this->assertEquals($httpBodyExample['message'], $apiException->message);
             $this->assertEquals($httpBodyExample['errorCode'], $apiException->errorCode);
             $this->assertEquals($httpBodyExample['errorType'], $apiException->errorType);
             $this->assertEquals($httpBodyExample['errorLink'], $apiException->errorLink);
