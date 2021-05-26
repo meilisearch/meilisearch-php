@@ -39,4 +39,24 @@ final class ApiExceptionTest extends TestCase
             $this->assertEquals($expectedExceptionToString, (string) $apiException);
         }
     }
+
+    public function testExceptionWithNoHttpBody(): void
+    {
+        $statusCode = 400;
+        $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
+        $response = $responseFactory->createResponse($statusCode);
+
+        try {
+            throw new ApiException($response, null);
+        } catch (ApiException $apiException) {
+            $this->assertEquals($statusCode, $apiException->httpStatus);
+            $this->assertEquals($response->getReasonPhrase(), $apiException->message);
+            $this->assertNull($apiException->errorCode);
+            $this->assertNull($apiException->errorType);
+            $this->assertNull($apiException->errorLink);
+
+            $expectedExceptionToString = "MeiliSearch HTTPRequestException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
+            $this->assertEquals($expectedExceptionToString, (string) $apiException);
+        }
+    }
 }
