@@ -23,4 +23,4 @@ If applicable, add screenshots or logs to help explain your problem.
 **Environment (please complete the following information):**
 - OS: [e.g. Debian GNU/Linux]
 - MeiliSearch version: [e.g. v.0.20.0]
-- meilisearch-python version: [e.g v0.14.1]
+- meilisearch-php version: [e.g v0.18.1]
