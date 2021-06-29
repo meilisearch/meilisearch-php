@@ -85,7 +85,7 @@ class Client implements Http
     }
 
     /**
-     * @param null|mixed $body
+     * @param mixed|null $body
      *
      * @return mixed
      *
@@ -98,8 +98,8 @@ class Client implements Http
     {
         $content = json_encode($body);
 
-        if($content === false) {
-            throw new FailedJsonEncodingException('Encoding payload to json failed. ' . json_last_error_msg());
+        if (false === $content) {
+            throw new FailedJsonEncodingException('Encoding payload to json failed. '.json_last_error_msg());
         }
 
         $request = $this->requestFactory->createRequest(

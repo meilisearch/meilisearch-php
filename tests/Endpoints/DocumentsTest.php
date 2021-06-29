@@ -27,9 +27,9 @@ final class DocumentsTest extends TestCase
     public function testAddDocumentWithSpecialChars(): void
     {
         $documents = [
-            [ 'title' => 'Sehr schön!', 'comment' => 'ßöüä', ], // German
-            [ 'title' => 'Très bien!', 'comment' => 'éèê', ], // French
-            [ 'title' => 'Очень красивый!', 'comment' => '', ], // Russian
+            ['title' => 'Sehr schön!', 'comment' => 'ßöüä'], // German
+            ['title' => 'Très bien!', 'comment' => 'éèê'], // French
+            ['title' => 'Очень красивый!', 'comment' => ''], // Russian
         ];
 
         $index = $this->client->createIndex('documents');
