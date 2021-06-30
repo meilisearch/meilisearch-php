@@ -9,6 +9,7 @@ use Http\Discovery\Psr18ClientDiscovery;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\CommunicationException;
+use MeiliSearch\Exceptions\FailedJsonEncodingException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
@@ -84,21 +85,27 @@ class Client implements Http
     }
 
     /**
-     * @param string $path
-     * @param null   $body
-     * @param array  $query
+     * @param mixed|null $body
      *
      * @return mixed
      *
-     * @throws ClientExceptionInterface
      * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
+     * @throws FailedJsonEncodingException
      */
-    public function post($path, $body = null, $query = [])
+    public function post(string $path, $body = null, array $query = [])
     {
+        $content = json_encode($body);
+
+        if (false === $content) {
+            throw new FailedJsonEncodingException('Encoding payload to json failed. '.json_last_error_msg());
+        }
+
         $request = $this->requestFactory->createRequest(
             'POST',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream(json_encode($body)));
+        )->withBody($this->streamFactory->createStream($content));
 
         return $this->execute($request);
     }
