@@ -6,9 +6,12 @@ namespace MeiliSearch\Http;
 
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use const JSON_THROW_ON_ERROR;
+use JsonException;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\CommunicationException;
+use MeiliSearch\Exceptions\FailedJsonDecodingException;
 use MeiliSearch\Exceptions\FailedJsonEncodingException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -96,16 +99,10 @@ class Client implements Http
      */
     public function post(string $path, $body = null, array $query = [])
     {
-        $content = json_encode($body);
-
-        if (false === $content) {
-            throw new FailedJsonEncodingException('Encoding payload to json failed. '.json_last_error_msg());
-        }
-
         $request = $this->requestFactory->createRequest(
             'POST',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream($content));
+        )->withBody($this->streamFactory->createStream($this->jsonEncode($body)));
 
         return $this->execute($request);
     }
@@ -115,7 +112,7 @@ class Client implements Http
         $request = $this->requestFactory->createRequest(
             'PUT',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream(json_encode($body)));
+        )->withBody($this->streamFactory->createStream($this->jsonEncode($body)));
 
         return $this->execute($request);
     }
@@ -135,7 +132,7 @@ class Client implements Http
         $request = $this->requestFactory->createRequest(
             'PATCH',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream(json_encode($body)));
+        )->withBody($this->streamFactory->createStream($this->jsonEncode($body)));
 
         return $this->execute($request);
     }
@@ -192,11 +189,44 @@ class Client implements Http
      */
     private function parseResponse(ResponseInterface $response)
     {
+        if (204 === $response->getStatusCode()) {
+            return null;
+        }
+
         if ($response->getStatusCode() >= 300) {
-            $body = json_decode($response->getBody()->getContents(), true) ?? $response->getReasonPhrase();
+            $body = $this->jsonDecode($response->getBody()->getContents()) ?? $response->getReasonPhrase();
+
             throw new ApiException($response, $body);
         }
 
-        return json_decode($response->getBody()->getContents(), true);
+        return $this->jsonDecode($response->getBody()->getContents());
+    }
+
+    /**
+     * @param mixed|null $body
+     */
+    private function jsonEncode($body): string
+    {
+        try {
+            $encoded = json_encode($body, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new FailedJsonEncodingException(sprintf('Encoding payload to json failed: "%s".', $e->getMessage()), $e->getCode(), $e);
+        }
+
+        return $encoded;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function jsonDecode(string $content)
+    {
+        try {
+            $decoded = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new FailedJsonDecodingException(sprintf('Decoding json payload failed: "%s".', $e->getMessage()), $e->getCode(), $e);
+        }
+
+        return $decoded;
     }
 }

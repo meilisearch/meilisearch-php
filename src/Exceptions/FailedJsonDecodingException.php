@@ -7,7 +7,7 @@ namespace MeiliSearch\Exceptions;
 use Exception;
 use Throwable;
 
-final class FailedJsonEncodingException extends Exception
+final class FailedJsonDecodingException extends Exception
 {
     public function __construct(string $message, int $code = 0, ?Throwable $previous = null)
     {
