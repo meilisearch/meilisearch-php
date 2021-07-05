@@ -50,7 +50,7 @@ final class DocumentsTest extends TestCase
     public function testCannotAddDocumentWhenJsonEncodingFails(): void
     {
         $this->expectException(FailedJsonEncodingException::class);
-        $this->expectExceptionMessage('Encoding payload to json failed. Malformed UTF-8 characters, possibly incorrectly encoded');
+        $this->expectExceptionMessage('Encoding payload to json failed: "Malformed UTF-8 characters, possibly incorrectly encoded".');
 
         $documents = ["\xB1\x31"];
 
