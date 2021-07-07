@@ -92,8 +92,8 @@ update_settings_1: |-
       'an'
     ],
     'synonyms' => [
-      'wolverine': ['xmen', 'logan'],
-      'logan': ['wolverine']
+      'wolverine' => ['xmen', 'logan'],
+      'logan' => ['wolverine']
     ]
   ]);
 reset_settings_1: |-
@@ -102,9 +102,9 @@ get_synonyms_1: |-
   $client->index('movies')->getSynonyms();
 update_synonyms_1: |-
   $client->index('movies')->updateSynonyms([
-    'wolverine': ['xmen', 'logan'],
-    'logan': ['wolverine', 'xmen'],
-    'wow': ['world of warcraft']
+    'wolverine' => ['xmen', 'logan'],
+    'logan' => ['wolverine', 'xmen'],
+    'wow' => ['world of warcraft']
   ]);
 reset_synonyms_1: |-
   $client->index('movies')->resetSynonyms();
