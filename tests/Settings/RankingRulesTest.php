@@ -11,12 +11,11 @@ final class RankingRulesTest extends TestCase
     private $index;
 
     public const DEFAULT_RANKING_RULES = [
-        'typo',
         'words',
+        'typo',
         'proximity',
         'attribute',
-        'wordsPosition',
-        'exactness',
+        'exactness'
     ];
 
     protected function setUp(): void
