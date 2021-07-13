@@ -141,6 +141,7 @@ final class SearchTest extends TestCase
     {
         $response = $this->index->updateFilterableAttributes(['title']);
         $this->index->waitForPendingUpdate($response['updateId']);
+
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
@@ -184,6 +185,7 @@ final class SearchTest extends TestCase
     {
         $response = $this->index->updateFilterableAttributes(['title']);
         $this->index->waitForPendingUpdate($response['updateId']);
+
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
@@ -223,6 +225,29 @@ final class SearchTest extends TestCase
         $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
+    public function testSearchWithFilterCanBeInt(): void
+    {
+        $response = $this->index->updateFilterableAttributes(['id', 'genre']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'filter' => 'id < 12',
+        ]);
+
+        $this->assertSame(1, $response->getNbHits());
+        $this->assertCount(1, $response->getHits());
+        $this->assertSame(4, $response->getHit(0)['id']);
+
+        $response = $this->index->search('', [
+            'filter' => 'genre = fantasy AND id < 12',
+        ]);
+
+        $this->assertSame(2, $response->getNbHits());
+        $this->assertCount(2, $response->getHits());
+        $this->assertSame(1, $response->getHit(0)['id']);
+        $this->assertSame(4, $response->getHit(1)['id']);
+    }
+
     public function testBasicSearchWithFacetsDistribution(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
@@ -253,85 +278,14 @@ final class SearchTest extends TestCase
         $this->assertSame($response['facetsDistribution']['genre']['adventure'], 1);
     }
 
-    // public function testBasicSearchWithFacetFilter(): void
-    // {
-    //     $response = $this->index->updateFilterableAttributes(['genre']);
-    //     $this->index->waitForPendingUpdate($response['updateId']);
+    public function testSearchWithPhraseSearch(): void
+    {
+        $response = $this->index->rawSearch('coco "harry"');
 
-    //     $response = $this->index->search('prince', [
-    //         'facetFilter' => [['genre:fantasy']],
-    //     ]);
-    //     $this->assertSame(1, $response->getHitsCount());
-    //     $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
-    //     $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response->getRaw());
-    //     $this->assertSame(4, $response->getHit(0)['id']);
-
-    //     $response = $this->index->search('prince', [
-    //         'facetFilter' => [['genre:fantasy']],
-    //     ], [
-    //         'raw' => true,
-    //     ]);
-    //     $this->assertSame(1, $response['nbHits']);
-    //     $this->assertArrayNotHasKey('facetsDistribution', $response);
-    //     $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
-    //     $this->assertSame(4, $response['hits'][0]['id']);
-    // }
-
-    // public function testBasicSearchWithMultipleFacetFilter(): void
-    // {
-    //     $response = $this->index->updateFilterableAttributes(['genre']);
-    //     $this->index->waitForPendingUpdate($response['updateId']);
-
-    //     $response = $this->index->search('prince', [
-    //         'facetFilter' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
-    //     ]);
-    //     $this->assertSame(1, $response->getHitsCount());
-    //     $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
-    //     $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response->getRaw());
-    //     $this->assertSame(4, $response->getHit(0)['id']);
-
-    //     $response = $this->index->search('prince', [
-    //         'facetFilter' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
-    //     ], [
-    //         'raw' => true,
-    //     ]);
-    //     $this->assertSame(1, $response['nbHits']);
-    //     $this->assertArrayNotHasKey('facetsDistribution', $response);
-    //     $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
-    //     $this->assertSame(4, $response['hits'][0]['id']);
-    // }
-
-    // public function testCustomSearchWithFacetFilterAndAttributesToRetrieve(): void
-    // {
-    //     $response = $this->index->updateFilterableAttributes(['genre']);
-    //     $this->index->waitForPendingUpdate($response['updateId']);
-
-    //     $response = $this->index->search('prince', [
-    //         'facetFilter' => [['genre:fantasy']],
-    //         'attributesToRetrieve' => ['id', 'title'],
-    //     ]);
-    //     $this->assertSame(1, $response->getHitsCount());
-    //     $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
-    //     $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response->getRaw());
-    //     $this->assertSame(4, $response->getHit(0)['id']);
-    //     $this->assertArrayHasKey('id', $response->getHit(0));
-    //     $this->assertArrayHasKey('title', $response->getHit(0));
-    //     $this->assertArrayNotHasKey('comment', $response->getHit(0));
-
-    //     $response = $this->index->search('prince', [
-    //         'facetFilter' => [['genre:fantasy']],
-    //         'attributesToRetrieve' => ['id', 'title'],
-    //     ], [
-    //         'raw' => true,
-    //     ]);
-    //     $this->assertSame(1, $response['nbHits']);
-    //     $this->assertArrayNotHasKey('facetsDistribution', $response);
-    //     $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
-    //     $this->assertSame(4, $response['hits'][0]['id']);
-    //     $this->assertArrayHasKey('id', $response['hits'][0]);
-    //     $this->assertArrayHasKey('title', $response['hits'][0]);
-    //     $this->assertArrayNotHasKey('comment', $response['hits'][0]);
-    // }
+        $this->assertCount(1, $response['hits']);
+        $this->assertEquals(4, $response['hits'][0]['id']);
+        $this->assertEquals('Harry Potter and the Half-Blood Prince', $response['hits'][0]['title']);
+    }
 
     public function testBasicSerachWithRawSearch(): void
     {
