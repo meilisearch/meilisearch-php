@@ -103,7 +103,7 @@ $documents = [
 $index->addDocuments($documents); // => { "updateId": 0 }
 ```
 
-With the `updateId`, you can check the status (`enqueued`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
+With the `updateId`, you can check the status (`enqueued`, `processing`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
 
 
 #### Basic Search <!-- omit in toc -->
@@ -135,10 +135,9 @@ All the supported options are described in the [search parameters](https://docs.
 
 ```php
 $index->search(
-    'prince',
+    'hob',
     [
         'attributesToHighlight' => ['*'],
-        'filters' => 'book_id > 10'
     ]
 )->getRaw(); // Return in Array format
 ```
@@ -149,14 +148,18 @@ JSON output:
 {
     "hits": [
         {
-            "book_id": 456,
-            "title": "Le Petit Prince"
+            "book_id": 1344,
+            "title": "The Hobbit",
+            "_formatted": {
+                "book_id": 1344,
+                "title": "The <em>Hob</em>bit"
+            }
         }
     ],
     "offset": 0,
     "limit": 20,
-    "processingTimeMs": 10,
-    "query": "prince"
+    "processingTimeMs": 0,
+    "query": "hob"
 }
 ```
 
