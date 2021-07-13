@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Search;
 
-use function array_filter;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
