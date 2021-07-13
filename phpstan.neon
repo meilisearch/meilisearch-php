@@ -1,0 +1,7 @@
+parameters:
+    level: 1
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        - '#Dynamic call to static method PHPUnit\\Framework\\.*#'

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Exceptions\ApiException;
+use MeiliSearch\Exceptions\FailedJsonEncodingException;
 use MeiliSearch\Exceptions\InvalidArgumentException;
 use Tests\TestCase;
 
@@ -21,6 +22,40 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
+    }
+
+    public function testAddDocumentWithSpecialChars(): void
+    {
+        $documents = [
+            ['id' => 60, 'title' => 'Sehr schön!', 'comment' => 'ßöüä'], // German
+            ['id' => 61, 'title' => 'Très bien!', 'comment' => 'éèê'], // French
+            ['id' => 62, 'title' => 'Очень красивый!', 'comment' => ''], // Russian
+        ];
+
+        $index = $this->client->createIndex('documents');
+        $promise = $index->addDocuments($documents);
+
+        $this->assertIsValidPromise($promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+
+        $response = $index->getDocuments();
+        $this->assertCount(\count($documents), $response);
+
+        foreach ($documents as $k => $document) {
+            $this->assertSame($document['title'], $response[$k]['title']);
+            $this->assertSame($document['comment'], $response[$k]['comment']);
+        }
+    }
+
+    public function testCannotAddDocumentWhenJsonEncodingFails(): void
+    {
+        $this->expectException(FailedJsonEncodingException::class);
+        $this->expectExceptionMessage('Encoding payload to json failed: "Malformed UTF-8 characters, possibly incorrectly encoded".');
+
+        $documents = ["\xB1\x31"];
+
+        $index = $this->client->createIndex('documents');
+        $index->addDocuments($documents);
     }
 
     public function testGetSingleDocumentWithIntegerDocumentId(): void
@@ -66,7 +101,7 @@ final class DocumentsTest extends TestCase
 
         $this->assertSame($replacement['id'], $response['id']);
         $this->assertSame($replacement['title'], $response['title']);
-        $this->assertFalse(array_search('comment', $response));
+        $this->assertFalse(array_search('comment', $response, true));
         $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
@@ -114,7 +149,7 @@ final class DocumentsTest extends TestCase
 
         $this->assertSame($document['id'], $response['id']);
         $this->assertSame($document['title'], $response['title']);
-        $this->assertFalse(array_search('comment', $response));
+        $this->assertFalse(array_search('comment', $response, true));
 
         $response = $index->getDocuments();
 

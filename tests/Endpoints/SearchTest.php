@@ -99,7 +99,7 @@ final class SearchTest extends TestCase
             'raw' => true,
         ]);
 
-        $this->assertSame(1, \count($response['hits']));
+        $this->assertCount(1, $response['hits']);
     }
 
     public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided(): void
@@ -360,10 +360,10 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithTransformHitsOptionToFilter(): void
     {
-        $keepLePetitPrinceFunc = function (array $hits) {
+        $keepLePetitPrinceFunc = function (array $hits): array {
             return array_filter(
                 $hits,
-                function (array $hit) { return 'Le Petit Prince' === $hit['title']; }
+                function (array $hit): bool { return 'Le Petit Prince' === $hit['title']; }
             );
         };
 
@@ -382,7 +382,7 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithTransformHitsOptionToMap(): void
     {
-        $titlesToUpperCaseFunc = function (array $hits) {
+        $titlesToUpperCaseFunc = function (array $hits): array {
             return array_map(
                 function (array $hit) {
                     $hit['title'] = strtoupper($hit['title']);
@@ -408,10 +408,10 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchCannotBeFilteredOnRawResult(): void
     {
-        $keepLePetitPrinceFunc = function (array $hits) {
+        $keepLePetitPrinceFunc = function (array $hits): array {
             return array_filter(
                 $hits,
-                function (array $hit) { return 'Le Petit Prince' === $hit['title']; }
+                function (array $hit): bool { return 'Le Petit Prince' === $hit['title']; }
             );
         };
 
@@ -431,10 +431,10 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchCanBeFilteredOnRawResultIfUsingToArray(): void
     {
-        $keepLePetitPrinceFunc = function (array $hits) {
+        $keepLePetitPrinceFunc = function (array $hits): array {
             return array_filter(
                 $hits,
-                function (array $hit) { return 'Le Petit Prince' === $hit['title']; }
+                function (array $hit): bool { return 'Le Petit Prince' === $hit['title']; }
             );
         };
 
@@ -497,11 +497,11 @@ final class SearchTest extends TestCase
         $response = $this->index->updateAttributesForFaceting(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
-        $filterAllFacets = function (array $facets) {
-            $filterOneFacet = function (array $facet) {
+        $filterAllFacets = function (array $facets): array {
+            $filterOneFacet = function (array $facet): array {
                 return array_filter(
                     $facet,
-                    function ($v, $k) { return $v > 1; },
+                    function (int $facetValue): bool { return 1 < $facetValue; },
                     ARRAY_FILTER_USE_BOTH
                 );
             };
@@ -534,8 +534,8 @@ final class SearchTest extends TestCase
         $response = $this->index->updateAttributesForFaceting(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
-        $facetsToUpperFunc = function (array $facets) {
-            $changeOneFacet = function (array $facet) {
+        $facetsToUpperFunc = function (array $facets): array {
+            $changeOneFacet = function (array $facet): array {
                 $result = [];
                 foreach ($facet as $k => $v) {
                     $result[strtoupper($k)] = $v;
@@ -572,8 +572,8 @@ final class SearchTest extends TestCase
         $response = $this->index->updateAttributesForFaceting(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
-        $facetsToUpperFunc = function (array $facets) {
-            $sortOneFacet = function (array $facet) {
+        $facetsToUpperFunc = function (array $facets): array {
+            $sortOneFacet = function (array $facet): array {
                 ksort($facet);
 
                 return $facet;

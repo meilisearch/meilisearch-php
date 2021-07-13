@@ -129,11 +129,11 @@ class SearchResult implements Countable, IteratorAggregate
 
     public function removeZeroFacets(): self
     {
-        $filterAllFacets = function (array $facets) {
-            $filterOneFacet = function (array $facet) {
+        $filterAllFacets = function (array $facets): array {
+            $filterOneFacet = function (array $facet): array {
                 return array_filter(
                     $facet,
-                    function ($v, $k) { return 0 !== $v; },
+                    function (int $facetValue): bool { return 0 !== $facetValue; },
                     ARRAY_FILTER_USE_BOTH
                 );
             };
@@ -238,7 +238,7 @@ class SearchResult implements Countable, IteratorAggregate
 
     public function toJSON(): string
     {
-        return \json_encode($this->toArray(), JSON_PRETTY_PRINT);
+        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }
 
     public function getIterator(): ArrayIterator

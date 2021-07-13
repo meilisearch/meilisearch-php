@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$finder = \PhpCsFixer\Finder::create()
+$finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.DIRECTORY_SEPARATOR.'src')
     ->in(__DIR__.DIRECTORY_SEPARATOR.'tests')
     ->append(['.php_cs.dist']);
@@ -14,6 +14,9 @@ $rules = [
     'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'namespaced'],
 ];
 
-return \PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+
+return $config
     ->setRules($rules)
+    ->setRiskyAllowed(true)
     ->setFinder($finder);

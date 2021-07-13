@@ -6,6 +6,8 @@ namespace MeiliSearch\Contracts;
 
 abstract class Endpoint
 {
+    protected const PATH = '';
+
     /**
      * @var Http
      */

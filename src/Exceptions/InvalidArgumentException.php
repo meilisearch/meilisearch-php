@@ -11,7 +11,7 @@ final class InvalidArgumentException extends Exception
     public static function invalidType(string $argumentName, array $validTypes): self
     {
         return new self(
-            sprintf('Argument "%s" is not a valid type! Please provide an argument that is of type: "%s"', $argumentName, \implode('","', $validTypes)),
+            sprintf('Argument "%s" is not a valid type! Please provide an argument that is of type: "%s"', $argumentName, implode('","', $validTypes)),
             400,
             null
         );
