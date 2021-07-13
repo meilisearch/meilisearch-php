@@ -89,7 +89,6 @@ class SearchResult implements Countable, IteratorAggregate
      * Return a new {@see SearchResult} instance.
      *
      * The $options parameter is an array, and the following keys are accepted:
-     * - removeZeroFacets (boolean)
      * - transformFacetsDistribution (callable)
      * - transformHits (callable)
      *
@@ -99,9 +98,6 @@ class SearchResult implements Countable, IteratorAggregate
      */
     public function applyOptions($options): self
     {
-        if (\array_key_exists('removeZeroFacets', $options) && true === $options['removeZeroFacets']) {
-            $this->removeZeroFacets();
-        }
         if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
             $this->transformHits($options['transformHits']);
         }
@@ -125,23 +121,6 @@ class SearchResult implements Countable, IteratorAggregate
         $this->facetsDistribution = $callback($this->facetsDistribution);
 
         return $this;
-    }
-
-    public function removeZeroFacets(): self
-    {
-        $filterAllFacets = function (array $facets): array {
-            $filterOneFacet = function (array $facet): array {
-                return array_filter(
-                    $facet,
-                    function (int $facetValue): bool { return 0 !== $facetValue; },
-                    ARRAY_FILTER_USE_BOTH
-                );
-            };
-
-            return array_map($filterOneFacet, $facets);
-        };
-
-        return $this->transformFacetsDistribution($filterAllFacets);
     }
 
     public function getHit(int $key, $default = null)
