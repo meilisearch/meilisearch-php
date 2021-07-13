@@ -13,7 +13,7 @@ final class SettingsTest extends TestCase
         'typo',
         'proximity',
         'attribute',
-        'exactness'
+        'exactness',
     ];
 
     public const DEFAULT_SEARCHABLE_ATTRIBUTES = ['*'];

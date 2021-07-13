@@ -15,7 +15,7 @@ final class RankingRulesTest extends TestCase
         'typo',
         'proximity',
         'attribute',
-        'exactness'
+        'exactness',
     ];
 
     protected function setUp(): void
