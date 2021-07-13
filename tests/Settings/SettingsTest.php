@@ -9,11 +9,10 @@ use Tests\TestCase;
 final class SettingsTest extends TestCase
 {
     public const DEFAULT_RANKING_RULES = [
-        'typo',
         'words',
+        'typo',
         'proximity',
         'attribute',
-        'wordsPosition',
         'exactness',
     ];
 

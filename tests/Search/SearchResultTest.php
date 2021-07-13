@@ -227,16 +227,4 @@ final class SearchResultTest extends TestCase
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['FANTASY']);
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['ADVENTURE']);
     }
-
-    public function testRemoveZeroFacetsMethod(): void
-    {
-        $response = $this->resultWithFacets->removeZeroFacets();
-
-        $this->assertCount(2, $response->getFacetsDistribution()['genre']);
-        $this->assertEquals(1, $response->getFacetsDistribution()['genre']['adventure']);
-        $this->assertEquals(1, $response->getFacetsDistribution()['genre']['fantasy']);
-        $this->assertCount(3, $response->getRaw()['facetsDistribution']['genre']);
-        $this->assertEquals($response->getRaw()['hits'], $response->getHits());
-        $this->assertNotEquals($response->getRaw()['facetsDistribution'], $response->getFacetsDistribution());
-    }
 }

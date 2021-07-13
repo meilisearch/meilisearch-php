@@ -113,20 +113,20 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/synonyms');
     }
 
-    // Settings - Attributes for faceting
+    // Settings - Filterable Attributes
 
-    public function getAttributesForFaceting(): array
+    public function getFilterableAttributes(): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/attributes-for-faceting');
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/filterable-attributes');
     }
 
-    public function updateAttributesForFaceting(array $attributesForFaceting): array
+    public function updateFilterableAttributes(array $FilterableAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/attributes-for-faceting', $attributesForFaceting);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $FilterableAttributes);
     }
 
-    public function resetAttributesForFaceting(): array
+    public function resetFilterableAttributes(): array
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/attributes-for-faceting');
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/filterable-attributes');
     }
 }

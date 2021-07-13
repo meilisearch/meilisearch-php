@@ -282,7 +282,7 @@ final class ClientTest extends TestCase
         $response = $this->client->version();
 
         $this->assertArrayHasKey('commitSha', $response);
-        $this->assertArrayHasKey('buildDate', $response);
+        $this->assertArrayHasKey('commitDate', $response);
         $this->assertArrayHasKey('pkgVersion', $response);
     }
 
