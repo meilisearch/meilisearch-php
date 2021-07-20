@@ -281,7 +281,7 @@ getting_started_add_documents_md: |-
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 getting_started_search_md: |-
   ```php
-  $index->search('botman');
+  $client->index('movies')->search('botman');
   ```
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
