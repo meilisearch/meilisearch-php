@@ -297,7 +297,7 @@ faceted_search_walkthrough_filterable_attributes_1: |-
     'production_companies'
   ]);
 faceted_search_walkthrough_filter_1: |-
-  $client->index('movies')->search('thriller', ['facetFilter' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
+  $client->index('movies')->search('thriller', ['filter' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
 faceted_search_walkthrough_facets_distribution_1: |-
   $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']);
 post_dump_1: |-
