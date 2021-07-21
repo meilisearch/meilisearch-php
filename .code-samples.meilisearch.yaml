@@ -54,8 +54,6 @@ search_post_1: |-
 
   // Get the decoded response of MeiliSearch, see response below
   $response = $searchResults->getRaw();
-search_get_1: |-
-  $client->index('movies')->search('american ninja');
 get_update_1: |-
   $client->index('movies')->getUpdateStatus(1);
 get_all_updates_1: |-
