@@ -10,9 +10,9 @@ list_all_indexes_1: |-
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'movie_id']);
 update_an_index_1: |-
-  $client->updateIndex('movies', ['primaryKey' => 'movie_id']);
+  $client->updateIndex('movies', ['primaryKey' => 'movie_review_id']);
   // OR
-  $client->index('movies')->update(['primaryKey' => 'movie_id']);
+  $client->index('movies')->update(['primaryKey' => 'movie_review_id']);
 delete_an_index_1: |-
   $client->deleteIndex('movies');
   // OR
@@ -65,11 +65,10 @@ get_settings_1: |-
 update_settings_1: |-
   $client->index('movies')->updateSettings([
     'rankingRules' => [
-      'typo',
       'words',
+      'typo',
       'proximity',
       'attribute',
-      'wordsPosition',
       'exactness',
       'desc(release_date)',
       'desc(rank)'
@@ -118,11 +117,10 @@ get_ranking_rules_1: |-
   $client->index('movies')->getRankingRules();
 update_ranking_rules_1: |-
   $client->index('movies')->updateRankingRules([
-    'typo',
     'words',
+    'typo',
     'proximity',
     'attribute',
-    'wordsPosition',
     'exactness',
     'asc(release_date)',
     'desc(rank)'
@@ -135,6 +133,15 @@ update_distinct_attribute_1: |-
   $client->index('movies')->updateDistinctAttribute('movie_id');
 reset_distinct_attribute_1: |-
   $client->index('movies')->resetDistinctAttribute();
+get_filterable_attributes_1: |-
+  $client->index('movies')->getFilterableAttributes();
+update_filterable_attributes_1: |-
+  $client->index('movies')->updateFilterableAttributes([
+    'genres',
+    'director'
+  ]);
+reset_filterable_attributes_1: |-
+  $client->index('movies')->resetFilterableAttributes();
 get_searchable_attributes_1: |-
   $client->index('movies')->getSearchableAttributes();
 update_searchable_attributes_1: |-
@@ -145,15 +152,6 @@ update_searchable_attributes_1: |-
   ]);
 reset_searchable_attributes_1: |-
   $client->index('movies')->resetSearchableAttributes();
-get_attributes_for_faceting_1: |-
-  $client->index('movies')->getAttributesForFaceting();
-update_attributes_for_faceting_1: |-
-  $client->index('movies')->updateAttributesForFaceting([
-    'genres',
-    'director'
-  ]);
-reset_attributes_for_faceting_1: |-
-  $client->index('movies')->resetAttributesForFaceting();
 get_displayed_attributes_1: |-
   $client->index('movies')->getDisplayedAttributes();
 update_displayed_attributes_1: |-
@@ -189,42 +187,41 @@ field_properties_guide_displayed_1: |-
     'release_date'
   ]);
 filtering_guide_1: |-
-  $client->index('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
+  $client->index('movies')->search('Avengers', ['filter' => 'release_date > 795484800']);
 filtering_guide_2: |-
-  $client->index('movies')->search('Avengers', ['filters' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")']);
+  $client->index('movies')->search('Batman', ['filter' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")']);
 filtering_guide_3: |-
-  $client->index('movies')->search('horror', ['filters' => 'director = "Jordan Peele"']);
+  $client->index('movies')->search('horror', ['filter' => 'director = "Jordan Peele"']);
 filtering_guide_4: |-
-  $client->index('movies')->search('Planet of the Apes', ['filters' => 'rating >= 3 AND (NOT director = "Tim Burton")']);
+  $client->index('movies')->search('Planet of the Apes', ['filter' => 'rating >= 3 AND (NOT director = "Tim Burton")']);
 search_parameter_guide_query_1: |-
   $client->index('movies')->search('shifu');
 search_parameter_guide_offset_1: |-
   $client->index('movies')->search('shifu', ['offset' => 1]);
 search_parameter_guide_limit_1: |-
-  $client->index('movies')->search('shifu', ['limit' => 1]);
+  $client->index('movies')->search('shifu', ['limit' => 2]);
 search_parameter_guide_retrieve_1: |-
   $client->index('movies')->search('shifu', ['attributesToRetrieve' => ['overview', 'title']]);
 search_parameter_guide_crop_1: |-
   $client->index('movies')->search('shifu', ['attributesToCrop' => ['overview'], 'cropLength' => 10]);
 search_parameter_guide_highlight_1: |-
-  $client->index('movies')->search('shifu', ['attributesToHighlight' => ['overview']]);
+  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview']]);
 search_parameter_guide_filter_1: |-
-  $client->index('movies')->search('n', ['filters' => 'title = Nightshift']);
+  $client->index('movies')->search('n', ['filter' => 'title = Nightshift']);
 search_parameter_guide_filter_2: |-
-  $client->index('movies')->search('shifu', ['filters' => 'title="Kung Fu Panda"']);
+  $client->index('movies')->search('shifu', ['filter' => 'title="Kung Fu Panda"']);
 search_parameter_guide_matches_1: |-
-  $client->index('movies')->search('shifu', ['attributesToHighlight' => ['overview'], 'matches' => true]);
+  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'matches' => true]);
 settings_guide_synonyms_1: |-
   $client->index('tops')->updateSynonyms(['sweater' => ['jumper'], 'jumper' => ['sweater']]);
 settings_guide_stop_words_1: |-
   $client->index('movies')->updateStopWords(['the', 'a', 'an']);
 settings_guide_ranking_rules_1: |-
   $client->index('movies')->updateRankingRules([
-    'typo',
     'words',
+    'typo',
     'proximity',
     'attribute',
-    'wordsPosition',
     'exactness',
     'asc(release_date)',
     'desc(rank)'
@@ -254,7 +251,7 @@ documents_guide_add_movie_1: |-
 search_guide_1: |-
   $client->index('movies')->search('shifu', ['limit' => 5, 'offset' => 10]);
 search_guide_2: |-
-  $client->index('movies')->search('Avengers', ['filters' => 'release_date > 795484800']);
+  $client->index('movies')->search('Avengers', ['filter' => 'release_date > 795484800']);
 getting_started_add_documents_md: |-
   Using `meilisearch-php` with the Guzzle HTTP client:
 
@@ -287,23 +284,25 @@ getting_started_search_md: |-
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 faceted_search_update_settings_1: |-
-  $client->index('movies')->updateAttributesForFaceting(['director', 'genres']);
-faceted_search_facet_filters_1: |-
-  $client->index('movies')->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"']);
+  $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
+faceted_search_filter_1: |-
+  $client->index('movies')->search('thriller', ['filter' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"']);
 faceted_search_facets_distribution_1: |-
   $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']]);
-faceted_search_walkthrough_attributes_for_faceting_1: |-
-  $client->index('movies')->updateAttributesForFaceting([
+faceted_search_walkthrough_filterable_attributes_1: |-
+  $client->index('movies')->updateFilterableAttributes([
     'director',
     'producer',
     'genres',
     'production_companies'
   ]);
-faceted_search_walkthrough_facet_filters_1: |-
-  $client->index('movies')->search('thriller', ['facetFilters' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
+faceted_search_walkthrough_filter_1: |-
+  $client->index('movies')->search('thriller', ['filter' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
 faceted_search_walkthrough_facets_distribution_1: |-
   $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']);
 post_dump_1: |-
   $client->createDump();
 get_dump_status_1: |-
   $client->getDumpStatus('20201101-110357260');
+phrase_search_1: |-
+  $client->index('movies')->search('"african american" horror');

@@ -139,6 +139,9 @@ final class SearchTest extends TestCase
 
     public function testParametersArray(): void
     {
+        $response = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
@@ -146,7 +149,7 @@ final class SearchTest extends TestCase
             'attributesToCrop' => ['id', 'title'],
             'cropLength' => 6,
             'attributesToHighlight' => ['title'],
-            'filters' => 'title = "Le Petit Prince"',
+            'filter' => 'title = "Le Petit Prince"',
             'matches' => true,
         ]);
 
@@ -164,7 +167,7 @@ final class SearchTest extends TestCase
             'attributesToCrop' => ['id', 'title'],
             'cropLength' => 6,
             'attributesToHighlight' => ['title'],
-            'filters' => 'title = "Le Petit Prince"',
+            'filter' => 'title = "Le Petit Prince"',
             'matches' => true,
         ], [
             'raw' => true,
@@ -180,6 +183,9 @@ final class SearchTest extends TestCase
 
     public function testParametersCanBeAStar(): void
     {
+        $response = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
         $response = $this->index->search('prince', [
             'limit' => 5,
             'offset' => 0,
@@ -187,7 +193,7 @@ final class SearchTest extends TestCase
             'attributesToCrop' => ['*'],
             'cropLength' => 6,
             'attributesToHighlight' => ['*'],
-            'filters' => 'title = "Le Petit Prince"',
+            'filter' => 'title = "Le Petit Prince"',
             'matches' => true,
         ]);
 
@@ -205,7 +211,7 @@ final class SearchTest extends TestCase
             'attributesToCrop' => ['*'],
             'cropLength' => 6,
             'attributesToHighlight' => ['*'],
-            'filters' => 'title = "Le Petit Prince"',
+            'filter' => 'title = "Le Petit Prince"',
             'matches' => true,
         ], [
             'raw' => true,
@@ -219,9 +225,32 @@ final class SearchTest extends TestCase
         $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
+    public function testSearchWithFilterCanBeInt(): void
+    {
+        $response = $this->index->updateFilterableAttributes(['id', 'genre']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'filter' => 'id < 12',
+        ]);
+
+        $this->assertSame(1, $response->getNbHits());
+        $this->assertCount(1, $response->getHits());
+        $this->assertSame(4, $response->getHit(0)['id']);
+
+        $response = $this->index->search('', [
+            'filter' => 'genre = fantasy AND id < 12',
+        ]);
+
+        $this->assertSame(2, $response->getNbHits());
+        $this->assertCount(2, $response->getHits());
+        $this->assertSame(1, $response->getHit(0)['id']);
+        $this->assertSame(4, $response->getHit(1)['id']);
+    }
+
     public function testBasicSearchWithFacetsDistribution(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $response = $this->index->search('prince', [
@@ -231,10 +260,9 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('facetsDistribution', $response->toArray());
         $this->assertArrayHasKey('exhaustiveFacetsCount', $response->toArray());
         $this->assertArrayHasKey('genre', $response->getFacetsDistribution());
-        $this->assertTrue($response->getExhaustiveFacetsCount());
+        $this->assertFalse($response->getExhaustiveFacetsCount());
         $this->assertSame($response->getFacetsDistribution()['genre']['fantasy'], 1);
         $this->assertSame($response->getFacetsDistribution()['genre']['adventure'], 1);
-        $this->assertSame($response->getFacetsDistribution()['genre']['romance'], 0);
 
         $response = $this->index->search('prince', [
             'facetsDistribution' => ['genre'],
@@ -245,19 +273,18 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('facetsDistribution', $response);
         $this->assertArrayHasKey('exhaustiveFacetsCount', $response);
         $this->assertArrayHasKey('genre', $response['facetsDistribution']);
-        $this->assertTrue($response['exhaustiveFacetsCount']);
+        $this->assertFalse($response['exhaustiveFacetsCount']);
         $this->assertSame($response['facetsDistribution']['genre']['fantasy'], 1);
         $this->assertSame($response['facetsDistribution']['genre']['adventure'], 1);
-        $this->assertSame($response['facetsDistribution']['genre']['romance'], 0);
     }
 
-    public function testBasicSearchWithFacetFilters(): void
+    public function testBasicSearchWithFilters(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $response = $this->index->search('prince', [
-            'facetFilters' => [['genre:fantasy']],
+            'filter' => [['genre = fantasy']],
         ]);
         $this->assertSame(1, $response->getHitsCount());
         $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
@@ -265,7 +292,7 @@ final class SearchTest extends TestCase
         $this->assertSame(4, $response->getHit(0)['id']);
 
         $response = $this->index->search('prince', [
-            'facetFilters' => [['genre:fantasy']],
+            'filter' => [['genre = fantasy']],
         ], [
             'raw' => true,
         ]);
@@ -275,13 +302,13 @@ final class SearchTest extends TestCase
         $this->assertSame(4, $response['hits'][0]['id']);
     }
 
-    public function testBasicSearchWithMultipleFacetFilters(): void
+    public function testBasicSearchWithMultipleFilter(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $response = $this->index->search('prince', [
-            'facetFilters' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
+            'filter' => ['genre = fantasy', ['genre = fantasy', 'genre = fantasy']],
         ]);
         $this->assertSame(1, $response->getHitsCount());
         $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
@@ -289,7 +316,7 @@ final class SearchTest extends TestCase
         $this->assertSame(4, $response->getHit(0)['id']);
 
         $response = $this->index->search('prince', [
-            'facetFilters' => ['genre:fantasy', ['genre:fantasy', 'genre:fantasy']],
+            'filter' => ['genre = fantasy', ['genre = fantasy', 'genre = fantasy']],
         ], [
             'raw' => true,
         ]);
@@ -299,13 +326,13 @@ final class SearchTest extends TestCase
         $this->assertSame(4, $response['hits'][0]['id']);
     }
 
-    public function testCustomSearchWithFacetFiltersAndAttributesToRetrieve(): void
+    public function testCustomSearchWithFilterAndAttributesToRetrieve(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $response = $this->index->search('prince', [
-            'facetFilters' => [['genre:fantasy']],
+            'filter' => [['genre = fantasy']],
             'attributesToRetrieve' => ['id', 'title'],
         ]);
         $this->assertSame(1, $response->getHitsCount());
@@ -317,7 +344,7 @@ final class SearchTest extends TestCase
         $this->assertArrayNotHasKey('comment', $response->getHit(0));
 
         $response = $this->index->search('prince', [
-            'facetFilters' => [['genre:fantasy']],
+            'filter' => [['genre = fantasy']],
             'attributesToRetrieve' => ['id', 'title'],
         ], [
             'raw' => true,
@@ -329,6 +356,15 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('id', $response['hits'][0]);
         $this->assertArrayHasKey('title', $response['hits'][0]);
         $this->assertArrayNotHasKey('comment', $response['hits'][0]);
+    }
+
+    public function testSearchWithPhraseSearch(): void
+    {
+        $response = $this->index->rawSearch('coco "harry"');
+
+        $this->assertCount(1, $response['hits']);
+        $this->assertEquals(4, $response['hits'][0]['id']);
+        $this->assertEquals('Harry Potter and the Half-Blood Prince', $response['hits'][0]['title']);
     }
 
     public function testBasicSerachWithRawSearch(): void
@@ -450,51 +486,49 @@ final class SearchTest extends TestCase
         $this->assertEquals('Le Petit Prince', $response['hits'][0]['title']);
     }
 
-    public function testBasicSearchWithRemoveZeroFacetsOption(): void
+    public function testBasicSearchWithFacetsOption(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $response = $this->index->search(
             'prince',
-            ['facetsDistribution' => ['genre']],
-            ['removeZeroFacets' => true]
+            ['facetsDistribution' => ['genre']]
         );
 
         $this->assertCount(2, $response->getFacetsDistribution()['genre']);
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['adventure']);
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['fantasy']);
-        $this->assertCount(3, $response->getRaw()['facetsDistribution']['genre']);
+        $this->assertCount(2, $response->getRaw()['facetsDistribution']['genre']);
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
-        $this->assertNotEquals($response->getRaw()['facetsDistribution'], $response->getFacetsDistribution());
+        $this->assertEquals($response->getRaw()['facetsDistribution'], $response->getFacetsDistribution());
     }
 
-    public function testBasicSearchWithRemoveZeroFacetsOptionAndMultipleFacets(): void
+    public function testBasicSearchWithFacetsOptionAndMultipleFacets(): void
     {
         $response = $this->index->addDocuments([['id' => 32, 'title' => 'The Witcher', 'genre' => 'adventure', 'adaptation' => 'video game']]);
         $this->index->waitForPendingUpdate($response['updateId']);
-        $response = $this->index->updateAttributesForFaceting(['genre', 'adaptation']);
+        $response = $this->index->updateFilterableAttributes(['genre', 'adaptation']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $response = $this->index->search(
             'prince',
-            ['facetsDistribution' => ['genre', 'adaptation']],
-            ['removeZeroFacets' => true]
+            ['facetsDistribution' => ['genre', 'adaptation']]
         );
 
         $this->assertCount(2, $response->getFacetsDistribution()['genre']);
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['adventure']);
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['fantasy']);
         $this->assertEquals([], $response->getFacetsDistribution()['adaptation']);
-        $this->assertCount(1, $response->getRaw()['facetsDistribution']['adaptation']);
-        $this->assertCount(3, $response->getRaw()['facetsDistribution']['genre']);
+        $this->assertCount(0, $response->getRaw()['facetsDistribution']['adaptation']);
+        $this->assertCount(2, $response->getRaw()['facetsDistribution']['genre']);
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
-        $this->assertNotEquals($response->getRaw()['facetsDistribution'], $response->getFacetsDistribution());
+        $this->assertEquals($response->getRaw()['facetsDistribution'], $response->getFacetsDistribution());
     }
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToFilter(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $filterAllFacets = function (array $facets): array {
@@ -531,7 +565,7 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $facetsToUpperFunc = function (array $facets): array {
@@ -569,7 +603,7 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToOder(): void
     {
-        $response = $this->index->updateAttributesForFaceting(['genre']);
+        $response = $this->index->updateFilterableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
         $facetsToUpperFunc = function (array $facets): array {

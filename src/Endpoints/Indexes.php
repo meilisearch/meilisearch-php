@@ -125,7 +125,7 @@ class Indexes extends Endpoint
         $timeout_temp = 0;
         while ($timeoutInMs > $timeout_temp) {
             $res = $this->getUpdateStatus($updateId);
-            if ('enqueued' != $res['status']) {
+            if ('enqueued' != $res['status'] && 'processing' != $res['status']) {
                 return $res;
             }
             $timeout_temp += $intervalInMs;

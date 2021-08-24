@@ -89,7 +89,7 @@ final class IndexTest extends TestCase
         $this->assertArrayHasKey('numberOfDocuments', $stats);
         $this->assertEquals(0, $stats['numberOfDocuments']);
         $this->assertArrayHasKey('isIndexing', $stats);
-        $this->assertArrayHasKey('fieldsDistribution', $stats);
+        $this->assertArrayHasKey('fieldDistribution', $stats);
     }
 
     public function testFetchInfo(): void
