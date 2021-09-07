@@ -13,6 +13,7 @@ final class SettingsTest extends TestCase
         'typo',
         'proximity',
         'attribute',
+        'sort',
         'exactness',
     ];
 
@@ -57,7 +58,7 @@ final class SettingsTest extends TestCase
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
-            'rankingRules' => ['asc(title)', 'typo'],
+            'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
@@ -65,7 +66,7 @@ final class SettingsTest extends TestCase
 
         $settings = $index->getSettings();
 
-        $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
+        $this->assertEquals(['title:asc', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertIsArray($settings['searchableAttributes']);
         $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
@@ -81,7 +82,7 @@ final class SettingsTest extends TestCase
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
-            'rankingRules' => ['asc(title)', 'typo'],
+            'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
 
@@ -97,7 +98,7 @@ final class SettingsTest extends TestCase
 
         $settings = $index->getSettings();
 
-        $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
+        $this->assertEquals(['title:asc', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertEquals(['title'], $settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
@@ -112,7 +113,7 @@ final class SettingsTest extends TestCase
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
-            'rankingRules' => ['asc(title)', 'typo'],
+            'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
