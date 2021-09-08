@@ -120,9 +120,9 @@ trait HandlesSettings
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/filterable-attributes');
     }
 
-    public function updateFilterableAttributes(array $FilterableAttributes): array
+    public function updateFilterableAttributes(array $filterableAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $FilterableAttributes);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $filterableAttributes);
     }
 
     public function resetFilterableAttributes(): array
