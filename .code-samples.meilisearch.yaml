@@ -86,6 +86,10 @@ update_settings_1: |-
       'genre',
       'release_date'
     ],
+    'sortableAttributes' => [
+      'price',
+      'author'
+    ],
     'stopWords' => [
       'the',
       'a',
@@ -165,14 +169,14 @@ update_displayed_attributes_1: |-
   ]);
 reset_displayed_attributes_1: |-
   $client->index('movies')->resetDisplayedAttributes();
-sortable_attributes_get_1: |-
+get_sortable_attributes_1: |-
   $client->index('books')->getSortableAttributes();
-sortable_attributes_update_1: |-
+update_sortable_attributes_1: |-
   $client->index('books')->updateSortableAttributes([
     'price',
     'author'
   ]);
-sortable_attributes_reset_1: |-
+reset_sortable_attributes_1: |-
   $client->index('books')->resetSortableAttributes();
 get_index_stats_1: |-
   $client->index('movies')->stats();
