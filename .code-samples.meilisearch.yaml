@@ -86,14 +86,14 @@ update_settings_1: |-
       'genre',
       'release_date'
     ],
-    'sortableAttributes' => [
-      'title',
-      'release_date'
-    ],
     'stopWords' => [
       'the',
       'a',
       'an'
+    ],
+    'sortableAttributes' => [
+      'title',
+      'release_date'
     ],
     'synonyms' => [
       'wolverine' => ['xmen', 'logan'],
