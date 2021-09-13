@@ -129,4 +129,21 @@ trait HandlesSettings
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/filterable-attributes');
     }
+
+    // Settings - Sortable Attributes
+
+    public function getSortableAttributes(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/sortable-attributes');
+    }
+
+    public function updateSortableAttributes(array $sortableAttributes): array
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/sortable-attributes', $sortableAttributes);
+    }
+
+    public function resetSortableAttributes(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/sortable-attributes');
+    }
 }

@@ -13,6 +13,7 @@ final class SettingsTest extends TestCase
         'typo',
         'proximity',
         'attribute',
+        'sort',
         'exactness',
     ];
 
@@ -41,6 +42,10 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settingA['stopWords']);
         $this->assertIsArray($settingA['synonyms']);
         $this->assertEmpty($settingA['synonyms']);
+        $this->assertIsArray($settingA['filterableAttributes']);
+        $this->assertEmpty($settingA['filterableAttributes']);
+        $this->assertIsArray($settingA['sortableAttributes']);
+        $this->assertEmpty($settingA['sortableAttributes']);
 
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
         $this->assertNull($settingB['distinctAttribute']);
@@ -50,6 +55,10 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settingB['stopWords']);
         $this->assertIsArray($settingB['synonyms']);
         $this->assertEmpty($settingB['synonyms']);
+        $this->assertIsArray($settingB['filterableAttributes']);
+        $this->assertEmpty($settingB['filterableAttributes']);
+        $this->assertIsArray($settingB['sortableAttributes']);
+        $this->assertEmpty($settingB['sortableAttributes']);
     }
 
     public function testUpdateSettings(): void
@@ -57,7 +66,7 @@ final class SettingsTest extends TestCase
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
-            'rankingRules' => ['asc(title)', 'typo'],
+            'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
@@ -65,7 +74,7 @@ final class SettingsTest extends TestCase
 
         $settings = $index->getSettings();
 
-        $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
+        $this->assertEquals(['title:asc', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertIsArray($settings['searchableAttributes']);
         $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
@@ -74,6 +83,10 @@ final class SettingsTest extends TestCase
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
+        $this->assertIsArray($settings['filterableAttributes']);
+        $this->assertEmpty($settings['filterableAttributes']);
+        $this->assertIsArray($settings['sortableAttributes']);
+        $this->assertEmpty($settings['sortableAttributes']);
     }
 
     public function testUpdateSettingsWithoutOverwritingThem(): void
@@ -81,7 +94,7 @@ final class SettingsTest extends TestCase
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
-            'rankingRules' => ['asc(title)', 'typo'],
+            'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
 
@@ -97,7 +110,7 @@ final class SettingsTest extends TestCase
 
         $settings = $index->getSettings();
 
-        $this->assertEquals(['asc(title)', 'typo'], $settings['rankingRules']);
+        $this->assertEquals(['title:asc', 'typo'], $settings['rankingRules']);
         $this->assertEquals('title', $settings['distinctAttribute']);
         $this->assertEquals(['title'], $settings['searchableAttributes']);
         $this->assertIsArray($settings['displayedAttributes']);
@@ -105,6 +118,10 @@ final class SettingsTest extends TestCase
         $this->assertEquals(['the'], $settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
+        $this->assertIsArray($settings['filterableAttributes']);
+        $this->assertEmpty($settings['filterableAttributes']);
+        $this->assertIsArray($settings['sortableAttributes']);
+        $this->assertEmpty($settings['sortableAttributes']);
     }
 
     public function testResetSettings(): void
@@ -112,7 +129,7 @@ final class SettingsTest extends TestCase
         $index = $this->client->createIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
-            'rankingRules' => ['asc(title)', 'typo'],
+            'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
@@ -135,5 +152,9 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settings['stopWords']);
         $this->assertIsArray($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
+        $this->assertIsArray($settings['filterableAttributes']);
+        $this->assertEmpty($settings['filterableAttributes']);
+        $this->assertIsArray($settings['sortableAttributes']);
+        $this->assertEmpty($settings['sortableAttributes']);
     }
 }

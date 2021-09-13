@@ -15,6 +15,7 @@ final class RankingRulesTest extends TestCase
         'typo',
         'proximity',
         'attribute',
+        'sort',
         'exactness',
     ];
 
@@ -35,9 +36,9 @@ final class RankingRulesTest extends TestCase
     public function testUpdateRankingRules(): void
     {
         $newRankingRules = [
-            'asc(title)',
+            'title:asc',
             'typo',
-            'desc(description)',
+            'description:desc',
         ];
 
         $promise = $this->index->updateRankingRules($newRankingRules);
