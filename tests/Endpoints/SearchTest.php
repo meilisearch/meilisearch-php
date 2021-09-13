@@ -360,6 +360,15 @@ final class SearchTest extends TestCase
 
     public function testSearchSortWithString(): void
     {
+        $response = $this->index->updateRankingRules([
+            'words',
+            'typo',
+            'sort',
+            'proximity',
+            'attribute',
+            'exactness',
+        ]);
+        $this->index->waitForPendingUpdate($response['updateId']);
         $response = $this->index->updateSortableAttributes(['genre']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
@@ -384,6 +393,15 @@ final class SearchTest extends TestCase
 
     public function testSearchSortWithInt(): void
     {
+        $response = $this->index->updateRankingRules([
+            'words',
+            'typo',
+            'sort',
+            'proximity',
+            'attribute',
+            'exactness',
+        ]);
+        $this->index->waitForPendingUpdate($response['updateId']);
         $response = $this->index->updateSortableAttributes(['id']);
         $this->index->waitForPendingUpdate($response['updateId']);
 
@@ -397,6 +415,39 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('prince', [
             'sort' => ['id:asc'],
+        ], [
+            'raw' => true,
+        ]);
+        $this->assertSame(2, $response['nbHits']);
+        $this->assertArrayNotHasKey('facetsDistribution', $response);
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response);
+        $this->assertSame(4, $response['hits'][0]['id']);
+    }
+
+    public function testSearchSortWithMultipleParameter(): void
+    {
+        $response = $this->index->updateRankingRules([
+            'words',
+            'typo',
+            'sort',
+            'proximity',
+            'attribute',
+            'exactness',
+        ]);
+        $this->index->waitForPendingUpdate($response['updateId']);
+        $response = $this->index->updateSortableAttributes(['id', 'title']);
+        $this->index->waitForPendingUpdate($response['updateId']);
+
+        $response = $this->index->search('prince', [
+            'sort' => ['id:asc', 'title:asc'],
+        ]);
+        $this->assertSame(2, $response->getHitsCount());
+        $this->assertArrayNotHasKey('facetsDistribution', $response->getRaw());
+        $this->assertArrayNotHasKey('exhaustiveFacetsCount', $response->getRaw());
+        $this->assertSame(4, $response->getHit(0)['id']);
+
+        $response = $this->index->search('prince', [
+            'sort' => ['id:asc', 'title:asc'],
         ], [
             'raw' => true,
         ]);
