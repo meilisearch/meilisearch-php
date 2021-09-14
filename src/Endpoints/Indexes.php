@@ -182,6 +182,7 @@ class Indexes extends Endpoint
     public function updateSettings($settings): array
     {
         // Patch related to https://github.com/meilisearch/meilisearch-php/issues/204
+        // Should be removed when implementing https://github.com/meilisearch/meilisearch-php/issues/209
         if (\array_key_exists('synonyms', $settings) && 0 == \count($settings['synonyms'])) {
             $settings['synonyms'] = null;
         }

@@ -106,6 +106,7 @@ trait HandlesSettings
     public function updateSynonyms(array $synonyms): array
     {
         // Patch related to https://github.com/meilisearch/meilisearch-php/issues/204.
+        // Should be removed when implementing https://github.com/meilisearch/meilisearch-php/issues/209
         if (0 == \count($synonyms)) {
             $synonyms = null;
         }
