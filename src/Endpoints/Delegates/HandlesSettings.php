@@ -109,6 +109,7 @@ trait HandlesSettings
         if (empty($synonyms)) {
             $synonyms = null;
         }
+
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/synonyms', $synonyms);
     }
 
