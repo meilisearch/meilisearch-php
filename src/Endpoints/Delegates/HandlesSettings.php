@@ -105,6 +105,10 @@ trait HandlesSettings
 
     public function updateSynonyms(array $synonyms): array
     {
+        // Patch related to https://github.com/meilisearch/meilisearch-php/issues/204.
+        if (empty($synonyms)) {
+            $synonyms = null;
+        }
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings/synonyms', $synonyms);
     }
 

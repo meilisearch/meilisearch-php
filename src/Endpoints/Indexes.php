@@ -181,6 +181,10 @@ class Indexes extends Endpoint
 
     public function updateSettings($settings): array
     {
+        // Patch related to https://github.com/meilisearch/meilisearch-php/issues/204
+        if (array_key_exists("synonyms", $settings) && empty($settings["synonyms"])) {
+            $settings["synonyms"] = null;
+        }
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings', $settings);
     }
 
