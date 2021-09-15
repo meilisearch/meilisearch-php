@@ -157,4 +157,19 @@ final class SettingsTest extends TestCase
         $this->assertIsArray($settings['sortableAttributes']);
         $this->assertEmpty($settings['sortableAttributes']);
     }
+
+    // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.
+    public function testGetThenUpdateSettings(): void
+    {
+        $index = $this->client->createIndex('index');
+
+        $resetPromise = $index->resetSettings();
+        $this->assertIsValidPromise($resetPromise);
+        $index->waitForPendingUpdate($resetPromise['updateId']);
+
+        $settings = $index->getSettings();
+        $promise = $index->updateSettings($settings);
+        $this->assertIsValidPromise($promise);
+        $index->waitForPendingUpdate($promise['updateId']);
+    }
 }
