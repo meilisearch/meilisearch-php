@@ -158,7 +158,7 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settings['sortableAttributes']);
     }
 
-    // Here to test for regressions related to https://github.com/meilisearch/meilisearch-php/issues/204.
+    // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.
     public function testGetThenUpdateSettings(): void
     {
         $index = $this->client->createIndex('index');
