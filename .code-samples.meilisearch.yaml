@@ -224,7 +224,7 @@ search_parameter_guide_highlight_1: |-
 search_parameter_guide_filter_1: |-
   $client->index('movies')->search('n', ['filter' => 'title = Nightshift']);
 search_parameter_guide_filter_2: |-
-  $client->index('movies')->search('shifu', ['filter' => 'title="Kung Fu Panda"']);
+  $client->index('movies')->search('shifu', ['filter' => 'title = "Kung Fu Panda"']);
 search_parameter_guide_matches_1: |-
   $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'matches' => true]);
 settings_guide_synonyms_1: |-
@@ -302,7 +302,7 @@ getting_started_search_md: |-
 faceted_search_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
 faceted_search_filter_1: |-
-  $client->index('movies')->search('thriller', ['filter' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"']);
+  $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 faceted_search_facets_distribution_1: |-
   $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']]);
 faceted_search_walkthrough_filterable_attributes_1: |-
@@ -313,7 +313,7 @@ faceted_search_walkthrough_filterable_attributes_1: |-
     'production_companies'
   ]);
 faceted_search_walkthrough_filter_1: |-
-  $client->index('movies')->search('thriller', ['filter' => [['genres:Horror', 'genres:Mystery']], 'director' => "Jordan Peele"]);
+  $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 faceted_search_walkthrough_facets_distribution_1: |-
   $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']);
 post_dump_1: |-
