@@ -24,7 +24,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 class Client implements Http
 {
     /**
-     * @var Http
+     * @var ClientInterface
      */
     private $http;
 
