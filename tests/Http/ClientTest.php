@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Http;
 
 use MeiliSearch\Exceptions\ApiException;
-use MeiliSearch\Exceptions\FailedJsonDecodingException;
 use MeiliSearch\Exceptions\FailedJsonEncodingException;
 use MeiliSearch\Http\Client;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,7 +35,7 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(FailedJsonDecodingException::class);
+        $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Decoding json payload failed: "Syntax error".');
 
         $client->post('/', '');
@@ -73,7 +72,7 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(FailedJsonDecodingException::class);
+        $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Decoding json payload failed: "Syntax error".');
 
         $client->put('/', '');
@@ -110,7 +109,7 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(FailedJsonDecodingException::class);
+        $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Decoding json payload failed: "Syntax error".');
 
         $client->put('/', '');
@@ -149,6 +148,9 @@ class ClientTest extends TestCase
         $response->expects(self::any())
             ->method('getStatusCode')
             ->willReturn($status);
+        $response->expects(self::any())
+            ->method('getReasonPhrase')
+            ->willReturn('HTTP Status '.$status);
         $response->expects(self::once())
             ->method('getBody')
             ->willReturn($stream);

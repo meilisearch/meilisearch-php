@@ -193,13 +193,18 @@ class Client implements Http
             return null;
         }
 
-        if ($response->getStatusCode() >= 300) {
-            $body = $this->jsonDecode($response->getBody()->getContents()) ?? $response->getReasonPhrase();
+        try {
+            $body = $this->jsonDecode($response->getBody()->getContents());
+        } catch (FailedJsonDecodingException $e) {
+            throw new ApiException($response, ['message' => $e->getMessage()], $e);
+        }
 
+        if ($response->getStatusCode() >= 300) {
+            $body = $body ?? $response->getReasonPhrase();
             throw new ApiException($response, $body);
         }
 
-        return $this->jsonDecode($response->getBody()->getContents());
+        return $body;
     }
 
     /**
