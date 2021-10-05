@@ -7,6 +7,7 @@ namespace Tests\Http;
 use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\FailedJsonDecodingException;
 use MeiliSearch\Exceptions\FailedJsonEncodingException;
+use MeiliSearch\Exceptions\InvalidResponseBodyException;
 use MeiliSearch\Http\Client;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -128,6 +129,18 @@ class ClientTest extends TestCase
         $client->post('/', '');
     }
 
+    public function testInvalidResponseContentTypeThrowsException(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '<b>not json</b>', 'text/html');
+
+        $client = new Client('https://localhost', null, $httpClient);
+
+        $this->expectException(InvalidResponseBodyException::class);
+        $this->expectExceptionMessage('not json');
+
+        $client->get('/');
+    }
+
     public function provideStatusCodes(): iterable
     {
         yield [200];
@@ -138,7 +151,7 @@ class ClientTest extends TestCase
     /**
      * @return ClientInterface|MockObject
      */
-    private function createHttpClientMock(int $status = 200, string $content = '{')
+    private function createHttpClientMock(int $status = 200, string $content = '{', string $contentType = 'application/json')
     {
         $stream = $this->createMock(StreamInterface::class);
         $stream->expects(self::once())
@@ -149,6 +162,10 @@ class ClientTest extends TestCase
         $response->expects(self::any())
             ->method('getStatusCode')
             ->willReturn($status);
+        $response->expects(self::any())
+            ->method('getHeader')
+            ->with('content-type')
+            ->willReturn([$contentType]);
         $response->expects(self::once())
             ->method('getBody')
             ->willReturn($stream);
