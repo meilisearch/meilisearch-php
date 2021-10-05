@@ -13,6 +13,7 @@ use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\CommunicationException;
 use MeiliSearch\Exceptions\FailedJsonDecodingException;
 use MeiliSearch\Exceptions\FailedJsonEncodingException;
+use MeiliSearch\Exceptions\InvalidResponseBodyException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
@@ -191,6 +192,10 @@ class Client implements Http
     {
         if (204 === $response->getStatusCode()) {
             return null;
+        }
+
+        if (!\in_array('application/json', $response->getHeader('content-type'), true)) {
+            throw new InvalidResponseBodyException($response, $response->getBody()->getContents());
         }
 
         if ($response->getStatusCode() >= 300) {
