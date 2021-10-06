@@ -40,6 +40,20 @@ final class SynonymsTest extends TestCase
         $this->assertEquals($newSynonyms, $synonyms);
     }
 
+    public function testUpdateSynonymsWithEmptyArray(): void
+    {
+        $newSynonyms = [];
+        $promise = $this->index->updateSynonyms($newSynonyms);
+
+        $this->assertIsValidPromise($promise);
+
+        $this->index->waitForPendingUpdate($promise['updateId']);
+        $synonyms = $this->index->getSynonyms();
+
+        $this->assertIsArray($synonyms);
+        $this->assertEquals($newSynonyms, $synonyms);
+    }
+
     public function testResetSynonyms(): void
     {
         $promise = $this->index->updateSynonyms([

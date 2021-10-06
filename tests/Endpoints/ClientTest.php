@@ -228,6 +228,16 @@ final class ClientTest extends TestCase
         $index2->delete();
     }
 
+    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromGetOrCreateIndex(): void
+    {
+        $client = new Client(self::HOST);
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('You must have an authorization token');
+
+        $client->getOrCreateIndex('index');
+    }
+
     public function testExceptionIsThrownWhenOverwritingPrimaryKeyUsingUpdateIndex(): void
     {
         $this->client->createIndex(
