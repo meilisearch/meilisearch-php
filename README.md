@@ -28,14 +28,14 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [📖 Documentation](#-documentation)
-- [🔧 Installation](#-installation)
-- [🚀 Getting Started](#-getting-started)
-- [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
-- [💡 Learn More](#-learn-more)
-- [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
-  - [Customize your HTTP Client](#customize-your-http-client)
-- [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
+-   [📖 Documentation](#-documentation)
+-   [🔧 Installation](#-installation)
+-   [🚀 Getting Started](#-getting-started)
+-   [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
+-   [💡 Learn More](#-learn-more)
+-   [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
+    -   [Customize your HTTP Client](#customize-your-http-client)
+-   [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 📖 Documentation
 
@@ -59,7 +59,7 @@ Here is an example of installation with the `symfony/http-client`:
 composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
 ```
 
-💡 *More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities).*
+💡 _More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities)._
 
 ### Run MeiliSearch <!-- omit in toc -->
 
@@ -88,29 +88,28 @@ use MeiliSearch\Client;
 $client = new Client('http://127.0.0.1:7700', 'masterKey');
 
 # An index is where the documents are stored.
-$index = $client->index('books');
+$index = $client->index('movies');
 
 $documents = [
-    ['book_id' => 123,  'title' => 'Pride and Prejudice', 'author' => 'Jane Austen'],
-    ['book_id' => 456,  'title' => 'Le Petit Prince', 'author' => 'Antoine de Saint-Exupéry'],
-    ['book_id' => 1,    'title' => 'Alice In Wonderland', 'author' => 'Lewis Carroll'],
-    ['book_id' => 1344, 'title' => 'The Hobbit', 'author' => 'J. R. R. Tolkien'],
-    ['book_id' => 4,    'title' => 'Harry Potter and the Half-Blood Prince', 'author' => 'J. K. Rowling'],
-    ['book_id' => 42,   'title' => 'The Hitchhiker\'s Guide to the Galaxy', 'author' => 'Douglas Adams, Eoin Colfer, Thomas Tidholm'],
+    ['movie_id' => 1,  'title' => 'Carol', 'genres' => 'Romance, Drama'],
+    ['movie_id' => 2,  'title' => 'Wonder Woman', 'genres' => 'Action, Adventure'],
+    ['movie_id' => 3,    'title' => 'Life of Pi', 'genres' => 'Adventure, Drama'],
+    ['movie_id' => 4, 'title' => 'Mad Max: Fury Road', 'genres' => 'Adventure, Science Fiction'],
+    ['movie_id' => 5,    'title' => 'Moana', 'genres' => 'Fantasy, Action'],
+    ['movie_id' => 6,   'title' => 'Philadelphia', 'genres' => 'Drama'],
 ];
 
-# If the index 'books' does not exist, MeiliSearch creates it when you first add the documents.
+# If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
 $index->addDocuments($documents); // => { "updateId": 0 }
 ```
 
 With the `updateId`, you can check the status (`enqueued`, `processing`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
 
-
 #### Basic Search <!-- omit in toc -->
 
 ```php
 // MeiliSearch is typo-tolerant:
-$hits = $index->search('harry pottre')->getHits();
+$hits = $index->search('Mda Max')->getHits();
 print_r($hits);
 ```
 
@@ -121,8 +120,9 @@ Array
 (
     [0] => Array
         (
-            [id] => 4
-            [title] => Harry Potter and the Half-Blood Prince
+            [movie_id] => 4
+            [title] => Mad Max: Fury Road
+            [genre] => Adventure, Science Fiction
         )
 )
 ```
@@ -135,7 +135,7 @@ All the supported options are described in the [search parameters](https://docs.
 
 ```php
 $index->search(
-    'hob',
+    'Phil',
     [
         'attributesToHighlight' => ['*'],
     ]
@@ -148,18 +148,19 @@ JSON output:
 {
     "hits": [
         {
-            "book_id": 1344,
-            "title": "The Hobbit",
+            "movie_id": 6,
+            "title": "Philadelphia",
             "_formatted": {
-                "book_id": 1344,
-                "title": "The <em>Hob</em>bit"
+                "movie_id": 6,
+                "title": "<em>Phil</em>adelphia",
+                "genre": ["Drama"]
             }
         }
     ],
     "offset": 0,
     "limit": 20,
     "processingTimeMs": 0,
-    "query": "hob"
+    "query": "Phil"
 }
 ```
 
@@ -171,10 +172,10 @@ This package only guarantees the compatibility with the [version v0.22.0 of Meil
 
 The following sections may interest you:
 
-- **Manipulate documents**: see the [API references](https://docs.meilisearch.com/reference/api/documents.html) or read more about [documents](https://docs.meilisearch.com/learn/core_concepts/documents.html).
-- **Search**: see the [API references](https://docs.meilisearch.com/reference/api/search.html) or follow our guide on [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html).
-- **Manage the indexes**: see the [API references](https://docs.meilisearch.com/reference/api/indexes.html) or read more about [indexes](https://docs.meilisearch.com/learn/core_concepts/indexes.html).
-- **Configure the index settings**: see the [API references](https://docs.meilisearch.com/reference/api/settings.html) or follow our guide on [settings parameters](https://docs.meilisearch.com/reference/features/settings.html).
+-   **Manipulate documents**: see the [API references](https://docs.meilisearch.com/reference/api/documents.html) or read more about [documents](https://docs.meilisearch.com/learn/core_concepts/documents.html).
+-   **Search**: see the [API references](https://docs.meilisearch.com/reference/api/search.html) or follow our guide on [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html).
+-   **Manage the indexes**: see the [API references](https://docs.meilisearch.com/reference/api/indexes.html) or read more about [indexes](https://docs.meilisearch.com/learn/core_concepts/indexes.html).
+-   **Configure the index settings**: see the [API references](https://docs.meilisearch.com/reference/api/settings.html) or follow our guide on [settings parameters](https://docs.meilisearch.com/reference/features/settings.html).
 
 ## 🧰 HTTP Client Compatibilities
 
@@ -183,31 +184,31 @@ A list of compatible HTTP clients and client adapters can be found at [php-http.
 
 If you want to use this `meilisearch-php`:
 
-- with `guzzlehttp/guzzle` (Guzzle 7), run:
+-   with `guzzlehttp/guzzle` (Guzzle 7), run:
 
 ```bash
 composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
 ```
 
-- with `php-http/guzzle6-adapter` (Guzzle < 7), run:
+-   with `php-http/guzzle6-adapter` (Guzzle < 7), run:
 
 ```bash
 composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
 ```
 
-- with `symfony/http-client`, run:
+-   with `symfony/http-client`, run:
 
 ```bash
 composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
 ```
 
-- with `php-http/curl-client`, run:
+-   with `php-http/curl-client`, run:
 
 ```bash
 composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:^1.0
 ```
 
-- with `kriswallsmith/buzz`, run:
+-   with `kriswallsmith/buzz`, run:
 
 ```bash
 composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
