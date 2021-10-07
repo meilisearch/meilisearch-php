@@ -191,6 +191,27 @@ class ClientTest extends TestCase
         $client->get('/');
     }
 
+    public function testParseResponseReturnsNullForNoContent(): void
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())
+            ->method('getStatusCode')
+            ->willReturn(204);
+
+        /** @var ClientInterface|MockObject $httpClient */
+        $httpClient = $this->createMock(ClientInterface::class);
+        $httpClient->expects(self::once())
+            ->method('sendRequest')
+            ->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($response);
+
+        $client = new Client('https://localhost', null, $httpClient);
+
+        $result = $client->get('/');
+
+        $this->assertNull($result);
+    }
+
     public function provideStatusCodes(): iterable
     {
         yield [200];
