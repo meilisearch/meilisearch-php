@@ -24,6 +24,22 @@ final class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
+    public function testAddDocumentsInBatches(): void
+    {
+        $index = $this->client->createIndex('documents');
+        $promises = $index->addDocumentsInBatches(self::DOCUMENTS, 2);
+
+        $this->assertCount(4, $promises);
+
+        foreach ($promises as $promise) {
+            $this->assertIsValidPromise($promise);
+            $index->waitForPendingUpdate($promise['updateId']);
+        }
+
+        $response = $index->getDocuments();
+        $this->assertCount(\count(self::DOCUMENTS), $response);
+    }
+
     public function testAddDocumentWithSpecialChars(): void
     {
         $documents = [
