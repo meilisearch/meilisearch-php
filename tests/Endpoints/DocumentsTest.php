@@ -24,6 +24,22 @@ final class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
+    public function testAddDocumentsInBatches(): void
+    {
+        $index = $this->client->createIndex('documents');
+        $promises = $index->addDocumentsInBatches(self::DOCUMENTS, 2);
+
+        $this->assertCount(4, $promises);
+
+        foreach ($promises as $promise) {
+            $this->assertIsValidPromise($promise);
+            $index->waitForPendingUpdate($promise['updateId']);
+        }
+
+        $response = $index->getDocuments();
+        $this->assertCount(\count(self::DOCUMENTS), $response);
+    }
+
     public function testAddDocumentWithSpecialChars(): void
     {
         $documents = [
@@ -128,6 +144,39 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
 
+        $this->assertCount(\count(self::DOCUMENTS), $response);
+    }
+
+    public function testUpdateDocumentsInBatches(): void
+    {
+        $index = $this->client->createIndex('documents');
+        $documentPromise = $index->addDocuments(self::DOCUMENTS);
+        $index->waitForPendingUpdate($documentPromise['updateId']);
+
+        $replacements = [
+            ['id' => 1, 'title' => 'Alice Outside Wonderland'],
+            ['id' => 123, 'title' => 'Pride and Prejudice and Zombies'],
+            ['id' => 1344, 'title' => 'The Rabbit'],
+            ['id' => 2, 'title' => 'Le Rouge et le Chocolate Noir'],
+            ['id' => 4, 'title' => 'Harry Potter and the Half-Blood Princess'],
+            ['id' => 456, 'title' => 'The Little Prince'],
+        ];
+        $promises = $index->updateDocumentsInBatches($replacements, 4);
+        $this->assertCount(2, $promises);
+
+        foreach ($promises as $promise) {
+            $this->assertIsValidPromise($promise);
+            $index->waitForPendingUpdate($promise['updateId']);
+        }
+
+        foreach ($replacements as $replacement) {
+            $response = $index->getDocument($replacement['id']);
+            $this->assertSame($replacement['id'], $response['id']);
+            $this->assertSame($replacement['title'], $response['title']);
+            $this->assertArrayHasKey('comment', $response);
+        }
+
+        $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 

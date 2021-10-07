@@ -35,6 +35,20 @@ trait HandlesIndex
         return $this->index($uid)->delete();
     }
 
+    public function deleteIndexIfExists(string $uid): bool
+    {
+        try {
+            $this->deleteIndex($uid);
+
+            return true;
+        } catch (ApiException $e) {
+            if (404 === $e->getCode()) {
+                return false;
+            }
+            throw ($e);
+        }
+    }
+
     public function deleteAllIndexes(): void
     {
         $indexes = $this->getAllIndexes();

@@ -18,6 +18,26 @@ use Psr\Http\Message\StreamInterface;
 
 class ClientTest extends TestCase
 {
+    public function testGetExecutesRequest(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+
+        $client = new Client('https://localhost', null, $httpClient);
+        $result = $client->get('/');
+
+        $this->assertSame([], $result);
+    }
+
+    public function testPostExecutesRequest(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+
+        $client = new Client('https://localhost', null, $httpClient);
+        $result = $client->post('/');
+
+        $this->assertSame([], $result);
+    }
+
     public function testPostThrowsWithInvalidBody(): void
     {
         $client = new Client('https://localhost');
@@ -53,6 +73,16 @@ class ClientTest extends TestCase
         $this->expectExceptionMessage('internal error');
 
         $client->post('/', '');
+    }
+
+    public function testPutExecutesRequest(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+
+        $client = new Client('https://localhost', null, $httpClient);
+        $result = $client->put('/');
+
+        $this->assertSame([], $result);
     }
 
     public function testPutThrowsWithInvalidBody(): void
@@ -92,6 +122,16 @@ class ClientTest extends TestCase
         $client->put('/', '');
     }
 
+    public function testPatchExecutesRequest(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+
+        $client = new Client('https://localhost', null, $httpClient);
+        $result = $client->patch('/');
+
+        $this->assertSame([], $result);
+    }
+
     public function testPatchThrowsWithInvalidBody(): void
     {
         $client = new Client('https://localhost');
@@ -129,6 +169,16 @@ class ClientTest extends TestCase
         $client->post('/', '');
     }
 
+    public function testDeleteExecutesRequest(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+
+        $client = new Client('https://localhost', null, $httpClient);
+        $result = $client->delete('/');
+
+        $this->assertSame([], $result);
+    }
+
     public function testInvalidResponseContentTypeThrowsException(): void
     {
         $httpClient = $this->createHttpClientMock(200, '<b>not json</b>', 'text/html');
@@ -139,6 +189,27 @@ class ClientTest extends TestCase
         $this->expectExceptionMessage('not json');
 
         $client->get('/');
+    }
+
+    public function testParseResponseReturnsNullForNoContent(): void
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())
+            ->method('getStatusCode')
+            ->willReturn(204);
+
+        /** @var ClientInterface|MockObject $httpClient */
+        $httpClient = $this->createMock(ClientInterface::class);
+        $httpClient->expects(self::once())
+            ->method('sendRequest')
+            ->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($response);
+
+        $client = new Client('https://localhost', null, $httpClient);
+
+        $result = $client->get('/');
+
+        $this->assertNull($result);
     }
 
     public function provideStatusCodes(): iterable

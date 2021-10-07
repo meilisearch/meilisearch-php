@@ -101,6 +101,44 @@ final class ClientTest extends TestCase
         $this->assertCount(0, $response);
     }
 
+    public function testDeleteIndexIfExistsDeletesExistingIndex(): void
+    {
+        $this->client->createIndex('index');
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(1, $response);
+
+        $response = $this->client->deleteIndexIfExists('index');
+        $this->assertTrue($response);
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(0, $response);
+    }
+
+    public function testDeleteIndexIfExistsReturnsFalseIfNotExists(): void
+    {
+        $this->client->createIndex('index');
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(1, $response);
+
+        $response = $this->client->deleteIndexIfExists('foo');
+        $this->assertFalse($response);
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(1, $response);
+    }
+
+    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromDeleteIndexIfExists(): void
+    {
+        $client = new Client(self::HOST);
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('You must have an authorization token');
+
+        $client->deleteIndexIfExists('index');
+    }
+
     public function testDeleteAllIndexes(): void
     {
         $this->client->createIndex('index-1');
@@ -198,6 +236,16 @@ final class ClientTest extends TestCase
         $documents = $index2->getDocuments();
         $this->assertCount(1, $documents);
         $index2->delete();
+    }
+
+    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromGetOrCreateIndex(): void
+    {
+        $client = new Client(self::HOST);
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('You must have an authorization token');
+
+        $client->getOrCreateIndex('index');
     }
 
     public function testExceptionIsThrownWhenOverwritingPrimaryKeyUsingUpdateIndex(): void
