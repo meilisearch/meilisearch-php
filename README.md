@@ -28,14 +28,14 @@
 
 ## Table of Contents <!-- omit in toc -->
 
--   [📖 Documentation](#-documentation)
--   [🔧 Installation](#-installation)
--   [🚀 Getting Started](#-getting-started)
--   [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
--   [💡 Learn More](#-learn-more)
--   [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
-    -   [Customize your HTTP Client](#customize-your-http-client)
--   [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
+- [📖 Documentation](#-documentation)
+- [🔧 Installation](#-installation)
+- [🚀 Getting Started](#-getting-started)
+- [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
+- [💡 Learn More](#-learn-more)
+- [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
+    - [Customize your HTTP Client](#customize-your-http-client)
+- [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 📖 Documentation
 
@@ -59,7 +59,7 @@ Here is an example of installation with the `symfony/http-client`:
 composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
 ```
 
-💡 _More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities)._
+💡 *More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities).*
 
 ### Run MeiliSearch <!-- omit in toc -->
 
@@ -109,7 +109,7 @@ With the `updateId`, you can check the status (`enqueued`, `processing`, `proces
 
 ```php
 // MeiliSearch is typo-tolerant:
-$hits = $index->search('Mda Max')->getHits();
+$hits = $index->search('wondre woman')->getHits();
 print_r($hits);
 ```
 
@@ -120,9 +120,9 @@ Array
 (
     [0] => Array
         (
-            [movie_id] => 4
-            [title] => Mad Max: Fury Road
-            [genre] => Adventure, Science Fiction
+            [movie_id] => 2
+            [title] => Wonder Woman
+            [genre] => Action, Adventure
         )
 )
 ```
@@ -135,7 +135,7 @@ All the supported options are described in the [search parameters](https://docs.
 
 ```php
 $index->search(
-    'Phil',
+    'phil',
     [
         'attributesToHighlight' => ['*'],
     ]
@@ -150,7 +150,7 @@ JSON output:
         {
             "movie_id": 6,
             "title": "Philadelphia",
-            "genre": ["Drama"]
+            "genre": ["Drama"],
             "_formatted": {
                 "movie_id": 6,
                 "title": "<em>Phil</em>adelphia",
@@ -173,10 +173,10 @@ This package only guarantees the compatibility with the [version v0.22.0 of Meil
 
 The following sections may interest you:
 
--   **Manipulate documents**: see the [API references](https://docs.meilisearch.com/reference/api/documents.html) or read more about [documents](https://docs.meilisearch.com/learn/core_concepts/documents.html).
--   **Search**: see the [API references](https://docs.meilisearch.com/reference/api/search.html) or follow our guide on [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html).
--   **Manage the indexes**: see the [API references](https://docs.meilisearch.com/reference/api/indexes.html) or read more about [indexes](https://docs.meilisearch.com/learn/core_concepts/indexes.html).
--   **Configure the index settings**: see the [API references](https://docs.meilisearch.com/reference/api/settings.html) or follow our guide on [settings parameters](https://docs.meilisearch.com/reference/features/settings.html).
+- **Manipulate documents**: see the [API references](https://docs.meilisearch.com/reference/api/documents.html) or read more about [documents](https://docs.meilisearch.com/learn/core_concepts/documents.html).
+- **Search**: see the [API references](https://docs.meilisearch.com/reference/api/search.html) or follow our guide on [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html).
+- **Manage the indexes**: see the [API references](https://docs.meilisearch.com/reference/api/indexes.html) or read more about [indexes](https://docs.meilisearch.com/learn/core_concepts/indexes.html).
+- **Configure the index settings**: see the [API references](https://docs.meilisearch.com/reference/api/settings.html) or follow our guide on [settings parameters](https://docs.meilisearch.com/reference/features/settings.html).
 
 ## 🧰 HTTP Client Compatibilities
 
@@ -185,31 +185,31 @@ A list of compatible HTTP clients and client adapters can be found at [php-http.
 
 If you want to use this `meilisearch-php`:
 
--   with `guzzlehttp/guzzle` (Guzzle 7), run:
+- with `guzzlehttp/guzzle` (Guzzle 7), run:
 
 ```bash
 composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http-factory-guzzle:^1.0
 ```
 
--   with `php-http/guzzle6-adapter` (Guzzle < 7), run:
+- with `php-http/guzzle6-adapter` (Guzzle < 7), run:
 
 ```bash
 composer require meilisearch/meilisearch-php php-http/guzzle6-adapter:^2.0 http-interop/http-factory-guzzle:^1.0
 ```
 
--   with `symfony/http-client`, run:
+- with `symfony/http-client`, run:
 
 ```bash
 composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
 ```
 
--   with `php-http/curl-client`, run:
+- with `php-http/curl-client`, run:
 
 ```bash
 composer require meilisearch/meilisearch-php php-http/curl-client nyholm/psr7:^1.0
 ```
 
--   with `kriswallsmith/buzz`, run:
+- with `kriswallsmith/buzz`, run:
 
 ```bash
 composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
