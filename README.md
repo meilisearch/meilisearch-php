@@ -161,7 +161,7 @@ JSON output:
     "offset": 0,
     "limit": 20,
     "processingTimeMs": 0,
-    "query": "Phil"
+    "query": "phil"
 }
 ```
 
