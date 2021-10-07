@@ -150,6 +150,7 @@ JSON output:
         {
             "movie_id": 6,
             "title": "Philadelphia",
+            "genre": ["Drama"]
             "_formatted": {
                 "movie_id": 6,
                 "title": "<em>Phil</em>adelphia",
