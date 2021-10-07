@@ -96,7 +96,7 @@ $documents = [
     ['id' => 3,  'title' => 'Life of Pi', 'genres' => ['Adventure, Drama']],
     ['id' => 4,  'title' => 'Mad Max: Fury Road', 'genres' => ['Adventure, Science Fiction']],
     ['id' => 5,  'title' => 'Moana', 'genres' => ['Fantasy, Action']],
-    ['id' => 6,  'title' => 'Philadelphia', ['genres' => 'Drama']],
+    ['id' => 6,  'title' => 'Philadelphia', 'genres' => ['Drama']],
 ];
 
 # If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
