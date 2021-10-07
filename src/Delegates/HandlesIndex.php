@@ -20,6 +20,11 @@ trait HandlesIndex
         return $this->index->all();
     }
 
+    public function getAllRawIndexes(): array
+    {
+        return $this->index->allRaw();
+    }
+
     public function index(string $uid): Indexes
     {
         return new Indexes($this->http, $uid);
