@@ -45,6 +45,16 @@ trait HandlesDocuments
         return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]);
     }
 
+    public function updateDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    {
+        $promises = [];
+        foreach (self::batch($documents, $batchSize) as $batch) {
+            $promises[] = $this->updateDocuments($documents, $primaryKey);
+        }
+
+        return $promises;
+    }
+
     public function deleteAllDocuments(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/documents');
