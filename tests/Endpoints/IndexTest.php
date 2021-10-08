@@ -188,28 +188,6 @@ final class IndexTest extends TestCase
         $this->assertEmpty($res);
     }
 
-    public function testGetAllIndexes(): void
-    {
-        $this->index = $this->client->createIndex('indexA');
-
-        $res = $this->index->all();
-
-        $this->assertIsArray($res);
-        $this->assertInstanceOf(Indexes::class, $res[0]);
-    }
-
-    public function testGetAllRawIndexes(): void
-    {
-        $this->index = $this->client->createIndex('indexA');
-        $indexB = $this->client->createIndex('indexB');
-
-        $res = $this->index->allRaw();
-
-        $this->assertIsArray($res);
-        $this->assertContains($indexB->fetchRawInfo(), $res);
-        $this->assertNotInstanceOf(Indexes::class, $res[0]);
-    }
-
     public function testExceptionIsThrownIfNoIndexWhenShowing(): void
     {
         $this->index->delete();
