@@ -19,6 +19,14 @@ final class ClientTest extends TestCase
         $this->assertEmpty($response);
     }
 
+    public function testGetAllRawIndexesWhenEmpty(): void
+    {
+        $response = $this->client->getAllRawIndexes();
+
+        $this->assertIsArray($response);
+        $this->assertEmpty($response);
+    }
+
     public function testCreateIndexWithOnlyUid(): void
     {
         $index = $this->client->createIndex('index');
@@ -75,6 +83,19 @@ final class ClientTest extends TestCase
         $this->assertContains($indexB, $uids);
     }
 
+    public function testGetAllRawIndexes(): void
+    {
+        $indexA = 'indexA';
+        $indexB = 'indexB';
+        $this->client->createIndex($indexA);
+        $this->client->createIndex($indexB);
+
+        $res = $this->client->getAllRawIndexes();
+
+        $this->assertIsArray($res);
+        $this->assertNotInstanceOf(Indexes::class, $res[0]);
+    }
+
     public function testUpdateIndex(): void
     {
         $this->client->createIndex('indexA');
@@ -99,6 +120,44 @@ final class ClientTest extends TestCase
         $response = $this->client->getAllIndexes();
 
         $this->assertCount(0, $response);
+    }
+
+    public function testDeleteIndexIfExistsDeletesExistingIndex(): void
+    {
+        $this->client->createIndex('index');
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(1, $response);
+
+        $response = $this->client->deleteIndexIfExists('index');
+        $this->assertTrue($response);
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(0, $response);
+    }
+
+    public function testDeleteIndexIfExistsReturnsFalseIfNotExists(): void
+    {
+        $this->client->createIndex('index');
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(1, $response);
+
+        $response = $this->client->deleteIndexIfExists('foo');
+        $this->assertFalse($response);
+
+        $response = $this->client->getAllIndexes();
+        $this->assertCount(1, $response);
+    }
+
+    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromDeleteIndexIfExists(): void
+    {
+        $client = new Client(self::HOST);
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('You must have an authorization token');
+
+        $client->deleteIndexIfExists('index');
     }
 
     public function testDeleteAllIndexes(): void
@@ -198,6 +257,16 @@ final class ClientTest extends TestCase
         $documents = $index2->getDocuments();
         $this->assertCount(1, $documents);
         $index2->delete();
+    }
+
+    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromGetOrCreateIndex(): void
+    {
+        $client = new Client(self::HOST);
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('You must have an authorization token');
+
+        $client->getOrCreateIndex('index');
     }
 
     public function testExceptionIsThrownWhenOverwritingPrimaryKeyUsingUpdateIndex(): void
