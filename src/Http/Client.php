@@ -101,8 +101,7 @@ class Client implements Http
     {
         if ($content_type) {
             $this->headers['Content-type'] = $content_type;
-        }
-        else {
+        } else {
             $this->headers['Content-type'] = 'application/json';
             $body = $this->jsonEncode($body);
         }
@@ -110,6 +109,7 @@ class Client implements Http
             'POST',
             $this->baseUrl.$path.$this->buildQueryString($query)
             )->withBody($this->streamFactory->createStream($body));
+
         return $this->execute($request);
     }
 
