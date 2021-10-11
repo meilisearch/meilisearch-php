@@ -8,7 +8,7 @@ interface Http
 {
     public function get($path, array $query = []);
 
-    public function post(string $path, $body = null, array $query = []);
+    public function post(string $path, $body = null, array $query = [], string $content_type = null);
 
     public function put(string $path, $body = null, array $query = []);
 

@@ -64,7 +64,6 @@ class Client implements Http
         $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         $this->headers = array_filter([
-            'Content-type' => 'application/json',
             'X-Meili-API-Key' => $this->apiKey,
         ]);
     }
@@ -98,18 +97,25 @@ class Client implements Http
      * @throws CommunicationException
      * @throws FailedJsonEncodingException
      */
-    public function post(string $path, $body = null, array $query = [])
+    public function post(string $path, $body = null, array $query = [], string $content_type = null)
     {
+        if ($content_type) {
+            $this->headers['Content-type'] = $content_type;
+        } else {
+            $this->headers['Content-type'] = 'application/json';
+            $body = $this->jsonEncode($body);
+        }
         $request = $this->requestFactory->createRequest(
             'POST',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream($this->jsonEncode($body)));
+            )->withBody($this->streamFactory->createStream($body));
 
         return $this->execute($request);
     }
 
     public function put($path, $body = null, $query = [])
     {
+        $this->headers['Content-type'] = 'application/json';
         $request = $this->requestFactory->createRequest(
             'PUT',
             $this->baseUrl.$path.$this->buildQueryString($query)
@@ -130,6 +136,7 @@ class Client implements Http
      */
     public function patch($path, $body = null, $query = [])
     {
+        $this->headers['Content-type'] = 'application/json';
         $request = $this->requestFactory->createRequest(
             'PATCH',
             $this->baseUrl.$path.$this->buildQueryString($query)
