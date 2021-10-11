@@ -63,6 +63,69 @@ final class DocumentsTest extends TestCase
         }
     }
 
+    public function testAddDocumentsCsv(): void
+    {
+        $index = $this->client->index('documentCsv');
+
+        $fileCsv = fopen("./tests/datasets/songs.csv", "r");
+        $documentCsv = fread($fileCsv,filesize("./tests/datasets/songs.csv"));
+        fclose($fileCsv);
+
+        $promise = $index->addDocumentsCsv($documentCsv);
+
+        $this->assertIsValidPromise($promise);
+
+        $update = $index->waitForPendingUpdate($promise['updateId']);
+
+        $this->assertEquals($update['status'], 'processed');
+        $this->assertNotEquals($update['type']['number'], 0);
+
+        $response = $index->getDocuments();
+        $this->assertCount(20, $response);
+    }
+
+    public function testAddDocumentsJson(): void
+    {
+        $index = $this->client->index('documentJson');
+
+        $fileJson = fopen("./tests/datasets/small_movies.json", "r");
+        $documentJson = fread($fileJson,filesize("./tests/datasets/small_movies.json"));
+        fclose($fileJson);
+
+        $promise = $index->addDocumentsJson($documentJson);
+
+        $this->assertIsValidPromise($promise);
+
+        $update = $index->waitForPendingUpdate($promise['updateId']);
+
+        $this->assertEquals($update['status'], 'processed');
+        $this->assertNotEquals($update['type']['number'], 0);
+
+        $response = $index->getDocuments();
+        $this->assertCount(20, $response);
+    }
+
+    public function testAddDocumentsNdJson(): void
+    {
+        $index = $this->client->index('documentNdJson');
+
+        $fileNdJson = fopen("./tests/datasets/songs.ndjson", "r");
+        $documentNdJson = fread($fileNdJson,filesize("./tests/datasets/songs.ndjson"));
+        fclose($fileNdJson);
+
+        $promise = $index->addDocumentsNdJson($documentNdJson);
+
+        $this->assertIsValidPromise($promise);
+
+        $update = $index->waitForPendingUpdate($promise['updateId']);
+
+        $this->assertEquals($update['status'], 'processed');
+        $this->assertNotEquals($update['type']['number'], 0);
+
+        $response = $index->getDocuments();
+        $this->assertCount(20, $response);
+    }
+
     public function testCannotAddDocumentWhenJsonEncodingFails(): void
     {
         $this->expectException(FailedJsonEncodingException::class);
