@@ -342,3 +342,19 @@ sorting_guide_sort_parameter_2: |-
   $client->index('books')->search('butler', ['sort' => ['author:desc']]);
 search_parameter_guide_sort_1: |-
   $client->index('books')->search('science fiction', ['sort' => ['price:asc']]);
+geosearch_guide_filter_settings_1: |-
+  $client->index('restaurants')->updateFilterableAttributes([
+    '_geo'
+  ]);
+geosearch_guide_filter_usage_1: |-
+  $client->index('restaurants')->search('thriller', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000)']);
+geosearch_guide_filter_usage_2: |-
+  $client->index('restaurants')->search('thriller', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000) AND type = pizza']);
+geosearch_guide_sort_settings_1: |-
+  $client->index('restaurants')->updateSortableAttributes([
+    '_geo'
+  ]);
+geosearch_guide_sort_usage_1: |-
+  $client->index('restaurants')->search('thriller', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc']]);
+geosearch_guide_sort_usage_2: |-
+  $client->index('restaurants')->search('thriller', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc', 'rating:desc']]);
