@@ -347,14 +347,14 @@ geosearch_guide_filter_settings_1: |-
     '_geo'
   ]);
 geosearch_guide_filter_usage_1: |-
-  $client->index('restaurants')->search('thriller', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000)']);
+  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000)']);
 geosearch_guide_filter_usage_2: |-
-  $client->index('restaurants')->search('thriller', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000) AND type = pizza']);
+  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000) AND type = pizza']);
 geosearch_guide_sort_settings_1: |-
   $client->index('restaurants')->updateSortableAttributes([
     '_geo'
   ]);
 geosearch_guide_sort_usage_1: |-
-  $client->index('restaurants')->search('thriller', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc']]);
+  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc']]);
 geosearch_guide_sort_usage_2: |-
-  $client->index('restaurants')->search('thriller', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc', 'rating:desc']]);
+  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc', 'rating:desc']]);
