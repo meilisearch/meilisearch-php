@@ -40,6 +40,21 @@ trait HandlesDocuments
         return $promises;
     }
 
+    public function addDocumentsJson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
+    }
+
+    public function addDocumentsNdjson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
+    }
+
+    public function addDocumentsCsv(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+    }
+
     public function updateDocuments(array $documents, ?string $primaryKey = null)
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]);
