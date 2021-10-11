@@ -20,6 +20,11 @@ trait HandlesIndex
         return $this->index->all();
     }
 
+    public function getAllRawIndexes(): array
+    {
+        return $this->index->allRaw();
+    }
+
     public function index(string $uid): Indexes
     {
         return new Indexes($this->http, $uid);
@@ -42,7 +47,7 @@ trait HandlesIndex
 
             return true;
         } catch (ApiException $e) {
-            if (404 === $e->getCode()) {
+            if ('index_not_found' === $e->errorCode) {
                 return false;
             }
             throw ($e);

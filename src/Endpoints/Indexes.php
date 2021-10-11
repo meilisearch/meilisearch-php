@@ -51,11 +51,16 @@ class Indexes extends Endpoint
     {
         $indexes = [];
 
-        foreach ($this->http->get(self::PATH) as $index) {
+        foreach ($this->allRaw() as $index) {
             $indexes[] = new self($this->http, $index['uid']);
         }
 
         return $indexes;
+    }
+
+    public function allRaw(): array
+    {
+        return $this->http->get(self::PATH);
     }
 
     public function getPrimaryKey(): ?string

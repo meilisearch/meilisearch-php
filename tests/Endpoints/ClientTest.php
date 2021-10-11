@@ -19,6 +19,14 @@ final class ClientTest extends TestCase
         $this->assertEmpty($response);
     }
 
+    public function testGetAllRawIndexesWhenEmpty(): void
+    {
+        $response = $this->client->getAllRawIndexes();
+
+        $this->assertIsArray($response);
+        $this->assertEmpty($response);
+    }
+
     public function testCreateIndexWithOnlyUid(): void
     {
         $index = $this->client->createIndex('index');
@@ -73,6 +81,19 @@ final class ClientTest extends TestCase
 
         $this->assertContains($indexA, $uids);
         $this->assertContains($indexB, $uids);
+    }
+
+    public function testGetAllRawIndexes(): void
+    {
+        $indexA = 'indexA';
+        $indexB = 'indexB';
+        $this->client->createIndex($indexA);
+        $this->client->createIndex($indexB);
+
+        $res = $this->client->getAllRawIndexes();
+
+        $this->assertIsArray($res);
+        $this->assertNotInstanceOf(Indexes::class, $res[0]);
     }
 
     public function testUpdateIndex(): void
