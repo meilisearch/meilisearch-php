@@ -97,10 +97,10 @@ class Client implements Http
      * @throws CommunicationException
      * @throws FailedJsonEncodingException
      */
-    public function post(string $path, $body = null, array $query = [], string $content_type = null)
+    public function post(string $path, $body = null, array $query = [], string $contentType = null)
     {
-        if ($content_type) {
-            $this->headers['Content-type'] = $content_type;
+        if ($contentType) {
+            $this->headers['Content-type'] = $contentType;
         } else {
             $this->headers['Content-type'] = 'application/json';
             $body = $this->jsonEncode($body);
