@@ -35,6 +35,29 @@ class Indexes extends Endpoint
 
     /**
      * @return $this
+     */
+    protected function newInstance(array $attributes): self
+    {
+        return new self(
+            $this->http,
+            $attributes['uid'],
+            $attributes['primaryKey'],
+        );
+    }
+
+    /**
+     * @return $this
+     */
+    protected function fill(array $attributes): self
+    {
+        $this->uid = $attributes['uid'];
+        $this->primaryKey = $attributes['primaryKey'];
+
+        return $this;
+    }
+
+    /**
+     * @return $this
      *
      * @throws Exception|ApiException
      */
@@ -44,7 +67,7 @@ class Indexes extends Endpoint
 
         $response = $this->http->post(self::PATH, $options);
 
-        return new self($this->http, $response['uid'], $response['primaryKey']);
+        return $this->newInstance($response);
     }
 
     public function all(): array
@@ -52,7 +75,7 @@ class Indexes extends Endpoint
         $indexes = [];
 
         foreach ($this->allRaw() as $index) {
-            $indexes[] = new self($this->http, $index['uid']);
+            $indexes[] = $this->newInstance($index);
         }
 
         return $indexes;
@@ -86,19 +109,15 @@ class Indexes extends Endpoint
     public function fetchInfo(): self
     {
         $response = $this->fetchRawInfo();
-        $this->uid = $response['uid'];
-        $this->primaryKey = $response['primaryKey'];
 
-        return $this;
+        return $this->fill($response);
     }
 
     public function update($body): self
     {
         $response = $this->http->put(self::PATH.'/'.$this->uid, $body);
-        $this->uid = $response['uid'];
-        $this->primaryKey = $response['primaryKey'];
 
-        return $this;
+        return $this->fill($response);
     }
 
     public function delete(): array

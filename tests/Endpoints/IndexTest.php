@@ -107,6 +107,7 @@ final class IndexTest extends TestCase
         $index = $index->fetchInfo();
         $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('objectID', $index->getPrimaryKey());
+        $this->assertSame($uid, $index->getUid());
     }
 
     public function testGetAndFetchPrimaryKey(): void
