@@ -30,7 +30,6 @@ final class ClientTest extends TestCase
     public function testExceptionIsThrownOnGetRawIndexWhenIndexDoesNotExist(): void
     {
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('Index "index" not found.');
 
         $this->client->getRawIndex('index');
     }
