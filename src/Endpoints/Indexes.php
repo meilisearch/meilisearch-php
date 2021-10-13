@@ -51,9 +51,6 @@ class Indexes extends Endpoint
         parent::__construct($http);
     }
 
-    /**
-     * @return $this
-     */
     protected function newInstance(array $attributes): self
     {
         return new self(
