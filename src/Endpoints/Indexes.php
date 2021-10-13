@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints;
 
+use DateTime;
 use Exception;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
@@ -24,12 +25,29 @@ class Indexes extends Endpoint
      * @var string|null
      */
     private $uid;
+
+    /**
+     * @var string|null
+     */
     private $primaryKey;
 
-    public function __construct(Http $http, $uid = null, $primaryKey = null)
+    /**
+     * @var string|null
+     */
+    private $createdAt;
+
+    /**
+     * @var string|null
+     */
+    private $updatedAt;
+
+    public function __construct(Http $http, $uid = null, $primaryKey = null, $createdAt = null, $updatedAt = null)
     {
         $this->uid = $uid;
         $this->primaryKey = $primaryKey;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
+
         parent::__construct($http);
     }
 
@@ -42,6 +60,8 @@ class Indexes extends Endpoint
             $this->http,
             $attributes['uid'],
             $attributes['primaryKey'],
+            $attributes['createdAt'],
+            $attributes['updatedAt'],
         );
     }
 
@@ -52,6 +72,8 @@ class Indexes extends Endpoint
     {
         $this->uid = $attributes['uid'];
         $this->primaryKey = $attributes['primaryKey'];
+        $this->createdAt = $attributes['createdAt'];
+        $this->updatedAt = $attributes['updatedAt'];
 
         return $this;
     }
@@ -99,6 +121,26 @@ class Indexes extends Endpoint
     public function getUid(): ?string
     {
         return $this->uid;
+    }
+
+    public function getCreatedAt(): ?DateTime
+    {
+        return static::parseDate($this->createdAt);
+    }
+
+    public function getCreatedAtString(): ?string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return static::parseDate($this->updatedAt);
+    }
+
+    public function getUpdatedAtString(): ?string
+    {
+        return $this->updatedAt;
     }
 
     public function fetchRawInfo(): ?array
@@ -217,5 +259,25 @@ class Indexes extends Endpoint
     public function resetSettings(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function parseDate(?string $dateTime): ?DateTime
+    {
+        if (null === $dateTime) {
+            return null;
+        }
+
+        try {
+            return new DateTime($dateTime);
+        } catch (\Exception $e) {
+            // Trim 9th+ digit from fractional seconds. Meilisearch server can send 9 digits; PHP supports up to 8
+            $trimPattern = '/(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,8})(?:\d{1,})?(Z|[\+-]\d{2}:\d{2})$/';
+            $trimmedDate = preg_replace($trimPattern, '$1$2', $dateTime);
+
+            return new DateTime($trimmedDate);
+        }
     }
 }
