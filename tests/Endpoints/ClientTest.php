@@ -27,6 +27,15 @@ final class ClientTest extends TestCase
         $this->assertEmpty($response);
     }
 
+    public function testExceptionIsThrownOnGetRawIndexWhenIndexDoesNotExist(): void
+    {
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Index index not found');
+        $this->expectExceptionCode(404);
+
+        $this->client->getRawIndex('index');
+    }
+
     public function testCreateIndexWithOnlyUid(): void
     {
         $index = $this->client->createIndex('index');
@@ -94,6 +103,17 @@ final class ClientTest extends TestCase
 
         $this->assertIsArray($res);
         $this->assertNotInstanceOf(Indexes::class, $res[0]);
+    }
+
+    public function testGetRawIndex(): void
+    {
+        $indexA = 'indexA';
+        $this->client->createIndex($indexA);
+
+        $res = $this->client->getRawIndex('indexA');
+
+        $this->assertIsArray($res);
+        $this->assertArrayHasKey('uid', $res);
     }
 
     public function testUpdateIndex(): void
