@@ -65,14 +65,17 @@ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.
 
 There are many easy ways to [download and run a MeiliSearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
 
-For example, if you use Docker:
+For example, using the `curl` command in your [Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
 
-```bash
-docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
-docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
+```sh
+#Install MeiliSearch
+curl -L https://install.meilisearch.com | sh
+
+# Launch MeiliSearch
+./meilisearch --master-key=masterKey
 ```
 
-NB: you can also download MeiliSearch from **Homebrew** or **APT**.
+NB: you can also download MeiliSearch from [**Homebrew**](https://formulae.brew.sh/formula/meilisearch), **APT**, or even with [**Docker**](https://hub.docker.com/r/getmeili/meilisearch).
 
 ## 🚀 Getting Started
 
