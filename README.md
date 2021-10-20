@@ -75,7 +75,7 @@ curl -L https://install.meilisearch.com | sh
 ./meilisearch --master-key=masterKey
 ```
 
-NB: you can also download MeiliSearch from [**Homebrew**](https://formulae.brew.sh/formula/meilisearch), **APT**, or even with [**Docker**](https://hub.docker.com/r/getmeili/meilisearch).
+NB: you can also download MeiliSearch from **Homebrew** or **APT** or even run it using **Docker**.
 
 ## 🚀 Getting Started
 
