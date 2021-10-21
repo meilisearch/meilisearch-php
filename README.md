@@ -178,7 +178,7 @@ If you want to enable filtering, you must add your attributes to the `filterable
 $index->updateFilterableAttributes([
   'id',
   'genres'
-])
+]);
 ```
 
 You only need to perform this operation once.
