@@ -187,7 +187,7 @@ Note that MeiliSearch will rebuild your index whenever you update `filterableAtt
 
 Then, you can perform the search:
 
-```py
+```php
 $index->search(
   'wonder',
   {
