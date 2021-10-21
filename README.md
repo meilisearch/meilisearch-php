@@ -193,7 +193,7 @@ $index->search(
   {
     filter: ['id > 1 AND genres = Action']
   }
-)
+);
 ```
 
 ```json
