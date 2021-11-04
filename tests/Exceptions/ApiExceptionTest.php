@@ -14,9 +14,9 @@ final class ApiExceptionTest extends TestCase
     {
         $httpBodyExample = [
             'message' => 'This is the message',
-            'errorCode' => 'this_is_the_error_code',
-            'errorType' => 'this_is_the_error_type',
-            'errorLink' => 'https://docs.meilisearch.com/errors',
+            'code' => 'this_is_the_error_code',
+            'type' => 'this_is_the_error_type',
+            'link' => 'https://docs.meilisearch.com/errors',
         ];
         $statusCode = 400;
 
@@ -31,11 +31,11 @@ final class ApiExceptionTest extends TestCase
         } catch (ApiException $apiException) {
             $this->assertEquals($statusCode, $apiException->httpStatus);
             $this->assertEquals($httpBodyExample['message'], $apiException->message);
-            $this->assertEquals($httpBodyExample['errorCode'], $apiException->errorCode);
-            $this->assertEquals($httpBodyExample['errorType'], $apiException->errorType);
-            $this->assertEquals($httpBodyExample['errorLink'], $apiException->errorLink);
+            $this->assertEquals($httpBodyExample['code'], $apiException->errorCode);
+            $this->assertEquals($httpBodyExample['type'], $apiException->errorType);
+            $this->assertEquals($httpBodyExample['link'], $apiException->errorLink);
 
-            $expectedExceptionToString = "MeiliSearch ApiException: Http Status: {$statusCode} - Message: {$httpBodyExample['message']} - Error code: {$httpBodyExample['errorCode']} - Error type: {$httpBodyExample['errorType']} - Error link: {$httpBodyExample['errorLink']}";
+            $expectedExceptionToString = "MeiliSearch ApiException: Http Status: {$statusCode} - Message: {$httpBodyExample['message']} - Code: {$httpBodyExample['code']} - Type: {$httpBodyExample['type']} - Link: {$httpBodyExample['link']}";
             $this->assertEquals($expectedExceptionToString, (string) $apiException);
         }
     }
