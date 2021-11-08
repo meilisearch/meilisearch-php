@@ -174,7 +174,6 @@ final class ClientTest extends TestCase
         $client = new Client(self::HOST);
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('You must have an authorization token');
 
         $client->deleteIndexIfExists('index');
     }
@@ -283,7 +282,6 @@ final class ClientTest extends TestCase
         $client = new Client(self::HOST);
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('You must have an authorization token');
 
         $client->getOrCreateIndex('index');
     }
