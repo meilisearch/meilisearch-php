@@ -190,9 +190,9 @@ Then, you can perform the search:
 ```php
 $index->search(
   'wonder',
-  {
-    filter: ['id > 1 AND genres = Action']
-  }
+  [
+    'filter' => ['id > 1 AND genres = Action']
+  ]
 );
 ```
 
