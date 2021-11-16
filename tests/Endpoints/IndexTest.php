@@ -105,18 +105,6 @@ final class IndexTest extends TestCase
         $this->assertSame($this->index->getUid(), 'index');
     }
 
-    public function testExceptionIsThrownWhenOverwritingPrimaryKey(): void
-    {
-        $index = $this->client->createIndex(
-            'indexB',
-            ['primaryKey' => 'objectId']
-        );
-
-        $this->expectException(ApiException::class);
-
-        $index->update(['primaryKey' => 'objectID']);
-    }
-
     public function testIndexStats(): void
     {
         $stats = $this->index->stats();

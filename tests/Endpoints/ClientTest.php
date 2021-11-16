@@ -30,7 +30,6 @@ final class ClientTest extends TestCase
     public function testExceptionIsThrownOnGetRawIndexWhenIndexDoesNotExist(): void
     {
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('Index index not found');
         $this->expectExceptionCode(404);
 
         $this->client->getRawIndex('index');
@@ -175,7 +174,6 @@ final class ClientTest extends TestCase
         $client = new Client(self::HOST);
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('You must have an authorization token');
 
         $client->deleteIndexIfExists('index');
     }
@@ -284,21 +282,8 @@ final class ClientTest extends TestCase
         $client = new Client(self::HOST);
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('You must have an authorization token');
 
         $client->getOrCreateIndex('index');
-    }
-
-    public function testExceptionIsThrownWhenOverwritingPrimaryKeyUsingUpdateIndex(): void
-    {
-        $this->client->createIndex(
-            'indexB',
-            ['primaryKey' => 'objectId']
-        );
-
-        $this->expectException(ApiException::class);
-
-        $this->client->updateIndex('indexB', ['primaryKey' => 'objectID']);
     }
 
     public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
