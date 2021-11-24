@@ -228,34 +228,60 @@ search_parameter_guide_filter_2: |-
 search_parameter_guide_matches_1: |-
   $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'matches' => true]);
 settings_guide_synonyms_1: |-
-  $client->index('tops')->updateSynonyms(['sweater' => ['jumper'], 'jumper' => ['sweater']]);
+  $client->index('tops')->updateSettings([
+    'synonyms' => [
+      'sweater' => ['jumper'],
+      'jumper' => ['sweater']
+    ]
+  ]);
 settings_guide_stop_words_1: |-
-  $client->index('movies')->updateStopWords(['the', 'a', 'an']);
+  $client->index('movies')->updateSettings([
+    'stopWords' => [
+      'the',
+      'a',
+      'an'
+    ],
+  ]);
 settings_guide_ranking_rules_1: |-
-  $client->index('movies')->updateRankingRules([
-    'words',
-    'typo',
-    'proximity',
-    'attribute',
-    'sort',
-    'exactness',
-    'release_date:asc',
-    'rank:desc'
+  $client->index('movies')->updateSettings([
+    'rankingRules' => [
+      'words',
+      'typo',
+      'proximity',
+      'attribute',
+      'sort',
+      'exactness',
+      'release_date:asc',
+      'rank:desc'
+    ]
   ]);
 settings_guide_distinct_1: |-
-  $client->index('jackets')->updateDistinctAttribute('product_id');
+  $client->index('jackets')->updateSettings([
+    'distinctAttribute' => 'product_id'
+  ]);
 settings_guide_searchable_1: |-
-  $client->index('movies')->updateSearchableAttributes([
-    'title',
-    'description',
-    'genre'
+  $client->index('movies')->updateSettings([
+    'searchableAttributes' => [
+      'title',
+      'description',
+      'genre'
+    ],
   ]);
 settings_guide_displayed_1: |-
-  $client->index('movies')->updateDisplayedAttributes([
-    'title',
-    'description',
-    'genre',
-    'release_date'
+  $client->index('movies')->updateSettings([
+    'displayedAttributes' => [
+      'title',
+      'description',
+      'genre',
+      'release_date'
+    ]
+  ]);
+settings_guide_sortable_1: |-
+  $client->index('books')->updateSettings([
+    'sortableAttributes' => [
+      'author',
+      'price'
+    ]
   ]);
 add_movies_json_1: |-
   $moviesJson = file_get_contents('movies.json');
