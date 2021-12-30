@@ -62,22 +62,4 @@ trait HandlesIndex
     {
         return $this->index($uid)->update($options);
     }
-
-    /**
-     * @throws ApiException
-     */
-    public function getOrCreateIndex(string $uid, array $options = []): Indexes
-    {
-        try {
-            $index = $this->getIndex($uid);
-        } catch (ApiException $e) {
-            if (\is_array($e->httpBody) && 'index_not_found' === $e->errorCode) {
-                $index = $this->createIndex($uid, $options);
-            } else {
-                throw $e;
-            }
-        }
-
-        return $index;
-    }
 }
