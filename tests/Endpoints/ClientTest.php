@@ -186,69 +186,6 @@ final class ClientTest extends TestCase
         $this->assertNull($index->getPrimaryKey());
     }
 
-    public function testGetOrCreateIndexWithOnlyUid(): void
-    {
-        $index = $this->client->getOrCreateIndex('index');
-
-        $this->assertInstanceOf(Indexes::class, $index);
-        $this->assertSame('index', $index->getUid());
-        $this->assertNull($index->getPrimaryKey());
-    }
-
-    public function testGetOrCreateIndexWithUidAndPrimaryKey(): void
-    {
-        $index = $this->client->getOrCreateIndex(
-            'index',
-            ['primaryKey' => 'ObjectId']
-        );
-
-        $this->assertInstanceOf(Indexes::class, $index);
-        $this->assertSame('index', $index->getUid());
-        $this->assertSame('ObjectId', $index->getPrimaryKey());
-    }
-
-    public function testGetOrCreateIndexWithUidInOptions(): void
-    {
-        $index = $this->client->getOrCreateIndex(
-            'index',
-            [
-                'uid' => 'wrong',
-                'primaryKey' => 'ObjectId',
-            ]
-        );
-
-        $this->assertInstanceOf(Indexes::class, $index);
-        $this->assertSame('index', $index->getUid());
-        $this->assertSame('ObjectId', $index->getPrimaryKey());
-    }
-
-    public function testGetOrCreateWithIndexAlreadyExists(): void
-    {
-        $index1 = $this->client->getOrCreateIndex('index');
-        $index2 = $this->client->getOrCreateIndex('index');
-        $index3 = $this->client->getOrCreateIndex('index');
-
-        $this->assertSame('index', $index1->getUid());
-        $this->assertSame('index', $index2->getUid());
-        $this->assertSame('index', $index3->getUid());
-
-        $update = $index1->addDocuments([['book_id' => 1, 'name' => 'Some book']]);
-        $index1->waitForPendingUpdate($update['updateId']);
-
-        $documents = $index2->getDocuments();
-        $this->assertCount(1, $documents);
-        $index2->delete();
-    }
-
-    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromGetOrCreateIndex(): void
-    {
-        $client = new Client(self::HOST);
-
-        $this->expectException(ApiException::class);
-
-        $client->getOrCreateIndex('index');
-    }
-
     public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
     {
         $this->expectException(ApiException::class);
