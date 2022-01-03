@@ -10,8 +10,8 @@ final class DisplayedAttributesTest extends TestCase
 {
     public function testGetDefaultDisplayedAttributes(): void
     {
-        $indexA = $this->client->createIndex('indexA');
-        $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
+        $indexA = $this->createEmptyIndex('indexA');
+        $indexB = $this->createEmptyIndex('indexB', ['primaryKey' => 'objectID']);
 
         $attributesA = $indexA->getDisplayedAttributes();
         $attributesB = $indexB->getDisplayedAttributes();
@@ -26,12 +26,12 @@ final class DisplayedAttributesTest extends TestCase
     public function testUpdateDisplayedAttributes(): void
     {
         $newAttributes = ['title'];
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
 
         $promise = $index->updateDisplayedAttributes($newAttributes);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $displayedAttributes = $index->getDisplayedAttributes();
 
@@ -41,17 +41,17 @@ final class DisplayedAttributesTest extends TestCase
 
     public function testResetDisplayedAttributes(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
         $newAttributes = ['title'];
 
         $promise = $index->updateDisplayedAttributes($newAttributes);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $promise = $index->resetDisplayedAttributes();
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $displayedAttributes = $index->getDisplayedAttributes();
         $this->assertIsArray($displayedAttributes);

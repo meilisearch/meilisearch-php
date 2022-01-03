@@ -10,7 +10,7 @@ final class SortableAttributesTest extends TestCase
 {
     public function testGetDefaultSortableAttributes(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
 
         $attributes = $index->getSortableAttributes();
 
@@ -21,12 +21,12 @@ final class SortableAttributesTest extends TestCase
     public function testUpdateSortableAttributes(): void
     {
         $newAttributes = ['title'];
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
 
         $promise = $index->updateSortableAttributes($newAttributes);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $sortableAttributes = $index->getSortableAttributes();
 
@@ -36,17 +36,17 @@ final class SortableAttributesTest extends TestCase
 
     public function testResetSortableAttributes(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
         $newAttributes = ['title'];
 
         $promise = $index->updateSortableAttributes($newAttributes);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $promise = $index->resetSortableAttributes();
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $sortableAttributes = $index->getSortableAttributes();
         $this->assertIsArray($sortableAttributes);

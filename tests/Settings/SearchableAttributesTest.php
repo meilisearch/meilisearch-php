@@ -10,8 +10,8 @@ final class SearchableAttributesTest extends TestCase
 {
     public function testGetDefaultSearchableAttributes(): void
     {
-        $indexA = $this->client->createIndex('indexA');
-        $indexB = $this->client->createIndex('indexB', ['primaryKey' => 'objectID']);
+        $indexA = $this->createEmptyIndex('indexA');
+        $indexB = $this->createEmptyIndex('indexB', ['primaryKey' => 'objectID']);
 
         $searchableAttributesA = $indexA->getSearchableAttributes();
         $searchableAttributesB = $indexB->getSearchableAttributes();
@@ -24,7 +24,7 @@ final class SearchableAttributesTest extends TestCase
 
     public function testUpdateSearchableAttributes(): void
     {
-        $indexA = $this->client->createIndex('indexA');
+        $indexA = $this->createEmptyIndex('indexA');
         $searchableAttributes = [
             'title',
             'description',
@@ -34,7 +34,7 @@ final class SearchableAttributesTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $indexA->waitForPendingUpdate($promise['updateId']);
+        $indexA->waitForTask($promise['uid']);
         $updatedAttributes = $indexA->getSearchableAttributes();
 
         $this->assertIsArray($updatedAttributes);
@@ -43,12 +43,12 @@ final class SearchableAttributesTest extends TestCase
 
     public function testResetSearchableAttributes(): void
     {
-        $index = $this->client->createIndex('indexA');
+        $index = $this->createEmptyIndex('indexA');
         $promise = $index->resetSearchableAttributes();
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $searchableAttributes = $index->getSearchableAttributes();
 
         $this->assertIsArray($searchableAttributes);

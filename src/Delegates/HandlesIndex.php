@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MeiliSearch\Delegates;
 
 use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\ApiException;
 
 /**
  * @property Indexes index
@@ -45,20 +44,23 @@ trait HandlesIndex
         return $this->index($uid)->delete();
     }
 
-    public function deleteAllIndexes(): void
+    public function deleteAllIndexes(): array
     {
+        $tasks = [];
         $indexes = $this->getAllIndexes();
         foreach ($indexes as $index) {
-            $index->delete();
+            $tasks[] = $index->delete();
         }
+
+        return $tasks;
     }
 
-    public function createIndex(string $uid, array $options = []): Indexes
+    public function createIndex(string $uid, array $options = []): array
     {
         return $this->index->create($uid, $options);
     }
 
-    public function updateIndex(string $uid, array $options = []): Indexes
+    public function updateIndex(string $uid, array $options = []): array
     {
         return $this->index($uid)->update($options);
     }
