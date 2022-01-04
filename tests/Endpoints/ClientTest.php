@@ -83,12 +83,12 @@ final class ClientTest extends TestCase
         $this->assertIsArray($response);
         $this->assertCount(2, $response);
 
-        $uids = array_map(function ($index): ?string {
+        $taskUids = array_map(function ($index): ?string {
             return $index->getUid();
         }, $response);
 
-        $this->assertContains($indexA, $uids);
-        $this->assertContains($indexB, $uids);
+        $this->assertContains($indexA, $taskUids);
+        $this->assertContains($indexB, $taskUids);
     }
 
     public function testGetAllRawIndexes(): void
@@ -158,10 +158,10 @@ final class ClientTest extends TestCase
 
         $res = $this->client->deleteAllIndexes();
 
-        $uids = array_map(function ($task) {
+        $taskUids = array_map(function ($task) {
             return $task['uid'];
         }, $res);
-        $res = $this->client->waitForAllTasks($uids);
+        $res = $this->client->waitForTasks($taskUids);
 
         $response = $this->client->getAllIndexes();
 
@@ -174,10 +174,10 @@ final class ClientTest extends TestCase
         $this->assertCount(0, $response);
 
         $res = $this->client->deleteAllIndexes();
-        $uids = array_map(function ($task) {
+        $taskUids = array_map(function ($task) {
             return $task['uid'];
         }, $res);
-        $this->client->waitForAllTasks($uids);
+        $this->client->waitForTasks($taskUids);
 
         $this->assertCount(0, $response);
     }

@@ -11,9 +11,9 @@ class Tasks extends Endpoint
 {
     protected const PATH = '/tasks';
 
-    public function get($uid): array
+    public function get($taskUid): array
     {
-        return $this->http->get(self::PATH.'/'.$uid);
+        return $this->http->get(self::PATH.'/'.$taskUid);
     }
 
     public function all(): array
@@ -21,28 +21,18 @@ class Tasks extends Endpoint
         return $this->http->get(self::PATH.'/');
     }
 
-    public function getIndexTask($path, $uid): array
-    {
-        return $this->http->get($path.self::PATH.'/'.$uid);
-    }
-
-    public function allIndexTask($path): array
-    {
-        return $this->http->get($path.self::PATH.'/');
-    }
-
     /**
-     * @param string $uid
+     * @param string $taskUid
      * @param int    $timeoutInMs
      * @param int    $intervalInMs
      *
      * @throws TimeOutException
      */
-    public function waitTask($uid, $timeoutInMs, $intervalInMs): array
+    public function waitTask($taskUid, $timeoutInMs, $intervalInMs): array
     {
         $timeout_temp = 0;
         while ($timeoutInMs > $timeout_temp) {
-            $res = $this->get($uid);
+            $res = $this->get($taskUid);
             if ('enqueued' != $res['status'] && 'processing' != $res['status']) {
                 return $res;
             }
@@ -53,17 +43,15 @@ class Tasks extends Endpoint
     }
 
     /**
-     * @param array $uids
+     * @param array $taskUids
      * @param int   $timeoutInMs
      * @param int   $intervalInMs
-     *
-     * @throws TimeOutException
      */
-    public function waitAllTasks($uids, $timeoutInMs, $intervalInMs): array
+    public function waitTasks($taskUids, $timeoutInMs, $intervalInMs): array
     {
         $tasks = [];
-        foreach ($uids as $uid) {
-            $tasks[] = $this->waitTask($uid, $timeoutInMs, $intervalInMs);
+        foreach ($taskUids as $taskUid) {
+            $tasks[] = $this->waitTask($taskUid, $timeoutInMs, $intervalInMs);
         }
 
         return $tasks;

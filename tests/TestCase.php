@@ -41,7 +41,7 @@ abstract class TestCase extends BaseTestCase
         $uids = array_map(function ($task) {
             return $task['uid'];
         }, $res);
-        $this->client->waitForAllTasks($uids);
+        $this->client->waitForTasks($uids);
     }
 
     public function assertIsValidPromise(array $promise): void

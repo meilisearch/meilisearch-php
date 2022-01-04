@@ -171,12 +171,12 @@ class Indexes extends Endpoint
 
     public function getTask($uid): array
     {
-        return $this->tasks->getIndexTask(self::PATH.'/'.$this->uid, $uid);
+        return $this->http->get(self::PATH.'/'.$this->uid.'/tasks'.'/'.$uid);
     }
 
-    public function getAllTasks(): array
+    public function getTasks(): array
     {
-        return $this->tasks->allIndexTask(self::PATH.'/'.$this->uid);
+        return $this->http->get(self::PATH.'/'.$this->uid.'/tasks');
     }
 
     // Search

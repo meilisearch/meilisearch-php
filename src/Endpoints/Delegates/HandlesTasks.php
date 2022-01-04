@@ -16,7 +16,7 @@ trait HandlesTasks
         return $this->tasks->get($uid);
     }
 
-    public function getAllTasks(): array
+    public function getTasks(): array
     {
         return $this->tasks->all();
     }
@@ -26,8 +26,8 @@ trait HandlesTasks
         return $this->tasks->waitTask($uid, $timeoutInMs, $intervalInMs);
     }
 
-    public function waitForAllTasks($uids, $timeoutInMs = 5000, $intervalInMs = 50): array
+    public function waitForTasks($uids, $timeoutInMs = 5000, $intervalInMs = 50): array
     {
-        return $this->tasks->waitAllTasks($uids, $timeoutInMs, $intervalInMs);
+        return $this->tasks->waitTasks($uids, $timeoutInMs, $intervalInMs);
     }
 }

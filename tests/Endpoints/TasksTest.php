@@ -54,12 +54,12 @@ final class TasksTest extends TestCase
 
     public function testGetAllTasksClient(): void
     {
-        $response = $this->client->getAllTasks();
+        $response = $this->client->getTasks();
         $preCount = \count($response['results']);
         [$promise, $response] = $this->seedIndex();
 
         $this->assertIsArray($promise);
-        $response = $this->client->getAllTasks();
+        $response = $this->client->getTasks();
         $this->assertCount($preCount + 1, $response['results']);
     }
 
@@ -83,12 +83,12 @@ final class TasksTest extends TestCase
 
     public function testGetAllTasksIndex(): void
     {
-        $response = $this->index->getAllTasks($this->index->getUid());
+        $response = $this->index->getTasks($this->index->getUid());
         $preCount = \count($response['results']);
         [$promise, $response] = $this->seedIndex();
 
         $this->assertIsArray($promise);
-        $response = $this->index->getAllTasks($promise['uid']);
+        $response = $this->index->getTasks($promise['uid']);
         $this->assertCount($preCount + 1, $response['results']);
     }
 
