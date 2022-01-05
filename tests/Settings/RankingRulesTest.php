@@ -22,7 +22,7 @@ final class RankingRulesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->client->createIndex('index');
+        $this->index = $this->createEmptyIndex('index');
     }
 
     public function testGetDefaultRankingRules(): void
@@ -44,7 +44,7 @@ final class RankingRulesTest extends TestCase
         $promise = $this->index->updateRankingRules($newRankingRules);
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
 
         $rankingRules = $this->index->getRankingRules();
 
@@ -58,7 +58,7 @@ final class RankingRulesTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
         $rankingRules = $this->index->getRankingRules();
 
         $this->assertIsArray($rankingRules);

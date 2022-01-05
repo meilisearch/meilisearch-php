@@ -17,12 +17,12 @@ final class IndexTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->client->createIndex('index');
+        $this->index = $this->createEmptyIndex('index');
     }
 
     public function testGetPrimaryKey(): void
     {
-        $indexB = $this->client->createIndex(
+        $indexB = $this->createEmptyIndex(
             'indexB',
             ['primaryKey' => 'objectId']
         );
@@ -33,7 +33,7 @@ final class IndexTest extends TestCase
 
     public function testGetUid(): void
     {
-        $indexB = $this->client->createIndex(
+        $indexB = $this->createEmptyIndex(
             'indexB',
             ['primaryKey' => 'objectId']
         );
@@ -77,7 +77,7 @@ final class IndexTest extends TestCase
 
     public function testfetchRawInfo(): void
     {
-        $index = $this->client->createIndex(
+        $index = $this->createEmptyIndex(
             'indexB',
             ['primaryKey' => 'objectId']
         );
@@ -96,12 +96,14 @@ final class IndexTest extends TestCase
     {
         $primaryKey = 'id';
 
-        $index = $this->index->update(['primaryKey' => $primaryKey]);
+        $response = $this->index->update(['primaryKey' => $primaryKey]);
+        $this->client->waitForTask($response['uid']);
+        $index = $this->client->getIndex($response['indexUid']);
 
         $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame($index->getPrimaryKey(), $primaryKey);
         $this->assertSame($index->getUid(), 'index');
-        $this->assertSame($this->index->getPrimaryKey(), $primaryKey);
+        $this->assertSame($index->getPrimaryKey(), $primaryKey);
         $this->assertSame($this->index->getUid(), 'index');
     }
 
@@ -118,7 +120,7 @@ final class IndexTest extends TestCase
     public function testFetchInfo(): void
     {
         $uid = 'indexA';
-        $this->client->createIndex(
+        $this->createEmptyIndex(
             $uid,
             ['primaryKey' => 'objectID']
         );
@@ -138,7 +140,7 @@ final class IndexTest extends TestCase
     public function testGetAndFetchPrimaryKey(): void
     {
         $uid = 'indexA';
-        $this->client->createIndex(
+        $this->createEmptyIndex(
             $uid,
             ['primaryKey' => 'objectID']
         );
@@ -149,69 +151,77 @@ final class IndexTest extends TestCase
         $this->assertSame('objectID', $index->getPrimaryKey());
     }
 
-    public function testWaitForPendingUpdateDefault(): void
+    public function testWaitForTaskDefault(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
 
-        $response = $this->index->waitForPendingUpdate($promise['updateId']);
+        $response = $this->index->waitForTask($promise['uid']);
 
         $this->assertIsArray($response);
-        $this->assertSame($response['status'], 'processed');
-        $this->assertSame($response['updateId'], $promise['updateId']);
+        $this->assertSame($response['status'], 'succeeded');
+        $this->assertSame($response['uid'], $promise['uid']);
         $this->assertArrayHasKey('type', $response);
-        $this->assertIsArray($response['type']);
+        $this->assertSame($response['type'], 'documentAddition');
         $this->assertArrayHasKey('duration', $response);
-        $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('processedAt', $response);
+        $this->assertArrayHasKey('startedAt', $response);
+        $this->assertArrayHasKey('finishedAt', $response);
     }
 
-    public function testWaitForPendingUpdateWithTimeoutAndInterval(): void
+    public function testWaitForTaskWithTimeoutAndInterval(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForPendingUpdate($promise['updateId'], 100, 20);
+        $response = $this->index->waitForTask($promise['uid'], 100, 20);
 
         $this->assertIsArray($response);
-        $this->assertSame($response['status'], 'processed');
-        $this->assertSame($response['updateId'], $promise['updateId']);
+        $this->assertSame($response['status'], 'succeeded');
+        $this->assertSame($response['uid'], $promise['uid']);
         $this->assertArrayHasKey('type', $response);
-        $this->assertIsArray($response['type']);
+        $this->assertSame($response['type'], 'documentAddition');
         $this->assertArrayHasKey('duration', $response);
         $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('processedAt', $response);
+        $this->assertArrayHasKey('startedAt', $response);
+        $this->assertArrayHasKey('finishedAt', $response);
     }
 
-    public function testWaitForPendingUpdateWithTimeout(): void
+    public function testWaitForTaskWithTimeout(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForPendingUpdate($promise['updateId'], 100);
+        $response = $this->index->waitForTask($promise['uid'], 100);
 
         $this->assertIsArray($response);
-        $this->assertSame($response['status'], 'processed');
-        $this->assertSame($response['updateId'], $promise['updateId']);
+        $this->assertSame($response['status'], 'succeeded');
+        $this->assertSame($response['uid'], $promise['uid']);
         $this->assertArrayHasKey('type', $response);
-        $this->assertIsArray($response['type']);
+        $this->assertSame($response['type'], 'documentAddition');
         $this->assertArrayHasKey('duration', $response);
         $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('processedAt', $response);
+        $this->assertArrayHasKey('startedAt', $response);
+        $this->assertArrayHasKey('finishedAt', $response);
     }
 
-    public function testExceptionWhenPendingUpdateTimeOut(): void
+    public function testExceptionWhenTaskTimeOut(): void
     {
-        $this->expectException(TimeOutException::class);
         $res = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $this->index->waitForPendingUpdate($res['updateId'], 0, 20);
+        $this->expectException(TimeOutException::class);
+        $this->index->waitForTask($res['uid'], 0, 20);
     }
 
     public function testDeleteIndexes(): void
     {
-        $this->index = $this->client->createIndex('indexA');
-        $indexB = $this->client->createIndex('indexB');
+        $this->index = $this->createEmptyIndex('indexA');
+        $indexB = $this->createEmptyIndex('indexB');
 
         $res = $this->index->delete();
-        $this->assertEmpty($res);
+        $this->assertSame($res['indexUid'], 'indexA');
+        $this->assertArrayHasKey('type', $res);
+        $this->assertSame($res['type'], 'indexDeletion');
+        $this->assertArrayHasKey('enqueuedAt', $res);
 
         $res = $indexB->delete();
-        $this->assertEmpty($res);
+        $this->assertSame($res['indexUid'], 'indexB');
+        $this->assertArrayHasKey('type', $res);
+        $this->assertSame($res['type'], 'indexDeletion');
+        $this->assertArrayHasKey('enqueuedAt', $res);
     }
 
     public function testParseDate(): void
@@ -239,30 +249,5 @@ final class IndexTest extends TestCase
         $dateTime = Indexes::parseDate(null);
 
         $this->assertNull($dateTime);
-    }
-
-    public function testExceptionIsThrownIfNoIndexWhenShowing(): void
-    {
-        $this->index->delete();
-
-        $this->expectException(ApiException::class);
-
-        $this->index->fetchInfo();
-    }
-
-    public function testExceptionIsThrownIfNoIndexWhenUpdating(): void
-    {
-        $this->index->delete();
-
-        $this->expectException(ApiException::class);
-        $this->index->update(['primaryKey' => 'objectID']);
-    }
-
-    public function testExceptionIsThrownIfNoIndexWhenDeleting(): void
-    {
-        $this->index->delete();
-
-        $this->expectException(ApiException::class);
-        $this->index->delete();
     }
 }
