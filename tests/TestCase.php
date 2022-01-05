@@ -24,6 +24,13 @@ abstract class TestCase extends BaseTestCase
 
     protected const DEFAULT_KEY = 'masterKey';
 
+    protected const INFO_KEY = [
+        'description' => 'test',
+        'actions' => ['search'],
+        'indexes' => ['index'],
+        'expiresAt' => null,
+    ];
+
     /**
      * @var Client
      */
