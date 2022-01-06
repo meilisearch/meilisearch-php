@@ -15,6 +15,11 @@ class Keys extends Endpoint
         return $this->http->get(self::PATH.'/'.$key);
     }
 
+    public function all(): array
+    {
+        return $this->http->get(self::PATH.'/');
+    }
+
     public function create(array $options = []): array
     {
         return $this->http->post(self::PATH, $options);

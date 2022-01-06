@@ -13,7 +13,7 @@ trait HandlesKeys
 {
     public function getKeys(): array
     {
-        return $this->keys->show();
+        return $this->keys->all();
     }
 
     public function getKey($key): array
