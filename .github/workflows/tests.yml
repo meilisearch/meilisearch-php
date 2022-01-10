@@ -68,7 +68,7 @@ jobs:
         composer remove --dev php-http/curl-client nyholm/psr7
     - name: Run test suite - kriswallsmith/buzz
       run: |
-        composer require --dev kriswallsmith/buzz nyholm/psr7
+        composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
         sh scripts/tests.sh
         composer remove --dev kriswallsmith/buzz nyholm/psr7
     - name: Run types tests with PHPStan
