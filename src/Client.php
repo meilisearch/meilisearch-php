@@ -7,6 +7,7 @@ namespace MeiliSearch;
 use MeiliSearch\Delegates\HandlesIndex;
 use MeiliSearch\Delegates\HandlesSystem;
 use MeiliSearch\Endpoints\Delegates\HandlesDumps;
+use MeiliSearch\Endpoints\Delegates\HandlesKeys;
 use MeiliSearch\Endpoints\Delegates\HandlesTasks;
 use MeiliSearch\Endpoints\Dumps;
 use MeiliSearch\Endpoints\Health;
@@ -22,6 +23,7 @@ class Client
     use HandlesDumps;
     use HandlesIndex;
     use HandlesTasks;
+    use HandlesKeys;
     use HandlesSystem;
 
     private $http;

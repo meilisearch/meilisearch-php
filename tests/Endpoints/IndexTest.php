@@ -6,7 +6,6 @@ namespace Tests\Endpoints;
 
 use DateTimeInterface;
 use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
