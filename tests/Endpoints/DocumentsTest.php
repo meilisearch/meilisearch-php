@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Exceptions\ApiException;
-use MeiliSearch\Exceptions\FailedJsonEncodingException;
 use MeiliSearch\Exceptions\InvalidArgumentException;
+use MeiliSearch\Exceptions\JsonEncodingException;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase
@@ -128,7 +128,7 @@ final class DocumentsTest extends TestCase
 
     public function testCannotAddDocumentWhenJsonEncodingFails(): void
     {
-        $this->expectException(FailedJsonEncodingException::class);
+        $this->expectException(JsonEncodingException::class);
         $this->expectExceptionMessage('Encoding payload to json failed: "Malformed UTF-8 characters, possibly incorrectly encoded".');
 
         $documents = ["\xB1\x31"];
