@@ -15,12 +15,12 @@ final class KeysAndPermissionsTest extends TestCase
         $response = $this->client->getKeys();
 
         $this->assertIsArray($response);
-        $this->assertCount(2, $response);
-        $this->assertArrayHasKey('actions', $response[0]);
-        $this->assertArrayHasKey('indexes', $response[0]);
-        $this->assertArrayHasKey('createdAt', $response[0]);
-        $this->assertArrayHasKey('expiresAt', $response[0]);
-        $this->assertArrayHasKey('updatedAt', $response[0]);
+        $this->assertCount(2, $response['results']);
+        $this->assertArrayHasKey('actions', $response['results'][0]);
+        $this->assertArrayHasKey('indexes', $response['results'][0]);
+        $this->assertArrayHasKey('createdAt', $response['results'][0]);
+        $this->assertArrayHasKey('expiresAt', $response['results'][0]);
+        $this->assertArrayHasKey('updatedAt', $response['results'][0]);
     }
 
     public function testExceptionIfNoMasterKeyProvided(): void
