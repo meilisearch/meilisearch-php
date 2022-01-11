@@ -429,3 +429,6 @@ security_guide_list_keys_1: |-
 security_guide_delete_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->deleteKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4');
+authorization_header_1: |-
+  $client = new Client('http://127.0.0.1:7700', 'masterKey');
+  $client->getKeys();
