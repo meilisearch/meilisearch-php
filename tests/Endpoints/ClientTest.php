@@ -37,7 +37,7 @@ final class ClientTest extends TestCase
 
     public function testCreateIndexWithOnlyUid(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
 
         $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
@@ -46,7 +46,7 @@ final class ClientTest extends TestCase
 
     public function testCreateIndexWithUidAndPrimaryKey(): void
     {
-        $index = $this->client->createIndex(
+        $index = $this->createEmptyIndex(
             'index',
             ['primaryKey' => 'ObjectId']
         );
@@ -58,7 +58,7 @@ final class ClientTest extends TestCase
 
     public function testCreateIndexWithUidInOptions(): void
     {
-        $index = $this->client->createIndex(
+        $index = $this->createEmptyIndex(
             'index',
             [
                 'uid' => 'wrong',
@@ -75,28 +75,28 @@ final class ClientTest extends TestCase
     {
         $indexA = 'indexA';
         $indexB = 'indexB';
-        $this->client->createIndex($indexA);
-        $this->client->createIndex($indexB);
+        $this->createEmptyIndex($indexA);
+        $this->createEmptyIndex($indexB);
 
         $response = $this->client->getAllIndexes();
 
         $this->assertIsArray($response);
         $this->assertCount(2, $response);
 
-        $uids = array_map(function ($index): ?string {
+        $taskUids = array_map(function ($index): ?string {
             return $index->getUid();
         }, $response);
 
-        $this->assertContains($indexA, $uids);
-        $this->assertContains($indexB, $uids);
+        $this->assertContains($indexA, $taskUids);
+        $this->assertContains($indexB, $taskUids);
     }
 
     public function testGetAllRawIndexes(): void
     {
         $indexA = 'indexA';
         $indexB = 'indexB';
-        $this->client->createIndex($indexA);
-        $this->client->createIndex($indexB);
+        $this->createEmptyIndex($indexA);
+        $this->createEmptyIndex($indexB);
 
         $res = $this->client->getAllRawIndexes();
 
@@ -107,7 +107,7 @@ final class ClientTest extends TestCase
     public function testGetRawIndex(): void
     {
         $indexA = 'indexA';
-        $this->client->createIndex($indexA);
+        $this->createEmptyIndex($indexA);
 
         $res = $this->client->getRawIndex('indexA');
 
@@ -117,9 +117,11 @@ final class ClientTest extends TestCase
 
     public function testUpdateIndex(): void
     {
-        $this->client->createIndex('indexA');
+        $this->createEmptyIndex('indexA');
 
-        $index = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
+        $response = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
+        $this->client->waitForTask($response['uid']);
+        $index = $this->client->getIndex($response['indexUid']);
 
         $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame($index->getPrimaryKey(), 'id');
@@ -128,66 +130,39 @@ final class ClientTest extends TestCase
 
     public function testDeleteIndex(): void
     {
-        $this->client->createIndex('index');
+        $this->createEmptyIndex('index');
 
         $response = $this->client->getAllIndexes();
         $this->assertCount(1, $response);
 
         $response = $this->client->deleteIndex('index');
-
-        $this->assertEmpty($response);
-        $response = $this->client->getAllIndexes();
-
-        $this->assertCount(0, $response);
-    }
-
-    public function testDeleteIndexIfExistsDeletesExistingIndex(): void
-    {
-        $this->client->createIndex('index');
-
-        $response = $this->client->getAllIndexes();
-        $this->assertCount(1, $response);
-
-        $response = $this->client->deleteIndexIfExists('index');
-        $this->assertTrue($response);
-
-        $response = $this->client->getAllIndexes();
-        $this->assertCount(0, $response);
-    }
-
-    public function testDeleteIndexIfExistsReturnsFalseIfNotExists(): void
-    {
-        $this->client->createIndex('index');
-
-        $response = $this->client->getAllIndexes();
-        $this->assertCount(1, $response);
-
-        $response = $this->client->deleteIndexIfExists('foo');
-        $this->assertFalse($response);
-
-        $response = $this->client->getAllIndexes();
-        $this->assertCount(1, $response);
-    }
-
-    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromDeleteIndexIfExists(): void
-    {
-        $client = new Client(self::HOST);
+        $this->client->waitForTask($response['uid']);
 
         $this->expectException(ApiException::class);
+        $index = $this->client->getIndex('index');
 
-        $client->deleteIndexIfExists('index');
+        $this->assertEmpty($index);
+        $indexes = $this->client->getAllIndexes();
+
+        $this->assertCount(0, $indexes);
     }
 
     public function testDeleteAllIndexes(): void
     {
-        $this->client->createIndex('index-1');
-        $this->client->createIndex('index-2');
+        $this->createEmptyIndex('index-1');
+        $this->createEmptyIndex('index-2');
 
         $response = $this->client->getAllIndexes();
 
         $this->assertCount(2, $response);
 
-        $this->client->deleteAllIndexes();
+        $res = $this->client->deleteAllIndexes();
+
+        $taskUids = array_map(function ($task) {
+            return $task['uid'];
+        }, $res);
+        $res = $this->client->waitForTasks($taskUids);
+
         $response = $this->client->getAllIndexes();
 
         $this->assertCount(0, $response);
@@ -198,14 +173,18 @@ final class ClientTest extends TestCase
         $response = $this->client->getAllIndexes();
         $this->assertCount(0, $response);
 
-        $this->client->deleteAllIndexes();
+        $res = $this->client->deleteAllIndexes();
+        $taskUids = array_map(function ($task) {
+            return $task['uid'];
+        }, $res);
+        $this->client->waitForTasks($taskUids);
 
         $this->assertCount(0, $response);
     }
 
     public function testGetIndex(): void
     {
-        $this->client->createIndex('index');
+        $this->createEmptyIndex('index');
 
         $index = $this->client->getIndex('index');
         $this->assertInstanceOf(Indexes::class, $index);
@@ -215,7 +194,7 @@ final class ClientTest extends TestCase
 
     public function testIndex(): void
     {
-        $this->client->createIndex('index');
+        $this->createEmptyIndex('index');
 
         $index = $this->client->index('index');
         $this->assertInstanceOf(Indexes::class, $index);
@@ -223,110 +202,22 @@ final class ClientTest extends TestCase
         $this->assertNull($index->getPrimaryKey());
     }
 
-    public function testGetOrCreateIndexWithOnlyUid(): void
-    {
-        $index = $this->client->getOrCreateIndex('index');
-
-        $this->assertInstanceOf(Indexes::class, $index);
-        $this->assertSame('index', $index->getUid());
-        $this->assertNull($index->getPrimaryKey());
-    }
-
-    public function testGetOrCreateIndexWithUidAndPrimaryKey(): void
-    {
-        $index = $this->client->getOrCreateIndex(
-            'index',
-            ['primaryKey' => 'ObjectId']
-        );
-
-        $this->assertInstanceOf(Indexes::class, $index);
-        $this->assertSame('index', $index->getUid());
-        $this->assertSame('ObjectId', $index->getPrimaryKey());
-    }
-
-    public function testGetOrCreateIndexWithUidInOptions(): void
-    {
-        $index = $this->client->getOrCreateIndex(
-            'index',
-            [
-                'uid' => 'wrong',
-                'primaryKey' => 'ObjectId',
-            ]
-        );
-
-        $this->assertInstanceOf(Indexes::class, $index);
-        $this->assertSame('index', $index->getUid());
-        $this->assertSame('ObjectId', $index->getPrimaryKey());
-    }
-
-    public function testGetOrCreateWithIndexAlreadyExists(): void
-    {
-        $index1 = $this->client->getOrCreateIndex('index');
-        $index2 = $this->client->getOrCreateIndex('index');
-        $index3 = $this->client->getOrCreateIndex('index');
-
-        $this->assertSame('index', $index1->getUid());
-        $this->assertSame('index', $index2->getUid());
-        $this->assertSame('index', $index3->getUid());
-
-        $update = $index1->addDocuments([['book_id' => 1, 'name' => 'Some book']]);
-        $index1->waitForPendingUpdate($update['updateId']);
-
-        $documents = $index2->getDocuments();
-        $this->assertCount(1, $documents);
-        $index2->delete();
-    }
-
-    public function testApiExceptionOtherThanIndexNotFoundIsThrownFromGetOrCreateIndex(): void
-    {
-        $client = new Client(self::HOST);
-
-        $this->expectException(ApiException::class);
-
-        $client->getOrCreateIndex('index');
-    }
-
-    public function testExceptionIsThrownWhenUpdateIndexUseANoneExistingIndex(): void
-    {
-        $this->expectException(ApiException::class);
-
-        $this->client->updateIndex(
-            'IndexNotExist',
-            ['primaryKey' => 'objectId']
-        );
-    }
-
-    public function testExceptionIfUidTakenWhenCreating(): void
-    {
-        $this->client->createIndex('index');
-
-        $this->expectException(ApiException::class);
-
-        $this->client->createIndex('index');
-    }
-
     public function testExceptionIfUidIsNullWhenCreating(): void
     {
         $this->expectException(\TypeError::class);
-        $this->client->createIndex(null);
+        $this->createEmptyIndex(null);
     }
 
     public function testExceptionIfUidIsEmptyStringWhenCreating(): void
     {
         $this->expectException(ApiException::class);
-        $this->client->createIndex('');
+        $this->createEmptyIndex('');
     }
 
     public function testExceptionIfNoIndexWhenShowing(): void
     {
         $this->expectException(ApiException::class);
         $this->client->getIndex('a-non-existing-index');
-    }
-
-    public function testExceptionIfNoIndexWhenDeleting(): void
-    {
-        $this->expectException(ApiException::class);
-        $this->client->deleteIndex('a-non-existing-index');
     }
 
     public function testHealth(): void

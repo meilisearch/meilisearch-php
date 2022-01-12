@@ -44,9 +44,4 @@ trait HandlesSystem
     {
         return $this->stats->show();
     }
-
-    public function getKeys(): array
-    {
-        return $this->keys->show();
-    }
 }

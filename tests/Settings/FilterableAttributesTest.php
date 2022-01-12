@@ -10,7 +10,7 @@ final class FilterableAttributesTest extends TestCase
 {
     public function testGetDefaultFilterableAttributes(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
 
         $attributes = $index->getFilterableAttributes();
 
@@ -21,12 +21,12 @@ final class FilterableAttributesTest extends TestCase
     public function testUpdateFilterableAttributes(): void
     {
         $newAttributes = ['title'];
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
 
         $promise = $index->updateFilterableAttributes($newAttributes);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $filterableAttributes = $index->getFilterableAttributes();
 
@@ -36,17 +36,17 @@ final class FilterableAttributesTest extends TestCase
 
     public function testResetFilterableAttributes(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
         $newAttributes = ['title'];
 
         $promise = $index->updateFilterableAttributes($newAttributes);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $promise = $index->resetFilterableAttributes();
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $filterableAttributes = $index->getFilterableAttributes();
         $this->assertIsArray($filterableAttributes);
