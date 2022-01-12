@@ -264,7 +264,7 @@ final class ClientTest extends TestCase
     {
         try {
             $client = new Client('http://127.0.0.1.com:1234', 'some-key');
-            $createEmptyIndex('index');
+            $client->createIndex('index');
         } catch (\Exception $e) {
             $this->assertIsString($e->getMessage());
 
