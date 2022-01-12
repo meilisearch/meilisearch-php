@@ -13,12 +13,12 @@ final class DocumentsTest extends TestCase
 {
     public function testAddDocuments(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $promise = $index->addDocuments(self::DOCUMENTS);
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
@@ -26,14 +26,14 @@ final class DocumentsTest extends TestCase
 
     public function testAddDocumentsInBatches(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $promises = $index->addDocumentsInBatches(self::DOCUMENTS, 2);
 
         $this->assertCount(4, $promises);
 
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
-            $index->waitForPendingUpdate($promise['updateId']);
+            $index->waitForTask($promise['uid']);
         }
 
         $response = $index->getDocuments();
@@ -48,11 +48,11 @@ final class DocumentsTest extends TestCase
             ['id' => 62, 'title' => 'Очень красивый!', 'comment' => ''], // Russian
         ];
 
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $promise = $index->addDocuments($documents);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $response = $index->getDocuments();
         $this->assertCount(\count($documents), $response);
@@ -75,10 +75,10 @@ final class DocumentsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $update = $index->waitForPendingUpdate($promise['updateId']);
+        $update = $index->waitForTask($promise['uid']);
 
-        $this->assertEquals($update['status'], 'processed');
-        $this->assertNotEquals($update['type']['number'], 0);
+        $this->assertEquals($update['status'], 'succeeded');
+        $this->assertNotEquals($update['details']['receivedDocuments'], 0);
 
         $response = $index->getDocuments();
         $this->assertCount(20, $response);
@@ -96,10 +96,10 @@ final class DocumentsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $update = $index->waitForPendingUpdate($promise['updateId']);
+        $update = $index->waitForTask($promise['uid']);
 
-        $this->assertEquals($update['status'], 'processed');
-        $this->assertNotEquals($update['type']['number'], 0);
+        $this->assertEquals($update['status'], 'succeeded');
+        $this->assertNotEquals($update['details']['receivedDocuments'], 0);
 
         $response = $index->getDocuments();
         $this->assertCount(20, $response);
@@ -117,10 +117,10 @@ final class DocumentsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $update = $index->waitForPendingUpdate($promise['updateId']);
+        $update = $index->waitForTask($promise['uid']);
 
-        $this->assertEquals($update['status'], 'processed');
-        $this->assertNotEquals($update['type']['number'], 0);
+        $this->assertEquals($update['status'], 'succeeded');
+        $this->assertNotEquals($update['details']['receivedDocuments'], 0);
 
         $response = $index->getDocuments();
         $this->assertCount(20, $response);
@@ -133,15 +133,15 @@ final class DocumentsTest extends TestCase
 
         $documents = ["\xB1\x31"];
 
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $index->addDocuments($documents);
     }
 
     public function testGetSingleDocumentWithIntegerDocumentId(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
         $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
         $response = $index->getDocument($doc['id']);
 
@@ -153,9 +153,9 @@ final class DocumentsTest extends TestCase
     public function testGetSingleDocumentWithStringDocumentId(): void
     {
         $stringDocumentId = 'myUniqueId';
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $addDocumentResponse = $index->addDocuments([['id' => $stringDocumentId]]);
-        $index->waitForPendingUpdate($addDocumentResponse['updateId']);
+        $index->waitForTask($addDocumentResponse['uid']);
         $response = $index->getDocument($stringDocumentId);
 
         $this->assertIsArray($response);
@@ -164,9 +164,9 @@ final class DocumentsTest extends TestCase
 
     public function testReplaceDocuments(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
         $replacement = [
             'id' => 2,
             'title' => 'The Red And The Black',
@@ -175,7 +175,7 @@ final class DocumentsTest extends TestCase
 
         $this->assertIsValidPromise($response);
 
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
         $response = $index->getDocument($replacement['id']);
 
         $this->assertSame($replacement['id'], $response['id']);
@@ -187,9 +187,9 @@ final class DocumentsTest extends TestCase
 
     public function testUpdateDocuments(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $promise = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $replacement = [
             'id' => 456,
             'title' => 'The Little Prince',
@@ -198,7 +198,7 @@ final class DocumentsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $response = $index->getDocument($replacement['id']);
 
         $this->assertSame($replacement['id'], $response['id']);
@@ -212,9 +212,9 @@ final class DocumentsTest extends TestCase
 
     public function testUpdateDocumentsInBatches(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $documentPromise = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($documentPromise['updateId']);
+        $index->waitForTask($documentPromise['uid']);
 
         $replacements = [
             ['id' => 1, 'title' => 'Alice Outside Wonderland'],
@@ -229,7 +229,7 @@ final class DocumentsTest extends TestCase
 
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
-            $index->waitForPendingUpdate($promise['updateId']);
+            $index->waitForTask($promise['uid']);
         }
 
         foreach ($replacements as $replacement) {
@@ -245,9 +245,9 @@ final class DocumentsTest extends TestCase
 
     public function testAddWithUpdateDocuments(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
         $document = [
             'id' => 9,
             'title' => '1984',
@@ -256,7 +256,7 @@ final class DocumentsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $response = $index->getDocument($document['id']);
 
         $this->assertSame($document['id'], $response['id']);
@@ -270,16 +270,16 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteNonExistingDocument(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
 
         $documentId = 9;
         $promise = $index->deleteDocument($documentId);
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS), $response);
@@ -288,16 +288,16 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteSingleExistingDocumentWithDocumentIdAsInteger(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
 
         $documentId = 123;
         $promise = $index->deleteDocument($documentId);
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS) - 1, $response);
@@ -307,12 +307,12 @@ final class DocumentsTest extends TestCase
     public function testDeleteSingleExistingDocumentWithDocumentIdAsString(): void
     {
         $stringDocumentId = 'myUniqueId';
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $addDocumentResponse = $index->addDocuments([['id' => $stringDocumentId]]);
-        $index->waitForPendingUpdate($addDocumentResponse['updateId']);
+        $index->waitForTask($addDocumentResponse['uid']);
 
         $promise = $index->deleteDocument($stringDocumentId);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $response = $index->getDocuments();
 
@@ -321,15 +321,15 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteMultipleDocumentsWithDocumentIdAsInteger(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
         $documentIds = [1, 2];
         $promise = $index->deleteDocuments($documentIds);
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS) - 2, $response);
@@ -344,12 +344,12 @@ final class DocumentsTest extends TestCase
             ['id' => 'myUniqueId2'],
             ['id' => 'myUniqueId3'],
         ];
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $addDocumentResponse = $index->addDocuments($documents);
-        $index->waitForPendingUpdate($addDocumentResponse['updateId']);
+        $index->waitForTask($addDocumentResponse['uid']);
 
         $promise = $index->deleteDocuments(['myUniqueId1', 'myUniqueId3']);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $response = $index->getDocuments();
         $this->assertCount(1, $response);
@@ -358,14 +358,14 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteAllDocuments(): void
     {
-        $index = $this->client->createIndex('documents');
+        $index = $this->createEmptyIndex('documents');
         $response = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForPendingUpdate($response['updateId']);
+        $index->waitForTask($response['uid']);
         $promise = $index->deleteAllDocuments();
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
         $response = $index->getDocuments();
 
         $this->assertCount(0, $response);
@@ -373,7 +373,7 @@ final class DocumentsTest extends TestCase
 
     public function testExceptionIfNoDocumentIdWhenGetting(): void
     {
-        $index = $this->client->createIndex('new-index');
+        $index = $this->createEmptyIndex('new-index');
 
         $this->expectException(ApiException::class);
 
@@ -389,11 +389,11 @@ final class DocumentsTest extends TestCase
                 'title' => 'Le Rouge et le Noir',
             ],
         ];
-        $index = $this->client->createIndex('an-index');
+        $index = $this->createEmptyIndex('an-index');
         $response = $index->addDocuments($documents, 'unique');
 
-        $this->assertArrayHasKey('updateId', $response);
-        $index->waitForPendingUpdate($response['updateId']);
+        $this->assertArrayHasKey('uid', $response);
+        $index->waitForTask($response['uid']);
 
         $this->assertSame('unique', $index->fetchPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
@@ -408,12 +408,12 @@ final class DocumentsTest extends TestCase
                 'title' => 'Le Rouge et le Noir',
             ],
         ];
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
         $promise = $index->updateDocuments($documents, 'unique');
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $this->assertSame('unique', $index->fetchPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
@@ -424,7 +424,7 @@ final class DocumentsTest extends TestCase
      */
     public function testFetchingDocumentWithInvalidId($documentId): void
     {
-        $index = $this->client->createIndex('an-index');
+        $index = $this->createEmptyIndex('an-index');
 
         $this->expectException(InvalidArgumentException::class);
         $index->getDocument($documentId);
@@ -435,7 +435,7 @@ final class DocumentsTest extends TestCase
      */
     public function testDeletingDocumentWithInvalidId($documentId): void
     {
-        $index = $this->client->createIndex('an-index');
+        $index = $this->createEmptyIndex('an-index');
 
         $this->expectException(InvalidArgumentException::class);
         $index->deleteDocument($documentId);

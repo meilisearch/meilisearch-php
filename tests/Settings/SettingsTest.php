@@ -23,11 +23,11 @@ final class SettingsTest extends TestCase
     public function testGetDefaultSettings(): void
     {
         $primaryKey = 'ObjectID';
-        $settingA = $this->client
-            ->createIndex('indexA')
+        $settingA = $this
+            ->createEmptyIndex('indexA')
             ->getSettings();
-        $settingB = $this->client
-            ->createIndex(
+        $settingB = $this
+            ->createEmptyIndex(
                 'indexB',
                 ['primaryKey' => $primaryKey]
             )->getSettings();
@@ -63,14 +63,14 @@ final class SettingsTest extends TestCase
 
     public function testUpdateSettings(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $settings = $index->getSettings();
 
@@ -91,7 +91,7 @@ final class SettingsTest extends TestCase
 
     public function testUpdateSettingsWithoutOverwritingThem(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
@@ -99,14 +99,14 @@ final class SettingsTest extends TestCase
         ]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $promise = $index->updateSettings([
             'searchableAttributes' => ['title'],
         ]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $settings = $index->getSettings();
 
@@ -126,19 +126,19 @@ final class SettingsTest extends TestCase
 
     public function testResetSettings(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $promise = $index->resetSettings();
 
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
 
         $settings = $index->getSettings();
 
@@ -161,15 +161,15 @@ final class SettingsTest extends TestCase
     // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.
     public function testGetThenUpdateSettings(): void
     {
-        $index = $this->client->createIndex('index');
+        $index = $this->createEmptyIndex('index');
 
         $resetPromise = $index->resetSettings();
         $this->assertIsValidPromise($resetPromise);
-        $index->waitForPendingUpdate($resetPromise['updateId']);
+        $index->waitForTask($resetPromise['uid']);
 
         $settings = $index->getSettings();
         $promise = $index->updateSettings($settings);
         $this->assertIsValidPromise($promise);
-        $index->waitForPendingUpdate($promise['updateId']);
+        $index->waitForTask($promise['uid']);
     }
 }

@@ -14,9 +14,9 @@ final class SearchTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->client->createIndex('index');
+        $this->index = $this->createEmptyIndex('index');
         $promise = $this->index->updateDocuments(self::DOCUMENTS);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
     }
 
     public function testBasicSearch(): void
@@ -104,7 +104,7 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided(): void
     {
-        $emptyIndex = $this->client->createIndex('empty');
+        $emptyIndex = $this->createEmptyIndex('empty');
 
         $res = $emptyIndex->search('prince');
 
@@ -129,8 +129,9 @@ final class SearchTest extends TestCase
 
     public function testExceptionIfNoIndexWhenSearching(): void
     {
-        $index = $this->client->createIndex('another-index');
-        $index->delete();
+        $index = $this->createEmptyIndex('another-index');
+        $res = $index->delete();
+        $index->waitForTask($res['uid']);
 
         $this->expectException(ApiException::class);
 
@@ -140,7 +141,7 @@ final class SearchTest extends TestCase
     public function testParametersArray(): void
     {
         $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'limit' => 5,
@@ -184,7 +185,7 @@ final class SearchTest extends TestCase
     public function testParametersCanBeAStar(): void
     {
         $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'limit' => 5,
@@ -228,7 +229,7 @@ final class SearchTest extends TestCase
     public function testSearchWithFilterCanBeInt(): void
     {
         $response = $this->index->updateFilterableAttributes(['id', 'genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'filter' => 'id < 12',
@@ -251,7 +252,7 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithFacetsDistribution(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'facetsDistribution' => ['genre'],
@@ -281,7 +282,7 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithFilters(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'filter' => [['genre = fantasy']],
@@ -305,7 +306,7 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithMultipleFilter(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'filter' => ['genre = fantasy', ['genre = fantasy', 'genre = fantasy']],
@@ -329,7 +330,7 @@ final class SearchTest extends TestCase
     public function testCustomSearchWithFilterAndAttributesToRetrieve(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'filter' => [['genre = fantasy']],
@@ -368,9 +369,9 @@ final class SearchTest extends TestCase
             'attribute',
             'exactness',
         ]);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
         $response = $this->index->updateSortableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'sort' => ['genre:asc'],
@@ -401,9 +402,9 @@ final class SearchTest extends TestCase
             'attribute',
             'exactness',
         ]);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
         $response = $this->index->updateSortableAttributes(['id']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'sort' => ['id:asc'],
@@ -434,9 +435,9 @@ final class SearchTest extends TestCase
             'attribute',
             'exactness',
         ]);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
         $response = $this->index->updateSortableAttributes(['id', 'title']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search('prince', [
             'sort' => ['id:asc', 'title:asc'],
@@ -588,7 +589,7 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithFacetsOption(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search(
             'prince',
@@ -606,9 +607,9 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithFacetsOptionAndMultipleFacets(): void
     {
         $response = $this->index->addDocuments([['id' => 32, 'title' => 'The Witcher', 'genre' => 'adventure', 'adaptation' => 'video game']]);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
         $response = $this->index->updateFilterableAttributes(['genre', 'adaptation']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search(
             'prince',
@@ -628,7 +629,7 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithTransformFacetsDritributionOptionToFilter(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $filterAllFacets = function (array $facets): array {
             $filterOneFacet = function (array $facet): array {
@@ -665,7 +666,7 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $facetsToUpperFunc = function (array $facets): array {
             $changeOneFacet = function (array $facet): array {
@@ -703,7 +704,7 @@ final class SearchTest extends TestCase
     public function testBasicSearchWithTransformFacetsDritributionOptionToOder(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForPendingUpdate($response['updateId']);
+        $this->index->waitForTask($response['uid']);
 
         $facetsToUpperFunc = function (array $facets): array {
             $sortOneFacet = function (array $facet): array {

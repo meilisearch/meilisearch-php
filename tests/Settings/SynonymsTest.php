@@ -13,7 +13,7 @@ final class SynonymsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->client->createIndex('index');
+        $this->index = $this->createEmptyIndex('index');
     }
 
     public function testGetDefaultSynonyms(): void
@@ -33,7 +33,7 @@ final class SynonymsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
         $synonyms = $this->index->getSynonyms();
 
         $this->assertIsArray($synonyms);
@@ -47,7 +47,7 @@ final class SynonymsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
         $synonyms = $this->index->getSynonyms();
 
         $this->assertIsArray($synonyms);
@@ -59,12 +59,12 @@ final class SynonymsTest extends TestCase
         $promise = $this->index->updateSynonyms([
             'hp' => ['harry potter'],
         ]);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
         $promise = $this->index->resetSynonyms();
 
         $this->assertIsValidPromise($promise);
 
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
         $synonyms = $this->index->getSynonyms();
 
         $this->assertIsArray($synonyms);

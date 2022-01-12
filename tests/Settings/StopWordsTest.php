@@ -13,7 +13,7 @@ final class StopWordsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->client->createIndex('index');
+        $this->index = $this->createEmptyIndex('index');
     }
 
     public function testGetDefaultStopWords(): void
@@ -31,7 +31,7 @@ final class StopWordsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
         $stopWords = $this->index->getStopWords();
 
         $this->assertIsArray($stopWords);
@@ -41,12 +41,12 @@ final class StopWordsTest extends TestCase
     public function testResetStopWords(): void
     {
         $promise = $this->index->updateStopWords(['the']);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
 
         $promise = $this->index->resetStopWords();
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
 
         $topWords = $this->index->getStopWords();
 

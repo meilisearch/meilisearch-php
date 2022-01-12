@@ -10,14 +10,15 @@ use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
+use MeiliSearch\Endpoints\Delegates\HandlesTasks;
 use MeiliSearch\Exceptions\ApiException;
-use MeiliSearch\Exceptions\TimeOutException;
 use MeiliSearch\Search\SearchResult;
 
 class Indexes extends Endpoint
 {
     use HandlesDocuments;
     use HandlesSettings;
+    use HandlesTasks;
 
     protected const PATH = '/indexes';
 
@@ -41,12 +42,18 @@ class Indexes extends Endpoint
      */
     private $updatedAt;
 
+    /**
+     * @var Tasks
+     */
+    private $tasks;
+
     public function __construct(Http $http, $uid = null, $primaryKey = null, $createdAt = null, $updatedAt = null)
     {
         $this->uid = $uid;
         $this->primaryKey = $primaryKey;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->tasks = new Tasks($http);
 
         parent::__construct($http);
     }
@@ -80,13 +87,11 @@ class Indexes extends Endpoint
      *
      * @throws Exception|ApiException
      */
-    public function create(string $uid, array $options = []): self
+    public function create(string $uid, array $options = []): array
     {
         $options['uid'] = $uid;
 
-        $response = $this->http->post(self::PATH, $options);
-
-        return $this->newInstance($response);
+        return $this->http->post(self::PATH, $options);
     }
 
     public function all(): array
@@ -152,11 +157,9 @@ class Indexes extends Endpoint
         return $this->fill($response);
     }
 
-    public function update($body): self
+    public function update($body): array
     {
-        $response = $this->http->put(self::PATH.'/'.$this->uid, $body);
-
-        return $this->fill($response);
+        return $this->http->put(self::PATH.'/'.$this->uid, $body);
     }
 
     public function delete(): array
@@ -164,37 +167,16 @@ class Indexes extends Endpoint
         return $this->http->delete(self::PATH.'/'.$this->uid) ?? [];
     }
 
-    // Updates
+    // Tasks
 
-    public function getUpdateStatus($updateId): array
+    public function getTask($uid): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/updates/'.$updateId);
+        return $this->http->get(self::PATH.'/'.$this->uid.'/tasks'.'/'.$uid);
     }
 
-    public function getAllUpdateStatus(): array
+    public function getTasks(): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/updates');
-    }
-
-    /**
-     * @param string $updateId
-     * @param int    $timeoutInMs
-     * @param int    $intervalInMs
-     *
-     * @throws TimeOutException
-     */
-    public function waitForPendingUpdate($updateId, $timeoutInMs = 5000, $intervalInMs = 50): array
-    {
-        $timeout_temp = 0;
-        while ($timeoutInMs > $timeout_temp) {
-            $res = $this->getUpdateStatus($updateId);
-            if ('enqueued' != $res['status'] && 'processing' != $res['status']) {
-                return $res;
-            }
-            $timeout_temp += $intervalInMs;
-            usleep(1000 * $intervalInMs);
-        }
-        throw new TimeOutException();
+        return $this->http->get(self::PATH.'/'.$this->uid.'/tasks');
     }
 
     // Search
