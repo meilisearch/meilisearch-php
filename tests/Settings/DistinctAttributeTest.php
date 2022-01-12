@@ -13,7 +13,7 @@ final class DistinctAttributeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->client->createIndex('index');
+        $this->index = $this->createEmptyIndex('index');
     }
 
     public function testGetDefaultDistinctAttribute(): void
@@ -28,7 +28,7 @@ final class DistinctAttributeTest extends TestCase
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
 
         $this->assertEquals($distinctAttribute, $this->index->getDistinctAttribute());
     }
@@ -37,12 +37,12 @@ final class DistinctAttributeTest extends TestCase
     {
         $distinctAttribute = 'description';
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
 
         $promise = $this->index->resetDistinctAttribute();
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForPendingUpdate($promise['updateId']);
+        $this->index->waitForTask($promise['uid']);
         $this->assertNull($this->index->getDistinctAttribute());
     }
 }
