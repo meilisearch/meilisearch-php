@@ -19,7 +19,7 @@ class Json implements SerializerInterface
     public function serialize($data)
     {
         try {
-            $encoded = json_encode($data, JSON_THROW_ON_ERROR);
+            $encoded = json_encode($data, JSON_THROW_ON_ERROR/* | JSON_FORCE_OBJECT*/);
         } catch (JsonException $e) {
             throw new JsonEncodingException(sprintf(self::JSON_ENCODE_ERROR_MESSAGE, $e->getMessage()), $e->getCode(), $e);
         }
