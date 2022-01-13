@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
+use MeiliSearch\Contracts\Index\Synonyms;
+
 trait HandlesSettings
 {
     // Settings - Ranking rules
@@ -95,18 +97,13 @@ trait HandlesSettings
 
     public function getSynonyms(): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/synonyms');
+        return (new Synonyms($this->http->get(self::PATH.'/'.$this->uid.'/settings/synonyms')))
+            ->getIterator()->getArrayCopy();
     }
 
     public function updateSynonyms(array $synonyms): array
     {
-        // Patch related to https://github.com/meilisearch/meilisearch-php/issues/204.
-        // Should be removed when implementing https://github.com/meilisearch/meilisearch-php/issues/209
-        if (0 === \count($synonyms)) {
-            $synonyms = null;
-        }
-
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/synonyms', $synonyms);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/synonyms', new Synonyms($synonyms));
     }
 
     public function resetSynonyms(): array
