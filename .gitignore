@@ -1,5 +1,6 @@
-composer.lock
 /vendor/
-.php-cs-fixer.cache
 .vscode/
 .idea/
+.php-cs-fixer.cache
+composer.lock
+phpunit.xml

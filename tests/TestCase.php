@@ -20,10 +20,6 @@ abstract class TestCase extends BaseTestCase
         ['id' => 42, 'title' => 'The Hitchhiker\'s Guide to the Galaxy'],
     ];
 
-    protected const HOST = 'http://localhost:7700';
-
-    protected const DEFAULT_KEY = 'masterKey';
-
     protected const INFO_KEY = [
         'description' => 'test',
         'actions' => ['search'],
@@ -35,11 +31,14 @@ abstract class TestCase extends BaseTestCase
      * @var Client
      */
     protected $client;
+    protected $host;
+    protected $defaultKey;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->client = new Client(self::HOST, self::DEFAULT_KEY);
+        $this->host = getenv('HOST');
+        $this->client = new Client($this->host, getenv('API_KEY'));
     }
 
     protected function tearDown(): void
