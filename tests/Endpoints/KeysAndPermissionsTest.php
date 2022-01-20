@@ -25,7 +25,7 @@ final class KeysAndPermissionsTest extends TestCase
 
     public function testExceptionIfNoMasterKeyProvided(): void
     {
-        $newClient = new Client(self::HOST);
+        $newClient = new Client($this->host);
 
         $this->expectException(ApiException::class);
         $newClient->index('index')->search('test');
@@ -37,7 +37,7 @@ final class KeysAndPermissionsTest extends TestCase
         $response = $this->client->index('index')->getSettings();
         $this->assertEquals(['*'], $response['searchableAttributes']);
 
-        $newClient = new Client(self::HOST, 'bad-key');
+        $newClient = new Client($this->host, 'bad-key');
 
         $this->expectException(ApiException::class);
         $newClient->index('index')->getSettings();
@@ -46,7 +46,7 @@ final class KeysAndPermissionsTest extends TestCase
     public function testExceptionIfBadKeyProvidedToGetKeys(): void
     {
         $this->expectException(ApiException::class);
-        $client = new Client(self::HOST, 'bad-key');
+        $client = new Client($this->host, 'bad-key');
         $client->getKeys();
     }
 
