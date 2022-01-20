@@ -1,7 +1,6 @@
 status = [
     'linter-check',
     'phpstan-tests',
-    'integration-tests (PHP 7.3)',
     'integration-tests (PHP 7.4)',
     'integration-tests (PHP 8.0)',
     'integration-tests (PHP 8.1)'
