@@ -30,7 +30,7 @@ class Json implements SerializerInterface
     /**
      * {@inheritDoc}
      */
-    public function unserialize($string)
+    public function unserialize(string $string)
     {
         try {
             $decoded = json_decode($string, true, 512, JSON_THROW_ON_ERROR);

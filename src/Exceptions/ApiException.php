@@ -11,9 +11,9 @@ class ApiException extends Exception
 {
     public $httpStatus = 0;
     public $message = null;
-    public $errorCode = null;
-    public $errorType = null;
-    public $errorLink = null;
+    public ?string $errorCode;
+    public ?string $errorType;
+    public ?string $errorLink;
     public $httpBody = null;
 
     public function __construct(ResponseInterface $response, $httpBody, $previous = null)

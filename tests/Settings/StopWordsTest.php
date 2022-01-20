@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Settings;
 
+use MeiliSearch\Endpoints\Indexes;
 use Tests\TestCase;
 
 final class StopWordsTest extends TestCase
 {
-    private $index;
+    private Indexes $index;
 
     protected function setUp(): void
     {

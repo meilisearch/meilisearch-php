@@ -10,20 +10,9 @@ use function strtoupper;
 
 final class SearchResultTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $basicServerResponse = [];
-
-    /**
-     * @var SearchResult
-     */
-    private $resultWithFacets;
-
-    /**
-     * @var SearchResult
-     */
-    private $basicResult;
+    private array $basicServerResponse = [];
+    private SearchResult $resultWithFacets;
+    private SearchResult $basicResult;
 
     protected function setUp(): void
     {

@@ -23,37 +23,13 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class Client implements Http
 {
-    /**
-     * @var ClientInterface
-     */
-    private $http;
-
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $requestFactory;
-
-    /**
-     * @var StreamFactoryInterface
-     */
-    private $streamFactory;
-
-    /**
-     * @var array
-     */
-    private $headers;
-
-    /**
-     * @var string
-     */
-    private $apiKey;
-
-    private $baseUrl;
-
-    /**
-     * @var Json
-     */
-    private $json;
+    private ClientInterface $http;
+    private RequestFactoryInterface $requestFactory;
+    private StreamFactoryInterface $streamFactory;
+    private array $headers;
+    private ?string $apiKey;
+    private string $baseUrl;
+    private Json $json;
 
     /**
      * Client constructor.
@@ -72,7 +48,7 @@ class Client implements Http
     }
 
     /**
-     * @param array $query
+     * @param string $path
      *
      * @return mixed
      *
@@ -80,7 +56,7 @@ class Client implements Http
      * @throws ApiException
      * @throws CommunicationException
      */
-    public function get($path, $query = [])
+    public function get($path, array $query = [])
     {
         $request = $this->requestFactory->createRequest(
             'GET',
@@ -116,7 +92,7 @@ class Client implements Http
         return $this->execute($request);
     }
 
-    public function put($path, $body = null, $query = [])
+    public function put(string $path, $body = null, array $query = [])
     {
         $this->headers['Content-type'] = 'application/json';
         $request = $this->requestFactory->createRequest(
@@ -128,16 +104,14 @@ class Client implements Http
     }
 
     /**
-     * @param string $path
-     * @param null   $body
-     * @param array  $query
+     * @param mixed|null $body
      *
      * @return mixed
      *
      * @throws ApiException
      * @throws JsonEncodingException
      */
-    public function patch($path, $body = null, $query = [])
+    public function patch(string $path, $body = null, array $query = [])
     {
         $this->headers['Content-type'] = 'application/json';
         $request = $this->requestFactory->createRequest(
@@ -149,15 +123,14 @@ class Client implements Http
     }
 
     /**
-     * @param $path
-     * @param array $query
+     * @param string $path
      *
      * @return mixed
      *
      * @throws ClientExceptionInterface
      * @throws ApiException
      */
-    public function delete($path, $query = [])
+    public function delete($path, array $query = [])
     {
         $request = $this->requestFactory->createRequest(
             'DELETE',

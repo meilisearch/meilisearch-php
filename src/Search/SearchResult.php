@@ -13,61 +13,33 @@ class SearchResult implements Countable, IteratorAggregate
     /**
      * @var array<int, array<string, mixed>>
      */
-    private $hits;
-
-    /**
-     * @var int
-     */
-    private $offset;
-
-    /**
-     * @var int
-     */
-    private $limit;
+    private array $hits;
 
     /**
      * `nbHits` is the attributes returned by the MeiliSearch server
      * and its value will not be modified by the methods in this class.
      * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
-     *
-     * @var int
      */
-    private $nbHits;
+    private int $nbHits;
 
-    /**
-     * @var int
-     */
-    private $hitsCount;
+    private int $hitsCount;
+    private bool $exhaustiveNbHits;
+    private int $offset;
+    private int $limit;
+    private int $processingTimeMs;
 
-    /**
-     * @var bool
-     */
-    private $exhaustiveNbHits;
-
-    /**
-     * @var int
-     */
-    private $processingTimeMs;
-
-    /**
-     * @var string
-     */
-    private $query;
-
-    /**
-     * @var bool|null
-     */
-    private $exhaustiveFacetsCount;
+    private string $query;
+    private ?bool $exhaustiveFacetsCount;
 
     /**
      * @var array<string, mixed>
      */
-    private $facetsDistribution;
+    private array $facetsDistribution;
 
     /**
      * @var array<string, mixed>
      */
-    private $raw;
+    private array $raw;
 
     public function __construct(array $body)
     {
