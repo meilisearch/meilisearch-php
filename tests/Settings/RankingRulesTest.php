@@ -30,7 +30,6 @@ final class RankingRulesTest extends TestCase
     {
         $response = $this->index->getRankingRules();
 
-        $this->assertIsArray($response);
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $response);
     }
 
@@ -49,7 +48,6 @@ final class RankingRulesTest extends TestCase
 
         $rankingRules = $this->index->getRankingRules();
 
-        $this->assertIsArray($rankingRules);
         $this->assertEquals($newRankingRules, $rankingRules);
     }
 
@@ -62,7 +60,6 @@ final class RankingRulesTest extends TestCase
         $this->index->waitForTask($promise['uid']);
         $rankingRules = $this->index->getRankingRules();
 
-        $this->assertIsArray($rankingRules);
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $rankingRules);
     }
 }

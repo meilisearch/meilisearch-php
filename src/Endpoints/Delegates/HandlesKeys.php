@@ -28,6 +28,6 @@ trait HandlesKeys
 
     public function deleteKey(string $key): array
     {
-        return $this->keys->delete($key) ?? [];
+        return $this->keys->delete($key);
     }
 }

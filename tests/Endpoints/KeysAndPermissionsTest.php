@@ -10,11 +10,16 @@ use Tests\TestCase;
 
 final class KeysAndPermissionsTest extends TestCase
 {
+    public function testGetKeysAlwaysReturnsArray(): void
+    {
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->client->getKeys());
+    }
+
     public function testGetKeysDefault(): void
     {
         $response = $this->client->getKeys();
 
-        $this->assertIsArray($response);
         $this->assertCount(2, $response['results']);
         $this->assertArrayHasKey('actions', $response['results'][0]);
         $this->assertArrayHasKey('indexes', $response['results'][0]);

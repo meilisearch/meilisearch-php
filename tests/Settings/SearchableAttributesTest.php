@@ -16,9 +16,7 @@ final class SearchableAttributesTest extends TestCase
         $searchableAttributesA = $indexA->getSearchableAttributes();
         $searchableAttributesB = $indexB->getSearchableAttributes();
 
-        $this->assertIsArray($searchableAttributesA);
         $this->assertEquals(['*'], $searchableAttributesA);
-        $this->assertIsArray($searchableAttributesB);
         $this->assertEquals(['*'], $searchableAttributesB);
     }
 
@@ -37,7 +35,6 @@ final class SearchableAttributesTest extends TestCase
         $indexA->waitForTask($promise['uid']);
         $updatedAttributes = $indexA->getSearchableAttributes();
 
-        $this->assertIsArray($updatedAttributes);
         $this->assertEquals($searchableAttributes, $updatedAttributes);
     }
 
@@ -51,7 +48,6 @@ final class SearchableAttributesTest extends TestCase
         $index->waitForTask($promise['uid']);
         $searchableAttributes = $index->getSearchableAttributes();
 
-        $this->assertIsArray($searchableAttributes);
         $this->assertEquals(['*'], $searchableAttributes);
     }
 }

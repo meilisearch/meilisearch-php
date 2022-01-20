@@ -16,10 +16,7 @@ final class DisplayedAttributesTest extends TestCase
         $attributesA = $indexA->getDisplayedAttributes();
         $attributesB = $indexB->getDisplayedAttributes();
 
-        $this->assertIsArray($attributesA);
         $this->assertEquals(['*'], $attributesA);
-
-        $this->assertIsArray($attributesB);
         $this->assertEquals(['*'], $attributesB);
     }
 
@@ -35,7 +32,6 @@ final class DisplayedAttributesTest extends TestCase
 
         $displayedAttributes = $index->getDisplayedAttributes();
 
-        $this->assertIsArray($displayedAttributes);
         $this->assertEquals($newAttributes, $displayedAttributes);
     }
 
@@ -54,7 +50,6 @@ final class DisplayedAttributesTest extends TestCase
         $index->waitForTask($promise['uid']);
 
         $displayedAttributes = $index->getDisplayedAttributes();
-        $this->assertIsArray($displayedAttributes);
         $this->assertEquals(['*'], $displayedAttributes);
     }
 }

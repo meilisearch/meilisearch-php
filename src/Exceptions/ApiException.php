@@ -32,19 +32,19 @@ class ApiException extends Exception
     {
         $base = 'MeiliSearch ApiException: Http Status: '.$this->httpStatus;
 
-        if (!is_null($this->message)) {
+        if (!\is_null($this->message)) {
             $base .= ' - Message: '.$this->message;
         }
 
-        if (!is_null($this->errorCode)) {
+        if (!\is_null($this->errorCode)) {
             $base .= ' - Code: '.$this->errorCode;
         }
 
-        if (!is_null($this->errorType)) {
+        if (!\is_null($this->errorType)) {
             $base .= ' - Type: '.$this->errorType;
         }
 
-        if (!is_null($this->errorLink)) {
+        if (!\is_null($this->errorLink)) {
             $base .= ' - Link: '.$this->errorLink;
         }
 

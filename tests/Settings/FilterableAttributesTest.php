@@ -14,7 +14,6 @@ final class FilterableAttributesTest extends TestCase
 
         $attributes = $index->getFilterableAttributes();
 
-        $this->assertIsArray($attributes);
         $this->assertEmpty($attributes);
     }
 
@@ -30,7 +29,6 @@ final class FilterableAttributesTest extends TestCase
 
         $filterableAttributes = $index->getFilterableAttributes();
 
-        $this->assertIsArray($filterableAttributes);
         $this->assertEquals($newAttributes, $filterableAttributes);
     }
 
@@ -49,7 +47,6 @@ final class FilterableAttributesTest extends TestCase
         $index->waitForTask($promise['uid']);
 
         $filterableAttributes = $index->getFilterableAttributes();
-        $this->assertIsArray($filterableAttributes);
         $this->assertEmpty($filterableAttributes);
     }
 }

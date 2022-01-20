@@ -19,6 +19,24 @@ final class IndexTest extends TestCase
         $this->index = $this->createEmptyIndex('index');
     }
 
+    public function testIndexSettingsAlwaysReturnArrays(): void
+    {
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getSynonyms());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getStopWords());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getSortableAttributes());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getSearchableAttributes());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getRankingRules());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getFilterableAttributes());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getDisplayedAttributes());
+    }
+
     public function testGetPrimaryKey(): void
     {
         $indexB = $this->createEmptyIndex(
@@ -99,7 +117,6 @@ final class IndexTest extends TestCase
         $this->client->waitForTask($response['uid']);
         $index = $this->client->getIndex($response['indexUid']);
 
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame($index->getPrimaryKey(), $primaryKey);
         $this->assertSame($index->getUid(), 'index');
         $this->assertSame($index->getPrimaryKey(), $primaryKey);
@@ -125,11 +142,9 @@ final class IndexTest extends TestCase
         );
 
         $index = $this->client->index($uid);
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertNull($index->getPrimaryKey());
 
         $index = $index->fetchInfo();
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('objectID', $index->getPrimaryKey());
         $this->assertSame($uid, $index->getUid());
         $this->assertInstanceOf(DateTimeInterface::class, $index->getCreatedAt());
@@ -156,6 +171,7 @@ final class IndexTest extends TestCase
 
         $response = $this->index->waitForTask($promise['uid']);
 
+        /* @phpstan-ignore-next-line */
         $this->assertIsArray($response);
         $this->assertSame($response['status'], 'succeeded');
         $this->assertSame($response['uid'], $promise['uid']);
@@ -171,7 +187,6 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForTask($promise['uid'], 100, 20);
 
-        $this->assertIsArray($response);
         $this->assertSame($response['status'], 'succeeded');
         $this->assertSame($response['uid'], $promise['uid']);
         $this->assertArrayHasKey('type', $response);
@@ -187,7 +202,6 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForTask($promise['uid'], 100);
 
-        $this->assertIsArray($response);
         $this->assertSame($response['status'], 'succeeded');
         $this->assertSame($response['uid'], $promise['uid']);
         $this->assertArrayHasKey('type', $response);
