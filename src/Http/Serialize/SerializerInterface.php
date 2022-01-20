@@ -23,11 +23,9 @@ interface SerializerInterface
     /**
      * Unserialize the given string.
      *
-     * @param string $string
-     *
      * @return string|int|float|bool|array|null
      *
      * @throws JsonDecodingException
      */
-    public function unserialize($string);
+    public function unserialize(string $string);
 }

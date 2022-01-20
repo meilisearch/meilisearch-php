@@ -21,12 +21,12 @@ trait HandlesTasks
         return $this->tasks->all();
     }
 
-    public function waitForTask($uid, $timeoutInMs = 5000, $intervalInMs = 50): array
+    public function waitForTask($uid, int $timeoutInMs = 5000, int $intervalInMs = 50): array
     {
         return $this->tasks->waitTask($uid, $timeoutInMs, $intervalInMs);
     }
 
-    public function waitForTasks($uids, $timeoutInMs = 5000, $intervalInMs = 50): array
+    public function waitForTasks($uids, int $timeoutInMs = 5000, int $intervalInMs = 50): array
     {
         return $this->tasks->waitTasks($uids, $timeoutInMs, $intervalInMs);
     }

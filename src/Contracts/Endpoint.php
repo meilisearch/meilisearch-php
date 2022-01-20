@@ -7,11 +7,7 @@ namespace MeiliSearch\Contracts;
 abstract class Endpoint
 {
     protected const PATH = '';
-
-    /**
-     * @var Http
-     */
-    protected $http;
+    protected Http $http;
 
     public function __construct(Http $http)
     {

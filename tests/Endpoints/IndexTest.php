@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 final class IndexTest extends TestCase
 {
-    private $index;
+    private Indexes $index;
 
     protected function setUp(): void
     {

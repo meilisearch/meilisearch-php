@@ -22,30 +22,11 @@ class Indexes extends Endpoint
 
     protected const PATH = '/indexes';
 
-    /**
-     * @var string|null
-     */
-    private $uid;
-
-    /**
-     * @var string|null
-     */
-    private $primaryKey;
-
-    /**
-     * @var string|null
-     */
-    private $createdAt;
-
-    /**
-     * @var string|null
-     */
-    private $updatedAt;
-
-    /**
-     * @var Tasks
-     */
-    private $tasks;
+    private ?string $uid;
+    private ?string $primaryKey;
+    private ?string $createdAt;
+    private ?string $updatedAt;
+    private Tasks $tasks;
 
     public function __construct(Http $http, $uid = null, $primaryKey = null, $createdAt = null, $updatedAt = null)
     {
@@ -83,8 +64,6 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @return $this
-     *
      * @throws Exception|ApiException
      */
     public function create(string $uid, array $options = []): array
@@ -182,11 +161,9 @@ class Indexes extends Endpoint
     // Search
 
     /**
-     * @param string $query
-     *
      * @return SearchResult|array
      */
-    public function search($query, array $searchParams = [], array $options = [])
+    public function search(?string $query, array $searchParams = [], array $options = [])
     {
         $result = $this->rawSearch($query, $searchParams);
 

@@ -27,41 +27,13 @@ class Client
     use HandlesSystem;
 
     private $http;
-
-    /**
-     * @var Indexes
-     */
-    private $index;
-
-    /**
-     * @var Health
-     */
-    private $health;
-
-    /**
-     * @var Version
-     */
-    private $version;
-
-    /**
-     * @var Keys
-     */
-    private $keys;
-
-    /**
-     * @var Stats
-     */
-    private $stats;
-
-    /**
-     * @var Tasks
-     */
-    private $tasks;
-
-    /**
-     * @var Dumps
-     */
-    private $dumps;
+    private Indexes $index;
+    private Health $health;
+    private Version $version;
+    private Keys $keys;
+    private Stats $stats;
+    private Tasks $tasks;
+    private Dumps $dumps;
 
     public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null)
     {

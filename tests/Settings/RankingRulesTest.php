@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Settings;
 
+use MeiliSearch\Endpoints\Indexes;
 use Tests\TestCase;
 
 final class RankingRulesTest extends TestCase
 {
-    private $index;
+    private Indexes $index;
 
     public const DEFAULT_RANKING_RULES = [
         'words',

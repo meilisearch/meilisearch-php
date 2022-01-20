@@ -22,13 +22,9 @@ class Tasks extends Endpoint
     }
 
     /**
-     * @param string $taskUid
-     * @param int    $timeoutInMs
-     * @param int    $intervalInMs
-     *
      * @throws TimeOutException
      */
-    public function waitTask($taskUid, $timeoutInMs, $intervalInMs): array
+    public function waitTask($taskUid, int $timeoutInMs, int $intervalInMs): array
     {
         $timeout_temp = 0;
         while ($timeoutInMs > $timeout_temp) {
@@ -42,12 +38,7 @@ class Tasks extends Endpoint
         throw new TimeOutException();
     }
 
-    /**
-     * @param array $taskUids
-     * @param int   $timeoutInMs
-     * @param int   $intervalInMs
-     */
-    public function waitTasks($taskUids, $timeoutInMs, $intervalInMs): array
+    public function waitTasks(array $taskUids, int $timeoutInMs, int $intervalInMs): array
     {
         $tasks = [];
         foreach ($taskUids as $taskUid) {
