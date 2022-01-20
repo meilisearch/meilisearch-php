@@ -11,4 +11,8 @@
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="HOST" value="http://localhost:7700"/>
+        <env name="API_KEY" value="masterKey"/>
+    </php>
 </phpunit>

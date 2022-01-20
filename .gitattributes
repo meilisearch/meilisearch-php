@@ -9,4 +9,4 @@
 bors.toml export-ignore
 CONTRIBUTING.md export-ignore
 phpstan.neon export-ignore
-phpunit.xml export-ignore
+phpunit.xml.dist export-ignore
