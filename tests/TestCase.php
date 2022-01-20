@@ -28,8 +28,8 @@ abstract class TestCase extends BaseTestCase
     ];
 
     protected Client $client;
-    protected $host;
-    protected $defaultKey;
+    protected string $host;
+    protected ?string $defaultKey;
 
     protected function setUp(): void
     {
