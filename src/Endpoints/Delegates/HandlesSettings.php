@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-use MeiliSearch\Contracts\Http;
-
-/**
- * @property Http http
- */
 trait HandlesSettings
 {
     // Settings - Ranking rules

@@ -113,7 +113,7 @@ final class DocumentsTest extends TestCase
         $documentNdJson = fread($fileNdJson, filesize('./tests/datasets/songs.ndjson'));
         fclose($fileNdJson);
 
-        $promise = $index->addDocumentsNdJson($documentNdJson);
+        $promise = $index->addDocumentsNdjson($documentNdJson);
 
         $this->assertIsValidPromise($promise);
 

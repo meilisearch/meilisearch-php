@@ -78,7 +78,7 @@ class Client implements Http
      */
     public function post(string $path, $body = null, array $query = [], string $contentType = null)
     {
-        if ($contentType) {
+        if (!is_null($contentType)) {
             $this->headers['Content-type'] = $contentType;
         } else {
             $this->headers['Content-type'] = 'application/json';

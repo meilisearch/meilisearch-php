@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace MeiliSearch\Endpoints\Delegates;
 
 use Generator;
-use MeiliSearch\Contracts\Http;
 use MeiliSearch\Exceptions\InvalidArgumentException;
 
-/**
- * @property Http http
- */
 trait HandlesDocuments
 {
     public function getDocument($documentId)

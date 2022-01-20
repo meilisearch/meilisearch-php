@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-use MeiliSearch\Endpoints\Tasks;
-
-/**
- * @property Tasks tasks
- */
 trait HandlesTasks
 {
     public function getTask($uid): array
