@@ -14,7 +14,6 @@ final class SortableAttributesTest extends TestCase
 
         $attributes = $index->getSortableAttributes();
 
-        $this->assertIsArray($attributes);
         $this->assertEmpty($attributes);
     }
 
@@ -30,7 +29,6 @@ final class SortableAttributesTest extends TestCase
 
         $sortableAttributes = $index->getSortableAttributes();
 
-        $this->assertIsArray($sortableAttributes);
         $this->assertEquals($newAttributes, $sortableAttributes);
     }
 
@@ -49,7 +47,6 @@ final class SortableAttributesTest extends TestCase
         $index->waitForTask($promise['uid']);
 
         $sortableAttributes = $index->getSortableAttributes();
-        $this->assertIsArray($sortableAttributes);
         $this->assertEmpty($sortableAttributes);
     }
 }

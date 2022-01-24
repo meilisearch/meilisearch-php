@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-use MeiliSearch\Endpoints\Keys;
-
-/**
- * @property Keys index
- */
 trait HandlesKeys
 {
     public function getKeys(): array
@@ -33,6 +28,6 @@ trait HandlesKeys
 
     public function deleteKey(string $key): array
     {
-        return $this->keys->delete($key) ?? [];
+        return $this->keys->delete($key);
     }
 }

@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-use MeiliSearch\Endpoints\Dumps;
-
-/**
- * @property Dumps dumps
- */
 trait HandlesDumps
 {
     public function createDump(): array

@@ -48,15 +48,13 @@ class Client implements Http
     }
 
     /**
-     * @param string $path
-     *
      * @return mixed
      *
      * @throws ClientExceptionInterface
      * @throws ApiException
      * @throws CommunicationException
      */
-    public function get($path, array $query = [])
+    public function get(string $path, array $query = [])
     {
         $request = $this->requestFactory->createRequest(
             'GET',
@@ -78,7 +76,7 @@ class Client implements Http
      */
     public function post(string $path, $body = null, array $query = [], string $contentType = null)
     {
-        if ($contentType) {
+        if (!\is_null($contentType)) {
             $this->headers['Content-type'] = $contentType;
         } else {
             $this->headers['Content-type'] = 'application/json';
@@ -123,14 +121,12 @@ class Client implements Http
     }
 
     /**
-     * @param string $path
-     *
      * @return mixed
      *
      * @throws ClientExceptionInterface
      * @throws ApiException
      */
-    public function delete($path, array $query = [])
+    public function delete(string $path, array $query = [])
     {
         $request = $this->requestFactory->createRequest(
             'DELETE',

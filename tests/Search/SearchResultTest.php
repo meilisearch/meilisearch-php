@@ -155,7 +155,8 @@ final class SearchResultTest extends TestCase
     {
         $iterator = $this->basicResult->getIterator();
 
-        $this->assertIsIterable($iterator);
+        /* @phpstan-ignore-next-line */
+        $this->assertIsIterable($this->basicResult);
         $this->assertCount(2, $iterator);
 
         $this->assertEquals([

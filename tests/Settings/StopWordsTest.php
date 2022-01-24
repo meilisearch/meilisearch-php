@@ -21,7 +21,6 @@ final class StopWordsTest extends TestCase
     {
         $response = $this->index->getStopWords();
 
-        $this->assertIsArray($response);
         $this->assertEmpty($response);
     }
 
@@ -35,7 +34,6 @@ final class StopWordsTest extends TestCase
         $this->index->waitForTask($promise['uid']);
         $stopWords = $this->index->getStopWords();
 
-        $this->assertIsArray($stopWords);
         $this->assertEquals($newStopWords, $stopWords);
     }
 
@@ -49,9 +47,8 @@ final class StopWordsTest extends TestCase
         $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['uid']);
 
-        $topWords = $this->index->getStopWords();
+        $stopWords = $this->index->getStopWords();
 
-        $this->assertIsArray($topWords);
-        $this->assertEmpty($topWords);
+        $this->assertEmpty($stopWords);
     }
 }

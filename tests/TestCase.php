@@ -49,7 +49,6 @@ abstract class TestCase extends BaseTestCase
 
     public function assertIsValidPromise(array $promise): void
     {
-        $this->assertIsArray($promise);
         $this->assertArrayHasKey('uid', $promise);
     }
 

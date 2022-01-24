@@ -6,9 +6,6 @@ namespace MeiliSearch\Delegates;
 
 use MeiliSearch\Endpoints\Indexes;
 
-/**
- * @property Indexes index
- */
 trait HandlesIndex
 {
     /**

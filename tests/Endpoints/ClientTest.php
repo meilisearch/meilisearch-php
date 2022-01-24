@@ -11,11 +11,30 @@ use Tests\TestCase;
 
 final class ClientTest extends TestCase
 {
+    public function testClientIndexMethodsAlwaysReturnArray(): void
+    {
+        $index = $this->createEmptyIndex('index');
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->client->getAllIndexes());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->client->getAllRawIndexes());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->client->getRawIndex($index->getUid()));
+    }
+
+    public function testClientIndexMethodsAlwaysReturnsIndexesInstance(): void
+    {
+        $index = $this->createEmptyIndex('index');
+        /* @phpstan-ignore-next-line */
+        $this->assertInstanceOf(Indexes::class, $this->client->getIndex($index->getUid()));
+        /* @phpstan-ignore-next-line */
+        $this->assertInstanceOf(Indexes::class, $this->client->index($index->getUid()));
+    }
+
     public function testGetAllIndexesWhenEmpty(): void
     {
         $response = $this->client->getAllIndexes();
 
-        $this->assertIsArray($response);
         $this->assertEmpty($response);
     }
 
@@ -23,7 +42,6 @@ final class ClientTest extends TestCase
     {
         $response = $this->client->getAllRawIndexes();
 
-        $this->assertIsArray($response);
         $this->assertEmpty($response);
     }
 
@@ -39,7 +57,6 @@ final class ClientTest extends TestCase
     {
         $index = $this->createEmptyIndex('index');
 
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -51,7 +68,6 @@ final class ClientTest extends TestCase
             ['primaryKey' => 'ObjectId']
         );
 
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -66,7 +82,6 @@ final class ClientTest extends TestCase
             ]
         );
 
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
@@ -80,7 +95,6 @@ final class ClientTest extends TestCase
 
         $response = $this->client->getAllIndexes();
 
-        $this->assertIsArray($response);
         $this->assertCount(2, $response);
 
         $taskUids = array_map(function ($index): ?string {
@@ -100,7 +114,6 @@ final class ClientTest extends TestCase
 
         $res = $this->client->getAllRawIndexes();
 
-        $this->assertIsArray($res);
         $this->assertNotInstanceOf(Indexes::class, $res[0]);
     }
 
@@ -111,7 +124,6 @@ final class ClientTest extends TestCase
 
         $res = $this->client->getRawIndex('indexA');
 
-        $this->assertIsArray($res);
         $this->assertArrayHasKey('uid', $res);
     }
 
@@ -123,7 +135,6 @@ final class ClientTest extends TestCase
         $this->client->waitForTask($response['uid']);
         $index = $this->client->getIndex($response['indexUid']);
 
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame($index->getPrimaryKey(), 'id');
         $this->assertSame($index->getUid(), 'indexA');
     }
@@ -187,7 +198,6 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex('index');
 
         $index = $this->client->getIndex('index');
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -197,7 +207,6 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex('index');
 
         $index = $this->client->index('index');
-        $this->assertInstanceOf(Indexes::class, $index);
         $this->assertSame('index', $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
@@ -262,14 +271,8 @@ final class ClientTest extends TestCase
 
     public function testBadClientUrl(): void
     {
-        try {
-            $client = new Client('http://127.0.0.1.com:1234', 'some-key');
-            $client->createIndex('index');
-        } catch (\Exception $e) {
-            $this->assertIsString($e->getMessage());
-
-            return;
-        }
-        $this->fail('Bad client was accepted and the exception was not thrown');
+        $this->expectException(\Exception::class);
+        $client = new Client('http://127.0.0.1.com:1234', 'some-key');
+        $client->createIndex('index');
     }
 }
