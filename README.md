@@ -86,7 +86,7 @@ NB: you can also download Meilisearch from **Homebrew** or **APT** or even run i
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Meilisearch\Client;
+use MeiliSearch\Client;
 
 $client = new Client('http://127.0.0.1:7700', 'masterKey');
 
