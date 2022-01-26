@@ -27,7 +27,7 @@ final class InvalidResponseBodyExceptionTest extends TestCase
             $this->assertEquals($statusCode, $invalidResponseBodyException->httpStatus);
             $this->assertEquals('Gateway Timeout', $invalidResponseBodyException->message);
 
-            $expectedExceptionToString = "MeiliSearch InvalidResponseBodyException: Http Status: {$statusCode} - Message: Gateway Timeout";
+            $expectedExceptionToString = "Meilisearch InvalidResponseBodyException: Http Status: {$statusCode} - Message: Gateway Timeout";
             $this->assertEquals($expectedExceptionToString, (string) $invalidResponseBodyException);
         }
     }
@@ -44,7 +44,7 @@ final class InvalidResponseBodyExceptionTest extends TestCase
             $this->assertEquals($statusCode, $invalidResponseBodyException->httpStatus);
             $this->assertEquals($response->getReasonPhrase(), $invalidResponseBodyException->message);
 
-            $expectedExceptionToString = "MeiliSearch InvalidResponseBodyException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
+            $expectedExceptionToString = "Meilisearch InvalidResponseBodyException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
             $this->assertEquals($expectedExceptionToString, (string) $invalidResponseBodyException);
         }
     }

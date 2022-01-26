@@ -10,6 +10,6 @@ class CommunicationException extends Exception
 {
     public function __toString()
     {
-        return 'MeiliSearch CommunicationException: '.$this->getMessage();
+        return 'Meilisearch CommunicationException: '.$this->getMessage();
     }
 }

@@ -24,7 +24,7 @@ class InvalidResponseBodyException extends Exception
 
     public function __toString()
     {
-        $base = 'MeiliSearch InvalidResponseBodyException: Http Status: '.$this->httpStatus;
+        $base = 'Meilisearch InvalidResponseBodyException: Http Status: '.$this->httpStatus;
 
         if ($this->message) {
             $base .= ' - Message: '.$this->message;

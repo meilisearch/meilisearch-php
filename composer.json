@@ -1,6 +1,6 @@
 {
     "name": "meilisearch/meilisearch-php",
-    "description": "PHP wrapper for the MeiliSearch API",
+    "description": "PHP wrapper for the Meilisearch API",
     "keywords": ["meilisearch", "instant", "search", "api", "client", "php"],
     "type": "library",
     "license": "MIT",
