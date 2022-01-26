@@ -20,7 +20,7 @@ final class TimeOutExceptionTest extends TestCase
             $this->assertEquals($message, $timeOutException->getMessage());
             $this->assertEquals($code, $timeOutException->getCode());
 
-            $expectedExceptionToString = "MeiliSearch TimeOutException: Code: {$code} - Message: {$message}";
+            $expectedExceptionToString = "Meilisearch TimeOutException: Code: {$code} - Message: {$message}";
             $this->assertEquals($expectedExceptionToString, (string) $timeOutException);
         }
     }
@@ -36,7 +36,7 @@ final class TimeOutExceptionTest extends TestCase
             $this->assertEquals($message, $timeOutException->getMessage());
             $this->assertEquals($code, $timeOutException->getCode());
 
-            $expectedExceptionToString = "MeiliSearch TimeOutException: Code: {$code} - Message: {$message}";
+            $expectedExceptionToString = "Meilisearch TimeOutException: Code: {$code} - Message: {$message}";
             $this->assertEquals($expectedExceptionToString, (string) $timeOutException);
         }
     }
@@ -48,7 +48,7 @@ final class TimeOutExceptionTest extends TestCase
         } catch (TimeOutException $timeOutException) {
             $this->assertEquals('', $timeOutException->getMessage());
 
-            $expectedExceptionToString = 'MeiliSearch TimeOutException: Code: 408';
+            $expectedExceptionToString = 'Meilisearch TimeOutException: Code: 408';
             $this->assertEquals($expectedExceptionToString, (string) $timeOutException);
         }
     }

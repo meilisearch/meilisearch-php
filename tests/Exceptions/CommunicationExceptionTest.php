@@ -16,7 +16,7 @@ final class CommunicationExceptionTest extends TestCase
         } catch (CommunicationException $CommunicationException) {
             $this->assertEquals('Connection refused', $CommunicationException->getMessage());
 
-            $expectedExceptionToString = 'MeiliSearch CommunicationException: Connection refused';
+            $expectedExceptionToString = 'Meilisearch CommunicationException: Connection refused';
             $this->assertEquals($expectedExceptionToString, (string) $CommunicationException);
         }
     }

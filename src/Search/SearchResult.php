@@ -16,7 +16,7 @@ class SearchResult implements Countable, IteratorAggregate
     private array $hits;
 
     /**
-     * `nbHits` is the attributes returned by the MeiliSearch server
+     * `nbHits` is the attributes returned by the Meilisearch server
      * and its value will not be modified by the methods in this class.
      * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
      */

@@ -22,7 +22,7 @@ class TimeOutException extends Exception
 
     public function __toString()
     {
-        $base = 'MeiliSearch TimeOutException: Code: '.$this->code;
+        $base = 'Meilisearch TimeOutException: Code: '.$this->code;
         if ($this->message) {
             return $base.' - Message: '.$this->message;
         } else {

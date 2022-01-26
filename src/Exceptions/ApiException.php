@@ -30,7 +30,7 @@ class ApiException extends Exception
 
     public function __toString()
     {
-        $base = 'MeiliSearch ApiException: Http Status: '.$this->httpStatus;
+        $base = 'Meilisearch ApiException: Http Status: '.$this->httpStatus;
 
         if (!\is_null($this->message)) {
             $base .= ' - Message: '.$this->message;

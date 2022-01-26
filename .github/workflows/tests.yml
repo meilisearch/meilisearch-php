@@ -59,7 +59,7 @@ jobs:
       run: |
         composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
         composer update --prefer-dist --no-progress
-    - name: MeiliSearch (latest version) setup with Docker
+    - name: Meilisearch (latest version) setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
     - name: Run test suite - default HTTP client (Guzzle 7)
       run: |

@@ -1,4 +1,4 @@
-# Testing the code base against the MeiliSearch pre-releases
+# Testing the code base against the Meilisearch pre-releases
 name: Pre-Release Tests
 
 # Will only run for PRs and pushes to bump-meilisearch-v*
@@ -27,9 +27,9 @@ jobs:
       run: |
         composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
         composer install --prefer-dist --no-progress --no-suggest
-    - name: Get the latest MeiliSearch RC
+    - name: Get the latest Meilisearch RC
       run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/main/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
-    - name: MeiliSearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
+    - name: Meilisearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:${{ env.MEILISEARCH_VERSION }} ./meilisearch --master-key=masterKey --no-analytics=true
     - name: Run test suite - default HTTP client (Guzzle 7)
       run: |

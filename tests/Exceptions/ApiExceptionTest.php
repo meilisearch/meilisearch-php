@@ -35,7 +35,7 @@ final class ApiExceptionTest extends TestCase
             $this->assertEquals($httpBodyExample['type'], $apiException->errorType);
             $this->assertEquals($httpBodyExample['link'], $apiException->errorLink);
 
-            $expectedExceptionToString = "MeiliSearch ApiException: Http Status: {$statusCode} - Message: {$httpBodyExample['message']} - Code: {$httpBodyExample['code']} - Type: {$httpBodyExample['type']} - Link: {$httpBodyExample['link']}";
+            $expectedExceptionToString = "Meilisearch ApiException: Http Status: {$statusCode} - Message: {$httpBodyExample['message']} - Code: {$httpBodyExample['code']} - Type: {$httpBodyExample['type']} - Link: {$httpBodyExample['link']}";
             $this->assertEquals($expectedExceptionToString, (string) $apiException);
         }
     }
@@ -55,7 +55,7 @@ final class ApiExceptionTest extends TestCase
             $this->assertNull($apiException->errorType);
             $this->assertNull($apiException->errorLink);
 
-            $expectedExceptionToString = "MeiliSearch ApiException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
+            $expectedExceptionToString = "Meilisearch ApiException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
             $this->assertEquals($expectedExceptionToString, (string) $apiException);
         }
     }
