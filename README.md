@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://res.cloudinary.com/meilisearch/image/upload/v1587402338/SDKs/meilisearch_php.svg" alt="MeiliSearch-PHP" width="200" height="200" />
+  <img src="https://res.cloudinary.com/meilisearch/image/upload/v1587402338/SDKs/meilisearch_php.svg" alt="meilisearch-PHP" width="200" height="200" />
 </p>
 
-<h1 align="center">MeiliSearch PHP</h1>
+<h1 align="center">meilisearch PHP</h1>
 
 <h4 align="center">
-  <a href="https://github.com/meilisearch/MeiliSearch">MeiliSearch</a> |
+  <a href="https://github.com/meilisearch/meilisearch">meilisearch</a> |
   <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://slack.meilisearch.com">Slack</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
@@ -20,18 +20,18 @@
   <a href="https://app.bors.tech/repositories/28780"><img src="https://bors.tech/images/badge_small.svg" alt="Bors enabled"></a>
 </p>
 
-<p align="center">⚡ The MeiliSearch API client written for PHP 🐘</p>
+<p align="center">⚡ The meilisearch API client written for PHP 🐘</p>
 
-**MeiliSearch PHP** is the MeiliSearch API client for PHP developers.
+**meilisearch PHP** is the meilisearch API client for PHP developers.
 
-**MeiliSearch** is an open-source search engine. [Discover what MeiliSearch is!](https://github.com/meilisearch/MeiliSearch)
+**meilisearch** is an open-source search engine. [Discover what meilisearch is!](https://github.com/meilisearch/meilisearch)
 
 ## Table of Contents <!-- omit in toc -->
 
 - [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
 - [🚀 Getting Started](#-getting-started)
-- [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
+- [🤖 Compatibility with meilisearch](#-compatibility-with-meilisearch)
 - [💡 Learn More](#-learn-more)
 - [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
   - [Customize your HTTP Client](#customize-your-http-client)
@@ -61,21 +61,21 @@ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.
 
 💡 *More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities).*
 
-### Run MeiliSearch <!-- omit in toc -->
+### Run meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a MeiliSearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
+There are many easy ways to [download and run a meilisearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
 
 For example, using the `curl` command in your [Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
 
 ```sh
-#Install MeiliSearch
+#Install meilisearch
 curl -L https://install.meilisearch.com | sh
 
-# Launch MeiliSearch
+# Launch meilisearch
 ./meilisearch --master-key=masterKey
 ```
 
-NB: you can also download MeiliSearch from **Homebrew** or **APT** or even run it using **Docker**.
+NB: you can also download meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
 
 ## 🚀 Getting Started
 
@@ -86,7 +86,7 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT** or even run i
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use MeiliSearch\Client;
+use meilisearch\Client;
 
 $client = new Client('http://127.0.0.1:7700', 'masterKey');
 
@@ -102,7 +102,7 @@ $documents = [
     ['id' => 6,  'title' => 'Philadelphia', 'genres' => ['Drama']],
 ];
 
-# If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
+# If the index 'movies' does not exist, meilisearch creates it when you first add the documents.
 $index->addDocuments($documents); // => { "uid": 0 }
 ```
 
@@ -111,7 +111,7 @@ With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` 
 #### Basic Search <!-- omit in toc -->
 
 ```php
-// MeiliSearch is typo-tolerant:
+// meilisearch is typo-tolerant:
 $hits = $index->search('wondre woman')->getHits();
 print_r($hits);
 ```
@@ -183,7 +183,7 @@ $index->updateFilterableAttributes([
 
 You only need to perform this operation once.
 
-Note that MeiliSearch will rebuild your index whenever you update `filterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [tasks](https://docs.meilisearch.com/reference/api/tasks.html#get-task)).
+Note that meilisearch will rebuild your index whenever you update `filterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [tasks](https://docs.meilisearch.com/reference/api/tasks.html#get-task)).
 
 Then, you can perform the search:
 
@@ -213,9 +213,9 @@ $index->search(
 }
 ```
 
-## 🤖 Compatibility with MeiliSearch
+## 🤖 Compatibility with meilisearch
 
-This package only guarantees the compatibility with the [version v0.25.0 of MeiliSearch](https://github.com/meilisearch/MeiliSearch/releases/tag/v0.25.0).
+This package only guarantees the compatibility with the [version v0.25.0 of meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.25.0).
 
 ## 💡 Learn More
 
@@ -266,7 +266,7 @@ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 ### Customize your HTTP Client
 
 For some reason, you might want to pass a custom configuration to your own HTTP client.<br>
-Make sure you have a [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client when you initialize the MeiliSearch client.
+Make sure you have a [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client when you initialize the meilisearch client.
 
 Following the example in the [Getting Started](#-getting-started) section, with the Guzzle HTTP client:
 
@@ -282,4 +282,4 @@ If you want to know more about the development workflow or want to contribute, p
 
 <hr>
 
-**MeiliSearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.
+**meilisearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.
