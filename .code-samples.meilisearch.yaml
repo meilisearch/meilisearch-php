@@ -24,7 +24,7 @@ get_documents_1: |-
 add_or_replace_documents_1: |-
   $client->index('movies')->addDocuments([
     [
-      'id' => 287947
+      'id' => 287947,
       'title' => 'Shazam',
       'poster' => 'https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg',
       'overview' => 'A boy is given the ability to become an adult superhero in times of need with a single magic word.',
@@ -34,7 +34,7 @@ add_or_replace_documents_1: |-
 add_or_update_documents_1: |-
   $client->index('movies')->updateDocuments([
     [
-      'id' => 287947
+      'id' => 287947,
       'title' => 'Shazam ⚡️',
       'genres' => 'comedy'
     ]
