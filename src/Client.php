@@ -17,6 +17,7 @@ use MeiliSearch\Endpoints\Stats;
 use MeiliSearch\Endpoints\Tasks;
 use MeiliSearch\Endpoints\Version;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class Client
 {
@@ -35,9 +36,9 @@ class Client
     private Tasks $tasks;
     private Dumps $dumps;
 
-    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null)
+    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null)
     {
-        $this->http = new Http\Client($url, $apiKey, $httpClient);
+        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);
