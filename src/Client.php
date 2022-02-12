@@ -36,8 +36,12 @@ class Client
     private Tasks $tasks;
     private Dumps $dumps;
 
-    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null, RequestFactoryInterface $requestFactory = null)
-    {
+    public function __construct(
+        string $url,
+        string $apiKey = null,
+        ClientInterface $httpClient = null,
+        RequestFactoryInterface $requestFactory = null
+    ) {
         $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
