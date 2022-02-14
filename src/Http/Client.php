@@ -13,6 +13,7 @@ use MeiliSearch\Exceptions\InvalidResponseBodyException;
 use MeiliSearch\Exceptions\JsonDecodingException;
 use MeiliSearch\Exceptions\JsonEncodingException;
 use MeiliSearch\Http\Serialize\Json;
+use MeiliSearch\MeiliSearch;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
@@ -34,15 +35,20 @@ class Client implements Http
     /**
      * Client constructor.
      */
-    public function __construct(string $url, string $apiKey = null, ClientInterface $httpClient = null)
-    {
+    public function __construct(
+        string $url,
+        string $apiKey = null,
+        ClientInterface $httpClient = null,
+        RequestFactoryInterface $reqFactory = null
+    ) {
         $this->baseUrl = $url;
         $this->apiKey = $apiKey;
         $this->http = $httpClient ?? Psr18ClientDiscovery::find();
-        $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
+        $this->requestFactory = $reqFactory ?? Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         $this->headers = array_filter([
             'Authorization' => sprintf('Bearer %s', $this->apiKey),
+            'User-Agent' => MeiliSearch::qualifiedVersion(),
         ]);
         $this->json = new Json();
     }
