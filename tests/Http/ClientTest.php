@@ -9,9 +9,11 @@ use MeiliSearch\Exceptions\InvalidResponseBodyException;
 use MeiliSearch\Exceptions\JsonDecodingException;
 use MeiliSearch\Exceptions\JsonEncodingException;
 use MeiliSearch\Http\Client;
+use MeiliSearch\MeiliSearch;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -189,6 +191,35 @@ class ClientTest extends TestCase
         $this->expectExceptionMessage('not json');
 
         $client->get('/');
+    }
+
+    public function testClientHasDefaultUserAgent(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+        $reqFactory = $this->createMock(RequestFactoryInterface::class);
+        $requestStub = $this->createMock(RequestInterface::class);
+
+        $requestStub->expects($this->any())
+            ->method('withAddedHeader')
+            ->withConsecutive(
+                [
+                    $this->equalTo('Authorization'),
+                    $this->equalTo('Bearer masterKey'),
+                ],
+                [
+                    $this->equalTo('User-Agent'),
+                    $this->equalTo(MeiliSearch::qualifiedVersion()),
+                ],
+              )
+            ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
+
+        $reqFactory->expects($this->any())
+            ->method('createRequest')
+            ->willReturn($requestStub);
+
+        $client = new \MeiliSearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory);
+
+        $client->health();
     }
 
     public function testParseResponseReturnsNullForNoContent(): void
