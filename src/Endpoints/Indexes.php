@@ -8,6 +8,7 @@ use DateTime;
 use Exception;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
+use MeiliSearch\Contracts\Index\Settings;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
 use MeiliSearch\Endpoints\Delegates\HandlesTasks;
@@ -198,17 +199,12 @@ class Indexes extends Endpoint
 
     public function getSettings(): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/settings');
+        return (new Settings($this->http->get(self::PATH.'/'.$this->uid.'/settings')))
+            ->getIterator()->getArrayCopy();
     }
 
     public function updateSettings($settings): array
     {
-        // Patch related to https://github.com/meilisearch/meilisearch-php/issues/204
-        // Should be removed when implementing https://github.com/meilisearch/meilisearch-php/issues/209
-        if (\array_key_exists('synonyms', $settings) && 0 == \count($settings['synonyms'])) {
-            $settings['synonyms'] = null;
-        }
-
         return $this->http->post(self::PATH.'/'.$this->uid.'/settings', $settings);
     }
 

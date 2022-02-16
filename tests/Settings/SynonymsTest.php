@@ -20,6 +20,9 @@ final class SynonymsTest extends TestCase
     public function testGetDefaultSynonyms(): void
     {
         $this->assertEmpty($this->index->getSynonyms());
+        $response = $this->index->getSynonyms();
+
+        $this->assertEmpty($response);
     }
 
     public function testUpdateSynonyms(): void
