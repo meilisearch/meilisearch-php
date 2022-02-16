@@ -40,7 +40,7 @@ final class SettingsTest extends TestCase
         $this->assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingA['displayedAttributes']);
         $this->assertIsArray($settingA['stopWords']);
         $this->assertEmpty($settingA['stopWords']);
-        $this->assertIsArray($settingA['synonyms']);
+        $this->assertIsIterable($settingA['synonyms']);
         $this->assertEmpty($settingA['synonyms']);
         $this->assertIsArray($settingA['filterableAttributes']);
         $this->assertEmpty($settingA['filterableAttributes']);
@@ -53,7 +53,7 @@ final class SettingsTest extends TestCase
         $this->assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingB['displayedAttributes']);
         $this->assertIsArray($settingB['stopWords']);
         $this->assertEmpty($settingB['stopWords']);
-        $this->assertIsArray($settingB['synonyms']);
+        $this->assertIsIterable($settingB['synonyms']);
         $this->assertEmpty($settingB['synonyms']);
         $this->assertIsArray($settingB['filterableAttributes']);
         $this->assertEmpty($settingB['filterableAttributes']);
@@ -81,7 +81,7 @@ final class SettingsTest extends TestCase
         $this->assertIsArray($settings['displayedAttributes']);
         $this->assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settings['displayedAttributes']);
         $this->assertEquals(['the'], $settings['stopWords']);
-        $this->assertIsArray($settings['synonyms']);
+        $this->assertIsIterable($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
         $this->assertIsArray($settings['filterableAttributes']);
         $this->assertEmpty($settings['filterableAttributes']);
@@ -116,7 +116,7 @@ final class SettingsTest extends TestCase
         $this->assertIsArray($settings['displayedAttributes']);
         $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
         $this->assertEquals(['the'], $settings['stopWords']);
-        $this->assertIsArray($settings['synonyms']);
+        $this->assertIsIterable($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
         $this->assertIsArray($settings['filterableAttributes']);
         $this->assertEmpty($settings['filterableAttributes']);
@@ -150,7 +150,7 @@ final class SettingsTest extends TestCase
         $this->assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
         $this->assertIsArray($settings['stopWords']);
         $this->assertEmpty($settings['stopWords']);
-        $this->assertIsArray($settings['synonyms']);
+        $this->assertIsIterable($settings['synonyms']);
         $this->assertEmpty($settings['synonyms']);
         $this->assertIsArray($settings['filterableAttributes']);
         $this->assertEmpty($settings['filterableAttributes']);
