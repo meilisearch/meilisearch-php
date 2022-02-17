@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace MeiliSearch\Delegates;
+
 use MeiliSearch\Http\Serialize\Json;
 
 trait HandlesSystem
@@ -33,28 +34,33 @@ trait HandlesSystem
         return $this->stats->show();
     }
 
-    function base64url_encode($data) {
+    public static function base64url_encode($data)
+    {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    public function generateTenantToken($parentApiKey, $payload)
+    public function generateTenantToken($options, ?string $apiKey = null)
     {
         $json = new Json();
 
         // Standar JWT header for encryption with SHA256/HS256 algorithm
-        $header = array(
-            "typ"=> "JWT",
-            "alg"=> "HS256"
-          );
+        $header = [
+            'typ' => 'JWT',
+            'alg' => 'HS256',
+          ];
+
+        if (!$apiKey) {
+            $apiKey = $this->apiKey;
+        }
 
         // Add the required fields with the prefix of the key
-        $payload['apiKeyPrefix'] = substr($parentApiKey, 0, 8);
+        $options['apiKeyPrefix'] = substr($apiKey, 0, 8);
 
         // Serialize the Header
         $jsonHeader = $json->serialize($header);
 
         // Serialize the Payload
-        $jsonPayload = $json->serialize($payload);
+        $jsonPayload = $json->serialize($options);
 
         // Encode Header to Base64Url String
         $encodedHeader = $this->base64url_encode($jsonHeader);
@@ -63,13 +69,13 @@ trait HandlesSystem
         $encodedPayload = $this->base64url_encode($jsonPayload);
 
         // Create Signature Hash
-        $signature = hash_hmac('sha256', $encodedHeader . "." . $encodedPayload, $parentApiKey, true);
+        $signature = hash_hmac('sha256', $encodedHeader.'.'.$encodedPayload, $apiKey, true);
 
         // Encode Signature to Base64Url String
         $encodedSignature = $this->base64url_encode($signature);
 
         // Create JWT
-        $jwtToken = $encodedHeader . "." . $encodedPayload . "." . $encodedSignature;
+        $jwtToken = $encodedHeader.'.'.$encodedPayload.'.'.$encodedSignature;
 
         return $jwtToken;
     }
