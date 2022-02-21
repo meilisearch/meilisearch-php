@@ -34,12 +34,12 @@ trait HandlesSystem
         return $this->stats->show();
     }
 
-    public static function base64url_encode($data)
+    public function base64url_encode($data)
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    public function generateTenantToken($options, ?string $apiKey = null)
+    public function generateTenantToken($searchRules, ?string $expiresAt = null, ?string $apiKey = null): string
     {
         $json = new Json();
 
@@ -49,18 +49,22 @@ trait HandlesSystem
             'alg' => 'HS256',
           ];
 
-        if (!$apiKey) {
+        if (null == $apiKey) {
             $apiKey = $this->apiKey;
         }
 
-        // Add the required fields with the prefix of the key
-        $options['apiKeyPrefix'] = substr($apiKey, 0, 8);
+        // Add the required fields to the payload
+        $payload['apiKeyPrefix'] = substr($apiKey, 0, 8);
+        $payload['searchRules'] = $searchRules;
+        if ($expiresAt) {
+            $payload['exp'] = $expiredAt;
+        }
 
         // Serialize the Header
         $jsonHeader = $json->serialize($header);
 
         // Serialize the Payload
-        $jsonPayload = $json->serialize($options);
+        $jsonPayload = $json->serialize($payload);
 
         // Encode Header to Base64Url String
         $encodedHeader = $this->base64url_encode($jsonHeader);

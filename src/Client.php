@@ -42,6 +42,7 @@ class Client
         ClientInterface $httpClient = null,
         RequestFactoryInterface $requestFactory = null
     ) {
+        $this->apiKey = $apiKey;
         $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
