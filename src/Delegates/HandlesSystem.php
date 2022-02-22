@@ -39,11 +39,11 @@ trait HandlesSystem
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    public function generateTenantToken($searchRules, ?string $expiresAt = null, ?string $apiKey = null): string
+    public function generateTenantToken($searchRules, ?int $expiresAt = null, ?string $apiKey = null): string
     {
         $json = new Json();
 
-        // Standar JWT header for encryption with SHA256/HS256 algorithm
+        // Standard JWT header for encryption with SHA256/HS256 algorithm
         $header = [
             'typ' => 'JWT',
             'alg' => 'HS256',
@@ -57,7 +57,7 @@ trait HandlesSystem
         $payload['apiKeyPrefix'] = substr($apiKey, 0, 8);
         $payload['searchRules'] = $searchRules;
         if ($expiresAt) {
-            $payload['exp'] = $expiredAt;
+            $payload['exp'] = $expiresAt;
         }
 
         // Serialize the Header
