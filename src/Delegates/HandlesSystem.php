@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Delegates;
 
+use DateTime;
+use MeiliSearch\Exceptions\InvalidArgumentException;
 use MeiliSearch\Http\Serialize\Json;
 
 trait HandlesSystem
@@ -39,8 +41,19 @@ trait HandlesSystem
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    public function generateTenantToken($searchRules, ?int $expiresAt = null, ?string $apiKey = null): string
+    public function generateTenantToken($searchRules, ?DateTime $expiresAt = null, ?string $apiKey = null): string
     {
+        // Validate every fields
+        if (null == $apiKey && null == $this->apiKey) {
+            throw InvalidArgumentException::emptyArgument('api key');
+        }
+        if (null == $searchRules) {
+            throw InvalidArgumentException::emptyArgument('search rules');
+        }
+        if ($expiresAt && new DateTime() > $expiresAt) {
+            throw InvalidArgumentException::dateIsExpired($expiresAt);
+        }
+
         $json = new Json();
 
         // Standard JWT header for encryption with SHA256/HS256 algorithm
@@ -57,7 +70,7 @@ trait HandlesSystem
         $payload['apiKeyPrefix'] = substr($apiKey, 0, 8);
         $payload['searchRules'] = $searchRules;
         if ($expiresAt) {
-            $payload['exp'] = $expiresAt;
+            $payload['exp'] = $expiresAt->getTimestamp();
         }
 
         // Serialize the Header

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use DateTimeInterface;
-use Tests\TestCase;
+use Datetime;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\ApiException;
-use \Datetime;
+use MeiliSearch\Exceptions\InvalidArgumentException;
+use Tests\TestCase;
 
 final class TenantTokenTest extends TestCase
 {
@@ -18,9 +18,7 @@ final class TenantTokenTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $index = $this->createEmptyIndex('tenantToken');
-        $promise = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForTask($promise['uid']);
+        $this->createEmptyIndex('tenantToken');
 
         $response = $this->client->getKeys();
         $this->privateKey = array_reduce($response['results'], function ($carry, $item) {
@@ -33,8 +31,11 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithSearchRulesOnly(): void
     {
-        $token = $this->privateClient->generateTenantToken(searchRules: array('*'));
-        $tokenClient = new Client('http://127.0.0.1:7700', $token);
+        $promise = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
+        $this->client->waitForTask($promise['uid']);
+
+        $token = $this->privateClient->generateTenantToken(searchRules: ['*']);
+        $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
         $this->assertArrayHasKey('hits', $response->toArray());
@@ -46,10 +47,23 @@ final class TenantTokenTest extends TestCase
         $this->assertCount(7, $response->getHits());
     }
 
+    public function testGenerateTenantTokenWithSearchRulesOnOneIndex(): void
+    {
+        $this->createEmptyIndex('tenantTokenDuplicate');
+        $token = $this->privateClient->generateTenantToken(searchRules: ['tenantToken']);
+        $tokenClient = new Client($this->host, $token);
+        $response = $tokenClient->index('tenantToken')->search('');
+
+        $this->assertArrayHasKey('hits', $response->toArray());
+        $this->assertArrayHasKey('query', $response->toArray());
+        $this->expectException(ApiException::class);
+        $response = $tokenClient->index('tenantTokenDuplicate')->search('');
+    }
+
     public function testGenerateTenantTokenWithApiKey(): void
     {
-        $token = $this->client->generateTenantToken(searchRules: array('*'), apiKey: $this->privateKey);
-        $tokenClient = new Client('http://127.0.0.1:7700', $token);
+        $token = $this->client->generateTenantToken(searchRules: ['*'], apiKey: $this->privateKey);
+        $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
         $this->assertArrayHasKey('hits', $response->toArray());
@@ -57,17 +71,15 @@ final class TenantTokenTest extends TestCase
         $this->assertArrayHasKey('limit', $response->toArray());
         $this->assertArrayHasKey('processingTimeMs', $response->toArray());
         $this->assertArrayHasKey('query', $response->toArray());
-        $this->assertSame(7, $response->getNbHits());
-        $this->assertCount(7, $response->getHits());
     }
 
     public function testGenerateTenantTokenWithExpiresAt(): void
     {
         $date = new DateTime();
-        $tomorrow = $date->modify('+1 day')->getTimestamp();
+        $tomorrow = $date->modify('+1 day');
 
-        $token = $this->privateClient->generateTenantToken(searchRules: array('*'), expiresAt: $tomorrow);
-        $tokenClient = new Client('http://127.0.0.1:7700', $token);
+        $token = $this->privateClient->generateTenantToken(searchRules: ['*'], expiresAt: $tomorrow);
+        $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
         $this->assertArrayHasKey('hits', $response->toArray());
@@ -75,39 +87,33 @@ final class TenantTokenTest extends TestCase
         $this->assertArrayHasKey('limit', $response->toArray());
         $this->assertArrayHasKey('processingTimeMs', $response->toArray());
         $this->assertArrayHasKey('query', $response->toArray());
-        $this->assertSame(7, $response->getNbHits());
-        $this->assertCount(7, $response->getHits());
     }
 
-
-    public function testGenerateTenantTokenWithoutSearchRules(): void
+    public function testGenerateTenantTokenWithEmptySearchRules(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         $token = $this->privateClient->generateTenantToken(searchRules: '');
-        $tokenClient = new Client('http://127.0.0.1:7700', $token);
-
-        $this->expectException(ApiException::class);
-        $tokenClient->index('tenantToken')->search('');
     }
 
-
-    public function testGenerateTenantTokenWithMasterKey(): void
+    public function testGenerateTenantTokenWithSearchRulesEmptyArray(): void
     {
-        $token = $this->client->generateTenantToken(array('*'));
-        $tokenClient = new Client('http://127.0.0.1:7700', $token);
-
-        $this->expectException(ApiException::class);
-        $tokenClient->index('tenantToken')->search('');
+        $this->expectException(InvalidArgumentException::class);
+        $token = $this->privateClient->generateTenantToken(searchRules: []);
     }
 
     public function testGenerateTenantTokenWithBadExpiresAt(): void
     {
         $date = new DateTime();
-        $yesterday = $date->modify('-2 day')->getTimestamp();
+        $yesterday = $date->modify('-1 day');
 
-        $token = $this->privateClient->generateTenantToken(searchRules: array('*'), expiresAt: $yesterday);
-        $tokenClient = new Client('http://127.0.0.1:7700', $token);
+        $this->expectException(InvalidArgumentException::class);
+        $token = $this->privateClient->generateTenantToken(searchRules: ['*'], expiresAt: $yesterday);
+    }
 
-        $this->expectException(ApiException::class);
-        $tokenClient->index('tenantToken')->search('');
+    public function testGenerateTenantTokenWithNoApiKey(): void
+    {
+        $client = new Client($this->host);
+        $this->expectException(InvalidArgumentException::class);
+        $token = $client->generateTenantToken(searchRules: ['*']);
     }
 }
