@@ -72,7 +72,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('internal error');
+        $this->expectExceptionCode(300);
 
         $client->post('/', '');
     }
@@ -119,7 +119,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('internal error');
+        $this->expectExceptionCode(300);
 
         $client->put('/', '');
     }
@@ -166,7 +166,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('internal error');
+        $this->expectExceptionCode(300);
 
         $client->post('/', '');
     }
