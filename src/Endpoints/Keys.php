@@ -26,9 +26,9 @@ class Keys extends Endpoint
         $this->description = $description;
         $this->actions = $actions;
         $this->indexes = $indexes;
-        $this->expiresAt = $expiresAt ? $expiresAt->format('Y-m-d\TH:i:s\Z') : null;
-        $this->createdAt = $createdAt ? $createdAt->format('Y-m-d\TH:i:s.vu\Z') : null;
-        $this->updatedAt = $updatedAt ? $updatedAt->format('Y-m-d\TH:i:s.vu\Z') : null;
+        $this->expiresAt = $expiresAt;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
 
         parent::__construct($http);
     }
@@ -42,9 +42,15 @@ class Keys extends Endpoint
         $this->description = $attributes['description'];
         $this->actions = $attributes['actions'];
         $this->indexes = $attributes['indexes'];
-        $this->expiresAt = $attributes['expiresAt'] ? date_create_from_format('Y-m-d\TH:i:s\Z', $attributes['expiresAt']) : null;
-        $this->createdAt = $attributes['createdAt'] ? date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['createdAt']) : null;
-        $this->updatedAt = $attributes['updatedAt'] ? date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['updatedAt']) : null;
+        if ($attributes['expiresAt']) {
+            $this->expiresAt = date_create_from_format('Y-m-d\TH:i:s\Z', $attributes['expiresAt']);
+        }
+        if ($attributes['createdAt']) {
+            $this->createdAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['createdAt']);
+        }
+        if ($attributes['updatedAt']) {
+            $this->updatedAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['updatedAt']);
+        }
 
         return $this;
     }
@@ -120,7 +126,7 @@ class Keys extends Endpoint
     public function update(string $key, array $options = []): self
     {
         if ($options['expiresAt'] && $options['expiresAt'] instanceof DateTime) {
-            $options['expiresAt'] = $options['expiresAt'] ? $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z') : null;
+            $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
         }
         $response = $this->http->patch(self::PATH.'/'.$key, $options);
 
