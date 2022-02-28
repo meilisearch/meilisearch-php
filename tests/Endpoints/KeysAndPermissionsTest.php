@@ -110,13 +110,37 @@ final class KeysAndPermissionsTest extends TestCase
         $this->client->deleteKey($key->getKey());
     }
 
-    public function testCreateKeyWithOptions(): void
+    public function testCreateKeyWithExpInString(): void
     {
         $key = [
             'description' => 'test create',
             'actions' => ['search'],
             'indexes' => ['index'],
             'expiresAt' => date('Y-m-d', strtotime('+1 day')),
+        ];
+        $response = $this->client->createKey($key);
+
+        $this->assertNotNull($response->getKey());
+        $this->assertNotNull($response->getDescription());
+        $this->assertSame($response->getDescription(), 'test create');
+        $this->assertIsArray($response->getActions());
+        $this->assertSame($response->getActions(), ['search']);
+        $this->assertIsArray($response->getIndexes());
+        $this->assertSame($response->getIndexes(), ['index']);
+        $this->assertNotNull($response->getExpiresAt());
+        $this->assertNotNull($response->getCreatedAt());
+        $this->assertNotNull($response->getUpdatedAt());
+
+        $this->client->deleteKey($response->getKey());
+    }
+
+    public function testCreateKeyWithExpInDate(): void
+    {
+        $key = [
+            'description' => 'test create',
+            'actions' => ['search'],
+            'indexes' => ['index'],
+            'expiresAt' => date_create_from_format('Y-m-d', date('Y-m-d', strtotime('+1 day'))),
         ];
         $response = $this->client->createKey($key);
 
@@ -144,13 +168,36 @@ final class KeysAndPermissionsTest extends TestCase
         ]);
     }
 
-    public function testUpdateKey(): void
+    public function testUpdateKeyWithExpInString(): void
     {
         $key = $this->client->createKey(self::INFO_KEY);
         $response = $this->client->updateKey($key->getKey(), [
             'description' => 'test update',
             'indexes' => ['*'],
             'expiresAt' => date('Y-m-d', strtotime('+1 day')),
+        ]);
+
+        $this->assertNotNull($response->getKey());
+        $this->assertNotNull($response->getDescription());
+        $this->assertSame($response->getDescription(), 'test update');
+        $this->assertIsArray($response->getActions());
+        $this->assertSame($response->getActions(), self::INFO_KEY['actions']);
+        $this->assertIsArray($response->getIndexes());
+        $this->assertSame($response->getIndexes(), ['*']);
+        $this->assertNotNull($response->getExpiresAt());
+        $this->assertNotNull($response->getCreatedAt());
+        $this->assertNotNull($response->getUpdatedAt());
+
+        $this->client->deleteKey($response->getKey());
+    }
+
+    public function testUpdateKeyWithExpInDate(): void
+    {
+        $key = $this->client->createKey(self::INFO_KEY);
+        $response = $this->client->updateKey($key->getKey(), [
+            'description' => 'test update',
+            'indexes' => ['*'],
+            'expiresAt' => date_create_from_format('Y-m-d', date('Y-m-d', strtotime('+1 day'))),
         ]);
 
         $this->assertNotNull($response->getKey());

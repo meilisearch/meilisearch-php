@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints;
 
+use DateTime;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 
@@ -15,9 +16,9 @@ class Keys extends Endpoint
     private ?string $description;
     private ?array $actions;
     private ?array $indexes;
-    private ?string $expiresAt;
-    private ?string $createdAt;
-    private ?string $updatedAt;
+    private ?DateTime $expiresAt;
+    private ?DateTime $createdAt;
+    private ?DateTime $updatedAt;
 
     public function __construct(Http $http, $key = null, $description = null, $actions = null, $indexes = null, $expiresAt = null, $createdAt = null, $updatedAt = null)
     {
@@ -25,39 +26,25 @@ class Keys extends Endpoint
         $this->description = $description;
         $this->actions = $actions;
         $this->indexes = $indexes;
-        $this->expiresAt = $expiresAt;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
+        $this->expiresAt = $expiresAt ? $expiresAt->format('Y-m-d\TH:i:s\Z') : null;
+        $this->createdAt = $createdAt ? $createdAt->format('Y-m-d\TH:i:s.vu\Z') : null;
+        $this->updatedAt = $updatedAt ? $updatedAt->format('Y-m-d\TH:i:s.vu\Z') : null;
 
         parent::__construct($http);
-    }
-
-    protected function newInstance(array $attributes): self
-    {
-        return new self(
-            $this->http,
-            $attributes['key'],
-            $attributes['description'],
-            $attributes['actions'],
-            $attributes['indexes'],
-            $attributes['expiresAt'],
-            $attributes['createdAt'],
-            $attributes['updatedAt'],
-        );
     }
 
     /**
      * @return $this
      */
-    protected function fill(array $attributes): self
+    protected function newInstance(array $attributes): self
     {
         $this->key = $attributes['key'];
         $this->description = $attributes['description'];
         $this->actions = $attributes['actions'];
         $this->indexes = $attributes['indexes'];
-        $this->expiresAt = $attributes['expiresAt'];
-        $this->createdAt = $attributes['createdAt'];
-        $this->updatedAt = $attributes['updatedAt'];
+        $this->expiresAt = $attributes['expiresAt'] ? date_create_from_format('Y-m-d\TH:i:s\Z', $attributes['expiresAt']) : null;
+        $this->createdAt = $attributes['createdAt'] ? date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['createdAt']) : null;
+        $this->updatedAt = $attributes['updatedAt'] ? date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['updatedAt']) : null;
 
         return $this;
     }
@@ -82,17 +69,17 @@ class Keys extends Endpoint
         return $this->indexes;
     }
 
-    public function getExpiresAt(): ?string
+    public function getExpiresAt(): ?DateTime
     {
         return $this->expiresAt;
     }
 
-    public function getCreatedAt(): ?string
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?string
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
@@ -101,7 +88,7 @@ class Keys extends Endpoint
     {
         $response = $this->http->get(self::PATH.'/'.$key);
 
-        return $this->fill($response);
+        return $this->newInstance($response);
     }
 
     public function all(): array
@@ -122,16 +109,22 @@ class Keys extends Endpoint
 
     public function create(array $options = []): self
     {
+        if ($options['expiresAt'] && $options['expiresAt'] instanceof DateTime) {
+            $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
+        }
         $response = $this->http->post(self::PATH, $options);
 
-        return $this->fill($response);
+        return $this->newInstance($response);
     }
 
     public function update(string $key, array $options = []): self
     {
+        if ($options['expiresAt'] && $options['expiresAt'] instanceof DateTime) {
+            $options['expiresAt'] = $options['expiresAt'] ? $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z') : null;
+        }
         $response = $this->http->patch(self::PATH.'/'.$key, $options);
 
-        return $this->fill($response);
+        return $this->newInstance($response);
     }
 
     public function delete(string $key): array
