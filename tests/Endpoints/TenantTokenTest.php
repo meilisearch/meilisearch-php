@@ -34,7 +34,7 @@ final class TenantTokenTest extends TestCase
         $promise = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
         $this->client->waitForTask($promise['uid']);
 
-        $token = $this->privateClient->generateTenantToken(searchRules: ['*']);
+        $token = $this->privateClient->generateTenantToken(['*']);
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
@@ -50,7 +50,7 @@ final class TenantTokenTest extends TestCase
     public function testGenerateTenantTokenWithSearchRulesOnOneIndex(): void
     {
         $this->createEmptyIndex('tenantTokenDuplicate');
-        $token = $this->privateClient->generateTenantToken(searchRules: ['tenantToken']);
+        $token = $this->privateClient->generateTenantToken(['tenantToken']);
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
@@ -62,7 +62,10 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithApiKey(): void
     {
-        $token = $this->client->generateTenantToken(searchRules: ['*'], apiKey: $this->privateKey);
+        $options = [
+            'apiKey' => $this->privateKey,
+        ];
+        $token = $this->client->generateTenantToken(['*'], $options);
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
@@ -77,8 +80,10 @@ final class TenantTokenTest extends TestCase
     {
         $date = new DateTime();
         $tomorrow = $date->modify('+1 day');
-
-        $token = $this->privateClient->generateTenantToken(searchRules: ['*'], expiresAt: $tomorrow);
+        $options = [
+            'expiresAt' => $tomorrow,
+        ];
+        $token = $this->privateClient->generateTenantToken(['*'], $options);
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
@@ -92,28 +97,31 @@ final class TenantTokenTest extends TestCase
     public function testGenerateTenantTokenWithEmptySearchRules(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $token = $this->privateClient->generateTenantToken(searchRules: '');
+        $token = $this->privateClient->generateTenantToken('');
     }
 
     public function testGenerateTenantTokenWithSearchRulesEmptyArray(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $token = $this->privateClient->generateTenantToken(searchRules: []);
+        $token = $this->privateClient->generateTenantToken([]);
     }
 
     public function testGenerateTenantTokenWithBadExpiresAt(): void
     {
         $date = new DateTime();
         $yesterday = $date->modify('-1 day');
+        $options = [
+            'expiresAt' => $yesterday,
+        ];
 
         $this->expectException(InvalidArgumentException::class);
-        $token = $this->privateClient->generateTenantToken(searchRules: ['*'], expiresAt: $yesterday);
+        $token = $this->privateClient->generateTenantToken(['*'], $options);
     }
 
     public function testGenerateTenantTokenWithNoApiKey(): void
     {
         $client = new Client($this->host);
         $this->expectException(InvalidArgumentException::class);
-        $token = $client->generateTenantToken(searchRules: ['*']);
+        $token = $client->generateTenantToken(['*']);
     }
 }
