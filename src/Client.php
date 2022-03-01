@@ -15,6 +15,7 @@ use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Endpoints\Keys;
 use MeiliSearch\Endpoints\Stats;
 use MeiliSearch\Endpoints\Tasks;
+use MeiliSearch\Endpoints\TenantToken;
 use MeiliSearch\Endpoints\Version;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -35,6 +36,7 @@ class Client
     private Stats $stats;
     private Tasks $tasks;
     private Dumps $dumps;
+    private TenantToken $tenantToken;
 
     public function __construct(
         string $url,
@@ -42,7 +44,6 @@ class Client
         ClientInterface $httpClient = null,
         RequestFactoryInterface $requestFactory = null
     ) {
-        $this->apiKey = $apiKey;
         $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
@@ -51,5 +52,6 @@ class Client
         $this->tasks = new Tasks($this->http);
         $this->keys = new Keys($this->http);
         $this->dumps = new Dumps($this->http);
+        $this->tenantToken = new TenantToken($this->http, $apiKey);
     }
 }

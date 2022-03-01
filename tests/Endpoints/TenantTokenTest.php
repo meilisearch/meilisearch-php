@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+/* @phpstan-ignore-next-line */
 use Datetime;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\ApiException;
@@ -22,7 +23,7 @@ final class TenantTokenTest extends TestCase
 
         $response = $this->client->getKeys();
         $this->privateKey = array_reduce($response['results'], function ($carry, $item) {
-            if (str_contains($item['description'], 'Default Admin API')) {
+            if (array_key_exists('description', $item) && $item['description'] && str_contains($item['description'], 'Default Admin API')) {
                 return $item['key'];
             }
         });
@@ -45,6 +46,46 @@ final class TenantTokenTest extends TestCase
         $this->assertArrayHasKey('query', $response->toArray());
         $this->assertSame(7, $response->getNbHits());
         $this->assertCount(7, $response->getHits());
+    }
+
+    public function testGenerateTenantTokenWithSearchRulesAsObject(): void
+    {
+        $promise = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
+        $this->client->waitForTask($promise['uid']);
+
+        $token = $this->privateClient->generateTenantToken((object) ['*' => (object) []]);
+        $tokenClient = new Client($this->host, $token);
+        $response = $tokenClient->index('tenantToken')->search('');
+
+        $this->assertArrayHasKey('hits', $response->toArray());
+        $this->assertArrayHasKey('offset', $response->toArray());
+        $this->assertArrayHasKey('limit', $response->toArray());
+        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
+        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertSame(7, $response->getNbHits());
+        $this->assertCount(7, $response->getHits());
+    }
+
+    public function testGenerateTenantTokenWithFilter(): void
+    {
+        $promise = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
+        $this->client->waitForTask($promise['uid']);
+        $promiseFromFilter = $this->client->index('tenantToken')->updateFilterableAttributes([
+            'id',
+        ]);
+        $this->client->waitForTask($promiseFromFilter['uid']);
+
+        $token = $this->privateClient->generateTenantToken((object) ['tenantToken' => (object) ['filter' => 'id > 10']]);
+        $tokenClient = new Client($this->host, $token);
+        $response = $tokenClient->index('tenantToken')->search('');
+
+        $this->assertArrayHasKey('hits', $response->toArray());
+        $this->assertArrayHasKey('offset', $response->toArray());
+        $this->assertArrayHasKey('limit', $response->toArray());
+        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
+        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertSame(4, $response->getNbHits());
+        $this->assertCount(4, $response->getHits());
     }
 
     public function testGenerateTenantTokenWithSearchRulesOnOneIndex(): void
@@ -78,6 +119,7 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithExpiresAt(): void
     {
+        /* @phpstan-ignore-next-line */
         $date = new DateTime();
         $tomorrow = $date->modify('+1 day');
         $options = [
@@ -94,12 +136,6 @@ final class TenantTokenTest extends TestCase
         $this->assertArrayHasKey('query', $response->toArray());
     }
 
-    public function testGenerateTenantTokenWithEmptySearchRules(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $token = $this->privateClient->generateTenantToken('');
-    }
-
     public function testGenerateTenantTokenWithSearchRulesEmptyArray(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -108,6 +144,7 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithBadExpiresAt(): void
     {
+        /* @phpstan-ignore-next-line */
         $date = new DateTime();
         $yesterday = $date->modify('-1 day');
         $options = [
@@ -123,5 +160,12 @@ final class TenantTokenTest extends TestCase
         $client = new Client($this->host);
         $this->expectException(InvalidArgumentException::class);
         $token = $client->generateTenantToken(['*']);
+    }
+
+    public function testGenerateTenantTokenWithEmptyApiKey(): void
+    {
+        $client = new Client($this->host);
+        $this->expectException(InvalidArgumentException::class);
+        $token = $client->generateTenantToken(['*'], ['apiKey' => '']);
     }
 }
