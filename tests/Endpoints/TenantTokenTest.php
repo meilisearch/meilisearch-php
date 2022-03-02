@@ -22,9 +22,9 @@ final class TenantTokenTest extends TestCase
         $this->createEmptyIndex('tenantToken');
 
         $response = $this->client->getKeys();
-        $this->privateKey = array_reduce($response['results'], function ($carry, $item) {
-            if (array_key_exists('description', $item) && $item['description'] && str_contains($item['description'], 'Default Admin API')) {
-                return $item['key'];
+        $this->privateKey = array_reduce($response, function ($carry, $item) {
+            if ($item->getDescription() && str_contains($item->getDescription(), 'Default Admin API')) {
+                return $item->getKey();
             }
         });
         $this->privateClient = new Client($this->host, $this->privateKey);

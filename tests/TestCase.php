@@ -21,7 +21,6 @@ abstract class TestCase extends BaseTestCase
     ];
 
     protected const INFO_KEY = [
-        'description' => 'test',
         'actions' => ['search'],
         'indexes' => ['index'],
         'expiresAt' => null,

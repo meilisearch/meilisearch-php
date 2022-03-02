@@ -79,6 +79,7 @@ final class KeysAndPermissionsTest extends TestCase
         $response = $this->client->getKey($key->getKey());
 
         $this->assertNotNull($response->getKey());
+        $this->assertNull($response->getDescription());
         $this->assertIsArray($response->getActions());
         $this->assertIsArray($response->getIndexes());
         $this->assertNull($response->getExpiresAt());
@@ -99,6 +100,7 @@ final class KeysAndPermissionsTest extends TestCase
         $key = $this->client->createKey(self::INFO_KEY);
 
         $this->assertNotNull($key->getKey());
+        $this->assertNull($key->getDescription());
         $this->assertIsArray($key->getActions());
         $this->assertSame($key->getActions(), self::INFO_KEY['actions']);
         $this->assertIsArray($key->getIndexes());
