@@ -124,6 +124,8 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithBadExpiresAt(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         /* @phpstan-ignore-next-line */
         $date = new DateTime();
         $yesterday = $date->modify('-1 day');
@@ -131,7 +133,6 @@ final class TenantTokenTest extends TestCase
             'expiresAt' => $yesterday,
         ];
 
-        $this->expectException(InvalidArgumentException::class);
         $this->privateClient->generateTenantToken(['*'], $options);
     }
 
