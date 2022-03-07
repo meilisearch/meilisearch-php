@@ -16,6 +16,17 @@ class TenantToken extends Endpoint
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
+    private function validateTenantTokenArguments($searchRules, ?array $options = []) {
+        if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey'] || strlen($options['apiKey']) <= 8) {
+            throw InvalidArgumentException::emptyArgument('api key');
+        }
+        if (null == $searchRules) {
+            throw InvalidArgumentException::emptyArgument('search rules');
+        }
+        if (\array_key_exists('expiresAt', $options) && new DateTime() > $options['expiresAt']) {
+            throw InvalidArgumentException::dateIsExpired($options['expiresAt']);
+        }
+    }
     /**
      * Generate a new tenant token.
      *
@@ -25,16 +36,12 @@ class TenantToken extends Endpoint
      */
     public function generateTenantToken($searchRules, ?array $options = []): string
     {
+        if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey']) {
+            $options['apiKey'] = $this->apiKey;
+        }
+
         // Validate every field
-        if ((!\array_key_exists('apiKey', $options) || '' == $options['apiKey']) && \is_null($this->apiKey)) {
-            throw InvalidArgumentException::emptyArgument('api key');
-        }
-        if (null == $searchRules) {
-            throw InvalidArgumentException::emptyArgument('search rules');
-        }
-        if (\array_key_exists('expiresAt', $options) && new DateTime() > $options['expiresAt']) {
-            throw InvalidArgumentException::dateIsExpired($options['expiresAt']);
-        }
+        $this->validateTenantTokenArguments($searchRules, $options);
 
         $json = new Json();
 
@@ -43,10 +50,6 @@ class TenantToken extends Endpoint
             'typ' => 'JWT',
             'alg' => 'HS256',
           ];
-
-        if (!\array_key_exists('apiKey', $options)) {
-            $options['apiKey'] = $this->apiKey;
-        }
 
         // Add the required fields to the payload
         $payload = [];
