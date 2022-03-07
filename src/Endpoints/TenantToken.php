@@ -16,17 +16,19 @@ class TenantToken extends Endpoint
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    private function validateTenantTokenArguments($searchRules, ?array $options = []) {
-        if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey'] || strlen($options['apiKey']) <= 8) {
+    private function validateTenantTokenArguments($searchRules, ?array $options = []): void
+    {
+        if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey'] || \strlen($options['apiKey']) <= 8) {
             throw InvalidArgumentException::emptyArgument('api key');
         }
-        if ((!is_array($searchRules) && !is_object($searchRules)) || null == $searchRules) {
+        if ((!\is_array($searchRules) && !\is_object($searchRules)) || null == $searchRules) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
         if (\array_key_exists('expiresAt', $options) && new DateTime() > $options['expiresAt']) {
             throw InvalidArgumentException::dateIsExpired($options['expiresAt']);
         }
     }
+
     /**
      * Generate a new tenant token.
      *
