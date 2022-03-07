@@ -20,7 +20,7 @@ class TenantToken extends Endpoint
         if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey'] || strlen($options['apiKey']) <= 8) {
             throw InvalidArgumentException::emptyArgument('api key');
         }
-        if (null == $searchRules) {
+        if ((!is_array($searchRules) && !is_object($searchRules)) || null == $searchRules) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
         if (\array_key_exists('expiresAt', $options) && new DateTime() > $options['expiresAt']) {
