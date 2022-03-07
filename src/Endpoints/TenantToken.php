@@ -25,7 +25,7 @@ class TenantToken extends Endpoint
      */
     public function generateTenantToken($searchRules, ?array $options = []): string
     {
-        // Validate every fields
+        // Validate every field
         if ((!\array_key_exists('apiKey', $options) || '' == $options['apiKey']) && \is_null($this->apiKey)) {
             throw InvalidArgumentException::emptyArgument('api key');
         }
