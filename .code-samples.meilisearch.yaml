@@ -432,3 +432,17 @@ security_guide_delete_key_1: |-
 authorization_header_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->getKeys();
+tenant_token_guide_generate_sdk_1: |-
+  $searchRules = (object) [
+    'patient_medical_records' => (object) [
+      'filter' => 'user_id = 1',
+    ]
+  ];
+  $options = [
+      'apiKey' => 'B5KdX2MY2jV6EXfUs6scSfmC...',
+      'expiresAt' => new DateTime('2025-12-20'),
+  ];
+  $token = $client->generateTenantToken($searchRules, $options);
+tenant_token_guide_search_sdk_1: |-
+  $frontEndClient = new Client('http://127.0.0.1:7700', $token);
+  $frontEndClient->index('patient_medical_records')->search('blood test');
