@@ -442,6 +442,7 @@ tenant_token_guide_generate_sdk_1: |-
       'apiKey' => 'B5KdX2MY2jV6EXfUs6scSfmC...',
       'expiresAt' => new DateTime('2025-12-20'),
   ];
+  
   $token = $client->generateTenantToken($searchRules, $options);
 tenant_token_guide_search_sdk_1: |-
   $frontEndClient = new Client('http://127.0.0.1:7700', $token);
