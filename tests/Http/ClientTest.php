@@ -67,14 +67,14 @@ class ClientTest extends TestCase
 
     public function testPostThrowsApiException(): void
     {
-        $httpClient = $this->createHttpClientMock(300, '{"message":"internal error"}');
-
-        $client = new Client('https://localhost', null, $httpClient);
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('internal error');
-
-        $client->post('/', '');
+        try {
+            $httpClient = $this->createHttpClientMock(300, '{"message":"internal error","code":"internal"}');
+            $client = new Client('https://localhost', null, $httpClient);
+            $client->post('/', '');
+            $this->fail('ApiException not raised.');
+        } catch (ApiException $e) {
+            $this->assertEquals('internal', $e->errorCode);
+        }
     }
 
     public function testPutExecutesRequest(): void
@@ -114,14 +114,14 @@ class ClientTest extends TestCase
 
     public function testPutThrowsApiException(): void
     {
-        $httpClient = $this->createHttpClientMock(300, '{"message":"internal error"}');
-
-        $client = new Client('https://localhost', null, $httpClient);
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('internal error');
-
-        $client->put('/', '');
+        try {
+            $httpClient = $this->createHttpClientMock(300, '{"message":"internal error","code":"internal"}');
+            $client = new Client('https://localhost', null, $httpClient);
+            $client->put('/', '');
+            $this->fail('ApiException not raised.');
+        } catch (ApiException $e) {
+            $this->assertEquals('internal', $e->errorCode);
+        }
     }
 
     public function testPatchExecutesRequest(): void
@@ -161,14 +161,14 @@ class ClientTest extends TestCase
 
     public function testPatchThrowsApiException(): void
     {
-        $httpClient = $this->createHttpClientMock(300, '{"message":"internal error"}');
-
-        $client = new Client('https://localhost', null, $httpClient);
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionMessage('internal error');
-
-        $client->post('/', '');
+        try {
+            $httpClient = $this->createHttpClientMock(300, '{"message":"internal error","code":"internal"}');
+            $client = new Client('https://localhost', null, $httpClient);
+            $client->patch('/', '');
+            $this->fail('ApiException not raised.');
+        } catch (ApiException $e) {
+            $this->assertEquals('internal', $e->errorCode);
+        }
     }
 
     public function testDeleteExecutesRequest(): void
