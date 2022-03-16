@@ -203,12 +203,12 @@ class ClientTest extends TestCase
             ->method('withAddedHeader')
             ->withConsecutive(
                 [
-                    $this->equalTo('Authorization'),
-                    $this->equalTo('Bearer masterKey'),
-                ],
-                [
                     $this->equalTo('User-Agent'),
                     $this->equalTo(MeiliSearch::qualifiedVersion()),
+                ],
+                [
+                    $this->equalTo('Authorization'),
+                    $this->equalTo('Bearer masterKey'),
                 ],
               )
             ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
