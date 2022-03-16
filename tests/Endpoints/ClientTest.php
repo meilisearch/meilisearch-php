@@ -275,4 +275,15 @@ final class ClientTest extends TestCase
         $client = new Client('http://127.0.0.1.com:1234', 'some-key');
         $client->createIndex('index');
     }
+
+    public function testHeaderWithoutApiKey(): void
+    {
+        $client = new Client('http://localhost:7700');
+
+        $response = $client->health();
+
+        $this->assertEquals('available', $response['status']);
+        $this->expectException(ApiException::class);
+        $response = $client->stats();
+    }
 }

@@ -49,7 +49,7 @@ class Client implements Http
         $this->headers = array_filter([
             'User-Agent' => MeiliSearch::qualifiedVersion(),
         ]);
-        if ($this->apiKey) {
+        if (null != $this->apiKey) {
             $this->headers['Authorization'] = sprintf('Bearer %s', $this->apiKey);
         }
         $this->json = new Json();
