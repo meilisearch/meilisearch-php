@@ -7,8 +7,17 @@ First of all, thank you for contributing to Meilisearch! The goal of this docume
 - [Assumptions](#assumptions)
 - [How to Contribute](#how-to-contribute)
 - [Development Workflow](#development-workflow)
+  - [Requirements](#requirements)
+  - [Setup](#setup)
+  - [Tests and Linter](#tests-and-linter)
 - [Git Guidelines](#git-guidelines)
+  - [Git Branches](#git-branches)
+  - [Git Commits](#git-commits)
+  - [GitHub Pull Requests](#github-pull-requests)
 - [Release Process (for internal team only)](#release-process-for-internal-team-only)
+  - [Automation to Rebase and Merge the PRs](#automation-to-rebase-and-merge-the-prs)
+  - [Automated Changelogs](#automated-changelogs)
+  - [How to Publish the Release](#how-to-publish-the-release)
 
 <!-- /MarkdownTOC -->
 
@@ -30,10 +39,26 @@ First of all, thank you for contributing to Meilisearch! The goal of this docume
 
 ## Development Workflow
 
+### Requirements
+
+- [Composer 2.x](https://getcomposer.org/download/)
+
 ### Setup
 
+Clone the project then:
+
 ```bash
+cd meilisearch-php
 composer install
+```
+
+If you don't already have a Meilisearch server instance running, execute the following commands:
+
+NB: Will create a bunch of files and folders, better to use a dedicated folder outside of this project.
+
+```bash
+curl -L https://install.meilisearch.com | sh # download Meilisearch
+./meilisearch --master-key=masterKey --no-analytics # run Meilisearch
 ```
 
 ### Tests and Linter
@@ -42,8 +67,6 @@ Each PR should pass the tests and the linter to be accepted.
 
 ```bash
 # Tests
-curl -L https://install.meilisearch.com | sh # download Meilisearch
-./meilisearch --master-key=masterKey --no-analytics # run Meilisearch
 composer test
 # Linter (with auto-fix)
 composer lint:fix
