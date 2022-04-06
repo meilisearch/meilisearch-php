@@ -352,14 +352,14 @@ getting_started_search_md: |-
   ```
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
-getting_started_add_meteorites_md: |-
+getting_started_add_meteorites: |-
   $client = new Client('http://127.0.0.1:7700');
 
   $meteorites_json = file_get_contents('meteorites.json');
   $meteorites = json_decode($meteorites_json);
 
   $client->index('meteorites')->addDocuments($meteorites);
-getting_started_update_rankingRules_md: |-
+getting_started_update_rankingRules: |-
   $client->index('movies')->updateRankingRules([
     'exactness',
     'words',
@@ -370,28 +370,28 @@ getting_started_update_rankingRules_md: |-
     'release_date:asc',
     'rank:desc'
   ]);
-getting_started_update_displayedAttributes_md: |-
+getting_started_update_displayedAttributes: |-
   $client->index('movies')->updateDisplayedAttributes([
     'title',
     'overview',
     'poster'
   ]);
-getting_started_update_searchableAttributes_md: |-
+getting_started_update_searchableAttributes: |-
   $client->index('movies')->updateSearchableAttributes(['title']);
-getting_started_update_stop_words_md: |-
+getting_started_update_stop_words: |-
   $client->index('movies')->updateStopWords(['the']);
-getting_started_synonyms_md: |-
+getting_started_synonyms: |-
   $client->index('movies')->updateSynonyms([
     'winnie' => ['piglet'],
     'piglet' => ['winnie']
   ]);
-getting_started_filtering_md: |-
+getting_started_filtering: |-
   $client->index('meteorites')->search('', ['filter' => 'mass < 200']);
-getting_started_geoRadius_md: |-
+getting_started_geoRadius: |-
   $client->index('meteorites')->search('', ['filter' => '_geoRadius(46.9480, 7.4474, 210000)']);
-getting_started_geoPoint_md: |-
+getting_started_geoPoint: |-
   $client->index('meteorites')->search('', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc']]);
-getting_started_sorting_md: |-
+getting_started_sorting: |-
   $client->index('meteorites')->search('', ['filter' => 'mass < 200', 'sort' => ['mass:asc']]);
 getting_started_configure_settings: |-
   $client->index('meteorites')->updateSettings([
@@ -455,17 +455,17 @@ geosearch_guide_filter_settings_1: |-
     '_geo'
   ]);
 geosearch_guide_filter_usage_1: |-
-  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000)']);
+  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000)']);
 geosearch_guide_filter_usage_2: |-
-  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.4628328, 9.1076931, 2000) AND type = pizza']);
+  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000) AND type = pizza']);
 geosearch_guide_sort_settings_1: |-
   $client->index('restaurants')->updateSortableAttributes([
     '_geo'
   ]);
 geosearch_guide_sort_usage_1: |-
-  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc']]);
+  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc']]);
 geosearch_guide_sort_usage_2: |-
-  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc', 'rating:desc']]);
+  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc', 'rating:desc']]);
 security_guide_search_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->index('patient_medical_records')->search();
