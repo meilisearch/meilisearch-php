@@ -296,8 +296,8 @@ settings_guide_displayed_1: |-
 settings_guide_sortable_1: |-
   $client->index('books')->updateSettings([
     'sortableAttributes' => [
-      'author',
-      'price'
+      'price',
+      'author'
     ]
   ]);
 add_movies_json_1: |-
@@ -447,6 +447,18 @@ geosearch_guide_sort_usage_1: |-
   $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc']]);
 geosearch_guide_sort_usage_2: |-
   $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc', 'rating:desc']]);
+document_guide_create_index_primary_key: |-
+  $client->createIndex('movies', ['primaryKey' => 'reference_number']);
+document_guide_add_document_primary_key: |-
+  $client->index('movies')->addDocuments([
+    [
+      'id' => 287947,
+      'title' => 'Shazam',
+      'poster' => 'https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg',
+      'overview' => 'A boy is given the ability to become an adult superhero in times of need with a single magic word.',
+      'release_date' => '2019-03-23'
+    ]
+  ], 'reference_number');
 security_guide_search_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->index('patient_medical_records')->search();
