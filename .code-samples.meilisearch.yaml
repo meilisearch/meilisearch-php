@@ -305,6 +305,17 @@ add_movies_json_1: |-
   $movies = json_decode($moviesJson);
 
   $client->index('movies')->addDocuments($movies)
+landing_getting_started_1: |-
+  $client = new Client('http://127.0.0.1:7700', 'masterKey');
+
+  $client->index('movies')->addDocuments([
+    [ 'id' => 1, 'title' => 'Carol'],
+    [ 'id' => 2, 'title' => 'Wonder Woman'],
+    [ 'id' => 3, 'title' => 'Life of Pi'],
+    [ 'id' => 4, 'title' => 'Mad Max: Fury Road'],
+    [ 'id' => 5, 'title' => 'Moana'],
+    [ 'id' => 6, 'title' => 'Philadelphia'],
+  ]);
 documents_guide_add_movie_1: |-
   $client->index('movies')->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
 getting_started_add_documents_md: |-
@@ -452,7 +463,7 @@ document_guide_create_index_primary_key: |-
 document_guide_add_document_primary_key: |-
   $client->index('movies')->addDocuments([
     [
-      'id' => 287947,
+      'reference_number' => 287947,
       'title' => 'Shazam',
       'poster' => 'https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg',
       'overview' => 'A boy is given the ability to become an adult superhero in times of need with a single magic word.',
