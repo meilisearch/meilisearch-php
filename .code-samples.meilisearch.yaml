@@ -229,8 +229,6 @@ filtering_guide_1: |-
 filtering_guide_2: |-
   $client->index('movies')->search('Batman', ['filter' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")']);
 filtering_guide_3: |-
-  $client->index('movies')->search('horror', ['filter' => 'director = "Jordan Peele"']);
-filtering_guide_4: |-
   $client->index('movies')->search('Planet of the Apes', ['filter' => 'rating >= 3 AND (NOT director = "Tim Burton")']);
 search_parameter_guide_query_1: |-
   $client->index('movies')->search('shifu');
@@ -244,10 +242,6 @@ search_parameter_guide_crop_1: |-
   $client->index('movies')->search('shifu', ['attributesToCrop' => ['overview'], 'cropLength' => 10]);
 search_parameter_guide_highlight_1: |-
   $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview']]);
-search_parameter_guide_filter_1: |-
-  $client->index('movies')->search('n', ['filter' => 'title = Nightshift']);
-search_parameter_guide_filter_2: |-
-  $client->index('movies')->search('shifu', ['filter' => 'title = "Kung Fu Panda"']);
 search_parameter_guide_matches_1: |-
   $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'matches' => true]);
 settings_guide_synonyms_1: |-
@@ -313,10 +307,6 @@ add_movies_json_1: |-
   $client->index('movies')->addDocuments($movies)
 documents_guide_add_movie_1: |-
   $client->index('movies')->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
-search_guide_1: |-
-  $client->index('movies')->search('shifu', ['limit' => 5, 'offset' => 10]);
-search_guide_2: |-
-  $client->index('movies')->search('Avengers', ['filter' => 'release_date > 795484800']);
 getting_started_add_documents_md: |-
   Using `meilisearch-php` with the Guzzle HTTP client:
 
@@ -413,17 +403,8 @@ faceted_search_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 faceted_search_facets_distribution_1: |-
   $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']]);
-faceted_search_walkthrough_filterable_attributes_1: |-
-  $client->index('movies')->updateFilterableAttributes([
-    'director',
-    'producer',
-    'genres',
-    'production_companies'
-  ]);
 faceted_search_walkthrough_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
-faceted_search_walkthrough_facets_distribution_1: |-
-  $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']);
 post_dump_1: |-
   $client->createDump();
 get_dump_status_1: |-
