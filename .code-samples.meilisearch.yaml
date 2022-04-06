@@ -100,13 +100,13 @@ update_settings_1: |-
     'distinctAttribute' => 'movie_id',
     'searchableAttributes' => [
       'title',
-      'description',
-      'genre'
+      'overview',
+      'genres'
     ],
     'displayedAttributes' => [
       'title',
-      'description',
-      'genre',
+      'overview',
+      'genres',
       'release_date'
     ],
     'stopWords' => [
@@ -176,8 +176,8 @@ get_searchable_attributes_1: |-
 update_searchable_attributes_1: |-
   $client->index('movies')->updateSearchableAttributes([
     'title',
-    'description',
-    'genre'
+    'overview',
+    'genres'
   ]);
 reset_searchable_attributes_1: |-
   $client->index('movies')->resetSearchableAttributes();
@@ -186,8 +186,8 @@ get_displayed_attributes_1: |-
 update_displayed_attributes_1: |-
   $client->index('movies')->updateDisplayedAttributes([
     'title',
-    'description',
-    'genre',
+    'overview',
+    'genres',
     'release_date'
   ]);
 reset_displayed_attributes_1: |-
@@ -214,14 +214,14 @@ distinct_attribute_guide_1: |-
 field_properties_guide_searchable_1: |-
   $client->index('movies')->updateSearchableAttributes([
     'title',
-    'description',
-    'genre'
+    'overview',
+    'genres'
   ]);
 field_properties_guide_displayed_1: |-
   $client->index('movies')->updateDisplayedAttributes([
     'title',
-    'description',
-    'genre',
+    'overview',
+    'genres',
     'release_date'
   ]);
 filtering_guide_1: |-
@@ -286,16 +286,16 @@ settings_guide_searchable_1: |-
   $client->index('movies')->updateSettings([
     'searchableAttributes' => [
       'title',
-      'description',
-      'genre'
+      'overview',
+      'genres'
     ],
   ]);
 settings_guide_displayed_1: |-
   $client->index('movies')->updateSettings([
     'displayedAttributes' => [
       'title',
-      'description',
-      'genre',
+      'overview',
+      'genres',
       'release_date'
     ]
   ]);
