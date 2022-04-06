@@ -342,12 +342,71 @@ getting_started_add_documents_md: |-
   ```
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
+getting_started_check_task_status_md: |-
+  ```php
+  $client->index('movies')->getTask(0);
+  ```
 getting_started_search_md: |-
   ```php
   $client->index('movies')->search('botman');
   ```
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
+getting_started_add_meteorites_md: |-
+  $client = new Client('http://127.0.0.1:7700');
+
+  $meteorites_json = file_get_contents('meteorites.json');
+  $meteorites = json_decode($meteorites_json);
+
+  $client->index('meteorites')->addDocuments($meteorites);
+getting_started_update_rankingRules_md: |-
+  $client->index('movies')->updateRankingRules([
+    'exactness',
+    'words',
+    'typo',
+    'proximity',
+    'attribute',
+    'sort',
+    'release_date:asc',
+    'rank:desc'
+  ]);
+getting_started_update_displayedAttributes_md: |-
+  $client->index('movies')->updateDisplayedAttributes([
+    'title',
+    'overview',
+    'poster'
+  ]);
+getting_started_update_searchableAttributes_md: |-
+  $client->index('movies')->updateSearchableAttributes(['title']);
+getting_started_update_stop_words_md: |-
+  $client->index('movies')->updateStopWords(['the']);
+getting_started_synonyms_md: |-
+  $client->index('movies')->updateSynonyms([
+    'winnie' => ['piglet'],
+    'piglet' => ['winnie']
+  ]);
+getting_started_filtering_md: |-
+  $client->index('meteorites')->search('', ['filter' => 'mass < 200']);
+getting_started_geoRadius_md: |-
+  $client->index('meteorites')->search('', ['filter' => '_geoRadius(46.9480, 7.4474, 210000)']);
+getting_started_geoPoint_md: |-
+  $client->index('meteorites')->search('', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc']]);
+getting_started_sorting_md: |-
+  $client->index('meteorites')->search('', ['filter' => 'mass < 200', 'sort' => ['mass:asc']]);
+getting_started_configure_settings: |-
+  $client->index('meteorites')->updateSettings([
+    'filterableAttributes' => [
+      'mass',
+      '_geo'
+    ],
+    'sortableAttributes' => [
+      'mass',
+      '_geo'
+    ]
+  ]);
+getting_started_communicating_with_a_protected_instance: |-
+  $client = new Client('http://127.0.0.1:7700', 'apiKey');
+  $client->index('movies')->search();
 faceted_search_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
 faceted_search_filter_1: |-
@@ -442,7 +501,7 @@ tenant_token_guide_generate_sdk_1: |-
       'apiKey' => 'B5KdX2MY2jV6EXfUs6scSfmC...',
       'expiresAt' => new DateTime('2025-12-20'),
   ];
-  
+
   $token = $client->generateTenantToken($searchRules, $options);
 tenant_token_guide_search_sdk_1: |-
   $frontEndClient = new Client('http://127.0.0.1:7700', $token);
