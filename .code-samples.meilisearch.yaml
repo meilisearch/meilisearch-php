@@ -8,11 +8,11 @@ get_one_index_1: |-
 list_all_indexes_1: |-
   $client->getAllIndexes();
 create_an_index_1: |-
-  $client->createIndex('movies', ['primaryKey' => 'movie_id']);
+  $client->createIndex('movies', ['primaryKey' => 'id']);
 update_an_index_1: |-
-  $client->updateIndex('movies', ['primaryKey' => 'movie_review_id']);
+  $client->updateIndex('movies', ['primaryKey' => 'id']);
   // OR
-  $client->index('movies')->update(['primaryKey' => 'movie_review_id']);
+  $client->index('movies')->update(['primaryKey' => 'id']);
 delete_an_index_1: |-
   $client->deleteIndex('movies');
   // OR
@@ -343,10 +343,8 @@ getting_started_add_documents_md: |-
   ```
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
-getting_started_check_task_status_md: |-
-  ```php
+getting_started_check_task_status: |-
   $client->index('movies')->getTask(0);
-  ```
 getting_started_search_md: |-
   ```php
   $client->index('movies')->search('botman');
