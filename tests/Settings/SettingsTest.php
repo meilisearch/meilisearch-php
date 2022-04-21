@@ -17,6 +17,16 @@ final class SettingsTest extends TestCase
         'exactness',
     ];
 
+    public const DEFAULT_TYPO_TOLERANCE = [
+        'enabled' => True,
+        'minWordLengthForTypo' => [
+            'oneTypo' => 5,
+            'twoTypos' => 9,
+        ],
+        'disableOnWords' => [],
+        'disableOnAttributes' => [],
+    ];
+
     public const DEFAULT_SEARCHABLE_ATTRIBUTES = ['*'];
     public const DEFAULT_DISPLAYED_ATTRIBUTES = ['*'];
 
@@ -46,6 +56,8 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settingA['filterableAttributes']);
         $this->assertIsArray($settingA['sortableAttributes']);
         $this->assertEmpty($settingA['sortableAttributes']);
+        $this->assertIsIterable($settingA['typoTolerance']);
+        $this->assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingA['typoTolerance']));
 
         $this->assertEquals(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
         $this->assertNull($settingB['distinctAttribute']);
@@ -59,6 +71,8 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settingB['filterableAttributes']);
         $this->assertIsArray($settingB['sortableAttributes']);
         $this->assertEmpty($settingB['sortableAttributes']);
+        $this->assertIsIterable($settingB['typoTolerance']);
+        $this->assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingB['typoTolerance']));
     }
 
     public function testUpdateSettings(): void
@@ -87,15 +101,27 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settings['filterableAttributes']);
         $this->assertIsArray($settings['sortableAttributes']);
         $this->assertEmpty($settings['sortableAttributes']);
+        $this->assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
     }
 
     public function testUpdateSettingsWithoutOverwritingThem(): void
     {
+        $new_typo_tolerance = [
+            'enabled' => True,
+            'minWordLengthForTypo' => [
+                'oneTypo' => 5,
+                'twoTypos' => 9,
+            ],
+            'disableOnWords' => [],
+            'disableOnAttributes' => [],
+        ];
+
         $index = $this->createEmptyIndex('index');
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
+            'typoTolerance' => $new_typo_tolerance,
         ]);
 
         $this->assertIsValidPromise($promise);
@@ -122,6 +148,7 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settings['filterableAttributes']);
         $this->assertIsArray($settings['sortableAttributes']);
         $this->assertEmpty($settings['sortableAttributes']);
+        $this->assertEquals($new_typo_tolerance, iterator_to_array($settings['typoTolerance']));
     }
 
     public function testResetSettings(): void
@@ -156,6 +183,7 @@ final class SettingsTest extends TestCase
         $this->assertEmpty($settings['filterableAttributes']);
         $this->assertIsArray($settings['sortableAttributes']);
         $this->assertEmpty($settings['sortableAttributes']);
+        $this->assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
     }
 
     // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.
