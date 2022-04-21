@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class SearchTestNestedFields extends TestCase
