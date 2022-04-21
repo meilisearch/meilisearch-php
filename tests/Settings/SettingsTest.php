@@ -19,7 +19,7 @@ final class SettingsTest extends TestCase
 
     public const DEFAULT_TYPO_TOLERANCE = [
         'enabled' => True,
-        'minWordLengthForTypo' => [
+        'minWordSizeForTypos' => [
             'oneTypo' => 5,
             'twoTypos' => 9,
         ],
@@ -108,7 +108,7 @@ final class SettingsTest extends TestCase
     {
         $new_typo_tolerance = [
             'enabled' => True,
-            'minWordLengthForTypo' => [
+            'minWordSizeForTypos' => [
                 'oneTypo' => 5,
                 'twoTypos' => 9,
             ],

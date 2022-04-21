@@ -205,7 +205,7 @@ final class SearchResultTest extends TestCase
         $this->assertCount(1, $response);
     }
 
-    public function testTransformFacetsDritributionMethod(): void
+    public function testTransformFacetsDistributionMethod(): void
     {
         $facetsToUpperFunc = function (array $facets): array {
             $changeOneFacet = function (array $facet): array {
