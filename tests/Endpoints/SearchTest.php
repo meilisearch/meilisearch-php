@@ -139,6 +139,112 @@ final class SearchTest extends TestCase
         $index->search('prince');
     }
 
+    public function testParametersCropMarker(): void
+    {
+        $response = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForTask($response['uid']);
+
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 2,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('…Half-Blood…', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 2,
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('…Half-Blood…', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersWithCustomizedCropMarker(): void
+    {
+        $response = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForTask($response['uid']);
+
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 3,
+            'cropMarker' => '(ꈍᴗꈍ)',
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('(ꈍᴗꈍ)Half-Blood Prince', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 3,
+            'cropMarker' => '(ꈍᴗꈍ)',
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('(ꈍᴗꈍ)Half-Blood Prince', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersWithHighlightTag(): void
+    {
+        $response = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForTask($response['uid']);
+
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('Pride <em>and</em> Prejudice', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('Pride <em>and</em> Prejudice', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersWithCustomizedHighlightTag(): void
+    {
+        $response = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForTask($response['uid']);
+
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+            'highlightPreTag' => '(⊃｡•́‿•̀｡)⊃ ',
+            'highlightPostTag' => ' ⊂(´• ω •`⊂)',
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('Pride (⊃｡•́‿•̀｡)⊃ and ⊂(´• ω •`⊂) Prejudice', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+            'highlightPreTag' => '(⊃｡•́‿•̀｡)⊃ ',
+            'highlightPostTag' => ' ⊂(´• ω •`⊂)',
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('Pride (⊃｡•́‿•̀｡)⊃ and ⊂(´• ω •`⊂) Prejudice', $response['hits'][0]['_formatted']['title']);
+    }
+
     public function testParametersArray(): void
     {
         $response = $this->index->updateFilterableAttributes(['title']);
