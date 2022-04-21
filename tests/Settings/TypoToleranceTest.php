@@ -12,7 +12,7 @@ final class TypoToleranceTest extends TestCase
     private Indexes $index;
 
     public const DEFAULT_TYPO_TOLERANCE = [
-        'enabled' => True,
+        'enabled' => true,
         'minWordSizeForTypos' => [
             'oneTypo' => 5,
             'twoTypos' => 9,
@@ -37,7 +37,7 @@ final class TypoToleranceTest extends TestCase
     public function testUpdateTypoTolerance(): void
     {
         $newTypoTolerance = [
-            'enabled' => True,
+            'enabled' => true,
             'minWordSizeForTypos' => [
                 'oneTypo' => 6,
                 'twoTypos' => 10,
