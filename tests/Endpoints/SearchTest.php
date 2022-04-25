@@ -141,9 +141,6 @@ final class SearchTest extends TestCase
 
     public function testParametersCropMarker(): void
     {
-        $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForTask($response['uid']);
-
         $response = $this->index->search('blood', [
             'limit' => 1,
             'attributesToCrop' => ['title'],
@@ -167,9 +164,6 @@ final class SearchTest extends TestCase
 
     public function testParametersWithCustomizedCropMarker(): void
     {
-        $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForTask($response['uid']);
-
         $response = $this->index->search('blood', [
             'limit' => 1,
             'attributesToCrop' => ['title'],
@@ -195,9 +189,6 @@ final class SearchTest extends TestCase
 
     public function testParametersWithHighlightTag(): void
     {
-        $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForTask($response['uid']);
-
         $response = $this->index->search('and', [
             'limit' => 1,
             'attributesToHighlight' => ['*'],
@@ -219,9 +210,6 @@ final class SearchTest extends TestCase
 
     public function testParametersWithCustomizedHighlightTag(): void
     {
-        $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForTask($response['uid']);
-
         $response = $this->index->search('and', [
             'limit' => 1,
             'attributesToHighlight' => ['*'],
