@@ -340,7 +340,7 @@ settings_guide_typo_tolerance_1: |-
   ]);
 typo_tolerance_guide_1: |-
   $client->index('movies')->updateTypoTolerance([
-    'enabled' => False
+    'enabled' => false
   ]);
 typo_tolerance_guide_2: |-
   $client->index('movies')->updateTypoTolerance([
