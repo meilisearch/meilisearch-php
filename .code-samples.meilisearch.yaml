@@ -268,7 +268,7 @@ search_parameter_guide_highlight_1: |-
 search_parameter_guide_highlight_tag_1: |-
   $client->index('movies')->search('winter feast', [
     'attributesToHighlight' => ['overview'],
-    'highlightPreTag' => '<span class=\"highlight\">',
+    'highlightPreTag' => '<span class="highlight">',
     'highlightPostTag' => '</span>'
   ]);
 search_parameter_guide_matches_1: |-
