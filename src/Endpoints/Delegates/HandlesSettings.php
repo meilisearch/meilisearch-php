@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MeiliSearch\Endpoints\Delegates;
 
 use MeiliSearch\Contracts\Index\Synonyms;
+use MeiliSearch\Contracts\Index\TypoTolerance;
 
 trait HandlesSettings
 {
@@ -143,5 +144,23 @@ trait HandlesSettings
     public function resetSortableAttributes(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/sortable-attributes');
+    }
+
+    // Settings - Typo Tolerance
+
+    public function getTypoTolerance(): array
+    {
+        return (new TypoTolerance($this->http->get(self::PATH.'/'.$this->uid.'/settings/typo-tolerance')))
+            ->getIterator()->getArrayCopy();
+    }
+
+    public function updateTypoTolerance(array $typoTolerance): array
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/typo-tolerance', new TypoTolerance($typoTolerance));
+    }
+
+    public function resetTypoTolerance(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/typo-tolerance');
     }
 }

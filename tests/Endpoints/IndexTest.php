@@ -35,6 +35,8 @@ final class IndexTest extends TestCase
         $this->assertIsArray($this->index->getFilterableAttributes());
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->index->getDisplayedAttributes());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getTypoTolerance());
     }
 
     public function testGetPrimaryKey(): void
