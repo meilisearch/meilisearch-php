@@ -56,12 +56,10 @@ final class TypoToleranceTest extends TestCase
     public function testResetTypoTolerance(): void
     {
         $promise = $this->index->resetTypoTolerance();
-
-        $this->assertIsValidPromise($promise);
-
         $this->index->waitForTask($promise['uid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
+        $this->assertIsValidPromise($promise);
         $this->assertEquals(self::DEFAULT_TYPO_TOLERANCE, $typoTolerance);
     }
 }
