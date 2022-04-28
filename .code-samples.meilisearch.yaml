@@ -124,8 +124,8 @@ update_settings_1: |-
     ],
     'typoTolerance' => [
         'minWordSizeForTypos' => [
-            'oneTypo' => 8,
-            'twoTypos' => 10
+          'oneTypo' => 8,
+          'twoTypos' => 10
         ],
         'disableOnAttributes' => ['title']
     ]
