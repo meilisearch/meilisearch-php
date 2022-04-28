@@ -46,12 +46,10 @@ final class TypoToleranceTest extends TestCase
             'disableOnAttributes' => ['title'],
         ];
         $promise = $this->index->updateTypoTolerance($newTypoTolerance);
-
-        $this->assertIsValidPromise($promise);
-
         $this->index->waitForTask($promise['uid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
+        $this->assertIsValidPromise($promise);
         $this->assertEquals($newTypoTolerance, $typoTolerance);
     }
 
