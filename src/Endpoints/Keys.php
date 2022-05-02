@@ -33,10 +33,32 @@ class Keys extends Endpoint
         parent::__construct($http);
     }
 
+    protected function newInstance(array $attributes): self
+    {
+        $key = new self(
+            $this->http,
+            $attributes['key'],
+            $attributes['description'],
+            $attributes['actions'],
+            $attributes['indexes'],
+        );
+        if ($attributes['expiresAt']) {
+            $key->expiresAt = date_create_from_format('Y-m-d\TH:i:s\Z', $attributes['expiresAt']);
+        }
+        if ($attributes['createdAt']) {
+            $key->createdAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['createdAt']);
+        }
+        if ($attributes['updatedAt']) {
+            $key->updatedAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['updatedAt']);
+        }
+
+        return $key;
+    }
+
     /**
      * @return $this
      */
-    protected function newInstance(array $attributes): self
+    protected function fill(array $attributes): self
     {
         $this->key = $attributes['key'];
         $this->description = $attributes['description'];
@@ -94,7 +116,7 @@ class Keys extends Endpoint
     {
         $response = $this->http->get(self::PATH.'/'.$key);
 
-        return $this->newInstance($response);
+        return $this->fill($response);
     }
 
     public function all(): array
@@ -120,7 +142,7 @@ class Keys extends Endpoint
         }
         $response = $this->http->post(self::PATH, $options);
 
-        return $this->newInstance($response);
+        return $this->fill($response);
     }
 
     public function update(string $key, array $options = []): self
@@ -130,7 +152,7 @@ class Keys extends Endpoint
         }
         $response = $this->http->patch(self::PATH.'/'.$key, $options);
 
-        return $this->newInstance($response);
+        return $this->fill($response);
     }
 
     public function delete(string $key): array
