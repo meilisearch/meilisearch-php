@@ -11,6 +11,7 @@ class Settings extends Data implements \JsonSerializable
     public function __construct(array $data = [])
     {
         $data['synonyms'] = new Synonyms($data['synonyms'] ?? []);
+        $data['typoTolerance'] = new TypoTolerance($data['typoTolerance'] ?? []);
         parent::__construct($data);
     }
 

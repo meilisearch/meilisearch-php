@@ -139,6 +139,100 @@ final class SearchTest extends TestCase
         $index->search('prince');
     }
 
+    public function testParametersCropMarker(): void
+    {
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 2,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('…Half-Blood…', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 2,
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('…Half-Blood…', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersWithCustomizedCropMarker(): void
+    {
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 3,
+            'cropMarker' => '(ꈍᴗꈍ)',
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('(ꈍᴗꈍ)Half-Blood Prince', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('blood', [
+            'limit' => 1,
+            'attributesToCrop' => ['title'],
+            'cropLength' => 3,
+            'cropMarker' => '(ꈍᴗꈍ)',
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('(ꈍᴗꈍ)Half-Blood Prince', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersWithHighlightTag(): void
+    {
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('Pride <em>and</em> Prejudice', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('Pride <em>and</em> Prejudice', $response['hits'][0]['_formatted']['title']);
+    }
+
+    public function testParametersWithCustomizedHighlightTag(): void
+    {
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+            'highlightPreTag' => '(⊃｡•́‿•̀｡)⊃ ',
+            'highlightPostTag' => ' ⊂(´• ω •`⊂)',
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response->getHit(0));
+        $this->assertSame('Pride (⊃｡•́‿•̀｡)⊃ and ⊂(´• ω •`⊂) Prejudice', $response->getHit(0)['_formatted']['title']);
+
+        $response = $this->index->search('and', [
+            'limit' => 1,
+            'attributesToHighlight' => ['*'],
+            'highlightPreTag' => '(⊃｡•́‿•̀｡)⊃ ',
+            'highlightPostTag' => ' ⊂(´• ω •`⊂)',
+        ], [
+            'raw' => true,
+        ]);
+
+        $this->assertArrayHasKey('_formatted', $response['hits'][0]);
+        $this->assertSame('Pride (⊃｡•́‿•̀｡)⊃ and ⊂(´• ω •`⊂) Prejudice', $response['hits'][0]['_formatted']['title']);
+    }
+
     public function testParametersArray(): void
     {
         $response = $this->index->updateFilterableAttributes(['title']);
@@ -160,7 +254,7 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('_formatted', $response->getHit(0));
         $this->assertArrayNotHasKey('comment', $response->getHit(0));
         $this->assertArrayNotHasKey('comment', $response->getHit(0)['_matchesInfo']);
-        $this->assertSame('Petit <em>Prince</em>', $response->getHit(0)['_formatted']['title']);
+        $this->assertSame('Le Petit <em>Prince</em>', $response->getHit(0)['_formatted']['title']);
 
         $response = $this->index->search('prince', [
             'limit' => 5,
@@ -180,7 +274,7 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('_formatted', $response['hits'][0]);
         $this->assertArrayNotHasKey('comment', $response['hits'][0]);
         $this->assertArrayNotHasKey('comment', $response['hits'][0]['_matchesInfo']);
-        $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
+        $this->assertSame('Le Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
     public function testParametersCanBeAStar(): void
@@ -204,7 +298,7 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('_formatted', $response->getHit(0));
         $this->assertArrayHasKey('comment', $response->getHit(0));
         $this->assertArrayNotHasKey('comment', $response->getHit(0)['_matchesInfo']);
-        $this->assertSame('Petit <em>Prince</em>', $response->getHit(0)['_formatted']['title']);
+        $this->assertSame('Le Petit <em>Prince</em>', $response->getHit(0)['_formatted']['title']);
 
         $response = $this->index->search('prince', [
             'limit' => 5,
@@ -224,7 +318,7 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('_formatted', $response['hits'][0]);
         $this->assertArrayHasKey('comment', $response['hits'][0]);
         $this->assertArrayNotHasKey('comment', $response['hits'][0]['_matchesInfo']);
-        $this->assertSame('Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
+        $this->assertSame('Le Petit <em>Prince</em>', $response['hits'][0]['_formatted']['title']);
     }
 
     public function testSearchWithFilterCanBeInt(): void
@@ -613,16 +707,16 @@ final class SearchTest extends TestCase
         $this->index->waitForTask($response['uid']);
 
         $response = $this->index->search(
-            'prince',
+            'witch',
             ['facetsDistribution' => ['genre', 'adaptation']]
         );
 
-        $this->assertCount(2, $response->getFacetsDistribution()['genre']);
+        $this->assertCount(1, $response->getFacetsDistribution()['genre']);
         $this->assertEquals(1, $response->getFacetsDistribution()['genre']['adventure']);
-        $this->assertEquals(1, $response->getFacetsDistribution()['genre']['fantasy']);
-        $this->assertEquals([], $response->getFacetsDistribution()['adaptation']);
-        $this->assertCount(0, $response->getRaw()['facetsDistribution']['adaptation']);
-        $this->assertCount(2, $response->getRaw()['facetsDistribution']['genre']);
+        $this->assertCount(1, $response->getFacetsDistribution()['adaptation']);
+        $this->assertEquals(1, $response->getFacetsDistribution()['adaptation']['video game']);
+        $this->assertCount(1, $response->getRaw()['facetsDistribution']['adaptation']);
+        $this->assertCount(1, $response->getRaw()['facetsDistribution']['genre']);
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
         $this->assertEquals($response->getRaw()['facetsDistribution'], $response->getFacetsDistribution());
     }
