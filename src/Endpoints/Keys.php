@@ -43,13 +43,13 @@ class Keys extends Endpoint
             $attributes['indexes'],
         );
         if ($attributes['expiresAt']) {
-            $key->expiresAt = date_create_from_format('Y-m-d\TH:i:s\Z', $attributes['expiresAt']);
+            $key->expiresAt = $this->createDate($attributes['expiresAt']);
         }
         if ($attributes['createdAt']) {
-            $key->createdAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['createdAt']);
+            $key->createdAt = $this->createDate($attributes['createdAt']);
         }
         if ($attributes['updatedAt']) {
-            $key->updatedAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['updatedAt']);
+            $key->updatedAt = $this->createDate($attributes['updatedAt']);
         }
 
         return $key;
@@ -65,16 +65,27 @@ class Keys extends Endpoint
         $this->actions = $attributes['actions'];
         $this->indexes = $attributes['indexes'];
         if ($attributes['expiresAt']) {
-            $this->expiresAt = date_create_from_format('Y-m-d\TH:i:s\Z', $attributes['expiresAt']);
+            $this->expiresAt = $this->createDate($attributes['expiresAt']);
         }
         if ($attributes['createdAt']) {
-            $this->createdAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['createdAt']);
+            $this->createdAt = $this->createDate($attributes['createdAt']);
         }
         if ($attributes['updatedAt']) {
-            $this->updatedAt = date_create_from_format('Y-m-d\TH:i:s.vu\Z', $attributes['updatedAt']);
+            $this->updatedAt = $this->createDate($attributes['updatedAt']);
         }
 
         return $this;
+    }
+
+    protected function createDate($attribute): DateTime|null
+    {
+        if (!is_string($attribute)) {
+            return null;
+        }
+
+        return date_create_from_format(DateTime::ATOM, $attribute)
+            ?: date_create_from_format('Y-m-d\TH:i:s.uP', $attribute)
+            ?: null;
     }
 
     public function getKey(): ?string
