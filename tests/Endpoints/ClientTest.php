@@ -278,7 +278,7 @@ final class ClientTest extends TestCase
 
     public function testHeaderWithoutApiKey(): void
     {
-        $client = new Client('http://localhost:7700');
+        $client = new Client($this->host);
 
         $response = $client->health();
 
