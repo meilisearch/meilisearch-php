@@ -56,5 +56,10 @@
         "test": [
             "sh scripts/tests.sh"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }
