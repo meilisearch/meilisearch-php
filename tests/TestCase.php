@@ -44,7 +44,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         $this->host = getenv('MEILISEARCH_HOST');
-        $this->client = new Client($this->host, getenv('API_KEY'));
+        $this->client = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
     }
 
     protected function tearDown(): void
