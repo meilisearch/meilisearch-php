@@ -79,13 +79,16 @@ class Keys extends Endpoint
 
     protected function createDate($attribute): ?DateTime
     {
-        if (!is_string($attribute)) {
+        if (!\is_string($attribute)) {
             return null;
         }
 
-        return date_create_from_format(DateTime::ATOM, $attribute)
-            ?: date_create_from_format('Y-m-d\TH:i:s.uP', $attribute)
-            ?: null;
+        $date = date_create_from_format('Y-m-d\TH:i:s.uP', $attribute);
+        if ($date === false) {
+            $date = date_create_from_format(DateTime::ATOM, $attribute);
+        }
+
+        return $date === false ? null : $date;
     }
 
     public function getKey(): ?string
