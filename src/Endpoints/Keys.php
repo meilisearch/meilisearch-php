@@ -77,7 +77,7 @@ class Keys extends Endpoint
         return $this;
     }
 
-    protected function createDate($attribute): DateTime|null
+    protected function createDate($attribute): ?DateTime
     {
         if (!is_string($attribute)) {
             return null;
