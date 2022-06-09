@@ -84,11 +84,11 @@ class Keys extends Endpoint
         }
 
         $date = date_create_from_format('Y-m-d\TH:i:s.uP', $attribute);
-        if ($date === false) {
+        if (false === $date) {
             $date = date_create_from_format(DateTime::ATOM, $attribute);
         }
 
-        return $date === false ? null : $date;
+        return false === $date ? null : $date;
     }
 
     public function getKey(): ?string
