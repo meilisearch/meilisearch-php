@@ -139,7 +139,7 @@ class Indexes extends Endpoint
 
     public function update($body): array
     {
-        return $this->http->put(self::PATH.'/'.$this->uid, $body);
+        return $this->http->patch(self::PATH.'/'.$this->uid, $body);
     }
 
     public function delete(): array
@@ -205,7 +205,7 @@ class Indexes extends Endpoint
 
     public function updateSettings($settings): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings', $settings);
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings);
     }
 
     public function resetSettings(): array
