@@ -18,7 +18,7 @@ trait HandlesSettings
 
     public function updateRankingRules(array $rankingRules): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/ranking-rules', $rankingRules);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/ranking-rules', $rankingRules);
     }
 
     public function resetRankingRules(): array
@@ -35,7 +35,7 @@ trait HandlesSettings
 
     public function updateDistinctAttribute(string $distinctAttribute): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/distinct-attribute', $distinctAttribute);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/distinct-attribute', $distinctAttribute);
     }
 
     public function resetDistinctAttribute(): array
@@ -52,7 +52,7 @@ trait HandlesSettings
 
     public function updateSearchableAttributes(array $searchableAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchableAttributes);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchableAttributes);
     }
 
     public function resetSearchableAttributes(): array
@@ -69,7 +69,7 @@ trait HandlesSettings
 
     public function updateDisplayedAttributes(array $displayedAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayedAttributes);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayedAttributes);
     }
 
     public function resetDisplayedAttributes(): array
@@ -86,7 +86,7 @@ trait HandlesSettings
 
     public function updateStopWords(array $stopWords): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/stop-words', $stopWords);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/stop-words', $stopWords);
     }
 
     public function resetStopWords(): array
@@ -104,7 +104,7 @@ trait HandlesSettings
 
     public function updateSynonyms(array $synonyms): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/synonyms', new Synonyms($synonyms));
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/synonyms', new Synonyms($synonyms));
     }
 
     public function resetSynonyms(): array
@@ -121,7 +121,7 @@ trait HandlesSettings
 
     public function updateFilterableAttributes(array $filterableAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $filterableAttributes);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $filterableAttributes);
     }
 
     public function resetFilterableAttributes(): array
@@ -138,7 +138,7 @@ trait HandlesSettings
 
     public function updateSortableAttributes(array $sortableAttributes): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/sortable-attributes', $sortableAttributes);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/sortable-attributes', $sortableAttributes);
     }
 
     public function resetSortableAttributes(): array
@@ -156,7 +156,7 @@ trait HandlesSettings
 
     public function updateTypoTolerance(array $typoTolerance): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings/typo-tolerance', new TypoTolerance($typoTolerance));
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/typo-tolerance', new TypoTolerance($typoTolerance));
     }
 
     public function resetTypoTolerance(): array
