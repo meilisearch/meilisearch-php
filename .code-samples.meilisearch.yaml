@@ -272,7 +272,7 @@ search_parameter_guide_highlight_tag_1: |-
     'highlightPostTag' => '</span>'
   ]);
 search_parameter_guide_matches_1: |-
-  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'matches' => true]);
+  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'showMatchesPosition' => true]);
 settings_guide_synonyms_1: |-
   $client->index('tops')->updateSettings([
     'synonyms' => [
@@ -468,7 +468,7 @@ faceted_search_update_settings_1: |-
 faceted_search_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 faceted_search_facets_distribution_1: |-
-  $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']]);
+  $client->index('movies')->search('Batman', ['facets' => ['genres']]);
 faceted_search_walkthrough_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 post_dump_1: |-
