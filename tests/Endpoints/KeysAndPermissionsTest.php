@@ -272,7 +272,7 @@ final class KeysAndPermissionsTest extends TestCase
 
         $this->assertCount(3, $response);
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; ++$i) {
             $this->assertNotNull($response[$i]->getExpiresAt(), (string) $i);
             $this->assertNotNull($response[$i]->getCreatedAt(), (string) $i);
             $this->assertNotNull($response[$i]->getUpdatedAt(), (string) $i);
