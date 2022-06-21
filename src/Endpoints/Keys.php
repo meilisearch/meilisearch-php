@@ -82,7 +82,7 @@ class Keys extends Endpoint
         if (!\is_string($attribute)) {
             return null;
         }
-    
+
         try {
             return new DateTime($attribute);
         } catch (\Exception $e) {

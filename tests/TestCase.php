@@ -7,6 +7,10 @@ namespace Tests;
 use MeiliSearch\Client;
 use MeiliSearch\Endpoints\Indexes;
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends BaseTestCase
 {

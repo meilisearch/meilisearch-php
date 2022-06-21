@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use DateTime;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
@@ -274,9 +273,9 @@ final class KeysAndPermissionsTest extends TestCase
         $this->assertCount(3, $response);
 
         for ($i = 0; $i < 3; $i++) {
-            $this->assertNotNull($response[$i]->getExpiresAt(), (string)$i);
-            $this->assertNotNull($response[$i]->getCreatedAt(), (string)$i);
-            $this->assertNotNull($response[$i]->getUpdatedAt(), (string)$i);
+            $this->assertNotNull($response[$i]->getExpiresAt(), (string) $i);
+            $this->assertNotNull($response[$i]->getCreatedAt(), (string) $i);
+            $this->assertNotNull($response[$i]->getUpdatedAt(), (string) $i);
         }
     }
 }
