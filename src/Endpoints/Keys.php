@@ -83,11 +83,14 @@ class Keys extends Endpoint
             return null;
         }
 
-        try {
-            return new DateTime($attribute);
-        } catch (\Exception $e) {
-            return null;
+        if (false === strpos($attribute, '.')) {
+            $date = date_create_from_format(DateTime::ATOM, $attribute);
+        } else {
+            $attribute = preg_replace('/(\.\d{6})\d+/', '$1', $attribute, 1);
+            $date = date_create_from_format('Y-m-d\TH:i:s.uP', $attribute);
         }
+
+        return false === $date ? null : $date;
     }
 
     public function getKey(): ?string
