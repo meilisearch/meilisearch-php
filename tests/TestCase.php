@@ -7,6 +7,10 @@ namespace Tests;
 use MeiliSearch\Client;
 use MeiliSearch\Endpoints\Indexes;
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -67,5 +71,34 @@ abstract class TestCase extends BaseTestCase
         $this->client->waitForTask($response['uid']);
 
         return $this->client->getIndex($response['indexUid']);
+    }
+
+    protected function createHttpClientMock(int $status = 200, string $content = '{', string $contentType = 'application/json')
+    {
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects(self::once())
+            ->method('getContents')
+            ->willReturn($content);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects(self::any())
+            ->method('getStatusCode')
+            ->willReturn($status);
+
+        $response->expects(self::any())
+            ->method('getHeader')
+            ->with('content-type')
+            ->willReturn([$contentType]);
+        $response->expects(self::once())
+            ->method('getBody')
+            ->willReturn($stream);
+
+        $httpClient = $this->createMock(ClientInterface::class);
+        $httpClient->expects(self::once())
+            ->method('sendRequest')
+            ->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($response);
+
+        return $httpClient;
     }
 }

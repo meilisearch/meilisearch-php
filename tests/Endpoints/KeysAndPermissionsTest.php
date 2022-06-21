@@ -229,4 +229,53 @@ final class KeysAndPermissionsTest extends TestCase
         $this->expectException(ApiException::class);
         $this->client->deleteKey('No existing key');
     }
+
+    public function testDateParsing(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '
+        {
+            "results": [
+              {
+                "description": "test_key_1",
+                "key": "z1ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
+                "actions": ["*"],
+                "indexes": ["*"],
+                "expiresAt": "2023-06-14T10:34:03Z",
+                "createdAt": "2022-06-14T10:34:03Z",
+                "updatedAt": "2022-06-14T10:34:03Z"
+              },
+              {
+                "description": "test_key_2",
+                "key": "z2ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
+                "actions": ["*"],
+                "indexes": ["*"],
+                "expiresAt": "2023-06-14T10:34:03.629Z",
+                "createdAt": "2022-06-14T10:34:03.627Z",
+                "updatedAt": "2022-06-14T10:34:03.627Z"
+              },
+              {
+                "description": "test_key_3",
+                "key": "z3ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
+                "actions": ["*"],
+                "indexes": ["*"],
+                "expiresAt": "2023-06-14T10:34:03.629690014Z",
+                "createdAt": "2022-06-14T10:34:03.627606639Z",
+                "updatedAt": "2022-06-14T10:34:03.627606639Z"
+              }
+            ]
+          }
+        ');
+
+        $newClient = new \MeiliSearch\Client('https://localhost:7700', null, $httpClient);
+
+        $response = $newClient->getKeys();
+
+        $this->assertCount(3, $response);
+
+        for ($i = 0; $i < 3; ++$i) {
+            $this->assertNotNull($response[$i]->getExpiresAt(), (string) $i);
+            $this->assertNotNull($response[$i]->getCreatedAt(), (string) $i);
+            $this->assertNotNull($response[$i]->getUpdatedAt(), (string) $i);
+        }
+    }
 }
