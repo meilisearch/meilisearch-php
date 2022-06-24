@@ -31,7 +31,7 @@ final class SearchTestNestedFields extends TestCase
         ]);
 
         $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['nbHits']);
+        $this->assertSame(1, $response['estimatedTotalHits']);
         $this->assertSame(5, $response['hits'][0]['id']);
     }
 
@@ -47,7 +47,7 @@ final class SearchTestNestedFields extends TestCase
         ]);
 
         $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(6, $response['nbHits']);
+        $this->assertSame(6, $response['estimatedTotalHits']);
         $this->assertSame(4, $response['hits'][0]['id']);
     }
 
@@ -80,7 +80,7 @@ final class SearchTestNestedFields extends TestCase
         ]);
 
         $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['nbHits']);
+        $this->assertSame(1, $response['estimatedTotalHits']);
         $this->assertSame(5, $response['hits'][0]['id']);
     }
 
@@ -102,7 +102,7 @@ final class SearchTestNestedFields extends TestCase
         ]);
 
         $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['nbHits']);
+        $this->assertSame(1, $response['estimatedTotalHits']);
         $this->assertSame(5, $response['hits'][0]['id']);
     }
 
@@ -127,7 +127,7 @@ final class SearchTestNestedFields extends TestCase
         ]);
 
         $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['nbHits']);
+        $this->assertSame(1, $response['estimatedTotalHits']);
         $this->assertSame(5, $response['hits'][0]['id']);
     }
 }

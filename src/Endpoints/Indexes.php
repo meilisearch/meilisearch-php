@@ -185,7 +185,12 @@ class Indexes extends Endpoint
             $searchParams
         );
 
-        return $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
+        $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
+
+        // patch to prevent breaking in laravel/scout getTotalCount method.
+        $result['nbHits'] = $result['estimativeNbHits'];
+
+        return $result;
     }
 
     // Stats
