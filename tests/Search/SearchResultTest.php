@@ -98,7 +98,7 @@ final class SearchResultTest extends TestCase
         $this->assertSame(976, $this->basicResult->getEstimatedTotalHits());
         $this->assertSame(35, $this->basicResult->getProcessingTimeMs());
         $this->assertSame('american', $this->basicResult->getQuery());
-        $this->assertEmpty($this->basicResult->getFacetsDistribution());
+        $this->assertEmpty($this->basicResult->getFacetDistribution());
         $this->assertCount(2, $this->basicResult);
 
         $this->assertArrayHasKey('hits', $this->basicResult->toArray());
@@ -139,6 +139,7 @@ final class SearchResultTest extends TestCase
     public function testResultCanBeReturnedAsJson(): void
     {
         $this->assertJsonStringEqualsJsonString(
+            '{"hits":[{"id":"1","title":"American Pie 2","poster":"https:\/\/image.tmdb.org\/t\/p\/w1280\/q4LNgUnRfltxzp3gf1MAGiK5LhV.jpg","overview":"The whole gang are back and as close as ever. They decide to get even closer by spending the summer together at a beach house. They decide to hold the biggest...","release_date":997405200},{"id":"190859","title":"American Sniper","poster":"https:\/\/image.tmdb.org\/t\/p\/w1280\/svPHnYE7N5NAGO49dBmRhq0vDQ3.jpg","overview":"U.S. Navy SEAL Chris Kyle takes his sole mission\u2014protect his comrades\u2014to heart and becomes one of the most lethal snipers in American history. His pinpoint accuracy not only saves countless lives but also makes him a prime...","release_date":1418256000}],"offset":0,"limit":20,"estimatedTotalHits":976,"hitsCount":2,"processingTimeMs":35,"query":"american","facetDistribution":[]}',
             $this->basicResult->toJSON()
         );
     }
@@ -212,7 +213,7 @@ final class SearchResultTest extends TestCase
             return array_map($changeOneFacet, $facets);
         };
 
-        $response = $this->resultWithFacets->transformFacetsDistribution($facetsToUpperFunc);
+        $response = $this->resultWithFacets->transformFacetDistribution($facetsToUpperFunc);
 
         $this->assertArrayHasKey('hits', $response->toArray());
         $this->assertArrayHasKey('facetDistribution', $response->toArray());
@@ -221,10 +222,10 @@ final class SearchResultTest extends TestCase
         $this->assertArrayHasKey('processingTimeMs', $response->toArray());
         $this->assertArrayHasKey('query', $response->toArray());
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
-        $this->assertNotEquals($response->getRaw()['facetDistribution'], $response->getFacetsDistribution());
-        $this->assertCount(3, $response->getFacetsDistribution()['genre']);
-        $this->assertEquals(0, $response->getFacetsDistribution()['genre']['ROMANCE']);
-        $this->assertEquals(1, $response->getFacetsDistribution()['genre']['FANTASY']);
-        $this->assertEquals(1, $response->getFacetsDistribution()['genre']['ADVENTURE']);
+        $this->assertNotEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
+        $this->assertCount(3, $response->getFacetDistribution()['genre']);
+        $this->assertEquals(0, $response->getFacetDistribution()['genre']['ROMANCE']);
+        $this->assertEquals(1, $response->getFacetDistribution()['genre']['FANTASY']);
+        $this->assertEquals(1, $response->getFacetDistribution()['genre']['ADVENTURE']);
     }
 }
