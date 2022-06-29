@@ -84,7 +84,7 @@ final class SettingsTest extends TestCase
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $settings = $index->getSettings();
 
@@ -125,14 +125,14 @@ final class SettingsTest extends TestCase
         ]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $promise = $index->updateSettings([
             'searchableAttributes' => ['title'],
         ]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $settings = $index->getSettings();
 
@@ -160,12 +160,12 @@ final class SettingsTest extends TestCase
             'stopWords' => ['the'],
         ]);
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $promise = $index->resetSettings();
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $settings = $index->getSettings();
 
@@ -193,11 +193,11 @@ final class SettingsTest extends TestCase
 
         $resetPromise = $index->resetSettings();
         $this->assertIsValidPromise($resetPromise);
-        $index->waitForTask($resetPromise['uid']);
+        $index->waitForTask($resetPromise['taskUid']);
 
         $settings = $index->getSettings();
         $promise = $index->updateSettings($settings);
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
     }
 }

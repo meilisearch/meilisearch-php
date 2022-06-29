@@ -24,7 +24,7 @@ final class TasksTest extends TestCase
 
         $this->assertIsArray($response);
         $this->assertArrayHasKey('status', $response);
-        $this->assertSame($response['uid'], $promise['uid']);
+        $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentPartial');
         $this->assertArrayHasKey('indexUid', $response);
@@ -40,9 +40,9 @@ final class TasksTest extends TestCase
         [$promise, $response] = $this->seedIndex();
 
         $this->assertIsArray($promise);
-        $response = $this->client->getTask($promise['uid']);
+        $response = $this->client->getTask($promise['taskUid']);
         $this->assertArrayHasKey('status', $response);
-        $this->assertSame($response['uid'], $promise['uid']);
+        $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentPartial');
         $this->assertArrayHasKey('indexUid', $response);
@@ -56,12 +56,13 @@ final class TasksTest extends TestCase
     public function testGetAllTasksClient(): void
     {
         $response = $this->client->getTasks();
-        $preCount = \count($response['results']);
-        [$promise, $response] = $this->seedIndex();
+        $firstIndex = $response['results'][0]['uid'];
+        $this->seedIndex();
 
-        $this->assertIsArray($promise);
         $response = $this->client->getTasks();
-        $this->assertCount($preCount + 1, $response['results']);
+        $newFirstIndex = $response['results'][0]['uid'];
+
+        $this->assertNotEquals($firstIndex, $newFirstIndex);
     }
 
     public function testGetOneTaskIndex(): void
@@ -69,9 +70,9 @@ final class TasksTest extends TestCase
         [$promise, $response] = $this->seedIndex();
 
         $this->assertIsArray($promise);
-        $response = $this->index->getTask($promise['uid']);
+        $response = $this->index->getTask($promise['taskUid']);
         $this->assertArrayHasKey('status', $response);
-        $this->assertSame($response['uid'], $promise['uid']);
+        $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentPartial');
         $this->assertArrayHasKey('indexUid', $response);
@@ -82,27 +83,30 @@ final class TasksTest extends TestCase
         $this->assertIsArray($response['details']);
     }
 
-    public function testGetAllTasksIndex(): void
+    public function testGetAllTasksByIndex(): void
     {
         $response = $this->index->getTasks();
-        $preCount = \count($response['results']);
-        [$promise, $response] = $this->seedIndex();
+        $firstIndex = $response['results'][0]['uid'];
 
-        $this->assertIsArray($promise);
+        $newIndex = $this->createEmptyIndex('a_new_index');
+        $newIndex->updateDocuments(self::DOCUMENTS);
+
         $response = $this->index->getTasks();
-        $this->assertCount($preCount + 1, $response['results']);
+        $newFirstIndex = $response['results'][0]['uid'];
+
+        $this->assertEquals($firstIndex, $newFirstIndex);
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void
     {
         $this->expectException(ApiException::class);
-        $this->index->getTask(9999999999);
+        $this->index->getTask(99999999);
     }
 
     private function seedIndex(): array
     {
         $promise = $this->index->updateDocuments(self::DOCUMENTS);
-        $response = $this->client->waitForTask($promise['uid']);
+        $response = $this->client->waitForTask($promise['taskUid']);
 
         return [$promise, $response];
     }

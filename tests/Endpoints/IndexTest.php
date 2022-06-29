@@ -116,7 +116,7 @@ final class IndexTest extends TestCase
         $primaryKey = 'id';
 
         $response = $this->index->update(['primaryKey' => $primaryKey]);
-        $this->client->waitForTask($response['uid']);
+        $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
         $this->assertSame($index->getPrimaryKey(), $primaryKey);
@@ -171,12 +171,12 @@ final class IndexTest extends TestCase
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
 
-        $response = $this->index->waitForTask($promise['uid']);
+        $response = $this->index->waitForTask($promise['taskUid']);
 
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($response);
         $this->assertSame($response['status'], 'succeeded');
-        $this->assertSame($response['uid'], $promise['uid']);
+        $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentAddition');
         $this->assertArrayHasKey('duration', $response);
@@ -187,10 +187,10 @@ final class IndexTest extends TestCase
     public function testWaitForTaskWithTimeoutAndInterval(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($promise['uid'], 100, 20);
+        $response = $this->index->waitForTask($promise['taskUid'], 100, 20);
 
         $this->assertSame($response['status'], 'succeeded');
-        $this->assertSame($response['uid'], $promise['uid']);
+        $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentAddition');
         $this->assertArrayHasKey('duration', $response);
@@ -202,10 +202,10 @@ final class IndexTest extends TestCase
     public function testWaitForTaskWithTimeout(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($promise['uid'], 100);
+        $response = $this->index->waitForTask($promise['taskUid'], 100);
 
         $this->assertSame($response['status'], 'succeeded');
-        $this->assertSame($response['uid'], $promise['uid']);
+        $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentAddition');
         $this->assertArrayHasKey('duration', $response);

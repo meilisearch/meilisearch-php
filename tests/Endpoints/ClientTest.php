@@ -132,7 +132,7 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex('indexA');
 
         $response = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
-        $this->client->waitForTask($response['uid']);
+        $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
         $this->assertSame($index->getPrimaryKey(), 'id');
@@ -147,7 +147,7 @@ final class ClientTest extends TestCase
         $this->assertCount(1, $response);
 
         $response = $this->client->deleteIndex('index');
-        $this->client->waitForTask($response['uid']);
+        $this->client->waitForTask($response['taskUid']);
 
         $this->expectException(ApiException::class);
         $index = $this->client->getIndex('index');
@@ -170,7 +170,7 @@ final class ClientTest extends TestCase
         $res = $this->client->deleteAllIndexes();
 
         $taskUids = array_map(function ($task) {
-            return $task['uid'];
+            return $task['uid'] ?? $task['taskUid'];
         }, $res);
         $res = $this->client->waitForTasks($taskUids);
 
@@ -186,7 +186,7 @@ final class ClientTest extends TestCase
 
         $res = $this->client->deleteAllIndexes();
         $taskUids = array_map(function ($task) {
-            return $task['uid'];
+            return $task['uid'] ?? $task['taskUid'];
         }, $res);
         $this->client->waitForTasks($taskUids);
 

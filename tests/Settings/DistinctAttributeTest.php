@@ -29,7 +29,7 @@ final class DistinctAttributeTest extends TestCase
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
 
         $this->assertEquals($distinctAttribute, $this->index->getDistinctAttribute());
     }
@@ -38,12 +38,12 @@ final class DistinctAttributeTest extends TestCase
     {
         $distinctAttribute = 'description';
         $promise = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
 
         $promise = $this->index->resetDistinctAttribute();
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
         $this->assertNull($this->index->getDistinctAttribute());
     }
 }
