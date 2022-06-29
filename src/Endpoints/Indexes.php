@@ -187,8 +187,11 @@ class Indexes extends Endpoint
 
         $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
 
-        // patch to prevent breaking in laravel/scout getTotalCount method.
-        $result['nbHits'] = $result['estimativeNbHits'];
+        // patch to prevent breaking in laravel/scout getTotalCount method,
+        // affects only Meilisearch >= v0.28.0.
+        if (isset($result['estimatedTotalHits'])) {
+            $result['nbHits'] = $result['estimatedTotalHits'];
+        }
 
         return $result;
     }
