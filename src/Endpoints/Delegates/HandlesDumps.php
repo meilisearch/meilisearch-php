@@ -10,9 +10,4 @@ trait HandlesDumps
     {
         return $this->dumps->create();
     }
-
-    public function getDumpStatus(string $uid): array
-    {
-        return $this->dumps->status($uid);
-    }
 }
