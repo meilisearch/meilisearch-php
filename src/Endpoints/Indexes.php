@@ -77,8 +77,9 @@ class Indexes extends Endpoint
     public function all(): array
     {
         $indexes = [];
+        $response = $this->allRaw();
 
-        foreach ($this->allRaw() as $index) {
+        foreach ($response['results'] as $index) {
             $indexes[] = $this->newInstance($index);
         }
 

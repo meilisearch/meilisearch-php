@@ -17,7 +17,7 @@ final class ClientTest extends TestCase
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->client->getAllIndexes());
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getAllRawIndexes());
+        $this->assertIsArray($this->client->getAllRawIndexes()['results']);
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->client->getRawIndex($index->getUid()));
     }
@@ -40,7 +40,7 @@ final class ClientTest extends TestCase
 
     public function testGetAllRawIndexesWhenEmpty(): void
     {
-        $response = $this->client->getAllRawIndexes();
+        $response = $this->client->getAllRawIndexes()['results'];
 
         $this->assertEmpty($response);
     }
@@ -112,7 +112,7 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex($indexA);
         $this->createEmptyIndex($indexB);
 
-        $res = $this->client->getAllRawIndexes();
+        $res = $this->client->getAllRawIndexes()['results'];
 
         $this->assertNotInstanceOf(Indexes::class, $res[0]);
     }
