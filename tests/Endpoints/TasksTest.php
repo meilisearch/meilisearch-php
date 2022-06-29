@@ -26,7 +26,7 @@ final class TasksTest extends TestCase
         $this->assertArrayHasKey('status', $response);
         $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentPartial');
+        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
         $this->assertArrayHasKey('indexUid', $response);
         $this->assertSame($response['indexUid'], 'index');
         $this->assertArrayHasKey('enqueuedAt', $response);
@@ -44,7 +44,7 @@ final class TasksTest extends TestCase
         $this->assertArrayHasKey('status', $response);
         $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentPartial');
+        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
         $this->assertArrayHasKey('indexUid', $response);
         $this->assertSame($response['indexUid'], 'index');
         $this->assertArrayHasKey('enqueuedAt', $response);
@@ -74,7 +74,7 @@ final class TasksTest extends TestCase
         $this->assertArrayHasKey('status', $response);
         $this->assertSame($response['uid'], $promise['taskUid']);
         $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentPartial');
+        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
         $this->assertArrayHasKey('indexUid', $response);
         $this->assertSame($response['indexUid'], 'index');
         $this->assertArrayHasKey('enqueuedAt', $response);
