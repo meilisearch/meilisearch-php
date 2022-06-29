@@ -181,10 +181,8 @@ class Keys extends Endpoint
 
     public function update(string $key, array $options = []): self
     {
-        if ($options['expiresAt'] && $options['expiresAt'] instanceof DateTime) {
-            $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
-        }
-        $response = $this->http->patch(self::PATH.'/'.$key, $options);
+        $data = array_intersect_key($options, array_flip((array) ['description', 'name']));
+        $response = $this->http->patch(self::PATH.'/'.$key, $data);
 
         return $this->fill($response);
     }
