@@ -32,8 +32,8 @@ trait HandlesSystem
         return $this->stats->show();
     }
 
-    public function generateTenantToken($searchRules, ?array $options = []): string
+    public function generateTenantToken(string $uid, $searchRules, ?array $options = []): string
     {
-        return $this->tenantToken->generateTenantToken($searchRules, $options);
+        return $this->tenantToken->generateTenantToken($uid, $searchRules, $options);
     }
 }
