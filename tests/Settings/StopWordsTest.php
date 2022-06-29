@@ -31,7 +31,7 @@ final class StopWordsTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
         $stopWords = $this->index->getStopWords();
 
         $this->assertEquals($newStopWords, $stopWords);
@@ -40,12 +40,12 @@ final class StopWordsTest extends TestCase
     public function testResetStopWords(): void
     {
         $promise = $this->index->updateStopWords(['the']);
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
 
         $promise = $this->index->resetStopWords();
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
 
         $stopWords = $this->index->getStopWords();
 

@@ -46,7 +46,7 @@ final class TypoToleranceTest extends TestCase
             'disableOnAttributes' => ['title'],
         ];
         $promise = $this->index->updateTypoTolerance($newTypoTolerance);
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
         $this->assertIsValidPromise($promise);
@@ -56,7 +56,7 @@ final class TypoToleranceTest extends TestCase
     public function testResetTypoTolerance(): void
     {
         $promise = $this->index->resetTypoTolerance();
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
         $this->assertIsValidPromise($promise);

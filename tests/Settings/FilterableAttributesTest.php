@@ -25,7 +25,7 @@ final class FilterableAttributesTest extends TestCase
         $promise = $index->updateFilterableAttributes($newAttributes);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $filterableAttributes = $index->getFilterableAttributes();
 
@@ -38,13 +38,13 @@ final class FilterableAttributesTest extends TestCase
         $newAttributes = ['title'];
 
         $promise = $index->updateFilterableAttributes($newAttributes);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $promise = $index->resetFilterableAttributes();
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $filterableAttributes = $index->getFilterableAttributes();
         $this->assertEmpty($filterableAttributes);

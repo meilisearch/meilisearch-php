@@ -32,7 +32,7 @@ final class SearchableAttributesTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $indexA->waitForTask($promise['uid']);
+        $indexA->waitForTask($promise['taskUid']);
         $updatedAttributes = $indexA->getSearchableAttributes();
 
         $this->assertEquals($searchableAttributes, $updatedAttributes);
@@ -45,7 +45,7 @@ final class SearchableAttributesTest extends TestCase
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
         $searchableAttributes = $index->getSearchableAttributes();
 
         $this->assertEquals(['*'], $searchableAttributes);
