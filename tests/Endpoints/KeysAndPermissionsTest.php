@@ -206,8 +206,8 @@ final class KeysAndPermissionsTest extends TestCase
         $this->assertIsArray($response->getActions());
         $this->assertSame($response->getActions(), self::INFO_KEY['actions']);
         $this->assertIsArray($response->getIndexes());
-        $this->assertSame($response->getIndexes(), ['*']);
-        $this->assertNotNull($response->getExpiresAt());
+        $this->assertSame($response->getIndexes(), ['index']);
+        $this->assertNull($response->getExpiresAt());
         $this->assertNotNull($response->getCreatedAt());
         $this->assertNotNull($response->getUpdatedAt());
 
