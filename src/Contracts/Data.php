@@ -40,6 +40,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * {@inheritDoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (isset($this->data[$offset])) {
