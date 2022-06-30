@@ -14,6 +14,7 @@ use Tests\TestCase;
 final class TenantTokenTest extends TestCase
 {
     private $key;
+    private $privateKey;
     private Client $privateClient;
 
     protected function setUp(): void
@@ -35,6 +36,7 @@ final class TenantTokenTest extends TestCase
 
     protected function tearDown(): void
     {
+        parent::tearDown();
         $this->client->deleteKey($this->privateKey);
     }
 

@@ -181,7 +181,7 @@ class Keys extends Endpoint
 
     public function update(string $key, array $options = []): self
     {
-        $data = array_intersect_key($options, array_flip((array) ['description', 'name']));
+        $data = array_intersect_key($options, array_flip(['description', 'name']));
         $response = $this->http->patch(self::PATH.'/'.$key, $data);
 
         return $this->fill($response);
