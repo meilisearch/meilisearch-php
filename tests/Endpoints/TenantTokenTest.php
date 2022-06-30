@@ -26,7 +26,7 @@ final class TenantTokenTest extends TestCase
             'description' => 'tenant token key',
             'actions' => ['*'],
             'indexes' => ['*'],
-            'expiresAt' => '2055-10-02T00:00:00Z'
+            'expiresAt' => '2055-10-02T00:00:00Z',
         ]);
 
         $this->privateKey = $this->key->getKey();
