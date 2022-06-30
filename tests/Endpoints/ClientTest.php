@@ -170,7 +170,7 @@ final class ClientTest extends TestCase
         $res = $this->client->deleteAllIndexes();
 
         $taskUids = array_map(function ($task) {
-            return $task['uid'] ?? $task['taskUid'];
+            return $task['taskUid'];
         }, $res);
         $res = $this->client->waitForTasks($taskUids);
 
@@ -186,7 +186,7 @@ final class ClientTest extends TestCase
 
         $res = $this->client->deleteAllIndexes();
         $taskUids = array_map(function ($task) {
-            return $task['uid'] ?? $task['taskUid'];
+            return $task['taskUid'];
         }, $res);
         $this->client->waitForTasks($taskUids);
 

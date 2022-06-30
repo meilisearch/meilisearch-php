@@ -55,7 +55,7 @@ abstract class TestCase extends BaseTestCase
     {
         $res = $this->client->deleteAllIndexes();
         $uids = array_map(function ($task) {
-            return $task['uid'] ?? $task['taskUid'];
+            return $task['taskUid'];
         }, $res);
         $this->client->waitForTasks($uids);
     }
