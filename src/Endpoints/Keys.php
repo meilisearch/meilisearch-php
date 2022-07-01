@@ -148,9 +148,9 @@ class Keys extends Endpoint
         return $this->updatedAt;
     }
 
-    public function get($key): self
+    public function get($keyOrUid): self
     {
-        $response = $this->http->get(self::PATH.'/'.$key);
+        $response = $this->http->get(self::PATH.'/'.$keyOrUid);
 
         return $this->fill($response);
     }
@@ -186,16 +186,16 @@ class Keys extends Endpoint
         return $this->fill($response);
     }
 
-    public function update(string $key, array $options = []): self
+    public function update(string $keyOrUid, array $options = []): self
     {
         $data = array_intersect_key($options, array_flip(['description', 'name']));
-        $response = $this->http->patch(self::PATH.'/'.$key, $data);
+        $response = $this->http->patch(self::PATH.'/'.$keyOrUid, $data);
 
         return $this->fill($response);
     }
 
-    public function delete(string $key): array
+    public function delete(string $keyOrUid): array
     {
-        return $this->http->delete(self::PATH.'/'.$key) ?? [];
+        return $this->http->delete(self::PATH.'/'.$keyOrUid) ?? [];
     }
 }
