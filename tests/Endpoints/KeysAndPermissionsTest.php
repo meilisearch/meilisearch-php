@@ -199,6 +199,21 @@ final class KeysAndPermissionsTest extends TestCase
         $this->client->deleteKey($response->getKey());
     }
 
+    public function testCreateKeyWithUid(): void
+    {
+        $key = $this->client->createKey([
+            'uid' => 'acab6d06-5385-47a2-a534-1ed4fd7f6402',
+            'actions' => ['*'],
+            'indexes' => ['*'],
+            'expiresAt' => null,
+        ]);
+
+        $this->assertNotNull($key->getKey());
+        $this->assertEquals('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
+
+        $this->client->deleteKey($key->getKey());
+    }
+
     public function testUpdateKeyWithExpInDate(): void
     {
         $key = $this->client->createKey(self::INFO_KEY);
