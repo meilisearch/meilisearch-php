@@ -9,6 +9,8 @@ use Exception;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Contracts\Index\Settings;
+use MeiliSearch\Contracts\IndexesQuery;
+use MeiliSearch\Contracts\IndexesResults;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
 use MeiliSearch\Endpoints\Delegates\HandlesTasks;
@@ -74,19 +76,22 @@ class Indexes extends Endpoint
         return $this->http->post(self::PATH, $options);
     }
 
-    public function all(): array
+    public function all(IndexesQuery $options = null): IndexesResults
     {
         $indexes = [];
-        $response = $this->allRaw();
+        $query = isset($options) ? $options->toArray() : [];
+        $response = $this->allRaw($query);
 
         foreach ($response['results'] as $index) {
             $indexes[] = $this->newInstance($index);
         }
 
-        return $indexes;
+        $response['results'] = $indexes;
+
+        return new IndexesResults($response);
     }
 
-    public function allRaw(): array
+    public function allRaw(array $options = []): array
     {
         return $this->http->get(self::PATH);
     }

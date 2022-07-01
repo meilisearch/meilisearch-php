@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
+use MeiliSearch\Contracts\IndexesQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
@@ -15,7 +16,7 @@ final class ClientTest extends TestCase
     {
         $index = $this->createEmptyIndex('index');
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getAllIndexes());
+        $this->assertIsIterable($this->client->getAllIndexes());
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->client->getAllRawIndexes()['results']);
         /* @phpstan-ignore-next-line */
@@ -34,6 +35,13 @@ final class ClientTest extends TestCase
     public function testGetAllIndexesWhenEmpty(): void
     {
         $response = $this->client->getAllIndexes();
+
+        $this->assertEmpty($response);
+    }
+
+    public function testGetAllIndexesWithPagination(): void
+    {
+        $response = $this->client->getAllIndexes((new IndexesQuery())->setLimit(1)->setOffset(99999));
 
         $this->assertEmpty($response);
     }
@@ -90,27 +98,24 @@ final class ClientTest extends TestCase
     {
         $indexA = 'indexA';
         $indexB = 'indexB';
-        $this->createEmptyIndex($indexA);
-        $this->createEmptyIndex($indexB);
+        $response = $this->client->createIndex($indexA);
+        $this->client->waitForTask($response['taskUid']);
+        $response = $this->client->createIndex($indexB);
+        $this->client->waitForTask($response['taskUid']);
 
-        $response = $this->client->getAllIndexes();
+        $indexes = $this->client->getAllIndexes();
 
-        $this->assertCount(2, $response);
-
-        $taskUids = array_map(function ($index): ?string {
-            return $index->getUid();
-        }, $response);
-
-        $this->assertContains($indexA, $taskUids);
-        $this->assertContains($indexB, $taskUids);
+        $this->assertCount(2, $indexes);
     }
 
     public function testGetAllRawIndexes(): void
     {
         $indexA = 'indexA';
         $indexB = 'indexB';
-        $this->createEmptyIndex($indexA);
-        $this->createEmptyIndex($indexB);
+        $response = $this->client->createIndex($indexA);
+        $this->client->waitForTask($response['taskUid']);
+        $response = $this->client->createIndex($indexB);
+        $this->client->waitForTask($response['taskUid']);
 
         $res = $this->client->getAllRawIndexes()['results'];
 
