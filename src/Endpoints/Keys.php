@@ -178,7 +178,7 @@ class Keys extends Endpoint
 
     public function create(array $options = []): self
     {
-        if ($options['expiresAt'] && $options['expiresAt'] instanceof DateTime) {
+        if (isset($options['expiresAt']) && $options['expiresAt'] instanceof DateTime) {
             $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
         }
         $response = $this->http->post(self::PATH, $options);
