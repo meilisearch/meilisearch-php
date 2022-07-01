@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace MeiliSearch\Endpoints\Delegates;
 
 use MeiliSearch\Endpoints\Keys;
+use MeiliSearch\Contracts\KeysResults;
+use MeiliSearch\Contracts\KeysQuery;
 
 trait HandlesKeys
 {
-    public function getKeys(): array
+    public function getKeys(KeysQuery $options = null): KeysResults
     {
-        return $this->keys->all();
+        return $this->keys->all($options);
     }
 
     public function getRawKeys(): array
