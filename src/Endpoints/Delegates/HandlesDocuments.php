@@ -6,6 +6,8 @@ namespace MeiliSearch\Endpoints\Delegates;
 
 use Generator;
 use MeiliSearch\Exceptions\InvalidArgumentException;
+use MeiliSearch\Contracts\DocumentsResults;
+use MeiliSearch\Contracts\DocumentsQuery;
 
 trait HandlesDocuments
 {
@@ -16,9 +18,12 @@ trait HandlesDocuments
         return $this->http->get(self::PATH.'/'.$this->uid.'/documents/'.$documentId);
     }
 
-    public function getDocuments(array $query = [])
+    public function getDocuments(DocumentsQuery $options = null): DocumentsResults
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/documents', $query);
+        $query = isset($options) ? $options->toArray() : [];
+        $response = $this->http->get(self::PATH.'/'.$this->uid.'/documents', $query);
+
+        return new DocumentsResults($response);
     }
 
     public function addDocuments(array $documents, ?string $primaryKey = null)
