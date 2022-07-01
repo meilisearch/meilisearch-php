@@ -7,6 +7,8 @@ namespace MeiliSearch\Endpoints;
 use DateTime;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
+use MeiliSearch\Contracts\KeysResults;
+use MeiliSearch\Contracts\KeysQuery;
 
 class Keys extends Endpoint
 {
@@ -153,20 +155,25 @@ class Keys extends Endpoint
         return $this->fill($response);
     }
 
-    public function all(): array
+    public function all(KeysQuery $options = null): KeysResults
     {
-        $keys = [];
+        $query = isset($options) ? $options->toArray() : [];
 
-        foreach ($this->allRaw()['results'] as $key) {
+        $keys = [];
+        $response = $this->allRaw($query);
+
+        foreach ($response['results'] as $key) {
             $keys[] = $this->newInstance($key);
         }
 
-        return $keys;
+        $response['results'] = $keys;
+
+        return new KeysResults($response);
     }
 
-    public function allRaw(): array
+    public function allRaw(array $options = []): array
     {
-        return $this->http->get(self::PATH.'/');
+        return $this->http->get(self::PATH.'/', $options);
     }
 
     public function create(array $options = []): self
