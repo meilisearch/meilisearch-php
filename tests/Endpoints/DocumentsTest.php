@@ -7,6 +7,7 @@ namespace Tests\Endpoints;
 use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\InvalidArgumentException;
 use MeiliSearch\Exceptions\JsonEncodingException;
+use MeiliSearch\Contracts\DocumentsQuery;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase
@@ -416,6 +417,18 @@ final class DocumentsTest extends TestCase
 
         $this->assertSame('unique', $index->fetchPrimaryKey());
         $this->assertCount(1, $index->getDocuments());
+    }
+
+    public function testGetDocumentsWithPagination(): void
+    {
+        $index = $this->createEmptyIndex('documents');
+        $promise = $index->addDocuments(self::DOCUMENTS);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocuments((new DocumentsQuery())->setLimit(3));
+
+        $this->assertCount(3, $response);
     }
 
     /**
