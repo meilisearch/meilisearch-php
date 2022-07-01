@@ -81,6 +81,14 @@ final class KeysAndPermissionsTest extends TestCase
         $this->assertCount(1, $response);
     }
 
+    public function testGetKeysWithOffset(): void
+    {
+        $response = $this->client->getKeys((new KeysQuery())->setOffset(100));
+
+        $this->assertCount(0, $response);
+    }
+
+
     public function testGetKey(): void
     {
         $key = $this->client->createKey(self::INFO_KEY);
