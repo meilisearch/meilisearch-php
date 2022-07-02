@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
+use MeiliSearch\Contracts\KeysQuery;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
-use MeiliSearch\Contracts\KeysQuery;
 
 final class KeysAndPermissionsTest extends TestCase
 {
@@ -87,7 +87,6 @@ final class KeysAndPermissionsTest extends TestCase
 
         $this->assertCount(0, $response);
     }
-
 
     public function testGetKey(): void
     {
