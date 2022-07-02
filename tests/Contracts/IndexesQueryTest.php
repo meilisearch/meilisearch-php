@@ -29,4 +29,11 @@ class IndexesQueryTest extends TestCase
 
         $this->assertEquals($data->toArray(), []);
     }
+
+    public function testToArrayWithZeros(): void
+    {
+        $data = (new IndexesQuery())->setLimit(0)->setOffset(0);
+
+        $this->assertEquals($data->toArray(), ['limit' => 0, 'offset' => 0]);
+    }
 }

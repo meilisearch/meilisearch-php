@@ -28,6 +28,6 @@ class IndexesQuery
         return array_filter([
             'offset' => $this->offset ?? null,
             'limit' => $this->limit ?? null,
-        ], function ($item) { return null != $item; });
+        ], function ($item) { return null != $item || is_numeric($item); });
     }
 }
