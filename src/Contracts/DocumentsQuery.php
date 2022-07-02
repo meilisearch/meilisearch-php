@@ -37,6 +37,6 @@ class DocumentsQuery
             'offset' => $this->offset ?? null,
             'limit' => $this->limit ?? null,
             'fields' => isset($this->fields) ? implode(',', $this->fields) : null,
-        ], function($item) { return $item != null; });
+        ], function ($item) { return null != $item; });
     }
 }

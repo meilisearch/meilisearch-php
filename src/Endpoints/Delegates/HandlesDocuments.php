@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace MeiliSearch\Endpoints\Delegates;
 
 use Generator;
-use MeiliSearch\Exceptions\InvalidArgumentException;
-use MeiliSearch\Contracts\DocumentsResults;
 use MeiliSearch\Contracts\DocumentsQuery;
+use MeiliSearch\Contracts\DocumentsResults;
+use MeiliSearch\Exceptions\InvalidArgumentException;
 
 trait HandlesDocuments
 {
