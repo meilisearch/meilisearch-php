@@ -12,7 +12,8 @@ class DocumentsResults extends Data
 
     public function __construct(array $params)
     {
-        $this->data = $params['results'] ?? [];
+        parent::__construct($params['results'] ?? []);
+
         $this->offset = $params['offset'];
         $this->limit = $params['limit'];
         $this->total = $params['total'] ?? 0;
@@ -53,6 +54,6 @@ class DocumentsResults extends Data
 
     public function count(): int
     {
-        return count($this->data);
+        return \count($this->data);
     }
 }

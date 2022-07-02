@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Contracts;
 
-use PHPUnit\Framework\TestCase;
 use MeiliSearch\Contracts\DocumentsQuery;
+use PHPUnit\Framework\TestCase;
 
 class DocumentsQueryTest extends TestCase
 {
