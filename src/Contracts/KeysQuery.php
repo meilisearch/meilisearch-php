@@ -25,9 +25,9 @@ class KeysQuery
 
     public function toArray(): array
     {
-        return [
+        return array_filter([
             'offset' => $this->offset ?? null,
             'limit' => $this->limit ?? null,
-        ];
+        ], function ($item) { return null != $item; });
     }
 }
