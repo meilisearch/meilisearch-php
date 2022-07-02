@@ -64,6 +64,6 @@ class TasksQuery
             'status' => isset($this->status) ? implode(',', $this->status) : null,
             'type' => isset($this->type) ? implode(',', $this->type) : null,
             'indexUid' => isset($this->indexUid) ? implode(',', $this->indexUid) : null,
-        ], function ($item) { return null != $item; });
+        ], function ($item) { return null != $item || is_numeric($item); });
     }
 }

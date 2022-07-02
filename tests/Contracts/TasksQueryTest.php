@@ -30,6 +30,13 @@ class TasksQueryTest extends TestCase
         $this->assertEquals($data->toArray(), ['limit' => 10]);
     }
 
+    public function testToArrayWithSetLimitWithZero(): void
+    {
+        $data = (new TasksQuery())->setLimit(0);
+
+        $this->assertEquals($data->toArray(), ['limit' => 0]);
+    }
+
     public function testToArrayWithDifferentSets(): void
     {
         $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setNext(99)->setStatus(['enqueued']);
