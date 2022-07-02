@@ -16,9 +16,9 @@ class Tasks extends Endpoint
         return $this->http->get(self::PATH.'/'.$taskUid);
     }
 
-    public function all(): array
+    public function all(array $query = []): array
     {
-        return $this->http->get(self::PATH.'/');
+        return $this->http->get(self::PATH.'/', $query);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
@@ -56,13 +57,20 @@ final class TasksTest extends TestCase
     public function testGetAllTasksClient(): void
     {
         $response = $this->client->getTasks();
-        $firstIndex = $response['results'][0]['uid'];
+        $firstIndex = $response->getResults()[0]['uid'];
         $this->seedIndex();
 
         $response = $this->client->getTasks();
-        $newFirstIndex = $response['results'][0]['uid'];
+        $newFirstIndex = $response->getResults()[0]['uid'];
 
         $this->assertNotEquals($firstIndex, $newFirstIndex);
+    }
+
+    public function testGetAllTasksClientWithPagination(): void
+    {
+        $response = $this->client->getTasks((new TasksQuery())->setLimit(0));
+
+        $this->assertEmpty($response->getResults());
     }
 
     public function testGetOneTaskIndex(): void
@@ -86,13 +94,29 @@ final class TasksTest extends TestCase
     public function testGetAllTasksByIndex(): void
     {
         $response = $this->index->getTasks();
-        $firstIndex = $response['results'][0]['uid'];
+        $firstIndex = $response->getResults()[0]['uid'];
 
         $newIndex = $this->createEmptyIndex('a_new_index');
         $newIndex->updateDocuments(self::DOCUMENTS);
 
         $response = $this->index->getTasks();
-        $newFirstIndex = $response['results'][0]['uid'];
+        $newFirstIndex = $response->getResults()[0]['uid'];
+
+        $this->assertEquals($firstIndex, $newFirstIndex);
+    }
+
+    public function testGetAllTasksByIndexWithFilter(): void
+    {
+        $response = $this->index->getTasks((new TasksQuery())->setStatus(['succeeded'])->setLimit(2));
+
+        $firstIndex = $response->getResults()[0]['uid'];
+        $this->assertEquals($response->getResults()[0]['status'], 'succeeded');
+
+        $newIndex = $this->createEmptyIndex('a_new_index');
+        $newIndex->updateDocuments(self::DOCUMENTS);
+
+        $response = $this->index->getTasks();
+        $newFirstIndex = $response->getResults()[0]['uid'];
 
         $this->assertEquals($firstIndex, $newFirstIndex);
     }

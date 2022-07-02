@@ -14,9 +14,9 @@ class TasksResults extends Data
     {
         parent::__construct($params['results'] ?? []);
 
-        $this->next = $params['next'];
-        $this->limit = $params['limit'];
         $this->from = $params['from'] ?? 0;
+        $this->limit = $params['limit'] ?? 0;
+        $this->next = $params['next'] ?? 0;
     }
 
     /**
