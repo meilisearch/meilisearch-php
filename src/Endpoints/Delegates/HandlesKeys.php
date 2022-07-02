@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-use MeiliSearch\Endpoints\Keys;
-use MeiliSearch\Contracts\KeysResults;
 use MeiliSearch\Contracts\KeysQuery;
+use MeiliSearch\Contracts\KeysResults;
+use MeiliSearch\Endpoints\Keys;
 
 trait HandlesKeys
 {

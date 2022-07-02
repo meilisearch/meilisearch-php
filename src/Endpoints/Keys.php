@@ -7,8 +7,8 @@ namespace MeiliSearch\Endpoints;
 use DateTime;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
-use MeiliSearch\Contracts\KeysResults;
 use MeiliSearch\Contracts\KeysQuery;
+use MeiliSearch\Contracts\KeysResults;
 
 class Keys extends Endpoint
 {
