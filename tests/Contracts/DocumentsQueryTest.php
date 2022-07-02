@@ -29,4 +29,11 @@ class DocumentsQueryTest extends TestCase
 
         $this->assertEquals($data->toArray(), ['offset' => 10]);
     }
+
+    public function testToArrayWithZeros(): void
+    {
+        $data = (new DocumentsQuery())->setLimit(0)->setOffset(0);
+
+        $this->assertEquals($data->toArray(), ['limit' => 0, 'offset' => 0]);
+    }
 }
