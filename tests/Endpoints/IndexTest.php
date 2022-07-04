@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use DateTimeInterface;
+use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\TimeOutException;
 use Tests\TestCase;
@@ -165,6 +166,24 @@ final class IndexTest extends TestCase
         $this->assertNull($index->getPrimaryKey());
         $this->assertSame('objectID', $index->fetchPrimaryKey());
         $this->assertSame('objectID', $index->getPrimaryKey());
+    }
+
+    public function testGetTasks(): void
+    {
+        $promise = $this->client->createIndex('new-index', ['primaryKey' => 'objectID']);
+        $this->index->waitForTask($promise['taskUid']);
+        $promise = $this->client->createIndex('other-index', ['primaryKey' => 'objectID']);
+        $this->index->waitForTask($promise['taskUid']);
+        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $this->index->waitForTask($promise['taskUid']);
+
+        $tasks = $this->index->getTasks((new TasksQuery())->setUid(['other-index']));
+
+        $allIndexUids = array_map(function ($val) { return $val['indexUid']; }, $tasks->getResults());
+        $results = array_unique($allIndexUids);
+        $expected = [$this->index->getUid(), 'other-index'];
+
+        $this->assertSame(sort($results), sort($expected));
     }
 
     public function testWaitForTaskDefault(): void

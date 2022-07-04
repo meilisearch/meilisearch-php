@@ -165,7 +165,12 @@ class Indexes extends Endpoint
     public function getTasks(TasksQuery $options = null): TasksResults
     {
         $options = $options ?? new TasksQuery();
-        $options->setUid([$this->uid]);
+
+        if (0 == \count($options->getUid())) {
+            $options->setUid(array_merge([$this->uid], $options->getUid()));
+        } else {
+            $options->setUid([$this->uid]);
+        }
 
         $response = $this->http->get('/tasks', $options->toArray());
 
