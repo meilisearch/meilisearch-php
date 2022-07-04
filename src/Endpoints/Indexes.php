@@ -11,6 +11,8 @@ use MeiliSearch\Contracts\Http;
 use MeiliSearch\Contracts\Index\Settings;
 use MeiliSearch\Contracts\IndexesQuery;
 use MeiliSearch\Contracts\IndexesResults;
+use MeiliSearch\Contracts\TasksQuery;
+use MeiliSearch\Contracts\TasksResults;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
 use MeiliSearch\Endpoints\Delegates\HandlesTasks;
@@ -160,9 +162,19 @@ class Indexes extends Endpoint
         return $this->http->get('/tasks/'.$uid);
     }
 
-    public function getTasks(): array
+    public function getTasks(TasksQuery $options = null): TasksResults
     {
-        return $this->http->get('/tasks', ['indexUid' => $this->uid]);
+        $options = $options ?? new TasksQuery();
+
+        if (0 == \count($options->getUid())) {
+            $options->setUid(array_merge([$this->uid], $options->getUid()));
+        } else {
+            $options->setUid([$this->uid]);
+        }
+
+        $response = $this->http->get('/tasks', $options->toArray());
+
+        return new TasksResults($response);
     }
 
     // Search

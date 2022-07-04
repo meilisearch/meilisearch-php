@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
+use MeiliSearch\Contracts\TasksQuery;
+use MeiliSearch\Contracts\TasksResults;
+
 trait HandlesTasks
 {
     public function getTask($uid): array
@@ -11,9 +14,13 @@ trait HandlesTasks
         return $this->tasks->get($uid);
     }
 
-    public function getTasks(): array
+    public function getTasks(TasksQuery $options = null): TasksResults
     {
-        return $this->tasks->all();
+        $query = isset($options) ? $options->toArray() : [];
+
+        $response = $this->tasks->all($query);
+
+        return new TasksResults($response);
     }
 
     public function waitForTask($uid, int $timeoutInMs = 5000, int $intervalInMs = 50): array
