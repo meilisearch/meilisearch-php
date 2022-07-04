@@ -55,6 +55,11 @@ class TasksQuery
         return $this;
     }
 
+    public function getUid(): array
+    {
+        return $this->indexUid ?? [];
+    }
+
     public function toArray(): array
     {
         return array_filter([
