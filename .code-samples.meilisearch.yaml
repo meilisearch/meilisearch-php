@@ -3,9 +3,22 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+get_all_tasks_filtering_1: |-
+get_all_tasks_filtering_2: |-
+get_all_tasks_paginating_1: |-
+get_all_tasks_paginating_2: |-
+get_pagination_settings_1: |-
+update_pagination_settings_1: |-
+reset_pagination_settings_1: |-
+get_faceting_settings_1: |-
+update_faceting_settings_1: |-
+reset_faceting_settings_1: |-
+settings_guide_faceting_1: |-
+settings_guide_pagination_1: |-
+
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
-list_all_indexes_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>list_all_indexes_1: |-
   $client->getAllIndexes();
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'id']);
@@ -17,7 +30,7 @@ delete_an_index_1: |-
   $client->deleteIndex('movies');
   // OR
   $client->index('movies')->delete();
-get_one_document_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>get_one_document_1: |-
   $client->index('movies')->getDocument(25684);
 get_documents_1: |-
   $client->index('movies')->getDocuments(['limit' => 2]);
@@ -54,17 +67,17 @@ search_post_1: |-
 
   // Get the decoded response of Meilisearch, see response below
   $response = $searchResults->getRaw();
-get_task_by_index_1: |-
+PLEASE_REMOVE_ME>>>>>>>>>>>>>get_task_by_index_1: |-
   $client->index('movies')->getTask(1);
 get_all_tasks_1: |-
   $client->getTasks();
 get_task_1: |-
   $client->getTask(1);
-get_all_tasks_by_index_1: |-
+PLEASE_REMOVE_ME>>>>>>>>>>>>>get_all_tasks_by_index_1: |-
   $client->index('movies')->getTasks();
 get_one_key_1: |-
   $client->getKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4');
-get_all_keys_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>get_all_keys_1: |-
   $client->getKeys();
 create_a_key_1: |-
   $client->createKey([
@@ -73,7 +86,7 @@ create_a_key_1: |-
     'indexes' => ['products'],
     'expiresAt' => '2042-04-02T00:42:42Z',
   ]);
-update_a_key_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>update_a_key_1: |-
   $client->updateKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4',
     [
       'description' => 'Manage documents: Products/Reviews API key',
@@ -81,11 +94,11 @@ update_a_key_1: |-
       'indexes' => ['products', 'reviews'],
       'expiresAt' => '2042-04-02T00:42:42Z',
     ]);
-delete_a_key_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>delete_a_key_1: |-
   $client->deleteKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4')
 get_settings_1: |-
   $client->index('movies')->getSettings();
-update_settings_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>update_settings_1: |-
   $client->index('movies')->updateSettings([
     'rankingRules' => [
       'words',
@@ -271,7 +284,7 @@ search_parameter_guide_highlight_tag_1: |-
     'highlightPreTag' => '<span class="highlight">',
     'highlightPostTag' => '</span>'
   ]);
-search_parameter_guide_matches_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>search_parameter_guide_matches_1: |-
   $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'showMatchesPosition' => true]);
 settings_guide_synonyms_1: |-
   $client->index('tops')->updateSettings([
@@ -400,7 +413,7 @@ getting_started_add_documents_md: |-
   ```
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
-getting_started_check_task_status: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>PLEASE_UPDATE_ME>>>>>>>>>>>>>getting_started_check_task_status: |-
   $client->index('movies')->getTask(0);
 getting_started_search_md: |-
   ```php
@@ -463,11 +476,11 @@ getting_started_configure_settings: |-
 getting_started_communicating_with_a_protected_instance: |-
   $client = new Client('http://127.0.0.1:7700', 'apiKey');
   $client->index('movies')->search();
-faceted_search_update_settings_1: |-
+faceted_search_PLEASE_UPDATE_ME>>>>>>>>>>>>>update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
 faceted_search_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
-faceted_search_facets_distribution_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>faceted_search_facets_distribution_1: |-
   $client->index('movies')->search('Batman', ['facets' => ['genres']]);
 faceted_search_walkthrough_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
@@ -528,7 +541,7 @@ primary_field_guide_add_document_primary_key: |-
 security_guide_search_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->index('patient_medical_records')->search();
-security_guide_update_key_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>security_guide_update_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->updateKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4',
     ['indexes': ['doctors']]
@@ -544,7 +557,7 @@ security_guide_create_key_1: |-
 security_guide_list_keys_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->getKeys();
-security_guide_delete_key_1: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>security_guide_delete_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->deleteKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4');
 authorization_header_1: |-
