@@ -11,11 +11,12 @@ use MeiliSearch\Exceptions\InvalidArgumentException;
 
 trait HandlesDocuments
 {
-    public function getDocument($documentId)
+    public function getDocument($documentId, array $fields = null)
     {
         $this->assertValidDocumentId($documentId);
+        $query = isset($fields) ? ['fields' => implode(',', $fields)] : [];
 
-        return $this->http->get(self::PATH.'/'.$this->uid.'/documents/'.$documentId);
+        return $this->http->get(self::PATH.'/'.$this->uid.'/documents/'.$documentId, $query);
     }
 
     public function getDocuments(DocumentsQuery $options = null): DocumentsResults
