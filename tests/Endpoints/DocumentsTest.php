@@ -150,6 +150,19 @@ final class DocumentsTest extends TestCase
         $this->assertSame($doc['title'], $response['title']);
     }
 
+    public function testGetSingleDocumentWithFields(): void
+    {
+        $index = $this->createEmptyIndex('documents');
+        $response = $index->addDocuments(self::DOCUMENTS);
+        $index->waitForTask($response['taskUid']);
+        $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
+        $response = $index->getDocument($doc['id'], ['title']);
+
+        $this->assertIsArray($response);
+        $this->assertSame($doc['title'], $response['title']);
+        $this->assertArrayNotHasKey('id', $response);
+    }
+
     public function testGetSingleDocumentWithStringDocumentId(): void
     {
         $stringDocumentId = 'myUniqueId';
