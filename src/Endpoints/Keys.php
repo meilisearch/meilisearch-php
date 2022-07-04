@@ -7,6 +7,8 @@ namespace MeiliSearch\Endpoints;
 use DateTime;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
+use MeiliSearch\Contracts\KeysQuery;
+use MeiliSearch\Contracts\KeysResults;
 
 class Keys extends Endpoint
 {
@@ -146,32 +148,37 @@ class Keys extends Endpoint
         return $this->updatedAt;
     }
 
-    public function get($key): self
+    public function get($keyOrUid): self
     {
-        $response = $this->http->get(self::PATH.'/'.$key);
+        $response = $this->http->get(self::PATH.'/'.$keyOrUid);
 
         return $this->fill($response);
     }
 
-    public function all(): array
+    public function all(KeysQuery $options = null): KeysResults
     {
-        $keys = [];
+        $query = isset($options) ? $options->toArray() : [];
 
-        foreach ($this->allRaw()['results'] as $key) {
+        $keys = [];
+        $response = $this->allRaw($query);
+
+        foreach ($response['results'] as $key) {
             $keys[] = $this->newInstance($key);
         }
 
-        return $keys;
+        $response['results'] = $keys;
+
+        return new KeysResults($response);
     }
 
-    public function allRaw(): array
+    public function allRaw(array $options = []): array
     {
-        return $this->http->get(self::PATH.'/');
+        return $this->http->get(self::PATH.'/', $options);
     }
 
     public function create(array $options = []): self
     {
-        if ($options['expiresAt'] && $options['expiresAt'] instanceof DateTime) {
+        if (isset($options['expiresAt']) && $options['expiresAt'] instanceof DateTime) {
             $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
         }
         $response = $this->http->post(self::PATH, $options);
@@ -179,16 +186,16 @@ class Keys extends Endpoint
         return $this->fill($response);
     }
 
-    public function update(string $key, array $options = []): self
+    public function update(string $keyOrUid, array $options = []): self
     {
         $data = array_intersect_key($options, array_flip(['description', 'name']));
-        $response = $this->http->patch(self::PATH.'/'.$key, $data);
+        $response = $this->http->patch(self::PATH.'/'.$keyOrUid, $data);
 
         return $this->fill($response);
     }
 
-    public function delete(string $key): array
+    public function delete(string $keyOrUid): array
     {
-        return $this->http->delete(self::PATH.'/'.$key) ?? [];
+        return $this->http->delete(self::PATH.'/'.$keyOrUid) ?? [];
     }
 }

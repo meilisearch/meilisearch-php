@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
+use MeiliSearch\Contracts\KeysQuery;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
@@ -19,14 +20,14 @@ final class KeysAndPermissionsTest extends TestCase
     public function testGetKeysAlwaysReturnsArray(): void
     {
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getKeys());
+        $this->assertIsIterable($this->client->getKeys());
     }
 
     public function testGetKeysDefault(): void
     {
         $response = $this->client->getKeys();
 
-        $this->assertGreaterThan(2, $response);
+        $this->assertGreaterThan(0, $response->count());
         $this->assertIsArray($response[0]->getActions());
         $this->assertIsArray($response[0]->getIndexes());
         $this->assertNull($response[0]->getExpiresAt());
@@ -71,6 +72,20 @@ final class KeysAndPermissionsTest extends TestCase
         $this->expectException(ApiException::class);
         $client = new Client($this->host, 'bad-key');
         $client->getKeys();
+    }
+
+    public function testGetKeysWithLimit(): void
+    {
+        $response = $this->client->getKeys((new KeysQuery())->setLimit(1));
+
+        $this->assertCount(1, $response);
+    }
+
+    public function testGetKeysWithOffset(): void
+    {
+        $response = $this->client->getKeys((new KeysQuery())->setOffset(100));
+
+        $this->assertCount(0, $response);
     }
 
     public function testGetKey(): void
@@ -191,6 +206,21 @@ final class KeysAndPermissionsTest extends TestCase
         $this->client->deleteKey($response->getKey());
     }
 
+    public function testCreateKeyWithUid(): void
+    {
+        $key = $this->client->createKey([
+            'uid' => 'acab6d06-5385-47a2-a534-1ed4fd7f6402',
+            'actions' => ['*'],
+            'indexes' => ['*'],
+            'expiresAt' => null,
+        ]);
+
+        $this->assertNotNull($key->getKey());
+        $this->assertEquals('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
+
+        $this->client->deleteKey($key->getKey());
+    }
+
     public function testUpdateKeyWithExpInDate(): void
     {
         $key = $this->client->createKey(self::INFO_KEY);
@@ -266,8 +296,11 @@ final class KeysAndPermissionsTest extends TestCase
                   "createdAt": "2022-06-14T10:34:03.627606639Z",
                   "updatedAt": "2022-06-14T10:34:03.627606639Z"
                 }
-              ]
-            }
+              ],
+              "limit": 10,
+              "offset": 0,
+              "total": 3
+          }
         ');
 
         $newClient = new \MeiliSearch\Client('https://localhost:7700', null, $httpClient);
