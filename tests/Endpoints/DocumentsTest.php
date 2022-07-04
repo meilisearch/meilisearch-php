@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use MeiliSearch\Contracts\DocumentsQuery;
 use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\InvalidArgumentException;
 use MeiliSearch\Exceptions\JsonEncodingException;
@@ -19,7 +20,7 @@ final class DocumentsTest extends TestCase
         $this->assertIsValidPromise($promise);
 
         $index->waitForTask($promise['taskUid']);
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
@@ -35,7 +36,7 @@ final class DocumentsTest extends TestCase
             $index->waitForTask($promise['taskUid']);
         }
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
@@ -53,7 +54,7 @@ final class DocumentsTest extends TestCase
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(\count($documents), $response);
 
         foreach ($documents as $k => $document) {
@@ -79,7 +80,7 @@ final class DocumentsTest extends TestCase
         $this->assertEquals($update['status'], 'succeeded');
         $this->assertNotEquals($update['details']['receivedDocuments'], 0);
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(20, $response);
     }
 
@@ -100,7 +101,7 @@ final class DocumentsTest extends TestCase
         $this->assertEquals($update['status'], 'succeeded');
         $this->assertNotEquals($update['details']['receivedDocuments'], 0);
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(20, $response);
     }
 
@@ -121,7 +122,7 @@ final class DocumentsTest extends TestCase
         $this->assertEquals($update['status'], 'succeeded');
         $this->assertNotEquals($update['details']['receivedDocuments'], 0);
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(20, $response);
     }
 
@@ -180,7 +181,7 @@ final class DocumentsTest extends TestCase
         $this->assertSame($replacement['id'], $response['id']);
         $this->assertSame($replacement['title'], $response['title']);
         $this->assertFalse(array_search('comment', $response, true));
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
@@ -204,7 +205,7 @@ final class DocumentsTest extends TestCase
         $this->assertSame($replacement['title'], $response['title']);
         $this->assertArrayHasKey('comment', $response);
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
@@ -238,7 +239,7 @@ final class DocumentsTest extends TestCase
             $this->assertArrayHasKey('comment', $response);
         }
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
@@ -262,7 +263,7 @@ final class DocumentsTest extends TestCase
         $this->assertSame($document['title'], $response['title']);
         $this->assertFalse(array_search('comment', $response, true));
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS) + 1, $response);
     }
@@ -279,7 +280,7 @@ final class DocumentsTest extends TestCase
         $this->assertIsValidPromise($promise);
 
         $index->waitForTask($promise['taskUid']);
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS), $response);
         $this->assertNull($this->findDocumentWithId($response, $documentId));
@@ -297,7 +298,7 @@ final class DocumentsTest extends TestCase
         $this->assertIsValidPromise($promise);
 
         $index->waitForTask($promise['taskUid']);
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS) - 1, $response);
         $this->assertNull($this->findDocumentWithId($response, $documentId));
@@ -313,7 +314,7 @@ final class DocumentsTest extends TestCase
         $promise = $index->deleteDocument($stringDocumentId);
         $index->waitForTask($promise['taskUid']);
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
 
         $this->assertEmpty($response);
     }
@@ -329,7 +330,7 @@ final class DocumentsTest extends TestCase
         $this->assertIsValidPromise($promise);
 
         $index->waitForTask($promise['taskUid']);
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
 
         $this->assertCount(\count(self::DOCUMENTS) - 2, $response);
         $this->assertNull($this->findDocumentWithId($response, $documentIds[0]));
@@ -350,9 +351,9 @@ final class DocumentsTest extends TestCase
         $promise = $index->deleteDocuments(['myUniqueId1', 'myUniqueId3']);
         $index->waitForTask($promise['taskUid']);
 
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
         $this->assertCount(1, $response);
-        $this->assertSame([['id' => 'myUniqueId2']], $response);
+        $this->assertSame([['id' => 'myUniqueId2']], $response->getResults());
     }
 
     public function testDeleteAllDocuments(): void
@@ -365,7 +366,7 @@ final class DocumentsTest extends TestCase
         $this->assertIsValidPromise($promise);
 
         $index->waitForTask($promise['taskUid']);
-        $response = $index->getDocuments()['results'];
+        $response = $index->getDocuments();
 
         $this->assertCount(0, $response);
     }
@@ -395,7 +396,7 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($response['taskUid']);
 
         $this->assertSame('unique', $index->fetchPrimaryKey());
-        $this->assertCount(1, $index->getDocuments()['results']);
+        $this->assertCount(1, $index->getDocuments());
     }
 
     public function testUpdateDocumentWithPrimaryKey(): void
@@ -415,7 +416,19 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $this->assertSame('unique', $index->fetchPrimaryKey());
-        $this->assertCount(1, $index->getDocuments()['results']);
+        $this->assertCount(1, $index->getDocuments());
+    }
+
+    public function testGetDocumentsWithPagination(): void
+    {
+        $index = $this->createEmptyIndex('documents');
+        $promise = $index->addDocuments(self::DOCUMENTS);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocuments((new DocumentsQuery())->setLimit(3));
+
+        $this->assertCount(3, $response);
     }
 
     /**
