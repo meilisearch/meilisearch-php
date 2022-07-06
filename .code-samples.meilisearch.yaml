@@ -6,7 +6,7 @@
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
 list_all_indexes_1: |-
-  $client->getAllIndexes((new IndexesQuery())->setFields(['id', 'title', 'poster', 'release_date']));
+  $client->getAllIndexes((new IndexesQuery())->setLimit(3));
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'id']);
 update_an_index_1: |-
