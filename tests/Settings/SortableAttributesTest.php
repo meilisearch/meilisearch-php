@@ -25,7 +25,7 @@ final class SortableAttributesTest extends TestCase
         $promise = $index->updateSortableAttributes($newAttributes);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $sortableAttributes = $index->getSortableAttributes();
 
@@ -38,13 +38,13 @@ final class SortableAttributesTest extends TestCase
         $newAttributes = ['title'];
 
         $promise = $index->updateSortableAttributes($newAttributes);
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $promise = $index->resetSortableAttributes();
 
         $this->assertIsValidPromise($promise);
 
-        $index->waitForTask($promise['uid']);
+        $index->waitForTask($promise['taskUid']);
 
         $sortableAttributes = $index->getSortableAttributes();
         $this->assertEmpty($sortableAttributes);

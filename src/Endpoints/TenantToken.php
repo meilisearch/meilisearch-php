@@ -36,7 +36,7 @@ class TenantToken extends Endpoint
      * - apiKey: The API key parent of the token. If you leave it empty the client API Key will be used.
      * - expiresAt: A DateTime when the key will expire. Note that if an expiresAt value is included it should be in UTC time.
      */
-    public function generateTenantToken($searchRules, ?array $options = []): string
+    public function generateTenantToken(string $uid, $searchRules, ?array $options = []): string
     {
         if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey']) {
             $options['apiKey'] = $this->apiKey;
@@ -55,7 +55,7 @@ class TenantToken extends Endpoint
 
         // Add the required fields to the payload
         $payload = [];
-        $payload['apiKeyPrefix'] = substr($options['apiKey'], 0, 8);
+        $payload['apiKeyUid'] = $uid;
         $payload['searchRules'] = $searchRules;
         if (\array_key_exists('expiresAt', $options)) {
             $payload['exp'] = $options['expiresAt']->getTimestamp();

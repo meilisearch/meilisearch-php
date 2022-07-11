@@ -210,7 +210,7 @@ class ClientTest extends TestCase
                     $this->equalTo('Authorization'),
                     $this->equalTo('Bearer masterKey'),
                 ],
-              )
+            )
             ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
 
         $reqFactory->expects($this->any())

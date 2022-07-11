@@ -14,9 +14,4 @@ class Dumps extends Endpoint
     {
         return $this->http->post(self::PATH);
     }
-
-    public function status(string $uid): array
-    {
-        return $this->http->get(self::PATH.'/'.$uid.'/status');
-    }
 }

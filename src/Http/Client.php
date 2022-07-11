@@ -93,7 +93,7 @@ class Client implements Http
         $request = $this->requestFactory->createRequest(
             'POST',
             $this->baseUrl.$path.$this->buildQueryString($query)
-            )->withBody($this->streamFactory->createStream($body));
+        )->withBody($this->streamFactory->createStream($body));
 
         return $this->execute($request);
     }

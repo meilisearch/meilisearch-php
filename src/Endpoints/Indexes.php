@@ -9,6 +9,10 @@ use Exception;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Contracts\Index\Settings;
+use MeiliSearch\Contracts\IndexesQuery;
+use MeiliSearch\Contracts\IndexesResults;
+use MeiliSearch\Contracts\TasksQuery;
+use MeiliSearch\Contracts\TasksResults;
 use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
 use MeiliSearch\Endpoints\Delegates\HandlesSettings;
 use MeiliSearch\Endpoints\Delegates\HandlesTasks;
@@ -74,18 +78,22 @@ class Indexes extends Endpoint
         return $this->http->post(self::PATH, $options);
     }
 
-    public function all(): array
+    public function all(IndexesQuery $options = null): IndexesResults
     {
         $indexes = [];
+        $query = isset($options) ? $options->toArray() : [];
+        $response = $this->allRaw($query);
 
-        foreach ($this->allRaw() as $index) {
+        foreach ($response['results'] as $index) {
             $indexes[] = $this->newInstance($index);
         }
 
-        return $indexes;
+        $response['results'] = $indexes;
+
+        return new IndexesResults($response);
     }
 
-    public function allRaw(): array
+    public function allRaw(array $options = []): array
     {
         return $this->http->get(self::PATH);
     }
@@ -139,7 +147,7 @@ class Indexes extends Endpoint
 
     public function update($body): array
     {
-        return $this->http->put(self::PATH.'/'.$this->uid, $body);
+        return $this->http->patch(self::PATH.'/'.$this->uid, $body);
     }
 
     public function delete(): array
@@ -151,12 +159,22 @@ class Indexes extends Endpoint
 
     public function getTask($uid): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/tasks'.'/'.$uid);
+        return $this->http->get('/tasks/'.$uid);
     }
 
-    public function getTasks(): array
+    public function getTasks(TasksQuery $options = null): TasksResults
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/tasks');
+        $options = $options ?? new TasksQuery();
+
+        if (0 == \count($options->getUid())) {
+            $options->setUid(array_merge([$this->uid], $options->getUid()));
+        } else {
+            $options->setUid([$this->uid]);
+        }
+
+        $response = $this->http->get('/tasks', $options->toArray());
+
+        return new TasksResults($response);
     }
 
     // Search
@@ -185,7 +203,15 @@ class Indexes extends Endpoint
             $searchParams
         );
 
-        return $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
+        $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
+
+        // patch to prevent breaking in laravel/scout getTotalCount method,
+        // affects only Meilisearch >= v0.28.0.
+        if (isset($result['estimatedTotalHits'])) {
+            $result['nbHits'] = $result['estimatedTotalHits'];
+        }
+
+        return $result;
     }
 
     // Stats
@@ -205,7 +231,7 @@ class Indexes extends Endpoint
 
     public function updateSettings($settings): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/settings', $settings);
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings);
     }
 
     public function resetSettings(): array

@@ -55,20 +55,20 @@ abstract class TestCase extends BaseTestCase
     {
         $res = $this->client->deleteAllIndexes();
         $uids = array_map(function ($task) {
-            return $task['uid'];
+            return $task['taskUid'];
         }, $res);
         $this->client->waitForTasks($uids);
     }
 
     public function assertIsValidPromise(array $promise): void
     {
-        $this->assertArrayHasKey('uid', $promise);
+        $this->assertArrayHasKey('taskUid', $promise);
     }
 
     public function createEmptyIndex($indexName, $options = []): Indexes
     {
         $response = $this->client->createIndex($indexName, $options);
-        $this->client->waitForTask($response['uid']);
+        $this->client->waitForTask($response['taskUid']);
 
         return $this->client->getIndex($response['indexUid']);
     }

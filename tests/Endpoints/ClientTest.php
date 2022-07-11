@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
+use MeiliSearch\Contracts\IndexesQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
@@ -15,9 +16,9 @@ final class ClientTest extends TestCase
     {
         $index = $this->createEmptyIndex('index');
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getAllIndexes());
+        $this->assertIsIterable($this->client->getAllIndexes());
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getAllRawIndexes());
+        $this->assertIsArray($this->client->getAllRawIndexes()['results']);
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->client->getRawIndex($index->getUid()));
     }
@@ -38,9 +39,16 @@ final class ClientTest extends TestCase
         $this->assertEmpty($response);
     }
 
+    public function testGetAllIndexesWithPagination(): void
+    {
+        $response = $this->client->getAllIndexes((new IndexesQuery())->setLimit(1)->setOffset(99999));
+
+        $this->assertEmpty($response);
+    }
+
     public function testGetAllRawIndexesWhenEmpty(): void
     {
-        $response = $this->client->getAllRawIndexes();
+        $response = $this->client->getAllRawIndexes()['results'];
 
         $this->assertEmpty($response);
     }
@@ -90,29 +98,26 @@ final class ClientTest extends TestCase
     {
         $indexA = 'indexA';
         $indexB = 'indexB';
-        $this->createEmptyIndex($indexA);
-        $this->createEmptyIndex($indexB);
+        $response = $this->client->createIndex($indexA);
+        $this->client->waitForTask($response['taskUid']);
+        $response = $this->client->createIndex($indexB);
+        $this->client->waitForTask($response['taskUid']);
 
-        $response = $this->client->getAllIndexes();
+        $indexes = $this->client->getAllIndexes();
 
-        $this->assertCount(2, $response);
-
-        $taskUids = array_map(function ($index): ?string {
-            return $index->getUid();
-        }, $response);
-
-        $this->assertContains($indexA, $taskUids);
-        $this->assertContains($indexB, $taskUids);
+        $this->assertCount(2, $indexes);
     }
 
     public function testGetAllRawIndexes(): void
     {
         $indexA = 'indexA';
         $indexB = 'indexB';
-        $this->createEmptyIndex($indexA);
-        $this->createEmptyIndex($indexB);
+        $response = $this->client->createIndex($indexA);
+        $this->client->waitForTask($response['taskUid']);
+        $response = $this->client->createIndex($indexB);
+        $this->client->waitForTask($response['taskUid']);
 
-        $res = $this->client->getAllRawIndexes();
+        $res = $this->client->getAllRawIndexes()['results'];
 
         $this->assertNotInstanceOf(Indexes::class, $res[0]);
     }
@@ -132,7 +137,7 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex('indexA');
 
         $response = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
-        $this->client->waitForTask($response['uid']);
+        $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
         $this->assertSame($index->getPrimaryKey(), 'id');
@@ -147,7 +152,7 @@ final class ClientTest extends TestCase
         $this->assertCount(1, $response);
 
         $response = $this->client->deleteIndex('index');
-        $this->client->waitForTask($response['uid']);
+        $this->client->waitForTask($response['taskUid']);
 
         $this->expectException(ApiException::class);
         $index = $this->client->getIndex('index');
@@ -170,7 +175,7 @@ final class ClientTest extends TestCase
         $res = $this->client->deleteAllIndexes();
 
         $taskUids = array_map(function ($task) {
-            return $task['uid'];
+            return $task['taskUid'];
         }, $res);
         $res = $this->client->waitForTasks($taskUids);
 
@@ -186,7 +191,7 @@ final class ClientTest extends TestCase
 
         $res = $this->client->deleteAllIndexes();
         $taskUids = array_map(function ($task) {
-            return $task['uid'];
+            return $task['taskUid'];
         }, $res);
         $this->client->waitForTasks($taskUids);
 

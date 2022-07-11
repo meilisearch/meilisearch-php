@@ -6,7 +6,7 @@
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
 list_all_indexes_1: |-
-  $client->getAllIndexes();
+  $client->getAllIndexes((new IndexesQuery())->setLimit(3));
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'id']);
 update_an_index_1: |-
@@ -18,7 +18,7 @@ delete_an_index_1: |-
   // OR
   $client->index('movies')->delete();
 get_one_document_1: |-
-  $client->index('movies')->getDocument(25684);
+  $client->index('movies')->getDocument(25684, ['id', 'title', 'poster', 'release_date']);
 get_documents_1: |-
   $client->index('movies')->getDocuments(['limit' => 2]);
 add_or_replace_documents_1: |-
@@ -54,18 +54,14 @@ search_post_1: |-
 
   // Get the decoded response of Meilisearch, see response below
   $response = $searchResults->getRaw();
-get_task_by_index_1: |-
-  $client->index('movies')->getTask(1);
 get_all_tasks_1: |-
   $client->getTasks();
 get_task_1: |-
   $client->getTask(1);
-get_all_tasks_by_index_1: |-
-  $client->index('movies')->getTasks();
 get_one_key_1: |-
-  $client->getKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4');
+  $client->getKey('6062abda-a5aa-4414-ac91-ecd7944c0f8d');
 get_all_keys_1: |-
-  $client->getKeys();
+  $client->getKeys((new KeysQuery())->setLimit(3));
 create_a_key_1: |-
   $client->createKey([
     'description' => 'Add documents: Products API key',
@@ -74,15 +70,13 @@ create_a_key_1: |-
     'expiresAt' => '2042-04-02T00:42:42Z',
   ]);
 update_a_key_1: |-
-  $client->updateKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4',
+  $client->updateKey('6062abda-a5aa-4414-ac91-ecd7944c0f8d',
     [
-      'description' => 'Manage documents: Products/Reviews API key',
-      'actions' => ['documents.add', 'documents.delete'],
-      'indexes' => ['products', 'reviews'],
-      'expiresAt' => '2042-04-02T00:42:42Z',
+      'name' => 'Products/Reviews API key',
+      'description' => 'Manage documents: Products/Reviews API key'
     ]);
 delete_a_key_1: |-
-  $client->deleteKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4')
+  $client->deleteKey('6062abda-a5aa-4414-ac91-ecd7944c0f8d')
 get_settings_1: |-
   $client->index('movies')->getSettings();
 update_settings_1: |-
@@ -128,6 +122,12 @@ update_settings_1: |-
           'twoTypos' => 10
         ],
         'disableOnAttributes' => ['title']
+    ],
+    'pagination' => [
+      'maxTotalHits' => 5000
+    ],
+    'faceting' => [
+      'maxValuesPerFacet' => 200
     ]
   ]);
 reset_settings_1: |-
@@ -271,8 +271,8 @@ search_parameter_guide_highlight_tag_1: |-
     'highlightPreTag' => '<span class="highlight">',
     'highlightPostTag' => '</span>'
   ]);
-search_parameter_guide_matches_1: |-
-  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'matches' => true]);
+search_parameter_guide_show_matches_position_1: |-
+  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'showMatchesPosition' => true]);
 settings_guide_synonyms_1: |-
   $client->index('tops')->updateSettings([
     'synonyms' => [
@@ -401,7 +401,7 @@ getting_started_add_documents_md: |-
 
   [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 getting_started_check_task_status: |-
-  $client->index('movies')->getTask(0);
+  $client->getTask(0);
 getting_started_search_md: |-
   ```php
   $client->index('movies')->search('botman');
@@ -467,14 +467,12 @@ faceted_search_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
 faceted_search_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
-faceted_search_facets_distribution_1: |-
-  $client->index('movies')->search('Batman', ['facetsDistribution' => ['genres']]);
+faceted_search_facets_1: |-
+  $client->index('movies')->search('Batman', ['facets' => ['genres']]);
 faceted_search_walkthrough_filter_1: |-
   $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 post_dump_1: |-
   $client->createDump();
-get_dump_status_1: |-
-  $client->getDumpStatus('20201101-110357260');
 phrase_search_1: |-
   $client->index('movies')->search('"african american" horror');
 sorting_guide_update_sortable_attributes_1: |-
@@ -532,8 +530,8 @@ security_guide_search_key_1: |-
   $client->index('patient_medical_records')->search();
 security_guide_update_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
-  $client->updateKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4',
-    ['indexes': ['doctors']]
+  $client->updateKey('74c9c733-3368-4738-bbe5-1d18a5fecb37',
+    ['description' => 'Default Search API Key']
   );
 security_guide_create_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
@@ -548,11 +546,12 @@ security_guide_list_keys_1: |-
   $client->getKeys();
 security_guide_delete_key_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
-  $client->deleteKey('d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4');
+  $client->deleteKey('ac5cd97d-5a4b-4226-a868-2d0eb6d197ab');
 authorization_header_1: |-
   $client = new Client('http://127.0.0.1:7700', 'masterKey');
   $client->getKeys();
 tenant_token_guide_generate_sdk_1: |-
+  $apiKeyUid = '85c3c2f9-bdd6-41f1-abd8-11fcf80e0f76';
   $searchRules = (object) [
     'patient_medical_records' => (object) [
       'filter' => 'user_id = 1',
@@ -563,7 +562,26 @@ tenant_token_guide_generate_sdk_1: |-
       'expiresAt' => new DateTime('2025-12-20'),
   ];
 
-  $token = $client->generateTenantToken($searchRules, $options);
+  $token = $client->generateTenantToken($apiKeyUid, $searchRules, $options);
 tenant_token_guide_search_sdk_1: |-
   $frontEndClient = new Client('http://127.0.0.1:7700', $token);
   $frontEndClient->index('patient_medical_records')->search('blood test');
+get_all_tasks_filtering_1: |-
+  $client->index('movies')->getTasks();
+get_all_tasks_filtering_2: |-
+  $taskQuery = (new TasksQuery())->setStatus(['succeeded', 'failed'])->setType(['documentAdditionOrUpdate']);
+  $client->getTasks($taskQuery);
+get_all_tasks_paginating_1: |-
+  $taskQuery = (new TasksQuery())->setLimit(2)->setFrom(10));
+  $client->getTasks($taskQuery);
+get_all_tasks_paginating_2: |-
+  $taskQuery = (new TasksQuery())->setLimit(2)->setFrom(8));
+  $client->getTasks($taskQuery);
+get_pagination_settings_1: |-
+update_pagination_settings_1: |-
+reset_pagination_settings_1: |-
+get_faceting_settings_1: |-
+update_faceting_settings_1: |-
+reset_faceting_settings_1: |-
+settings_guide_faceting_1: |-
+settings_guide_pagination_1: |-

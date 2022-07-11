@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use MeiliSearch\Client;
+use MeiliSearch\Contracts\KeysQuery;
 use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
@@ -19,14 +20,14 @@ final class KeysAndPermissionsTest extends TestCase
     public function testGetKeysAlwaysReturnsArray(): void
     {
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getKeys());
+        $this->assertIsIterable($this->client->getKeys());
     }
 
     public function testGetKeysDefault(): void
     {
         $response = $this->client->getKeys();
 
-        $this->assertCount(2, $response);
+        $this->assertGreaterThan(0, $response->count());
         $this->assertIsArray($response[0]->getActions());
         $this->assertIsArray($response[0]->getIndexes());
         $this->assertNull($response[0]->getExpiresAt());
@@ -38,7 +39,7 @@ final class KeysAndPermissionsTest extends TestCase
     {
         $response = $this->client->getRawKeys();
 
-        $this->assertCount(2, $response['results']);
+        $this->assertGreaterThan(2, $response['results']);
         $this->assertArrayHasKey('actions', $response['results'][0]);
         $this->assertArrayHasKey('indexes', $response['results'][0]);
         $this->assertArrayHasKey('createdAt', $response['results'][0]);
@@ -71,6 +72,20 @@ final class KeysAndPermissionsTest extends TestCase
         $this->expectException(ApiException::class);
         $client = new Client($this->host, 'bad-key');
         $client->getKeys();
+    }
+
+    public function testGetKeysWithLimit(): void
+    {
+        $response = $this->client->getKeys((new KeysQuery())->setLimit(1));
+
+        $this->assertCount(1, $response);
+    }
+
+    public function testGetKeysWithOffset(): void
+    {
+        $response = $this->client->getKeys((new KeysQuery())->setOffset(100));
+
+        $this->assertCount(0, $response);
     }
 
     public function testGetKey(): void
@@ -175,8 +190,6 @@ final class KeysAndPermissionsTest extends TestCase
         $key = $this->client->createKey(self::INFO_KEY);
         $response = $this->client->updateKey($key->getKey(), [
             'description' => 'test update',
-            'indexes' => ['*'],
-            'expiresAt' => date('Y-m-d', strtotime('+1 day')),
         ]);
 
         $this->assertNotNull($response->getKey());
@@ -185,12 +198,27 @@ final class KeysAndPermissionsTest extends TestCase
         $this->assertIsArray($response->getActions());
         $this->assertSame($response->getActions(), self::INFO_KEY['actions']);
         $this->assertIsArray($response->getIndexes());
-        $this->assertSame($response->getIndexes(), ['*']);
-        $this->assertNotNull($response->getExpiresAt());
+        $this->assertSame($response->getIndexes(), ['index']);
+        $this->assertNull($response->getExpiresAt());
         $this->assertNotNull($response->getCreatedAt());
         $this->assertNotNull($response->getUpdatedAt());
 
         $this->client->deleteKey($response->getKey());
+    }
+
+    public function testCreateKeyWithUid(): void
+    {
+        $key = $this->client->createKey([
+            'uid' => 'acab6d06-5385-47a2-a534-1ed4fd7f6402',
+            'actions' => ['*'],
+            'indexes' => ['*'],
+            'expiresAt' => null,
+        ]);
+
+        $this->assertNotNull($key->getKey());
+        $this->assertEquals('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
+
+        $this->client->deleteKey($key->getKey());
     }
 
     public function testUpdateKeyWithExpInDate(): void
@@ -208,8 +236,8 @@ final class KeysAndPermissionsTest extends TestCase
         $this->assertIsArray($response->getActions());
         $this->assertSame($response->getActions(), self::INFO_KEY['actions']);
         $this->assertIsArray($response->getIndexes());
-        $this->assertSame($response->getIndexes(), ['*']);
-        $this->assertNotNull($response->getExpiresAt());
+        $this->assertSame($response->getIndexes(), ['index']);
+        $this->assertNull($response->getExpiresAt());
         $this->assertNotNull($response->getCreatedAt());
         $this->assertNotNull($response->getUpdatedAt());
 
@@ -235,34 +263,43 @@ final class KeysAndPermissionsTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '
         {
             "results": [
-              {
-                "description": "test_key_1",
-                "key": "z1ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
-                "actions": ["*"],
-                "indexes": ["*"],
-                "expiresAt": "2023-06-14T10:34:03Z",
-                "createdAt": "2022-06-14T10:34:03Z",
-                "updatedAt": "2022-06-14T10:34:03Z"
-              },
-              {
-                "description": "test_key_2",
-                "key": "z2ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
-                "actions": ["*"],
-                "indexes": ["*"],
-                "expiresAt": "2023-06-14T10:34:03.629Z",
-                "createdAt": "2022-06-14T10:34:03.627Z",
-                "updatedAt": "2022-06-14T10:34:03.627Z"
-              },
-              {
-                "description": "test_key_3",
-                "key": "z3ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
-                "actions": ["*"],
-                "indexes": ["*"],
-                "expiresAt": "2023-06-14T10:34:03.629690014Z",
-                "createdAt": "2022-06-14T10:34:03.627606639Z",
-                "updatedAt": "2022-06-14T10:34:03.627606639Z"
-              }
-            ]
+                {
+                  "description": "test_key_1",
+                  "name": null,
+                  "uid": "e3091e84-928c-44b5-8a61-7e5b15cd5009",
+                  "key": "z1ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
+                  "actions": ["*"],
+                  "indexes": ["*"],
+                  "expiresAt": "2023-06-14T10:34:03Z",
+                  "createdAt": "2022-06-14T10:34:03Z",
+                  "updatedAt": "2022-06-14T10:34:03Z"
+                },
+                {
+                  "description": "test_key_2",
+                  "name": null,
+                  "uid": "85f12b91-cf39-493a-9364-7d8b85b87798",
+                  "key": "z2ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
+                  "actions": ["*"],
+                  "indexes": ["*"],
+                  "expiresAt": "2023-06-14T10:34:03.629Z",
+                  "createdAt": "2022-06-14T10:34:03.627Z",
+                  "updatedAt": "2022-06-14T10:34:03.627Z"
+                },
+                {
+                  "description": "test_key_3",
+                  "name": "test_key_3",
+                  "uid": "6dffa3ee-b98f-4218-827a-7a062f23ebf5",
+                  "key": "z3ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
+                  "actions": ["*"],
+                  "indexes": ["*"],
+                  "expiresAt": "2023-06-14T10:34:03.629690014Z",
+                  "createdAt": "2022-06-14T10:34:03.627606639Z",
+                  "updatedAt": "2022-06-14T10:34:03.627606639Z"
+                }
+              ],
+              "limit": 10,
+              "offset": 0,
+              "total": 3
           }
         ');
 

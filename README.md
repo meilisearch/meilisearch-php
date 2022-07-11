@@ -207,7 +207,7 @@ $index->search(
   ],
   "offset": 0,
   "limit": 20,
-  "nbHits": 1,
+  "estimatedTotalHits": 1,
   "processingTimeMs": 0,
   "query": "wonder"
 }
@@ -215,7 +215,7 @@ $index->search(
 
 ## 🤖 Compatibility with Meilisearch
 
-This package only guarantees the compatibility with the [version v0.27.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.27.0).
+This package only guarantees the compatibility with the [version v0.28.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.28.0).
 
 ## 💡 Learn More
 

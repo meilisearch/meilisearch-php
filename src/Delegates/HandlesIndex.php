@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Delegates;
 
+use MeiliSearch\Contracts\IndexesQuery;
+use MeiliSearch\Contracts\IndexesResults;
 use MeiliSearch\Endpoints\Indexes;
 
 trait HandlesIndex
 {
-    /**
-     * @return Indexes[]
-     */
-    public function getAllIndexes(): array
+    public function getAllIndexes(IndexesQuery $options = null): IndexesResults
     {
-        return $this->index->all();
+        return $this->index->all($options ?? null);
     }
 
-    public function getAllRawIndexes(): array
+    public function getAllRawIndexes(IndexesQuery $options = null): array
     {
-        return $this->index->allRaw();
+        return $this->index->allRaw($options ?? []);
     }
 
     public function getRawIndex(string $uid): array

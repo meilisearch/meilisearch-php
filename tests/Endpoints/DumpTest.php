@@ -4,29 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class DumpTest extends TestCase
 {
-    public function testCreateDumpAndGetStatus(): void
+    public function testCreateDump(): void
     {
-        $dump = $this->client->createDump();
+        $expectedKeys = ['taskUid', 'indexUid', 'status', 'type', 'enqueuedAt'];
 
-        $this->assertArrayHasKey('uid', $dump);
-        $this->assertArrayHasKey('status', $dump);
-        $this->assertEquals('in_progress', $dump['status']);
+        $task = $this->client->createDump();
 
-        $dump = $this->client->getDumpStatus($dump['uid']);
-
-        $this->assertArrayHasKey('uid', $dump);
-        $this->assertArrayHasKey('status', $dump);
-    }
-
-    public function testDumpNotFound(): void
-    {
-        $this->expectException(ApiException::class);
-
-        $this->client->getDumpStatus('not-found');
+        $this->assertEquals($expectedKeys, array_keys($task));
     }
 }

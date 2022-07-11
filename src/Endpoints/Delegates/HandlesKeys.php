@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
+use MeiliSearch\Contracts\KeysQuery;
+use MeiliSearch\Contracts\KeysResults;
 use MeiliSearch\Endpoints\Keys;
 
 trait HandlesKeys
 {
-    public function getKeys(): array
+    public function getKeys(KeysQuery $options = null): KeysResults
     {
-        return $this->keys->all();
+        return $this->keys->all($options);
     }
 
     public function getRawKeys(): array
@@ -18,9 +20,9 @@ trait HandlesKeys
         return $this->keys->allRaw();
     }
 
-    public function getKey($key): Keys
+    public function getKey($keyOrUid): Keys
     {
-        return $this->keys->get($key);
+        return $this->keys->get($keyOrUid);
     }
 
     public function createKey(array $options = []): Keys
@@ -28,13 +30,13 @@ trait HandlesKeys
         return $this->keys->create($options);
     }
 
-    public function updateKey(string $key, array $options = []): Keys
+    public function updateKey(string $keyOrUid, array $options = []): Keys
     {
-        return $this->keys->update($key, $options);
+        return $this->keys->update($keyOrUid, $options);
     }
 
-    public function deleteKey(string $key): array
+    public function deleteKey(string $keyOrUid): array
     {
-        return $this->keys->delete($key);
+        return $this->keys->delete($keyOrUid);
     }
 }
