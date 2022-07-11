@@ -96,8 +96,7 @@ final class SearchTestNestedFields extends TestCase
 
         $response = $this->index->search('An awesome', [
             'sort' => ['info.reviewNb:desc'],
-        ],
-        [
+        ], [
             'raw' => true,
         ]);
 
@@ -121,8 +120,7 @@ final class SearchTestNestedFields extends TestCase
 
         $response = $this->index->search('An awesome', [
             'sort' => ['info.reviewNb:desc'],
-        ],
-        [
+        ], [
             'raw' => true,
         ]);
 
