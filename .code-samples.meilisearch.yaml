@@ -20,7 +20,7 @@ delete_an_index_1: |-
 get_one_document_1: |-
   $client->index('movies')->getDocument(25684, ['id', 'title', 'poster', 'release_date']);
 get_documents_1: |-
-  $client->index('movies')->getDocuments(['limit' => 2]);
+  $client->index('movies')->getDocuments((new DocumentsQuery())->setLimit(2));
 add_or_replace_documents_1: |-
   $client->index('movies')->addDocuments([
     [
