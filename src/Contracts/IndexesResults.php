@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Contracts;
 
+use MeiliSearch\Endpoints\Indexes;
+
 class IndexesResults extends Data
 {
     private int $offset;
     private int $limit;
     private int $total;
 
+    /**
+     * @param array{results: array<int, Indexes>, offset: int, limit: int, total: int|null} $params
+     */
     public function __construct(array $params)
     {
-        parent::__construct($params['results'] ?? []);
+        parent::__construct($params['results']);
 
         $this->offset = $params['offset'];
         $this->limit = $params['limit'];
@@ -20,7 +25,7 @@ class IndexesResults extends Data
     }
 
     /**
-     * @return array<int, array>
+     * @return array<int, Indexes>
      */
     public function getResults(): array
     {
