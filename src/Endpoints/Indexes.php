@@ -95,7 +95,7 @@ class Indexes extends Endpoint
 
     public function allRaw(array $options = []): array
     {
-        return $this->http->get(self::PATH);
+        return $this->http->get(self::PATH, $options);
     }
 
     public function getPrimaryKey(): ?string
