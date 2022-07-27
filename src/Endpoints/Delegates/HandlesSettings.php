@@ -77,6 +77,54 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
+    // Settings - faceting
+
+    public function getFacetingAttributes(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting');
+    }
+
+    public function updateFacetingAttributes(array $facetingAttributes): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/faceting', $facetingAttributes);
+    }
+
+    public function resetFacetingAttributes(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/faceting');
+    }
+
+    public function setMaxValuesPerFacet(int $maxValuesPerFacet): array
+    {
+        return $this->updateFacetingAttributes([
+            'maxValuesPerFacet' => $maxValuesPerFacet
+        ]);
+    }
+
+    // Settings - pagination
+
+    public function getPaginationAttributes(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/pagination');
+    }
+
+    public function updatePaginationAttributes(array $paginationAttributes): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/pagination', $paginationAttributes);
+    }
+
+    public function resetPaginationAttributes(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/pagination');
+    }
+
+    public function setMaxTotalHits(int $maxTotalHits): array
+    {
+        return $this->updatePaginationAttributes([
+            'maxTotalHits' => $maxTotalHits
+        ]);
+    }
+
     // Settings - Stop-words
 
     public function getStopWords(): array

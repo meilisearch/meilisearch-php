@@ -37,6 +37,10 @@ final class IndexTest extends TestCase
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->index->getDisplayedAttributes());
         /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getFacetingAttributes());
+        /* @phpstan-ignore-next-line */
+        $this->assertIsArray($this->index->getPaginationAttributes());
+        /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->index->getTypoTolerance());
     }
 
