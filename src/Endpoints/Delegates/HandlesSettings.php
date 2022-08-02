@@ -86,7 +86,7 @@ trait HandlesSettings
 
     public function updateFacetingAttributes(array $facetingAttributes): array
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/faceting', $facetingAttributes);
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $facetingAttributes);
     }
 
     public function resetFacetingAttributes(): array
@@ -110,7 +110,7 @@ trait HandlesSettings
 
     public function updatePaginationAttributes(array $paginationAttributes): array
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/pagination', $paginationAttributes);
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/pagination', $paginationAttributes);
     }
 
     public function resetPaginationAttributes(): array
