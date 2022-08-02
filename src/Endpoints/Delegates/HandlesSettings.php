@@ -77,7 +77,7 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
-    // Settings - faceting
+    // Settings - Faceting
 
     public function getFacetingAttributes(): array
     {
@@ -97,11 +97,11 @@ trait HandlesSettings
     public function setMaxValuesPerFacet(int $maxValuesPerFacet): array
     {
         return $this->updateFacetingAttributes([
-            'maxValuesPerFacet' => $maxValuesPerFacet
+            'maxValuesPerFacet' => $maxValuesPerFacet,
         ]);
     }
 
-    // Settings - pagination
+    // Settings - Pagination
 
     public function getPaginationAttributes(): array
     {
@@ -121,7 +121,7 @@ trait HandlesSettings
     public function setMaxTotalHits(int $maxTotalHits): array
     {
         return $this->updatePaginationAttributes([
-            'maxTotalHits' => $maxTotalHits
+            'maxTotalHits' => $maxTotalHits,
         ]);
     }
 
