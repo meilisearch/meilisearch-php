@@ -4,6 +4,11 @@
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
 getting_started_typo_tolerance: |-
+  $client->index('books')->updateTypoTolerance([
+    'minWordSizeForTypos' => [ 
+      'oneTypo' => 4 
+    ]
+  ]);
 
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
