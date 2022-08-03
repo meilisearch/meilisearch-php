@@ -79,50 +79,36 @@ trait HandlesSettings
 
     // Settings - Faceting
 
-    public function getFacetingAttributes(): array
+    public function getFaceting(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting');
     }
 
-    public function updateFacetingAttributes(array $facetingAttributes): array
+    public function updateFaceting(array $faceting): array
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $facetingAttributes);
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $faceting);
     }
 
-    public function resetFacetingAttributes(): array
+    public function resetFaceting(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/faceting');
     }
 
-    public function setMaxValuesPerFacet(int $maxValuesPerFacet): array
-    {
-        return $this->updateFacetingAttributes([
-            'maxValuesPerFacet' => $maxValuesPerFacet,
-        ]);
-    }
-
     // Settings - Pagination
 
-    public function getPaginationAttributes(): array
+    public function getPagination(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/pagination');
     }
 
-    public function updatePaginationAttributes(array $paginationAttributes): array
+    public function updatePagination(array $pagination): array
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/pagination', $paginationAttributes);
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/pagination', $pagination);
     }
 
-    public function resetPaginationAttributes(): array
+    public function resetPagination(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/pagination');
-    }
-
-    public function setMaxTotalHits(int $maxTotalHits): array
-    {
-        return $this->updatePaginationAttributes([
-            'maxTotalHits' => $maxTotalHits,
-        ]);
     }
 
     // Settings - Stop-words

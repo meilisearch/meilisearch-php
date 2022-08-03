@@ -20,28 +20,29 @@ final class IndexTest extends TestCase
         $this->index = $this->createEmptyIndex('index');
     }
 
-    public function testIndexSettingsAlwaysReturnArrays(): void
+    public function testIndexGetSettings(): void
     {
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getSynonyms());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getStopWords());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getSortableAttributes());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getSearchableAttributes());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getRankingRules());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getFilterableAttributes());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getDisplayedAttributes());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getFacetingAttributes());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getPaginationAttributes());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->index->getTypoTolerance());
+        $this->assertSame([], $this->index->getSynonyms());
+        $this->assertSame([], $this->index->getStopWords());
+        $this->assertSame([], $this->index->getSortableAttributes());
+        $this->assertSame(['*'], $this->index->getSearchableAttributes());
+        $this->assertSame(
+            ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+            $this->index->getRankingRules()
+        );
+        $this->assertSame([], $this->index->getFilterableAttributes());
+        $this->assertSame(['*'], $this->index->getDisplayedAttributes());
+        $this->assertSame(['maxValuesPerFacet' => 100], $this->index->getFaceting());
+        $this->assertSame(['maxTotalHits' => 1000], $this->index->getPagination());
+        $this->assertSame(
+            [
+                'enabled' => true,
+                'minWordSizeForTypos' => ['oneTypo' => 5, 'twoTypos' => 9],
+                'disableOnWords' => [],
+                'disableOnAttributes' => [],
+            ],
+            $this->index->getTypoTolerance(),
+        );
     }
 
     public function testGetPrimaryKey(): void
@@ -99,7 +100,7 @@ final class IndexTest extends TestCase
         $this->assertSame($rawInfo['updatedAt'], $this->index->getUpdatedAtString());
     }
 
-    public function testfetchRawInfo(): void
+    public function testFetchRawInfo(): void
     {
         $index = $this->createEmptyIndex(
             'indexB',
