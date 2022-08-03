@@ -77,6 +77,40 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
+    // Settings - Faceting
+
+    public function getFaceting(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting');
+    }
+
+    public function updateFaceting(array $faceting): array
+    {
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $faceting);
+    }
+
+    public function resetFaceting(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/faceting');
+    }
+
+    // Settings - Pagination
+
+    public function getPagination(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/pagination');
+    }
+
+    public function updatePagination(array $pagination): array
+    {
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/pagination', $pagination);
+    }
+
+    public function resetPagination(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/pagination');
+    }
+
     // Settings - Stop-words
 
     public function getStopWords(): array
