@@ -6,7 +6,7 @@ namespace MeiliSearch;
 
 class MeiliSearch
 {
-    public const VERSION = '0.24.1-pagination-beta.0';
+    public const VERSION = '0.25.0-meilisearch-pagination-beta.0';
 
     public static function qualifiedVersion()
     {
