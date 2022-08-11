@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# current_tag=$(echo $GITHUB_REF | cut -d '/' -f 3 | tr -d ' ',v)
 meilisearch_php_version=$(grep 'public const VERSION =' src/MeiliSearch.php | cut -d ' ' -f 9 | tr -d "'" | tr -d ";")
 composer_version=$(grep '"version":' composer.json | cut -d ':' -f 2- | tr -d ' ' | tr -d '"' | tr -d ',')
 
