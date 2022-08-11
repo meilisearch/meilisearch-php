@@ -56,7 +56,7 @@ composer require meilisearch/meilisearch-php guzzlehttp/guzzle http-interop/http
 Here is an example of installation with the `symfony/http-client`:
 
 ```bash
-composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.0
+composer require meilisearch/meilisearch-php:0.25.0-meilisearch-pagination-beta.0 symfony/http-client nyholm/psr7:^1.0
 ```
 
 💡 *More HTTP client installations compatible with this package can be found [in this section](#-http-client-compatibilities).*
