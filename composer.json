@@ -2,7 +2,6 @@
     "name": "meilisearch/meilisearch-php",
     "description": "PHP wrapper for the Meilisearch API",
     "keywords": ["meilisearch", "instant", "search", "api", "client", "php"],
-    "version": "0.25.0-meilisearch-pagination-beta.0",
     "type": "library",
     "license": "MIT",
     "authors": [
