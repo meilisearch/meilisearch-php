@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check tag format
-        run: sh .github/scripts/check-tag-format.sh"
+        run: sh .github/scripts/check-tag-format.sh
   meilisearch-version:
     runs-on: ubuntu-latest
     outputs:
