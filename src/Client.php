@@ -42,9 +42,10 @@ class Client
         string $url,
         string $apiKey = null,
         ClientInterface $httpClient = null,
-        RequestFactoryInterface $requestFactory = null
+        RequestFactoryInterface $requestFactory = null,
+        array $clientAgents = []
     ) {
-        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory);
+        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $clientAgents);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);

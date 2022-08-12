@@ -222,6 +222,65 @@ class ClientTest extends TestCase
         $client->health();
     }
 
+    public function testClientHasCustomUserAgent(): void
+    {
+        $customAgent = 'Meilisearch Symfony (v0.10.0)';
+        $httpClient = $this->createHttpClientMock(200, '{}');
+        $reqFactory = $this->createMock(RequestFactoryInterface::class);
+        $requestStub = $this->createMock(RequestInterface::class);
+
+        $requestStub->expects($this->any())
+            ->method('withAddedHeader')
+            ->withConsecutive(
+                [
+                    $this->equalTo('User-Agent'),
+                    $this->equalTo($customAgent.';'.MeiliSearch::qualifiedVersion()),
+                ],
+                [
+                    $this->equalTo('Authorization'),
+                    $this->equalTo('Bearer masterKey'),
+                ],
+            )
+            ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
+
+        $reqFactory->expects($this->any())
+            ->method('createRequest')
+            ->willReturn($requestStub);
+
+        $client = new \MeiliSearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, [$customAgent]);
+
+        $client->health();
+    }
+
+    public function testClientHasEmptyCustomUserAgentArray(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+        $reqFactory = $this->createMock(RequestFactoryInterface::class);
+        $requestStub = $this->createMock(RequestInterface::class);
+
+        $requestStub->expects($this->any())
+            ->method('withAddedHeader')
+            ->withConsecutive(
+                [
+                    $this->equalTo('User-Agent'),
+                    $this->equalTo(MeiliSearch::qualifiedVersion()),
+                ],
+                [
+                    $this->equalTo('Authorization'),
+                    $this->equalTo('Bearer masterKey'),
+                ],
+            )
+            ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
+
+        $reqFactory->expects($this->any())
+            ->method('createRequest')
+            ->willReturn($requestStub);
+
+        $client = new \MeiliSearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, []);
+
+        $client->health();
+    }
+
     public function testParseResponseReturnsNullForNoContent(): void
     {
         $response = $this->createMock(ResponseInterface::class);
