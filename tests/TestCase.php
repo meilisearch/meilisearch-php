@@ -65,6 +65,32 @@ abstract class TestCase extends BaseTestCase
         $this->assertArrayHasKey('taskUid', $promise);
     }
 
+    public function assertFinitePagination(array $response): void
+    {
+        $currentKeys = array_keys($response);
+        $validBody = ['hitsPerPage', 'totalHits', 'totalPages', 'page', 'processingTimeMs', 'query', 'hits'];
+
+        foreach ($validBody as $value) {
+            $this->assertTrue(
+                \in_array($value, $currentKeys, true),
+                'Not a valid finite pagination response, since the "'.$value.'" key is not present in: ['.implode(', ', $currentKeys).']'
+            );
+        }
+    }
+
+    public function assertEstimatedPagination(array $response): void
+    {
+        $currentKeys = array_keys($response);
+        $validBody = ['offset', 'limit', 'estimatedTotalHits', 'processingTimeMs', 'query', 'hits'];
+
+        foreach ($validBody as $value) {
+            $this->assertTrue(
+                \in_array($value, $currentKeys, true),
+                'Not a valid estimated pagination response, since the "'.$value.'" key is not present in: ['.implode(', ', $currentKeys).']'
+            );
+        }
+    }
+
     public function createEmptyIndex($indexName, $options = []): Indexes
     {
         $response = $this->client->createIndex($indexName, $options);
