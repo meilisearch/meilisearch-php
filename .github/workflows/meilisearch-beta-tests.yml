@@ -1,0 +1,74 @@
+# Testing the code base against a specific Meilisearch feature
+name: Meilisearch Prototype Beta tests
+
+# Will only run for PRs and pushes to *-beta
+on:
+  push:
+    branches: ['meilisearch-**-beta']
+  pull_request:
+    branches: ['meilisearch-**-beta']
+
+jobs:
+  meilisearch-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.grep-step.outputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Grep docker beta version of Meilisearch
+        id: grep-step
+        run: |
+          MEILISEARCH_VERSION=$(sh .github/scripts/beta-docker-version.sh)
+          echo $MEILISEARCH_VERSION
+          echo ::set-output name=version::$MEILISEARCH_VERSION
+  tests:
+    runs-on: ubuntu-latest
+    needs: ['meilisearch-version']
+    services:
+      meilisearch:
+        image: getmeili/meilisearch:${{ needs.meilisearch-version.outputs.version }}
+        env:
+          MEILI_MASTER_KEY: 'masterKey'
+          MEILI_NO_ANALYTICS: 'true'
+        ports:
+          - '7700:7700'
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0', '8.1']
+    name: integration-tests-against-rc (PHP ${{ matrix.php-versions }})
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Install dependencies
+        run: |
+          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
+          composer install --prefer-dist --no-progress --no-suggest
+      - name: Run test suite - default HTTP client (Guzzle 7)
+        run: |
+          sh scripts/tests.sh
+          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
+      - name: Run test suite - php-http/guzzle6-adapter
+        run: |
+          composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+          sh scripts/tests.sh
+          composer remove --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+      - name: Run test suite - symfony/http-client
+        run: |
+          composer require --dev symfony/http-client nyholm/psr7
+          sh scripts/tests.sh
+          composer remove --dev symfony/http-client nyholm/psr7
+      - name: Run test suite - php-http/curl-client
+        run: |
+          composer require --dev php-http/curl-client nyholm/psr7
+          sh scripts/tests.sh
+          composer remove --dev php-http/curl-client nyholm/psr7
+      - name: Run test suite - kriswallsmith/buzz
+        run: |
+          composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
+          sh scripts/tests.sh
+          composer remove --dev kriswallsmith/buzz nyholm/psr7
