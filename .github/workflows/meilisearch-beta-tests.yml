@@ -4,26 +4,11 @@ name: Meilisearch Prototype Beta tests
 # Will only run for PRs and pushes to *-beta
 on:
   push:
-    branches: ['!bump-meilisearch-v*.*.*-beta', 'meilisearch-**-beta']
+    branches: ['meilisearch-**-beta']
   pull_request:
-    branches: ['!bump-meilisearch-v*.*.*-beta', 'meilisearch-**-beta']
-
-# on:
-#   pull_request:
-#   push:
-#     # trying and staging branches are for BORS config
-#     branches:
-#       - trying
-#       - staging
-#       - main
+    branches: ['meilisearch-**-beta']
 
 jobs:
-  check-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Check tag format
-        run: sh .github/scripts/check-tag-format.sh
   meilisearch-version:
     runs-on: ubuntu-latest
     outputs:
