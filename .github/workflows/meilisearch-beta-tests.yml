@@ -18,12 +18,12 @@ on:
 #       - main
 
 jobs:
-  check-version:
+  check-beta-version-format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Check tag format
-        run: sh .github/scripts/check-tag-format.sh
+      - name: Check version format
+        run: sh .github/scripts/check-tag-format.sh false
   meilisearch-version:
     runs-on: ubuntu-latest
     outputs:

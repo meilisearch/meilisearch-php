@@ -114,6 +114,48 @@ Once the changes are merged on `main`, you can publish the current draft release
 
 A WebHook will be triggered and push the package to [Packagist](https://packagist.org/packages/meilisearch/meilisearch-php).
 
+#### Release a `beta` Version
+
+The package is automatically published on composer whenever a tag is created. It takes the version of the tag as the version of the package in composer.
+Nonetheless, to [overwrite that behavior](https://getcomposer.org/doc/articles/versions.md#branches), the tag should be added in the `composer.json`.
+
+Here are the steps to release a beta version of this package:
+
+1. Create a new branch containing the "beta" changes with the following format `xxx-beta` where `xxx` explains the context:
+    - In case of a Meilisearch **pre-release** beta: create a branch originating from `bump-meilisearch-v*.*.*` named `bump-meilisearch-v*.*.*-beta`. <br>
+    - In case you are implementing a **prototype provided by [Meilisearch](https://github.com/meilisearch/meilisearch/)**, create a branch `meilisearch-xx-xx-beta` where you implement the feature. Where `xxx` has the same name as the docker image containing the prototype.
+        Example:
+            - The [docker image](https://hub.docker.com/r/getmeili/meilisearch/tags) is named: `v0.29.0-pagination.beta.2`
+            - The beta branch should be named: `meilisearch-pagination-beta`
+    - In case you are implementing a beta for the php package, create a branch `xx-xx-beta` with the context of your beta. Example: `refactor-beta`.
+
+2. Change the version in [`src/MeiliSearch.php`](/src/MeiliSearch.php), then commit it to the `beta` branch.
+    - pre-release: `v*.*.*-bump-meilisearch-v*.*.*-beta.X`
+    - prototype: `v*.*.*-meilisearch-pagination-beta.X`
+    - package beta: `v*.*.*-refactor-beta.X`
+
+// TODO: screen of update on packagist
+// TODO: compare with previous PR
+3. Create a new tag
+<!--
+- Go to the [GitHub interface for releasing](https://github.com/meilisearch/meilisearch-js/releases): on this page, click on `Draft a new release`.
+
+- Create a GitHub pre-release:
+  - Fill the description with the detailed changelogs
+  - Fill the title with `vX.X.X-beta.0`
+  - Fill the tag with `vX.X.X-beta.0`
+  - ⚠️ Select the `vX.X.X-beta.0` branch and NOT `main`
+  - ⚠️ Click on the "This is a pre-release" checkbox
+  - Click on "Publish release" -->
+
+GitHub Actions will be triggered and push the beta version to [npm](https://www.npmjs.com/package/meilisearch).
+
+💡 If you need to release a new beta for the same version (i.e. `vX.X.X-beta.1`):
+- merge the change into your beta branch
+- change the version name in [`package.json`](/package.json) and in [`src/package-version`](/src/package-version.ts)
+- creata a pre-release via the GitHub interface
+
+
 <hr>
 
 Thank you again for reading this through, we can not wait to begin to work with you if you made your way through this contributing guide ❤️
