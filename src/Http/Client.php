@@ -39,7 +39,8 @@ class Client implements Http
         string $url,
         string $apiKey = null,
         ClientInterface $httpClient = null,
-        RequestFactoryInterface $reqFactory = null
+        RequestFactoryInterface $reqFactory = null,
+        array $clientAgents = []
     ) {
         $this->baseUrl = $url;
         $this->apiKey = $apiKey;
@@ -47,7 +48,7 @@ class Client implements Http
         $this->requestFactory = $reqFactory ?? Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         $this->headers = array_filter([
-            'User-Agent' => MeiliSearch::qualifiedVersion(),
+            'User-Agent' => implode(';', array_merge($clientAgents, [MeiliSearch::qualifiedVersion()])),
         ]);
         if (null != $this->apiKey) {
             $this->headers['Authorization'] = sprintf('Bearer %s', $this->apiKey);
