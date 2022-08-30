@@ -116,7 +116,6 @@ A WebHook will be triggered and push the package to [Packagist](https://packagis
 
 #### Release a `beta` Version
 
-
 Here are the steps to release a beta version of this package:
 
 1. Create a new branch containing the "beta" changes with the following format `xxx-beta` where `xxx` explains the context:
@@ -135,9 +134,9 @@ Here are the steps to release a beta version of this package:
 3. Commit and push your code to the newly created branch.
 
 4. Update [Packagist](https://packagist.org/) so that the new branch appears in the available tags.
-    To do so, click on `update now` underneath the list of the available versions/branches:
+    To do so, click on `Update Now` underneath the list of the available versions/branches:
     <p align="center">
-    <img src="./assets/packagist-update.png" alt="Restaurant demo" width="600"/>
+    <img src="./assets/packagist-update.png" alt="Restaurant demo" width="300"/>
     </p>
 
 In case changes are made on the branch, don't forget to update packagist again following the screen above!
