@@ -116,8 +116,6 @@ A WebHook will be triggered and push the package to [Packagist](https://packagis
 
 #### Release a `beta` Version
 
-The package is automatically published on composer whenever a tag is created. It takes the version of the tag as the version of the package in composer.
-Nonetheless, to [overwrite that behavior](https://getcomposer.org/doc/articles/versions.md#branches), the tag should be added in the `composer.json`.
 
 Here are the steps to release a beta version of this package:
 
@@ -134,21 +132,15 @@ Here are the steps to release a beta version of this package:
     - prototype: `v*.*.*-meilisearch-pagination-beta.X`
     - package beta: `v*.*.*-refactor-beta.X`
 
-// TODO: screen of update on packagist
-// TODO: compare with previous PR
-3. Update [Packagist](https://packagist.org/) so that the new branch appears in the available tags.
+3. Commit and push your code to the newly created branch.
+
+4. Update [Packagist](https://packagist.org/) so that the new branch appears in the available tags.
     To do so, click on `update now` underneath the list of the available versions/branches:
     <p align="center">
     <img src="./assets/packagist-update.png" alt="Restaurant demo" width="600"/>
     </p>
 
-GitHub Actions will be triggered and push the beta version to [npm](https://www.npmjs.com/package/meilisearch).
-
-💡 If you need to release a new beta for the same version (i.e. `vX.X.X-beta.1`):
-- merge the change into your beta branch
-- change the version name in [`package.json`](/package.json) and in [`src/package-version`](/src/package-version.ts)
-- creata a pre-release via the GitHub interface
-
+In case changes are made on the branch, don't forget to update packagist again following the screen above!
 
 <hr>
 
