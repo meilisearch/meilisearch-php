@@ -7,16 +7,7 @@ on:
     branches: ['!bump-meilisearch-v*.*.*-beta', 'meilisearch-**-beta']
   pull_request:
     branches: ['!bump-meilisearch-v*.*.*-beta', 'meilisearch-**-beta']
-
-# on:
-#   pull_request:
-#   push:
-#     # trying and staging branches are for BORS config
-#     branches:
-#       - trying
-#       - staging
-#       - main
-
+    
 jobs:
   check-beta-version-format:
     runs-on: ubuntu-latest
@@ -93,6 +84,6 @@ jobs:
         # kriswallsmith/buzz is currently not compatible with PHP 8.0
         if: ${{ !startsWith(matrix.php-versions, '8.') }}
         run: |
-          composer require --dev kriswallsmith/buzz nyholm/psr7
+          composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
           sh scripts/tests.sh
           composer remove --dev kriswallsmith/buzz nyholm/psr7

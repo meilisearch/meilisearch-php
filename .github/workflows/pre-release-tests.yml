@@ -22,51 +22,42 @@ jobs:
         php-versions: ['7.4', '8.0', '8.1']
     name: integration-tests-against-rc (PHP ${{ matrix.php-versions }})
     steps:
-      - uses: actions/checkout@v1
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-      - name: Install dependencies
-        run: |
-          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
-          composer install --prefer-dist --no-progress --no-suggest
-      - name: Get the latest Meilisearch RC
-        run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/main/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
-      - name: Meilisearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
-        run: docker run -d -p 7700:7700 getmeili/meilisearch:${{ env.MEILISEARCH_VERSION }} meilisearch --master-key=masterKey --no-analytics
-      - name: Run test suite - default HTTP client (Guzzle 7)
-        run: |
-          sh scripts/tests.sh
-          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
-      - name: Run test suite - php-http/guzzle6-adapter
-        # Don't run on PHP 8
-        # Guzzle 6 is not compatible with PHP 8.0
-        if: ${{ !startsWith(matrix.php-versions, '8.') }}
-        run: |
-          composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
-          sh scripts/tests.sh
-          composer remove --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
-      - name: Run test suite - symfony/http-client
-        run: |
-          composer require --dev symfony/http-client nyholm/psr7
-          sh scripts/tests.sh
-          composer remove --dev symfony/http-client nyholm/psr7
-      - name: Run test suite - php-http/curl-client
-        # Don't run on PHP 8
-        # php-http/curl-client is currently not compatible with PHP 8.0
-        if: ${{ !startsWith(matrix.php-versions, '8.') }}
-        run: |
-          composer require --dev php-http/curl-client nyholm/psr7
-          sh scripts/tests.sh
-          composer remove --dev php-http/curl-client nyholm/psr7
-      - name: Run test suite - kriswallsmith/buzz
-        # Don't run on PHP 8
-        # kriswallsmith/buzz is currently not compatible with PHP 8.0
-        if: ${{ !startsWith(matrix.php-versions, '8.') }}
-        run: |
-          composer require --dev kriswallsmith/buzz nyholm/psr7
-          sh scripts/tests.sh
-          composer remove --dev kriswallsmith/buzz nyholm/psr7
+    - uses: actions/checkout@v1
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+    - name: Install dependencies
+      run: |
+        composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
+        composer install --prefer-dist --no-progress --no-suggest
+    - name: Get the latest Meilisearch RC
+      run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/main/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
+    - name: Meilisearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
+      run: docker run -d -p 7700:7700 getmeili/meilisearch:${{ env.MEILISEARCH_VERSION }} meilisearch --master-key=masterKey --no-analytics
+    - name: Run test suite - default HTTP client (Guzzle 7)
+      run: |
+        sh scripts/tests.sh
+        composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
+    - name: Run test suite - php-http/guzzle6-adapter
+      run: |
+        composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+        sh scripts/tests.sh
+        composer remove --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+    - name: Run test suite - symfony/http-client
+      run: |
+        composer require --dev symfony/http-client nyholm/psr7
+        sh scripts/tests.sh
+        composer remove --dev symfony/http-client nyholm/psr7
+    - name: Run test suite - php-http/curl-client
+      run: |
+        composer require --dev php-http/curl-client nyholm/psr7
+        sh scripts/tests.sh
+        composer remove --dev php-http/curl-client nyholm/psr7
+    - name: Run test suite - kriswallsmith/buzz
+      run: |
+        composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
+        sh scripts/tests.sh
+        composer remove --dev kriswallsmith/buzz nyholm/psr7
