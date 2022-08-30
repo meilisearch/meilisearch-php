@@ -136,17 +136,11 @@ Here are the steps to release a beta version of this package:
 
 // TODO: screen of update on packagist
 // TODO: compare with previous PR
-3. Create a new tag
-<!--
-- Go to the [GitHub interface for releasing](https://github.com/meilisearch/meilisearch-js/releases): on this page, click on `Draft a new release`.
-
-- Create a GitHub pre-release:
-  - Fill the description with the detailed changelogs
-  - Fill the title with `vX.X.X-beta.0`
-  - Fill the tag with `vX.X.X-beta.0`
-  - ⚠️ Select the `vX.X.X-beta.0` branch and NOT `main`
-  - ⚠️ Click on the "This is a pre-release" checkbox
-  - Click on "Publish release" -->
+3. Update [Packagist](https://packagist.org/) so that the new branch appears in the available tags.
+    To do so, click on `update now` underneath the list of the available versions/branches:
+    <p align="center">
+    <img src="./assets/packagist-update.png" alt="Restaurant demo" width="600"/>
+    </p>
 
 GitHub Actions will be triggered and push the beta version to [npm](https://www.npmjs.com/package/meilisearch).
 
