@@ -28,6 +28,7 @@
 
 ## Table of Contents <!-- omit in toc -->
 
+- [🎃 Hacktoberfest](#-hacktoberfest)
 - [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
 - [🚀 Getting Started](#-getting-started)
@@ -36,6 +37,14 @@
 - [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
   - [Customize your HTTP Client](#customize-your-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
+
+## 🎃 Hacktoberfest
+
+It’s Hacktoberfest 2022 @Meilisearch
+
+[Hacktoberfest](https://hacktoberfest.com/) is a celebration of the open-source community. This year, and for the third time in a row, Meilisearch is participating in this fantastic event.
+
+You’d like to contribute? Don’t hesitate to check out our [contributing guidelines](./CONTRIBUTING.md).
 
 ## 📖 Documentation
 
