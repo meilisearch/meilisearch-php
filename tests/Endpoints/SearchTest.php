@@ -187,6 +187,30 @@ final class SearchTest extends TestCase
         $this->assertSame('(ꈍᴗꈍ)Half-Blood Prince', $response['hits'][0]['_formatted']['title']);
     }
 
+    public function testSearchWithMatchingStrategyALL(): void
+    {
+        $response = $this->index->updateSearchableAttributes(['comment']);
+        $this->index->waitForTask($response['taskUid']);
+
+        $response = $this->index->search('another french book', [
+            'matchingStrategy' => 'all',
+        ]);
+
+        $this->assertCount(1, $response->getHits());
+    }
+
+    public function testSearchWithMatchingStrategyLAST(): void
+    {
+        $response = $this->index->updateSearchableAttributes(['comment']);
+        $this->index->waitForTask($response['taskUid']);
+
+        $response = $this->index->search('french book', [
+            'matchingStrategy' => 'last',
+        ]);
+
+        $this->assertCount(2, $response->getHits());
+    }
+
     public function testParametersWithHighlightTag(): void
     {
         $response = $this->index->search('and', [

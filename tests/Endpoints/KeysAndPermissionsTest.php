@@ -127,6 +127,20 @@ final class KeysAndPermissionsTest extends TestCase
         $this->client->deleteKey($key->getKey());
     }
 
+    public function testCreateKeyWithWildcard(): void
+    {
+        $key = $this->client->createKey([
+            'actions' => ['tasks.*', 'indexes.get'],
+            'indexes' => ['*'],
+            'expiresAt' => null,
+        ]);
+
+        $this->assertIsArray($key->getActions());
+        $this->assertSame($key->getActions(), ['tasks.*', 'indexes.get']);
+
+        $this->client->deleteKey($key->getKey());
+    }
+
     public function testCreateKeyWithExpInString(): void
     {
         $key = [

@@ -60,8 +60,6 @@ class SearchResult implements Countable, IteratorAggregate
      * - transformHits (callable)
      *
      * The method does NOT trigger a new search.
-     *
-     * @return SearchResult
      */
     public function applyOptions($options): self
     {
