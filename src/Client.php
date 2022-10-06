@@ -19,7 +19,7 @@ use MeiliSearch\Endpoints\TenantToken;
 use MeiliSearch\Endpoints\Version;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use Http\Client as HttpClient;
+use \Http\Client as HttpClient;
 
 class Client
 {
