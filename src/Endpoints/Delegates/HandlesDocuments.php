@@ -66,7 +66,7 @@ trait HandlesDocuments
     {
         $promises = [];
         foreach (self::batch($documents, $batchSize) as $batch) {
-            $promises[] = $this->updateDocuments($documents, $primaryKey);
+            $promises[] = $this->updateDocuments($batch, $primaryKey);
         }
 
         return $promises;
