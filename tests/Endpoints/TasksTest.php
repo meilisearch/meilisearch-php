@@ -12,11 +12,13 @@ use Tests\TestCase;
 final class TasksTest extends TestCase
 {
     private Indexes $index;
+    private string $indexName;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->createEmptyIndex('index');
+        $this->indexName = $this->safeIndexName();
+        $this->index = $this->createEmptyIndex($this->indexName);
     }
 
     public function testGetOneTaskFromWaitTask(): void
@@ -29,7 +31,7 @@ final class TasksTest extends TestCase
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentAdditionOrUpdate');
         $this->assertArrayHasKey('indexUid', $response);
-        $this->assertSame($response['indexUid'], 'index');
+        $this->assertSame($response['indexUid'], $this->indexName);
         $this->assertArrayHasKey('enqueuedAt', $response);
         $this->assertArrayHasKey('startedAt', $response);
         $this->assertArrayHasKey('finishedAt', $response);
@@ -47,7 +49,7 @@ final class TasksTest extends TestCase
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentAdditionOrUpdate');
         $this->assertArrayHasKey('indexUid', $response);
-        $this->assertSame($response['indexUid'], 'index');
+        $this->assertSame($response['indexUid'], $this->indexName);
         $this->assertArrayHasKey('enqueuedAt', $response);
         $this->assertArrayHasKey('startedAt', $response);
         $this->assertArrayHasKey('finishedAt', $response);
@@ -84,7 +86,7 @@ final class TasksTest extends TestCase
         $this->assertArrayHasKey('type', $response);
         $this->assertSame($response['type'], 'documentAdditionOrUpdate');
         $this->assertArrayHasKey('indexUid', $response);
-        $this->assertSame($response['indexUid'], 'index');
+        $this->assertSame($response['indexUid'], $this->indexName);
         $this->assertArrayHasKey('enqueuedAt', $response);
         $this->assertArrayHasKey('startedAt', $response);
         $this->assertArrayHasKey('finishedAt', $response);
@@ -96,7 +98,7 @@ final class TasksTest extends TestCase
         $response = $this->index->getTasks();
         $firstIndex = $response->getResults()[0]['uid'];
 
-        $newIndex = $this->createEmptyIndex('a_new_index');
+        $newIndex = $this->createEmptyIndex($this->safeIndexName('a_new_index'));
         $newIndex->updateDocuments(self::DOCUMENTS);
 
         $response = $this->index->getTasks();
@@ -112,7 +114,7 @@ final class TasksTest extends TestCase
         $firstIndex = $response->getResults()[0]['uid'];
         $this->assertEquals($response->getResults()[0]['status'], 'succeeded');
 
-        $newIndex = $this->createEmptyIndex('a_new_index');
+        $newIndex = $this->createEmptyIndex($this->safeIndexName('a_new_index'));
         $newIndex->updateDocuments(self::DOCUMENTS);
 
         $response = $this->index->getTasks();

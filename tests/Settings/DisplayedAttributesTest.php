@@ -10,8 +10,8 @@ final class DisplayedAttributesTest extends TestCase
 {
     public function testGetDefaultDisplayedAttributes(): void
     {
-        $indexA = $this->createEmptyIndex('indexA');
-        $indexB = $this->createEmptyIndex('indexB', ['primaryKey' => 'objectID']);
+        $indexA = $this->createEmptyIndex($this->safeIndexName('indexA'));
+        $indexB = $this->createEmptyIndex($this->safeIndexName('indexB'), ['primaryKey' => 'objectID']);
 
         $attributesA = $indexA->getDisplayedAttributes();
         $attributesB = $indexB->getDisplayedAttributes();
@@ -23,7 +23,7 @@ final class DisplayedAttributesTest extends TestCase
     public function testUpdateDisplayedAttributes(): void
     {
         $newAttributes = ['title'];
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
         $promise = $index->updateDisplayedAttributes($newAttributes);
 
@@ -37,7 +37,7 @@ final class DisplayedAttributesTest extends TestCase
 
     public function testResetDisplayedAttributes(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
         $promise = $index->updateDisplayedAttributes($newAttributes);

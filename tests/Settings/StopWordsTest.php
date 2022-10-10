@@ -14,7 +14,7 @@ final class StopWordsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->createEmptyIndex('index');
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
     public function testGetDefaultStopWords(): void

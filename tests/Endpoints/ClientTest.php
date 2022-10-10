@@ -14,7 +14,7 @@ final class ClientTest extends TestCase
 {
     public function testClientIndexMethodsAlwaysReturnArray(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         /* @phpstan-ignore-next-line */
         $this->assertIsIterable($this->client->getAllIndexes());
         /* @phpstan-ignore-next-line */
@@ -25,7 +25,7 @@ final class ClientTest extends TestCase
 
     public function testClientIndexMethodsAlwaysReturnsIndexesInstance(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         /* @phpstan-ignore-next-line */
         $this->assertInstanceOf(Indexes::class, $this->client->getIndex($index->getUid()));
         /* @phpstan-ignore-next-line */
@@ -63,41 +63,44 @@ final class ClientTest extends TestCase
 
     public function testCreateIndexWithOnlyUid(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $indexName = $this->safeIndexName();
+        $index = $this->createEmptyIndex($indexName);
 
-        $this->assertSame('index', $index->getUid());
+        $this->assertSame($indexName, $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
 
     public function testCreateIndexWithUidAndPrimaryKey(): void
     {
+        $indexName = $this->safeIndexName();
         $index = $this->createEmptyIndex(
-            'index',
+            $indexName,
             ['primaryKey' => 'ObjectId']
         );
 
-        $this->assertSame('index', $index->getUid());
+        $this->assertSame($indexName, $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
     public function testCreateIndexWithUidInOptions(): void
     {
+        $indexName = $this->safeIndexName();
         $index = $this->createEmptyIndex(
-            'index',
+            $indexName,
             [
                 'uid' => 'wrong',
                 'primaryKey' => 'ObjectId',
             ]
         );
 
-        $this->assertSame('index', $index->getUid());
+        $this->assertSame($indexName, $index->getUid());
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
     public function testGetAllIndexes(): void
     {
-        $indexA = 'indexA';
-        $indexB = 'indexB';
+        $indexA = $this->safeIndexName('indexA');
+        $indexB = $this->safeIndexName('indexB');
         $response = $this->client->createIndex($indexA);
         $this->client->waitForTask($response['taskUid']);
         $response = $this->client->createIndex($indexB);
@@ -110,8 +113,8 @@ final class ClientTest extends TestCase
 
     public function testGetAllRawIndexes(): void
     {
-        $indexA = 'indexA';
-        $indexB = 'indexB';
+        $indexA = $this->safeIndexName('indexA');
+        $indexB = $this->safeIndexName('indexB');
         $response = $this->client->createIndex($indexA);
         $this->client->waitForTask($response['taskUid']);
         $response = $this->client->createIndex($indexB);
@@ -134,19 +137,20 @@ final class ClientTest extends TestCase
 
     public function testUpdateIndex(): void
     {
-        $this->createEmptyIndex('indexA');
+        $indexName = $this->safeIndexName('indexA');
+        $this->createEmptyIndex($indexName);
 
-        $response = $this->client->updateIndex('indexA', ['primaryKey' => 'id']);
+        $response = $this->client->updateIndex($indexName, ['primaryKey' => 'id']);
         $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
         $this->assertSame($index->getPrimaryKey(), 'id');
-        $this->assertSame($index->getUid(), 'indexA');
+        $this->assertSame($index->getUid(), $indexName);
     }
 
     public function testDeleteIndex(): void
     {
-        $this->createEmptyIndex('index');
+        $this->createEmptyIndex($this->safeIndexName());
 
         $response = $this->client->getAllIndexes();
         $this->assertCount(1, $response);
@@ -165,8 +169,8 @@ final class ClientTest extends TestCase
 
     public function testDeleteAllIndexes(): void
     {
-        $this->createEmptyIndex('index-1');
-        $this->createEmptyIndex('index-2');
+        $this->createEmptyIndex($this->safeIndexName('index-1'));
+        $this->createEmptyIndex($this->safeIndexName('index-2'));
 
         $response = $this->client->getAllIndexes();
 
@@ -200,16 +204,17 @@ final class ClientTest extends TestCase
 
     public function testGetIndex(): void
     {
-        $this->createEmptyIndex('index');
+        $indexName = $this->safeIndexName();
+        $this->createEmptyIndex($indexName);
 
-        $index = $this->client->getIndex('index');
-        $this->assertSame('index', $index->getUid());
+        $index = $this->client->getIndex($indexName);
+        $this->assertSame($indexName, $index->getUid());
         $this->assertNull($index->getPrimaryKey());
     }
 
     public function testIndex(): void
     {
-        $this->createEmptyIndex('index');
+        $this->createEmptyIndex($this->safeIndexName());
 
         $index = $this->client->index('index');
         $this->assertSame('index', $index->getUid());
