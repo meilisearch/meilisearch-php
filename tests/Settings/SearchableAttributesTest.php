@@ -10,8 +10,8 @@ final class SearchableAttributesTest extends TestCase
 {
     public function testGetDefaultSearchableAttributes(): void
     {
-        $indexA = $this->createEmptyIndex($this->safeIndexName('indexA'));
-        $indexB = $this->createEmptyIndex($this->safeIndexName('indexB'), ['primaryKey' => 'objectID']);
+        $indexA = $this->createEmptyIndex($this->safeIndexName('books-1'));
+        $indexB = $this->createEmptyIndex($this->safeIndexName('books-2'), ['primaryKey' => 'objectID']);
 
         $searchableAttributesA = $indexA->getSearchableAttributes();
         $searchableAttributesB = $indexB->getSearchableAttributes();
@@ -22,7 +22,7 @@ final class SearchableAttributesTest extends TestCase
 
     public function testUpdateSearchableAttributes(): void
     {
-        $indexA = $this->createEmptyIndex($this->safeIndexName('indexA'));
+        $indexA = $this->createEmptyIndex($this->safeIndexName('books-1'));
         $searchableAttributes = [
             'title',
             'description',
@@ -40,7 +40,7 @@ final class SearchableAttributesTest extends TestCase
 
     public function testResetSearchableAttributes(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('indexA'));
+        $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
         $promise = $index->resetSearchableAttributes();
 
         $this->assertIsValidPromise($promise);

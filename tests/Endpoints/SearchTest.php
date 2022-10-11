@@ -130,7 +130,7 @@ final class SearchTest extends TestCase
 
     public function testExceptionIfNoIndexWhenSearching(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('another-index'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movie-1'));
         $res = $index->delete();
         $index->waitForTask($res['taskUid']);
 

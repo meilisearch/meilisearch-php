@@ -49,24 +49,24 @@ final class IndexTest extends TestCase
 
     public function testGetPrimaryKey(): void
     {
-        $indexB = $this->createEmptyIndex(
-            $this->safeIndexName('indexB'),
+        $index = $this->createEmptyIndex(
+            $this->safeIndexName('books-2'),
             ['primaryKey' => 'objectId']
         );
 
         $this->assertNull($this->index->getPrimaryKey());
-        $this->assertSame('objectId', $indexB->getPrimaryKey());
+        $this->assertSame('objectId', $index->getPrimaryKey());
     }
 
     public function testGetUid(): void
     {
-        $indexName = $this->safeIndexName('indexB');
-        $indexB = $this->createEmptyIndex(
+        $indexName = $this->safeIndexName('books-2');
+        $index = $this->createEmptyIndex(
             $indexName,
             ['primaryKey' => 'objectId']
         );
         $this->assertSame($this->indexName, $this->index->getUid());
-        $this->assertSame($indexName, $indexB->getUid());
+        $this->assertSame($indexName, $index->getUid());
     }
 
     public function testGetCreatedAt(): void
@@ -105,7 +105,7 @@ final class IndexTest extends TestCase
 
     public function testFetchRawInfo(): void
     {
-        $indexName = $this->safeIndexName('indexB');
+        $indexName = $this->safeIndexName('books-2');
         $index = $this->createEmptyIndex(
             $indexName,
             ['primaryKey' => 'objectId']
@@ -147,31 +147,31 @@ final class IndexTest extends TestCase
 
     public function testFetchInfo(): void
     {
-        $uid = $this->safeIndexName('indexA');
+        $indexName = $this->safeIndexName('books-1');
         $this->createEmptyIndex(
-            $uid,
+            $indexName,
             ['primaryKey' => 'objectID']
         );
 
-        $index = $this->client->index($uid);
+        $index = $this->client->index($indexName);
         $this->assertNull($index->getPrimaryKey());
 
         $index = $index->fetchInfo();
         $this->assertSame('objectID', $index->getPrimaryKey());
-        $this->assertSame($uid, $index->getUid());
+        $this->assertSame($indexName, $index->getUid());
         $this->assertInstanceOf(DateTimeInterface::class, $index->getCreatedAt());
         $this->assertInstanceOf(DateTimeInterface::class, $index->getUpdatedAt());
     }
 
     public function testGetAndFetchPrimaryKey(): void
     {
-        $uid = $this->safeIndexName('indexA');
+        $indexName = $this->safeIndexName('books-1');
         $this->createEmptyIndex(
-            $uid,
+            $indexName,
             ['primaryKey' => 'objectID']
         );
 
-        $index = $this->client->index($uid);
+        $index = $this->client->index($indexName);
         $this->assertNull($index->getPrimaryKey());
         $this->assertSame('objectID', $index->fetchPrimaryKey());
         $this->assertSame('objectID', $index->getPrimaryKey());
@@ -251,19 +251,19 @@ final class IndexTest extends TestCase
 
     public function testDeleteIndexes(): void
     {
-        $indexAName = $this->safeIndexName('indexA');
-        $this->index = $this->createEmptyIndex($indexAName);
-        $indexBName = $this->safeIndexName('indexB');
-        $indexB = $this->createEmptyIndex($indexBName);
+        $indexName1 = $this->safeIndexName('books-1');
+        $this->index = $this->createEmptyIndex($indexName1);
+        $indexName2 = $this->safeIndexName('books-2');
+        $index = $this->createEmptyIndex($indexName2);
 
         $res = $this->index->delete();
-        $this->assertSame($res['indexUid'], $indexAName);
+        $this->assertSame($res['indexUid'], $indexName1);
         $this->assertArrayHasKey('type', $res);
         $this->assertSame($res['type'], 'indexDeletion');
         $this->assertArrayHasKey('enqueuedAt', $res);
 
-        $res = $indexB->delete();
-        $this->assertSame($res['indexUid'], $indexBName);
+        $res = $index->delete();
+        $this->assertSame($res['indexUid'], $indexName2);
         $this->assertArrayHasKey('type', $res);
         $this->assertSame($res['type'], 'indexDeletion');
         $this->assertArrayHasKey('enqueuedAt', $res);

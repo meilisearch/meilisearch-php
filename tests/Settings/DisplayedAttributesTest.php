@@ -10,8 +10,8 @@ final class DisplayedAttributesTest extends TestCase
 {
     public function testGetDefaultDisplayedAttributes(): void
     {
-        $indexA = $this->createEmptyIndex($this->safeIndexName('indexA'));
-        $indexB = $this->createEmptyIndex($this->safeIndexName('indexB'), ['primaryKey' => 'objectID']);
+        $indexA = $this->createEmptyIndex($this->safeIndexName('books-1'));
+        $indexB = $this->createEmptyIndex($this->safeIndexName('books-2'), ['primaryKey' => 'objectID']);
 
         $attributesA = $indexA->getDisplayedAttributes();
         $attributesB = $indexB->getDisplayedAttributes();

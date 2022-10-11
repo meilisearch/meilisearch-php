@@ -98,7 +98,7 @@ final class TasksTest extends TestCase
         $response = $this->index->getTasks();
         $firstIndex = $response->getResults()[0]['uid'];
 
-        $newIndex = $this->createEmptyIndex($this->safeIndexName('a_new_index'));
+        $newIndex = $this->createEmptyIndex($this->safeIndexName('movie-1'));
         $newIndex->updateDocuments(self::DOCUMENTS);
 
         $response = $this->index->getTasks();
@@ -114,7 +114,7 @@ final class TasksTest extends TestCase
         $firstIndex = $response->getResults()[0]['uid'];
         $this->assertEquals($response->getResults()[0]['status'], 'succeeded');
 
-        $newIndex = $this->createEmptyIndex($this->safeIndexName('a_new_index'));
+        $newIndex = $this->createEmptyIndex($this->safeIndexName('movie-1'));
         $newIndex->updateDocuments(self::DOCUMENTS);
 
         $response = $this->index->getTasks();

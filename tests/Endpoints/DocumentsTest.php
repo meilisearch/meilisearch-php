@@ -14,7 +14,7 @@ final class DocumentsTest extends TestCase
 {
     public function testAddDocuments(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $promise = $index->addDocuments(self::DOCUMENTS);
 
         $this->assertIsValidPromise($promise);
@@ -26,7 +26,7 @@ final class DocumentsTest extends TestCase
 
     public function testAddDocumentsInBatches(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $promises = $index->addDocumentsInBatches(self::DOCUMENTS, 2);
 
         $this->assertCount(4, $promises);
@@ -48,7 +48,7 @@ final class DocumentsTest extends TestCase
             ['id' => 62, 'title' => 'Очень красивый!', 'comment' => ''], // Russian
         ];
 
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $promise = $index->addDocuments($documents);
 
         $this->assertIsValidPromise($promise);
@@ -133,13 +133,13 @@ final class DocumentsTest extends TestCase
 
         $documents = ["\xB1\x31"];
 
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $index->addDocuments($documents);
     }
 
     public function testGetSingleDocumentWithIntegerDocumentId(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
         $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
@@ -152,7 +152,7 @@ final class DocumentsTest extends TestCase
 
     public function testGetSingleDocumentWithFields(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
         $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
@@ -166,7 +166,7 @@ final class DocumentsTest extends TestCase
     public function testGetSingleDocumentWithStringDocumentId(): void
     {
         $stringDocumentId = 'myUniqueId';
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $addDocumentResponse = $index->addDocuments([['id' => $stringDocumentId]]);
         $index->waitForTask($addDocumentResponse['taskUid']);
         $response = $index->getDocument($stringDocumentId);
@@ -177,7 +177,7 @@ final class DocumentsTest extends TestCase
 
     public function testReplaceDocuments(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
         $replacement = [
@@ -200,7 +200,7 @@ final class DocumentsTest extends TestCase
 
     public function testUpdateDocuments(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $promise = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($promise['taskUid']);
         $replacement = [
@@ -225,7 +225,7 @@ final class DocumentsTest extends TestCase
 
     public function testUpdateDocumentsInBatches(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $documentPromise = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($documentPromise['taskUid']);
 
@@ -258,7 +258,7 @@ final class DocumentsTest extends TestCase
 
     public function testAddWithUpdateDocuments(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
         $document = [
@@ -283,7 +283,7 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteNonExistingDocument(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
 
@@ -301,7 +301,7 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteSingleExistingDocumentWithDocumentIdAsInteger(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
 
@@ -320,7 +320,7 @@ final class DocumentsTest extends TestCase
     public function testDeleteSingleExistingDocumentWithDocumentIdAsString(): void
     {
         $stringDocumentId = 'myUniqueId';
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $addDocumentResponse = $index->addDocuments([['id' => $stringDocumentId]]);
         $index->waitForTask($addDocumentResponse['taskUid']);
 
@@ -334,7 +334,7 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteMultipleDocumentsWithDocumentIdAsInteger(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
         $documentIds = [1, 2];
@@ -357,7 +357,7 @@ final class DocumentsTest extends TestCase
             ['id' => 'myUniqueId2'],
             ['id' => 'myUniqueId3'],
         ];
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $addDocumentResponse = $index->addDocuments($documents);
         $index->waitForTask($addDocumentResponse['taskUid']);
 
@@ -371,7 +371,7 @@ final class DocumentsTest extends TestCase
 
     public function testDeleteAllDocuments(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
         $promise = $index->deleteAllDocuments();
@@ -386,7 +386,7 @@ final class DocumentsTest extends TestCase
 
     public function testExceptionIfNoDocumentIdWhenGetting(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('new-index'));
+        $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
 
         $this->expectException(ApiException::class);
 
@@ -402,7 +402,7 @@ final class DocumentsTest extends TestCase
                 'title' => 'Le Rouge et le Noir',
             ],
         ];
-        $index = $this->createEmptyIndex($this->safeIndexName('an-index'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies-1'));
         $response = $index->addDocuments($documents, 'unique');
 
         $this->assertArrayHasKey('taskUid', $response);
@@ -434,7 +434,7 @@ final class DocumentsTest extends TestCase
 
     public function testGetDocumentsWithPagination(): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('documents'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $promise = $index->addDocuments(self::DOCUMENTS);
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
@@ -449,7 +449,7 @@ final class DocumentsTest extends TestCase
      */
     public function testFetchingDocumentWithInvalidId($documentId): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('an-index'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies-1'));
 
         $this->expectException(InvalidArgumentException::class);
         $index->getDocument($documentId);
@@ -460,7 +460,7 @@ final class DocumentsTest extends TestCase
      */
     public function testDeletingDocumentWithInvalidId($documentId): void
     {
-        $index = $this->createEmptyIndex($this->safeIndexName('an-index'));
+        $index = $this->createEmptyIndex($this->safeIndexName('movies-1'));
 
         $this->expectException(InvalidArgumentException::class);
         $index->deleteDocument($documentId);

@@ -34,11 +34,11 @@ final class SettingsTest extends TestCase
     {
         $primaryKey = 'ObjectID';
         $settingA = $this
-            ->createEmptyIndex('indexA')
+            ->createEmptyIndex($this->safeIndexName('books-1'))
             ->getSettings();
         $settingB = $this
             ->createEmptyIndex(
-                'indexB',
+                $this->safeIndexName('books-1'),
                 ['primaryKey' => $primaryKey]
             )->getSettings();
 

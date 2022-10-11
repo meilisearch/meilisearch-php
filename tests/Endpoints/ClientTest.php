@@ -99,11 +99,11 @@ final class ClientTest extends TestCase
 
     public function testGetAllIndexes(): void
     {
-        $indexA = $this->safeIndexName('indexA');
-        $indexB = $this->safeIndexName('indexB');
-        $response = $this->client->createIndex($indexA);
+        $booksIndex1 = $this->safeIndexName('books-1');
+        $booksIndex2 = $this->safeIndexName('books-2');
+        $response = $this->client->createIndex($booksIndex1);
         $this->client->waitForTask($response['taskUid']);
-        $response = $this->client->createIndex($indexB);
+        $response = $this->client->createIndex($booksIndex2);
         $this->client->waitForTask($response['taskUid']);
 
         $indexes = $this->client->getAllIndexes();
@@ -113,11 +113,11 @@ final class ClientTest extends TestCase
 
     public function testGetAllRawIndexes(): void
     {
-        $indexA = $this->safeIndexName('indexA');
-        $indexB = $this->safeIndexName('indexB');
-        $response = $this->client->createIndex($indexA);
+        $booksIndex1 = $this->safeIndexName('books-1');
+        $booksIndex2 = $this->safeIndexName('books-2');
+        $response = $this->client->createIndex($booksIndex1);
         $this->client->waitForTask($response['taskUid']);
-        $response = $this->client->createIndex($indexB);
+        $response = $this->client->createIndex($booksIndex2);
         $this->client->waitForTask($response['taskUid']);
 
         $res = $this->client->getAllRawIndexes()['results'];
@@ -127,17 +127,16 @@ final class ClientTest extends TestCase
 
     public function testGetRawIndex(): void
     {
-        $indexA = 'indexA';
-        $this->createEmptyIndex($indexA);
+        $this->createEmptyIndex('books-1');
 
-        $res = $this->client->getRawIndex('indexA');
+        $res = $this->client->getRawIndex('books-1');
 
         $this->assertArrayHasKey('uid', $res);
     }
 
     public function testUpdateIndex(): void
     {
-        $indexName = $this->safeIndexName('indexA');
+        $indexName = $this->safeIndexName('books-1');
         $this->createEmptyIndex($indexName);
 
         $response = $this->client->updateIndex($indexName, ['primaryKey' => 'id']);
@@ -169,8 +168,8 @@ final class ClientTest extends TestCase
 
     public function testDeleteAllIndexes(): void
     {
-        $this->createEmptyIndex($this->safeIndexName('index-1'));
-        $this->createEmptyIndex($this->safeIndexName('index-2'));
+        $this->createEmptyIndex($this->safeIndexName('books-1'));
+        $this->createEmptyIndex($this->safeIndexName('books-2'));
 
         $response = $this->client->getAllIndexes();
 
