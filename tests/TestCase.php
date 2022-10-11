@@ -75,12 +75,7 @@ abstract class TestCase extends BaseTestCase
 
     public function safeIndexName(string $indexName = 'index'): string
     {
-        $uidData = random_bytes(16);
-        $uidData[6] = \chr(\ord($uidData[6]) & 0x0F | 0x40);
-        $uidData[8] = \chr(\ord($uidData[8]) & 0x3F | 0x80);
-        $uid = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($uidData), 4));
-
-        return $indexName.'_'.$uid;
+        return $indexName.'_'.bin2hex(random_bytes(16));
     }
 
     protected function createHttpClientMock(int $status = 200, string $content = '{', string $contentType = 'application/json')
