@@ -19,6 +19,7 @@ use MeiliSearch\Endpoints\TenantToken;
 use MeiliSearch\Endpoints\Version;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class Client
 {
@@ -43,9 +44,10 @@ class Client
         string $apiKey = null,
         ClientInterface $httpClient = null,
         RequestFactoryInterface $requestFactory = null,
-        array $clientAgents = []
+        array $clientAgents = [],
+        StreamFactoryInterface $streamFactory = null
     ) {
-        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $clientAgents);
+        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);

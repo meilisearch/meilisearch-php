@@ -181,6 +181,8 @@ class Indexes extends Endpoint
 
     /**
      * @return SearchResult|array
+     *
+     * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int} ? array : SearchResult)
      */
     public function search(?string $query, array $searchParams = [], array $options = [])
     {
