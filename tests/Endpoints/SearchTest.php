@@ -616,7 +616,7 @@ final class SearchTest extends TestCase
         $this->assertSame('Le Petit Prince', $response->getHit(0)['title']);
         $this->assertSame(2, $response->getEstimatedTotalHits());
         $this->assertSame(1, $response->getHitsCount());
-        $this->assertSame(1, $response->count());
+        $this->assertCount(1, $response);
     }
 
     public function testBasicSearchWithTransformHitsOptionToMap(): void
