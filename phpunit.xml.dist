@@ -12,7 +12,7 @@
         </testsuite>
     </testsuites>
     <php>
-        <env name="MEILISEARCH_HOST" value="http://localhost:7700"/>
+        <env name="MEILISEARCH_URL" value="http://localhost:7700"/>
         <env name="MEILISEARCH_API_KEY" value="masterKey"/>
     </php>
 </phpunit>
