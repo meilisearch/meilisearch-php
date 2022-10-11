@@ -16,6 +16,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
 class ClientTest extends TestCase
@@ -35,6 +36,18 @@ class ClientTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '{}');
 
         $client = new Client('https://localhost', null, $httpClient);
+        $result = $client->post('/');
+
+        $this->assertSame([], $result);
+    }
+
+    public function testPostExecutesRequestWithCustomStreamFactory(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+        $streamFactory = $this->createMock(StreamFactoryInterface::class);
+        $streamFactory->expects(self::atLeastOnce())->method('createStream');
+
+        $client = new Client('https://localhost', null, $httpClient, null, [], $streamFactory);
         $result = $client->post('/');
 
         $this->assertSame([], $result);

@@ -40,13 +40,14 @@ class Client implements Http
         string $apiKey = null,
         ClientInterface $httpClient = null,
         RequestFactoryInterface $reqFactory = null,
-        array $clientAgents = []
+        array $clientAgents = [],
+        StreamFactoryInterface $streamFactory = null
     ) {
         $this->baseUrl = $url;
         $this->apiKey = $apiKey;
         $this->http = $httpClient ?? Psr18ClientDiscovery::find();
         $this->requestFactory = $reqFactory ?? Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+        $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
         $this->headers = array_filter([
             'User-Agent' => implode(';', array_merge($clientAgents, [MeiliSearch::qualifiedVersion()])),
         ]);
