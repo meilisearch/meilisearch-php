@@ -73,6 +73,11 @@ abstract class TestCase extends BaseTestCase
         return $this->client->getIndex($response['indexUid']);
     }
 
+    public function safeIndexName(string $indexName = 'index'): string
+    {
+        return $indexName.'_'.bin2hex(random_bytes(16));
+    }
+
     protected function createHttpClientMock(int $status = 200, string $content = '{', string $contentType = 'application/json')
     {
         $stream = $this->createMock(StreamInterface::class);

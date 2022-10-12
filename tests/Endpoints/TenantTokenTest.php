@@ -16,11 +16,13 @@ final class TenantTokenTest extends TestCase
     private $key;
     private $privateKey;
     private Client $privateClient;
+    private string $indexName;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->createEmptyIndex('tenantToken');
+        $this->indexName = $this->safeIndexName('tenantToken');
+        $this->createEmptyIndex($this->indexName);
 
         $response = $this->client->getKeys();
         $this->key = $this->client->createKey([
@@ -85,16 +87,17 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithSearchRulesOnOneIndex(): void
     {
-        $this->createEmptyIndex('tenantTokenDuplicate');
+        $indexName = $this->safeIndexName('tenantTokenDuplicate');
+        $this->createEmptyIndex($indexName);
 
-        $token = $this->privateClient->generateTenantToken($this->key->getUid(), ['tenantToken']);
+        $token = $this->privateClient->generateTenantToken($this->key->getUid(), [$this->indexName]);
         $tokenClient = new Client($this->host, $token);
-        $response = $tokenClient->index('tenantToken')->search('');
+        $response = $tokenClient->index($this->indexName)->search('');
 
         $this->assertArrayHasKey('hits', $response->toArray());
         $this->assertArrayHasKey('query', $response->toArray());
         $this->expectException(ApiException::class);
-        $tokenClient->index('tenantTokenDuplicate')->search('');
+        $tokenClient->index($indexName)->search('');
     }
 
     public function testGenerateTenantTokenWithApiKey(): void
@@ -105,7 +108,7 @@ final class TenantTokenTest extends TestCase
 
         $token = $this->client->generateTenantToken($this->key->getUid(), ['*'], $options);
         $tokenClient = new Client($this->host, $token);
-        $response = $tokenClient->index('tenantToken')->search('');
+        $response = $tokenClient->index($this->indexName)->search('');
 
         $this->assertArrayHasKey('hits', $response->toArray());
     }
@@ -121,7 +124,7 @@ final class TenantTokenTest extends TestCase
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), ['*'], $options);
         $tokenClient = new Client($this->host, $token);
-        $response = $tokenClient->index('tenantToken')->search('');
+        $response = $tokenClient->index($this->indexName)->search('');
 
         $this->assertArrayHasKey('hits', $response->toArray());
     }

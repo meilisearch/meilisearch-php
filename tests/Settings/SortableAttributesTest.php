@@ -10,7 +10,7 @@ final class SortableAttributesTest extends TestCase
 {
     public function testGetDefaultSortableAttributes(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
         $attributes = $index->getSortableAttributes();
 
@@ -20,7 +20,7 @@ final class SortableAttributesTest extends TestCase
     public function testUpdateSortableAttributes(): void
     {
         $newAttributes = ['title'];
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
         $promise = $index->updateSortableAttributes($newAttributes);
 
@@ -34,7 +34,7 @@ final class SortableAttributesTest extends TestCase
 
     public function testResetSortableAttributes(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
         $promise = $index->updateSortableAttributes($newAttributes);

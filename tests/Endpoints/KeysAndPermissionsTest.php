@@ -57,14 +57,15 @@ final class KeysAndPermissionsTest extends TestCase
 
     public function testExceptionIfBadKeyProvidedToGetSettings(): void
     {
-        $this->createEmptyIndex('index');
-        $response = $this->client->index('index')->getSettings();
+        $index = $this->safeIndexName();
+        $this->createEmptyIndex($index);
+        $response = $this->client->index($index)->getSettings();
         $this->assertEquals(['*'], $response['searchableAttributes']);
 
         $newClient = new Client($this->host, 'bad-key');
 
         $this->expectException(ApiException::class);
-        $newClient->index('index')->getSettings();
+        $newClient->index($index)->getSettings();
     }
 
     public function testExceptionIfBadKeyProvidedToGetKeys(): void

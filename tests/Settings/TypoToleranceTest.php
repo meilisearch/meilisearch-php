@@ -24,7 +24,7 @@ final class TypoToleranceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->createEmptyIndex('index');
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
     public function testGetDefaultTypoTolerance(): void
