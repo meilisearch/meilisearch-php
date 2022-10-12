@@ -10,7 +10,7 @@ final class FilterableAttributesTest extends TestCase
 {
     public function testGetDefaultFilterableAttributes(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
         $attributes = $index->getFilterableAttributes();
 
@@ -20,7 +20,7 @@ final class FilterableAttributesTest extends TestCase
     public function testUpdateFilterableAttributes(): void
     {
         $newAttributes = ['title'];
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
         $promise = $index->updateFilterableAttributes($newAttributes);
 
@@ -34,7 +34,7 @@ final class FilterableAttributesTest extends TestCase
 
     public function testResetFilterableAttributes(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
         $promise = $index->updateFilterableAttributes($newAttributes);

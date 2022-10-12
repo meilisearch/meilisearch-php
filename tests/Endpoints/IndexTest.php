@@ -13,11 +13,13 @@ use Tests\TestCase;
 final class IndexTest extends TestCase
 {
     private Indexes $index;
+    private string $indexName;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->createEmptyIndex('index');
+        $this->indexName = $this->safeIndexName();
+        $this->index = $this->createEmptyIndex($this->indexName);
     }
 
     public function testIndexGetSettings(): void
@@ -47,23 +49,24 @@ final class IndexTest extends TestCase
 
     public function testGetPrimaryKey(): void
     {
-        $indexB = $this->createEmptyIndex(
-            'indexB',
+        $index = $this->createEmptyIndex(
+            $this->safeIndexName('books-2'),
             ['primaryKey' => 'objectId']
         );
 
         $this->assertNull($this->index->getPrimaryKey());
-        $this->assertSame('objectId', $indexB->getPrimaryKey());
+        $this->assertSame('objectId', $index->getPrimaryKey());
     }
 
     public function testGetUid(): void
     {
-        $indexB = $this->createEmptyIndex(
-            'indexB',
+        $indexName = $this->safeIndexName('books-2');
+        $index = $this->createEmptyIndex(
+            $indexName,
             ['primaryKey' => 'objectId']
         );
-        $this->assertSame('index', $this->index->getUid());
-        $this->assertSame('indexB', $indexB->getUid());
+        $this->assertSame($this->indexName, $this->index->getUid());
+        $this->assertSame($indexName, $index->getUid());
     }
 
     public function testGetCreatedAt(): void
@@ -102,8 +105,9 @@ final class IndexTest extends TestCase
 
     public function testFetchRawInfo(): void
     {
+        $indexName = $this->safeIndexName('books-2');
         $index = $this->createEmptyIndex(
-            'indexB',
+            $indexName,
             ['primaryKey' => 'objectId']
         );
 
@@ -114,7 +118,7 @@ final class IndexTest extends TestCase
         $this->assertArrayHasKey('createdAt', $response);
         $this->assertArrayHasKey('updatedAt', $response);
         $this->assertSame($response['primaryKey'], 'objectId');
-        $this->assertSame($response['uid'], 'indexB');
+        $this->assertSame($response['uid'], $indexName);
     }
 
     public function testPrimaryKeyUpdate(): void
@@ -126,9 +130,9 @@ final class IndexTest extends TestCase
         $index = $this->client->getIndex($response['indexUid']);
 
         $this->assertSame($index->getPrimaryKey(), $primaryKey);
-        $this->assertSame($index->getUid(), 'index');
+        $this->assertSame($index->getUid(), $this->indexName);
         $this->assertSame($index->getPrimaryKey(), $primaryKey);
-        $this->assertSame($this->index->getUid(), 'index');
+        $this->assertSame($this->index->getUid(), $this->indexName);
     }
 
     public function testIndexStats(): void
@@ -143,31 +147,31 @@ final class IndexTest extends TestCase
 
     public function testFetchInfo(): void
     {
-        $uid = 'indexA';
+        $indexName = $this->safeIndexName('books-1');
         $this->createEmptyIndex(
-            $uid,
+            $indexName,
             ['primaryKey' => 'objectID']
         );
 
-        $index = $this->client->index($uid);
+        $index = $this->client->index($indexName);
         $this->assertNull($index->getPrimaryKey());
 
         $index = $index->fetchInfo();
         $this->assertSame('objectID', $index->getPrimaryKey());
-        $this->assertSame($uid, $index->getUid());
+        $this->assertSame($indexName, $index->getUid());
         $this->assertInstanceOf(DateTimeInterface::class, $index->getCreatedAt());
         $this->assertInstanceOf(DateTimeInterface::class, $index->getUpdatedAt());
     }
 
     public function testGetAndFetchPrimaryKey(): void
     {
-        $uid = 'indexA';
+        $indexName = $this->safeIndexName('books-1');
         $this->createEmptyIndex(
-            $uid,
+            $indexName,
             ['primaryKey' => 'objectID']
         );
 
-        $index = $this->client->index($uid);
+        $index = $this->client->index($indexName);
         $this->assertNull($index->getPrimaryKey());
         $this->assertSame('objectID', $index->fetchPrimaryKey());
         $this->assertSame('objectID', $index->getPrimaryKey());
@@ -247,17 +251,19 @@ final class IndexTest extends TestCase
 
     public function testDeleteIndexes(): void
     {
-        $this->index = $this->createEmptyIndex('indexA');
-        $indexB = $this->createEmptyIndex('indexB');
+        $indexName1 = $this->safeIndexName('books-1');
+        $this->index = $this->createEmptyIndex($indexName1);
+        $indexName2 = $this->safeIndexName('books-2');
+        $index = $this->createEmptyIndex($indexName2);
 
         $res = $this->index->delete();
-        $this->assertSame($res['indexUid'], 'indexA');
+        $this->assertSame($res['indexUid'], $indexName1);
         $this->assertArrayHasKey('type', $res);
         $this->assertSame($res['type'], 'indexDeletion');
         $this->assertArrayHasKey('enqueuedAt', $res);
 
-        $res = $indexB->delete();
-        $this->assertSame($res['indexUid'], 'indexB');
+        $res = $index->delete();
+        $this->assertSame($res['indexUid'], $indexName2);
         $this->assertArrayHasKey('type', $res);
         $this->assertSame($res['type'], 'indexDeletion');
         $this->assertArrayHasKey('enqueuedAt', $res);

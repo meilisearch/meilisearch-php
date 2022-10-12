@@ -15,7 +15,7 @@ final class SearchTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->index = $this->createEmptyIndex('index');
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
         $promise = $this->index->updateDocuments(self::DOCUMENTS);
         $this->index->waitForTask($promise['taskUid']);
     }
@@ -105,7 +105,7 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided(): void
     {
-        $emptyIndex = $this->createEmptyIndex('empty');
+        $emptyIndex = $this->createEmptyIndex($this->safeIndexName('empty'));
 
         $res = $emptyIndex->search('prince');
 
@@ -130,7 +130,7 @@ final class SearchTest extends TestCase
 
     public function testExceptionIfNoIndexWhenSearching(): void
     {
-        $index = $this->createEmptyIndex('another-index');
+        $index = $this->createEmptyIndex($this->safeIndexName('movie-1'));
         $res = $index->delete();
         $index->waitForTask($res['taskUid']);
 

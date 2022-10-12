@@ -34,11 +34,11 @@ final class SettingsTest extends TestCase
     {
         $primaryKey = 'ObjectID';
         $settingA = $this
-            ->createEmptyIndex('indexA')
+            ->createEmptyIndex($this->safeIndexName('books-1'))
             ->getSettings();
         $settingB = $this
             ->createEmptyIndex(
-                'indexB',
+                $this->safeIndexName('books-1'),
                 ['primaryKey' => $primaryKey]
             )->getSettings();
 
@@ -77,7 +77,7 @@ final class SettingsTest extends TestCase
 
     public function testUpdateSettings(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
@@ -116,7 +116,7 @@ final class SettingsTest extends TestCase
             'disableOnAttributes' => [],
         ];
 
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
@@ -153,7 +153,7 @@ final class SettingsTest extends TestCase
 
     public function testResetSettings(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
         $promise = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
@@ -189,7 +189,7 @@ final class SettingsTest extends TestCase
     // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.
     public function testGetThenUpdateSettings(): void
     {
-        $index = $this->createEmptyIndex('index');
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
         $resetPromise = $index->resetSettings();
         $this->assertIsValidPromise($resetPromise);
