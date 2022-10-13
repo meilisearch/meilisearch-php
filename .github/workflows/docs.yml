@@ -1,0 +1,48 @@
+name: documentation
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v1
+      - name: Cache phpDocumentor build files
+        id: phpdocumentor-cache
+        uses: actions/cache@v3
+        with:
+          path: .phpdoc/cache
+          key: ${{ runner.os }}-phpdocumentor-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-phpdocumentor-
+      - name: Build with phpDocumentor
+        run: docker run --rm --volume "$(pwd):/data" phpdoc/phpdoc:3 -vv --target docs --cache-folder .phpdoc/cache --template default
+      - name: Upload artifact to GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
