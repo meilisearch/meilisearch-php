@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MeiliSearch;
 
+use MeiliSearch\Contracts\Http as HttpContract;
 use MeiliSearch\Delegates\HandlesIndex;
 use MeiliSearch\Delegates\HandlesSystem;
 use MeiliSearch\Endpoints\Delegates\HandlesDumps;
@@ -17,6 +18,7 @@ use MeiliSearch\Endpoints\Stats;
 use MeiliSearch\Endpoints\Tasks;
 use MeiliSearch\Endpoints\TenantToken;
 use MeiliSearch\Endpoints\Version;
+use MeiliSearch\Http\Client as MeilisearchClientAdapter;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -29,7 +31,7 @@ class Client
     use HandlesKeys;
     use HandlesSystem;
 
-    private $http;
+    private HttpContract $http;
     private Indexes $index;
     private Health $health;
     private Version $version;
@@ -47,7 +49,7 @@ class Client
         array $clientAgents = [],
         StreamFactoryInterface $streamFactory = null
     ) {
-        $this->http = new Http\Client($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory);
+        $this->http = new MeilisearchClientAdapter($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);
