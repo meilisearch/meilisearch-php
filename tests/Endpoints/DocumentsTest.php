@@ -256,6 +256,53 @@ final class DocumentsTest extends TestCase
         $this->assertCount(\count(self::DOCUMENTS), $response);
     }
 
+    public function testAddDocumentsCsvInBatches(): void
+    {
+        $index = $this->client->index('documentCsv');
+
+        $fileCsv = fopen('./tests/datasets/songs.csv', 'r');
+        $documentCsv = fread($fileCsv, filesize('./tests/datasets/songs.csv'));
+        fclose($fileCsv);
+
+        // Total number of lines excluding header
+        $total = \count(preg_split("/\r\n|\n|\r/", trim($documentCsv))) - 1;
+
+        $promises = $index->addDocumentsCsvInBatches($documentCsv, 250);
+
+        $this->assertCount(2, $promises);
+
+        foreach ($promises as $promise) {
+            $this->assertIsValidPromise($promise);
+            $index->waitForTask($promise['taskUid']);
+        }
+
+        $response = $index->getDocuments();
+        $this->assertSame($total, $response->getTotal());
+    }
+
+    public function testAddDocumentsNdjsonInBatches(): void
+    {
+        $index = $this->client->index('documentNdJson');
+
+        $fileNdJson = fopen('./tests/datasets/songs.ndjson', 'r');
+        $documentNdJson = fread($fileNdJson, filesize('./tests/datasets/songs.ndjson'));
+        fclose($fileNdJson);
+
+        $total = \count(preg_split("/\r\n|\n|\r/", trim($documentNdJson)));
+
+        $promises = $index->addDocumentsNdjsonInBatches($documentNdJson, 150);
+
+        $this->assertCount(2, $promises);
+
+        foreach ($promises as $promise) {
+            $this->assertIsValidPromise($promise);
+            $index->waitForTask($promise['taskUid']);
+        }
+
+        $response = $index->getDocuments();
+        $this->assertSame($total, $response->getTotal());
+    }
+
     public function testAddWithUpdateDocuments(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));

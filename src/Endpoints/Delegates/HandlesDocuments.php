@@ -52,9 +52,29 @@ trait HandlesDocuments
         return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
     }
 
+    public function addDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    {
+        $promises = [];
+        foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
+            $promises[] = $this->addDocumentsNdjson($batch, $primaryKey);
+        }
+
+        return $promises;
+    }
+
     public function addDocumentsCsv(string $documents, ?string $primaryKey = null)
     {
         return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+    }
+
+    public function addDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    {
+        $promises = [];
+        foreach (self::batchCsvString($documents, $batchSize) as $batch) {
+            $promises[] = $this->addDocumentsCsv($batch, $primaryKey);
+        }
+
+        return $promises;
     }
 
     public function updateDocuments(array $documents, ?string $primaryKey = null)
@@ -97,6 +117,31 @@ trait HandlesDocuments
 
         if (\is_string($documentId) && '' === trim($documentId)) {
             throw InvalidArgumentException::emptyArgument('documentId');
+        }
+    }
+
+    private static function batchCsvString(string $documents, int $batchSize): Generator
+    {
+        $documents = preg_split("/\r\n|\n|\r/", trim($documents));
+        $csvHeader = $documents[0];
+        array_shift($documents);
+
+        $batches = array_chunk($documents, $batchSize);
+        foreach ($batches as $batch) {
+            array_unshift($batch, $csvHeader);
+            $batch = implode("\n", $batch);
+            yield $batch;
+        }
+    }
+
+    private static function batchNdjsonString(string $documents, int $batchSize): Generator
+    {
+        $documents = preg_split("/\r\n|\n|\r/", trim($documents));
+
+        $batches = array_chunk($documents, $batchSize);
+        foreach ($batches as $batch) {
+            $batch = implode("\n", $batch);
+            yield $batch;
         }
     }
 
