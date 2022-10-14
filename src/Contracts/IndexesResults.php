@@ -12,9 +12,6 @@ class IndexesResults extends Data
     private int $limit;
     private int $total;
 
-    /**
-     * @param array{results: array<int, Indexes>, offset: int, limit: int, total: int|null} $params
-     */
     public function __construct(array $params)
     {
         parent::__construct($params['results']);
