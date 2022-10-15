@@ -49,7 +49,7 @@ You’d like to contribute? Don’t hesitate to check out our [contributing guid
 ## 📖 Documentation
 
 
-To learn more about Meilisearch PHP, refer to the in-depth [Mailsearch PHP Documentation](https://meilisearch.github.io/meilisearch-php/). To learn more about Meilisearch in general, refer to our [documentation](https://docs.meilisearch.com/learn/getting_started/quick_start.html) or our [API reference](https://docs.meilisearch.com/reference/api/overview.html).
+To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://meilisearch.github.io/meilisearch-php/). To learn more about Meilisearch in general, refer to our [documentation](https://docs.meilisearch.com/learn/getting_started/quick_start.html) or our [API reference](https://docs.meilisearch.com/reference/api/overview.html).
 
 ## 🔧 Installation
 
