@@ -160,11 +160,12 @@ trait HandlesDocuments
         $documents = preg_split("/\r\n|\n|\r/", trim($documents));
         $csvHeader = $documents[0];
         array_shift($documents);
-
         $batches = array_chunk($documents, $batchSize);
+
         foreach ($batches as $batch) {
             array_unshift($batch, $csvHeader);
             $batch = implode("\n", $batch);
+
             yield $batch;
         }
     }
@@ -172,10 +173,11 @@ trait HandlesDocuments
     private static function batchNdjsonString(string $documents, int $batchSize): Generator
     {
         $documents = preg_split("/\r\n|\n|\r/", trim($documents));
-
         $batches = array_chunk($documents, $batchSize);
+
         foreach ($batches as $batch) {
             $batch = implode("\n", $batch);
+
             yield $batch;
         }
     }
