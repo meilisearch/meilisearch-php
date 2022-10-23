@@ -92,6 +92,41 @@ trait HandlesDocuments
         return $promises;
     }
 
+    public function updateDocumentsJson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
+    }
+
+    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+    }
+
+    public function updateDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    {
+        $promises = [];
+        foreach (self::batchCsvString($documents, $batchSize) as $batch) {
+            $promises[] = $this->updateDocumentsCsv($batch, $primaryKey);
+        }
+
+        return $promises;
+    }
+
+    public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
+    }
+
+    public function updateDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    {
+        $promises = [];
+        foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
+            $promises[] = $this->updateDocumentsNdjson($batch, $primaryKey);
+        }
+
+        return $promises;
+    }
+
     public function deleteAllDocuments(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/documents');

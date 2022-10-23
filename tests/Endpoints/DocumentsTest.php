@@ -491,6 +491,155 @@ final class DocumentsTest extends TestCase
         $this->assertCount(3, $response);
     }
 
+    public function testUpdateDocumentsJson(): void
+    {
+        $index = $this->client->index('documentJson');
+
+        $fileJson = fopen('./tests/datasets/small_movies.json', 'r');
+        $documentJson = fread($fileJson, filesize('./tests/datasets/small_movies.json'));
+        fclose($fileJson);
+
+        $promise = $index->addDocumentsJson($documentJson);
+        $index->waitForTask($promise['taskUid']);
+
+        $replacement = [
+            [
+                'id' => 522681,
+                'title' => 'No Escape Room',
+            ],
+        ];
+
+        $promise = $index->updateDocumentsJson(json_encode($replacement));
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocument($replacement[0]['id']);
+
+        $this->assertSame($replacement[0]['id'], $response['id']);
+        $this->assertSame($replacement[0]['title'], $response['title']);
+
+        $documents = $index->getDocuments();
+
+        $this->assertCount(20, $documents);
+    }
+
+    public function testUpdateDocumentsCsv(): void
+    {
+        $index = $this->client->index('documentCsv');
+
+        $fileCsv = fopen('./tests/datasets/songs.csv', 'r');
+        $documentCsv = fread($fileCsv, filesize('./tests/datasets/songs.csv'));
+        fclose($fileCsv);
+
+        $promise = $index->addDocumentsCsv($documentCsv);
+        $index->waitForTask($promise['taskUid']);
+
+        $replacement = 'id,title'.PHP_EOL;
+        $replacement .= '888221515,Young folks'.PHP_EOL;
+
+        $promise = $index->updateDocumentsCsv($replacement);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocument(888221515);
+
+        $this->assertSame(888221515, (int) $response['id']);
+        $this->assertSame('Young folks', $response['title']);
+
+        $documents = $index->getDocuments();
+
+        $this->assertSame(499, $documents->getTotal());
+    }
+
+    public function testUpdateDocumentsNdjson(): void
+    {
+        $index = $this->client->index('documentNdJson');
+
+        $fileNdJson = fopen('./tests/datasets/songs.ndjson', 'r');
+        $documentNdJson = fread($fileNdJson, filesize('./tests/datasets/songs.ndjson'));
+        fclose($fileNdJson);
+
+        $promise = $index->addDocumentsNdjson($documentNdJson);
+        $index->waitForTask($promise['taskUid']);
+
+        $replacement = json_encode(['id' => 412559401, 'title' => 'WASPTHOVEN']).PHP_EOL;
+        $replacement .= json_encode(['id' => 70764404, 'artist' => 'Ailitp']).PHP_EOL;
+
+        $promise = $index->updateDocumentsNdjson($replacement);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocument(412559401);
+        $this->assertSame(412559401, (int) $response['id']);
+        $this->assertSame('WASPTHOVEN', $response['title']);
+
+        $response = $index->getDocument(70764404);
+        $this->assertSame(70764404, (int) $response['id']);
+        $this->assertSame('Ailitp', $response['artist']);
+
+        $documents = $index->getDocuments();
+
+        $this->assertSame(225, $documents->getTotal());
+    }
+
+    public function testUpdateDocumentsCsvInBatches(): void
+    {
+        $index = $this->client->index('documentCsv');
+
+        $fileCsv = fopen('./tests/datasets/songs.csv', 'r');
+        $documentCsv = fread($fileCsv, filesize('./tests/datasets/songs.csv'));
+        fclose($fileCsv);
+
+        $promise = $index->addDocumentsCsv($documentCsv);
+        $index->waitForTask($promise['taskUid']);
+
+        $replacement = 'id,title'.PHP_EOL;
+        $replacement .= '888221515,Young folks'.PHP_EOL;
+        $replacement .= '235115704,Mister Klein'.PHP_EOL;
+
+        $promises = $index->updateDocumentsCsvInBatches($replacement, 1);
+        $this->assertCount(2, $promises);
+        foreach ($promises as $promise) {
+            $this->assertIsValidPromise($promise);
+            $index->waitForTask($promise['taskUid']);
+        }
+
+        $response = $index->getDocument(888221515);
+        $this->assertSame(888221515, (int) $response['id']);
+        $this->assertSame('Young folks', $response['title']);
+
+        $response = $index->getDocument(235115704);
+        $this->assertSame(235115704, (int) $response['id']);
+        $this->assertSame('Mister Klein', $response['title']);
+    }
+
+    public function testUpdateDocumentsNdjsonInBatches(): void
+    {
+        $index = $this->client->index('documentNdJson');
+
+        $fileNdJson = fopen('./tests/datasets/songs.ndjson', 'r');
+        $documentNdJson = fread($fileNdJson, filesize('./tests/datasets/songs.ndjson'));
+        fclose($fileNdJson);
+
+        $promise = $index->addDocumentsNdjson($documentNdJson);
+        $index->waitForTask($promise['taskUid']);
+
+        $replacement = json_encode(['id' => 412559401, 'title' => 'WASPTHOVEN']).PHP_EOL;
+        $replacement .= json_encode(['id' => 70764404, 'artist' => 'Ailitp']).PHP_EOL;
+
+        $promises = $index->updateDocumentsNdjsonInBatches($replacement, 1);
+        $this->assertCount(2, $promises);
+        foreach ($promises as $promise) {
+            $this->assertIsValidPromise($promise);
+            $index->waitForTask($promise['taskUid']);
+        }
+
+        $response = $index->getDocument(412559401);
+        $this->assertSame(412559401, (int) $response['id']);
+        $this->assertSame('WASPTHOVEN', $response['title']);
+
+        $response = $index->getDocument(70764404);
+        $this->assertSame(70764404, (int) $response['id']);
+        $this->assertSame('Ailitp', $response['artist']);
+    }
+
     /**
      * @dataProvider invalidDocumentIds
      */
