@@ -100,13 +100,18 @@ class Client implements Http
         return $this->execute($request);
     }
 
-    public function put(string $path, $body = null, array $query = [])
+    public function put(string $path, $body = null, array $query = [], string $contentType = null)
     {
-        $this->headers['Content-type'] = 'application/json';
+        if (!\is_null($contentType)) {
+            $this->headers['Content-type'] = $contentType;
+        } else {
+            $this->headers['Content-type'] = 'application/json';
+            $body = $this->json->serialize($body);
+        }
         $request = $this->requestFactory->createRequest(
             'PUT',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream($this->json->serialize($body)));
+        )->withBody($this->streamFactory->createStream($body));
 
         return $this->execute($request);
     }

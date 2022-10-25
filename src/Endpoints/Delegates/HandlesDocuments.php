@@ -32,6 +32,21 @@ trait HandlesDocuments
         return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]);
     }
 
+    public function addDocumentsJson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
+    }
+
+    public function addDocumentsCsv(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+    }
+
+    public function addDocumentsNdjson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
+    }
+
     public function addDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
         $promises = [];
@@ -42,19 +57,24 @@ trait HandlesDocuments
         return $promises;
     }
 
-    public function addDocumentsJson(string $documents, ?string $primaryKey = null)
+    public function addDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
+        $promises = [];
+        foreach (self::batchCsvString($documents, $batchSize) as $batch) {
+            $promises[] = $this->addDocumentsCsv($batch, $primaryKey);
+        }
+
+        return $promises;
     }
 
-    public function addDocumentsNdjson(string $documents, ?string $primaryKey = null)
+    public function addDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
-    }
+        $promises = [];
+        foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
+            $promises[] = $this->addDocumentsNdjson($batch, $primaryKey);
+        }
 
-    public function addDocumentsCsv(string $documents, ?string $primaryKey = null)
-    {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+        return $promises;
     }
 
     public function updateDocuments(array $documents, ?string $primaryKey = null)
@@ -62,11 +82,46 @@ trait HandlesDocuments
         return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]);
     }
 
+    public function updateDocumentsJson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
+    }
+
+    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+    }
+
+    public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null)
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
+    }
+
     public function updateDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
         $promises = [];
         foreach (self::batch($documents, $batchSize) as $batch) {
             $promises[] = $this->updateDocuments($batch, $primaryKey);
+        }
+
+        return $promises;
+    }
+
+    public function updateDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    {
+        $promises = [];
+        foreach (self::batchCsvString($documents, $batchSize) as $batch) {
+            $promises[] = $this->updateDocumentsCsv($batch, $primaryKey);
+        }
+
+        return $promises;
+    }
+
+    public function updateDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    {
+        $promises = [];
+        foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
+            $promises[] = $this->updateDocumentsNdjson($batch, $primaryKey);
         }
 
         return $promises;
@@ -97,6 +152,33 @@ trait HandlesDocuments
 
         if (\is_string($documentId) && '' === trim($documentId)) {
             throw InvalidArgumentException::emptyArgument('documentId');
+        }
+    }
+
+    private static function batchCsvString(string $documents, int $batchSize): Generator
+    {
+        $documents = preg_split("/\r\n|\n|\r/", trim($documents));
+        $csvHeader = $documents[0];
+        array_shift($documents);
+        $batches = array_chunk($documents, $batchSize);
+
+        foreach ($batches as $batch) {
+            array_unshift($batch, $csvHeader);
+            $batch = implode("\n", $batch);
+
+            yield $batch;
+        }
+    }
+
+    private static function batchNdjsonString(string $documents, int $batchSize): Generator
+    {
+        $documents = preg_split("/\r\n|\n|\r/", trim($documents));
+        $batches = array_chunk($documents, $batchSize);
+
+        foreach ($batches as $batch) {
+            $batch = implode("\n", $batch);
+
+            yield $batch;
         }
     }
 

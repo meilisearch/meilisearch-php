@@ -10,7 +10,7 @@ interface Http
 
     public function post(string $path, $body = null, array $query = [], string $contentType = null);
 
-    public function put(string $path, $body = null, array $query = []);
+    public function put(string $path, $body = null, array $query = [], string $contentType = null);
 
     public function patch(string $path, $body = null, array $query = []);
 
