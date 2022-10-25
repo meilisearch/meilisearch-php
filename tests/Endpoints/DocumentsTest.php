@@ -587,8 +587,8 @@ final class DocumentsTest extends TestCase
         $documentCsv = fread($fileCsv, filesize('./tests/datasets/songs.csv'));
         fclose($fileCsv);
 
-        $promise = $index->addDocumentsCsv($documentCsv);
-        $index->waitForTask($promise['taskUid']);
+        $addPromise = $index->addDocumentsCsv($documentCsv);
+        $index->waitForTask($addPromise['taskUid']);
 
         $replacement = 'id,title'.PHP_EOL;
         $replacement .= '888221515,Young folks'.PHP_EOL;
@@ -618,8 +618,8 @@ final class DocumentsTest extends TestCase
         $documentNdJson = fread($fileNdJson, filesize('./tests/datasets/songs.ndjson'));
         fclose($fileNdJson);
 
-        $promise = $index->addDocumentsNdjson($documentNdJson);
-        $index->waitForTask($promise['taskUid']);
+        $addPromise = $index->addDocumentsNdjson($documentNdJson);
+        $index->waitForTask($addPromise['taskUid']);
 
         $replacement = json_encode(['id' => 412559401, 'title' => 'WASPTHOVEN']).PHP_EOL;
         $replacement .= json_encode(['id' => 70764404, 'artist' => 'Ailitp']).PHP_EOL;
