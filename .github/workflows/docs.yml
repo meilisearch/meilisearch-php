@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v1
+        uses: actions/configure-pages@v2
       - name: Cache phpDocumentor build files
         id: phpdocumentor-cache
         uses: actions/cache@v3
@@ -30,7 +30,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-phpdocumentor-
       - name: Build with phpDocumentor
-        run: docker run --rm --volume "$(pwd):/data" phpdoc/phpdoc:3 -vv --target docs --cache-folder .phpdoc/cache --template default
+        run: docker run --rm --volume "$(pwd):/data" phpdoc/phpdoc:3 -i tests/ -vv --target docs --cache-folder .phpdoc/cache --template default
       - name: Upload artifact to GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:

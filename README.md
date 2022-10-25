@@ -24,19 +24,19 @@
 
 **Meilisearch PHP** is the Meilisearch API client for PHP developers.
 
-**Meilisearch** is an open-source search engine. [Discover what Meilisearch is!](https://github.com/meilisearch/Meilisearch)
+**Meilisearch** is an open-source search engine. [Learn more about Meilisearch.](https://github.com/meilisearch/Meilisearch)
 
 ## Table of Contents <!-- omit in toc -->
 
 - [🎃 Hacktoberfest](#-hacktoberfest)
 - [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
-- [🚀 Getting Started](#-getting-started)
+- [🚀 Getting started](#-getting-started)
 - [🤖 Compatibility with Meilisearch](#-compatibility-with-meilisearch)
-- [💡 Learn More](#-learn-more)
+- [💡 Learn more](#-learn-more)
 - [🧰 HTTP Client Compatibilities](#-http-client-compatibilities)
   - [Customize your HTTP Client](#customize-your-http-client)
-- [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
+- [⚙️ Contributing](#️-contributing)
 
 ## 🎃 Hacktoberfest
 
@@ -48,7 +48,8 @@ You’d like to contribute? Don’t hesitate to check out our [contributing guid
 
 ## 📖 Documentation
 
-See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_started.html) or our [API References](https://docs.meilisearch.com/reference/api/).
+
+To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://meilisearch.github.io/meilisearch-php/). To learn more about Meilisearch in general, refer to our [documentation](https://docs.meilisearch.com/learn/getting_started/quick_start.html) or our [API reference](https://docs.meilisearch.com/reference/api/overview.html).
 
 ## 🔧 Installation
 
@@ -86,7 +87,7 @@ curl -L https://install.meilisearch.com | sh
 
 NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
 
-## 🚀 Getting Started
+## 🚀 Getting started
 
 #### Add documents <!-- omit in toc -->
 
@@ -226,9 +227,9 @@ $index->search(
 
 This package only guarantees the compatibility with the [version v0.29.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.29.0).
 
-## 💡 Learn More
+## 💡 Learn more
 
-The following sections may interest you:
+The following sections in our main documentation website may interest you:
 
 - **Manipulate documents**: see the [API references](https://docs.meilisearch.com/reference/api/documents.html) or read more about [documents](https://docs.meilisearch.com/learn/core_concepts/documents.html).
 - **Search**: see the [API references](https://docs.meilisearch.com/reference/api/search.html) or follow our guide on [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html).
@@ -277,13 +278,13 @@ composer require meilisearch/meilisearch-php kriswallsmith/buzz nyholm/psr7:^1.0
 For some reason, you might want to pass a custom configuration to your own HTTP client.<br>
 Make sure you have a [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible client when you initialize the Meilisearch client.
 
-Following the example in the [Getting Started](#-getting-started) section, with the Guzzle HTTP client:
+Following the example in the [Getting started](#-getting-started) section, with the Guzzle HTTP client:
 
 ```php
 new Client('http://127.0.0.1:7700', 'masterKey', new GuzzleHttpClient(['timeout' => 2]));
 ```
 
-## ⚙️ Development Workflow and Contributing
+## ⚙️ Contributing
 
 Any new contribution is more than welcome in this project!
 
