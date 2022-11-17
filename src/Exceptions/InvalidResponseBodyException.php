@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Exceptions;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 
-class InvalidResponseBodyException extends Exception
+class InvalidResponseBodyException extends \Exception
 {
     public $httpStatus = 0;
     public $httpBody = null;

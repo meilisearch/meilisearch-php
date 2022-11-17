@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints;
 
-use DateTime;
-use Exception;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Contracts\Index\Settings;
@@ -69,7 +67,7 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @throws Exception|ApiException
+     * @throws \Exception|ApiException
      */
     public function create(string $uid, array $options = []): array
     {
@@ -113,7 +111,7 @@ class Indexes extends Endpoint
         return $this->uid;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return static::parseDate($this->createdAt);
     }
@@ -123,7 +121,7 @@ class Indexes extends Endpoint
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
         return static::parseDate($this->updatedAt);
     }
@@ -242,22 +240,22 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public static function parseDate(?string $dateTime): ?DateTime
+    public static function parseDate(?string $dateTime): ?\DateTime
     {
         if (null === $dateTime) {
             return null;
         }
 
         try {
-            return new DateTime($dateTime);
+            return new \DateTime($dateTime);
         } catch (\Exception $e) {
             // Trim 9th+ digit from fractional seconds. Meilisearch server can send 9 digits; PHP supports up to 8
             $trimPattern = '/(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,8})(?:\d{1,})?(Z|[\+-]\d{2}:\d{2})$/';
             $trimmedDate = preg_replace($trimPattern, '$1$2', $dateTime);
 
-            return new DateTime($trimmedDate);
+            return new \DateTime($trimmedDate);
         }
     }
 }

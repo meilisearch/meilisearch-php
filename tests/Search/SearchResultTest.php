@@ -7,8 +7,6 @@ namespace Tests\Search;
 use MeiliSearch\Search\SearchResult;
 use PHPUnit\Framework\TestCase;
 
-use function strtoupper;
-
 final class SearchResultTest extends TestCase
 {
     private array $basicServerResponse = [];

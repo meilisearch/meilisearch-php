@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Exceptions;
 
-use DateTime;
-use Exception;
-
-final class InvalidArgumentException extends Exception
+final class InvalidArgumentException extends \Exception
 {
     public static function invalidType(string $argumentName, array $validTypes): self
     {
@@ -27,7 +24,7 @@ final class InvalidArgumentException extends Exception
         );
     }
 
-    public static function dateIsExpired(DateTime $date): self
+    public static function dateIsExpired(\DateTime $date): self
     {
         return new self(
             sprintf('DateTime "%s" is expired. The date expiresAt should be in the future.', $date->format('Y-m-d H:i:s')),

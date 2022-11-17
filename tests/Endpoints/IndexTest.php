@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use DateTimeInterface;
 use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\TimeOutException;
@@ -74,7 +73,7 @@ final class IndexTest extends TestCase
         $indexB = $this->client->index('indexB');
 
         $this->assertNull($indexB->getCreatedAt());
-        $this->assertInstanceOf(DateTimeInterface::class, $this->index->getCreatedAt());
+        $this->assertInstanceOf(\DateTimeInterface::class, $this->index->getCreatedAt());
     }
 
     public function testGetUpdatedAt(): void
@@ -82,7 +81,7 @@ final class IndexTest extends TestCase
         $indexB = $this->client->index('indexB');
 
         $this->assertNull($indexB->getUpdatedAt());
-        $this->assertInstanceOf(DateTimeInterface::class, $this->index->getUpdatedAt());
+        $this->assertInstanceOf(\DateTimeInterface::class, $this->index->getUpdatedAt());
     }
 
     public function testGetCreatedAtString(): void
@@ -159,8 +158,8 @@ final class IndexTest extends TestCase
         $index = $index->fetchInfo();
         $this->assertSame('objectID', $index->getPrimaryKey());
         $this->assertSame($indexName, $index->getUid());
-        $this->assertInstanceOf(DateTimeInterface::class, $index->getCreatedAt());
-        $this->assertInstanceOf(DateTimeInterface::class, $index->getUpdatedAt());
+        $this->assertInstanceOf(\DateTimeInterface::class, $index->getCreatedAt());
+        $this->assertInstanceOf(\DateTimeInterface::class, $index->getUpdatedAt());
     }
 
     public function testGetAndFetchPrimaryKey(): void
@@ -275,7 +274,7 @@ final class IndexTest extends TestCase
         $dateTime = Indexes::parseDate($date);
         $formattedDate = '2021-01-01T01:23:45.123456+00:00';
 
-        $this->assertInstanceOf(DateTimeInterface::class, $dateTime);
+        $this->assertInstanceOf(\DateTimeInterface::class, $dateTime);
         $this->assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
     }
 
@@ -285,7 +284,7 @@ final class IndexTest extends TestCase
         $dateTime = Indexes::parseDate($date);
         $formattedDate = '2021-01-01T01:23:45.123456+00:00';
 
-        $this->assertInstanceOf(DateTimeInterface::class, $dateTime);
+        $this->assertInstanceOf(\DateTimeInterface::class, $dateTime);
         $this->assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
     }
 
