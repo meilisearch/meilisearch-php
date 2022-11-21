@@ -16,12 +16,18 @@ class SearchResult implements \Countable, \IteratorAggregate
      * and its value will not be modified by the methods in this class.
      * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
      */
-    private int $estimatedTotalHits;
+    private ?int $estimatedTotalHits;
+    private ?int $hitsCount;
+    private ?int $offset;
+    private ?int $limit;
 
-    private int $hitsCount;
-    private int $offset;
-    private int $limit;
+    private ?int $hitsPerPage;
+    private ?int $page;
+    private ?int $totalPages;
+    private ?int $totalHits;
+
     private int $processingTimeMs;
+    private bool $numberedPagination;
 
     private string $query;
 
@@ -37,11 +43,24 @@ class SearchResult implements \Countable, \IteratorAggregate
 
     public function __construct(array $body)
     {
+        if (isset($body['estimatedTotalHits'])) {
+            $this->numberedPagination = false;
+
+            $this->offset = $body['offset'];
+            $this->limit = $body['limit'];
+            $this->estimatedTotalHits = $body['estimatedTotalHits'];
+            $this->hitsCount = \count($body['hits']);
+        } else {
+            $this->numberedPagination = true;
+
+            $this->hitsPerPage = $body['hitsPerPage'];
+            $this->page = $body['page'];
+            $this->totalPages = $body['totalPages'];
+            $this->totalHits = $body['totalHits'];
+            $this->hitsCount = $body['totalHits'];
+        }
+
         $this->hits = $body['hits'] ?? [];
-        $this->offset = $body['offset'];
-        $this->limit = $body['limit'];
-        $this->estimatedTotalHits = $body['estimatedTotalHits'];
-        $this->hitsCount = \count($body['hits']);
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->query = $body['query'];
         $this->facetDistribution = $body['facetDistribution'] ?? [];
@@ -132,6 +151,26 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->query;
     }
 
+    public function getHitsPerPage(): ?int
+    {
+        return $this->hitsPerPage;
+    }
+
+    public function getPage(): ?int
+    {
+        return $this->page;
+    }
+
+    public function getTotalPages(): ?int
+    {
+        return $this->totalPages;
+    }
+
+    public function getTotalHits(): ?int
+    {
+        return $this->totalHits;
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -152,16 +191,30 @@ class SearchResult implements \Countable, \IteratorAggregate
 
     public function toArray(): array
     {
-        return [
+        $arr = [
             'hits' => $this->hits,
-            'offset' => $this->offset,
-            'limit' => $this->limit,
-            'estimatedTotalHits' => $this->estimatedTotalHits,
             'hitsCount' => $this->hitsCount,
             'processingTimeMs' => $this->processingTimeMs,
             'query' => $this->query,
             'facetDistribution' => $this->facetDistribution,
         ];
+
+        if (!$this->numberedPagination) {
+            $arr = array_merge($arr, [
+                'offset' => $this->offset,
+                'limit' => $this->limit,
+                'estimatedTotalHits' => $this->estimatedTotalHits,
+            ]);
+        } else {
+            $arr = array_merge($arr, [
+                'hitsPerPage' => $this->hitsPerPage,
+                'page' => $this->page,
+                'totalPages' => $this->totalPages,
+                'totalHits' => $this->totalHits,
+            ]);
+        }
+
+        return $arr;
     }
 
     public function toJSON(): string
