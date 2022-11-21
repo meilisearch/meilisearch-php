@@ -9,9 +9,9 @@ class TasksQuery
     private int $from;
     private int $limit;
     private int $next;
-    private array $type;
-    private array $status;
-    private array $indexUid;
+    private array $types;
+    private array $statuses;
+    private array $indexUids;
 
     public function setFrom(int $from): TasksQuery
     {
@@ -36,28 +36,28 @@ class TasksQuery
 
     public function setTypes(array $types): TasksQuery
     {
-        $this->type = $types;
+        $this->types = $types;
 
         return $this;
     }
 
-    public function setStatus(array $status): TasksQuery
+    public function setStatuses(array $statuses): TasksQuery
     {
-        $this->status = $status;
+        $this->statuses = $statuses;
 
         return $this;
     }
 
-    public function setUid(array $indexUid): TasksQuery
+    public function setIndexUids(array $indexUids): TasksQuery
     {
-        $this->indexUid = $indexUid;
+        $this->indexUids = $indexUids;
 
         return $this;
     }
 
-    public function getUid(): array
+    public function getIndexUids(): array
     {
-        return $this->indexUid ?? [];
+        return $this->indexUids ?? [];
     }
 
     public function toArray(): array
@@ -66,9 +66,9 @@ class TasksQuery
             'from' => $this->from ?? null,
             'limit' => $this->limit ?? null,
             'next' => $this->next ?? null,
-            'status' => isset($this->status) ? implode(',', $this->status) : null,
-            'type' => isset($this->type) ? implode(',', $this->type) : null,
-            'indexUid' => isset($this->indexUid) ? implode(',', $this->indexUid) : null,
+            'statuses' => isset($this->statuses) ? implode(',', $this->statuses) : null,
+            'types' => isset($this->types) ? implode(',', $this->types) : null,
+            'indexUids' => isset($this->indexUids) ? implode(',', $this->indexUids) : null,
         ], function ($item) { return null != $item || is_numeric($item); });
     }
 }

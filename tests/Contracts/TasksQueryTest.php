@@ -13,7 +13,7 @@ class TasksQueryTest extends TestCase
     {
         $data = (new TasksQuery())->setTypes(['abc', 'xyz']);
 
-        $this->assertEquals($data->toArray(), ['type' => 'abc,xyz']);
+        $this->assertEquals($data->toArray(), ['types' => 'abc,xyz']);
     }
 
     public function testSetNext(): void
@@ -42,7 +42,7 @@ class TasksQueryTest extends TestCase
         $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setNext(99)->setStatus(['enqueued']);
 
         $this->assertEquals($data->toArray(), [
-            'limit' => 9, 'next' => 99, 'from' => 10, 'status' => 'enqueued',
+            'limit' => 9, 'next' => 99, 'from' => 10, 'statuses' => 'enqueued',
         ]);
     }
 }
