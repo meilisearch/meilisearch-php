@@ -185,7 +185,7 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $this->index->waitForTask($promise['taskUid']);
 
-        $tasks = $this->index->getTasks((new TasksQuery())->setUid(['other-index']));
+        $tasks = $this->index->getTasks((new TasksQuery())->setIndexUids(['other-index']));
 
         $allIndexUids = array_map(function ($val) { return $val['indexUid']; }, $tasks->getResults());
         $results = array_unique($allIndexUids);
