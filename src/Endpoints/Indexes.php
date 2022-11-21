@@ -164,10 +164,10 @@ class Indexes extends Endpoint
     {
         $options = $options ?? new TasksQuery();
 
-        if (0 == \count($options->getUid())) {
-            $options->setUid(array_merge([$this->uid], $options->getUid()));
+        if (0 == \count($options->getIndexUids())) {
+            $options->setIndexUids(array_merge([$this->uid], $options->getIndexUids()));
         } else {
-            $options->setUid([$this->uid]);
+            $options->setIndexUids([$this->uid]);
         }
 
         $response = $this->http->get('/tasks', $options->toArray());
