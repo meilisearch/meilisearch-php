@@ -161,6 +161,7 @@ trait HandlesDocuments
         array_shift($documents);
         $batches = array_chunk($documents, $batchSize);
 
+        /** @var array<string> $batch */
         foreach ($batches as $batch) {
             array_unshift($batch, $csvHeader);
             $batch = implode("\n", $batch);
@@ -174,6 +175,7 @@ trait HandlesDocuments
         $documents = preg_split("/\r\n|\n|\r/", trim($documents));
         $batches = array_chunk($documents, $batchSize);
 
+        /** @var array<string> $batch */
         foreach ($batches as $batch) {
             $batch = implode("\n", $batch);
 
