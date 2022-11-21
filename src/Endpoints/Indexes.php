@@ -154,7 +154,7 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param array{0: list<non-empty-string>, 1: list<non-empty-string>} $indexes
+     * @param array<array{indexes: mixed}> $indexes
      */
     public function swapIndexes(array $indexes): array
     {
