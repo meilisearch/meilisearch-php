@@ -58,7 +58,7 @@
             "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
         ],
         "phpstan": [
-            "php ./vendor/bin/phpstan"
+            "php -d memory_limit=256M ./vendor/bin/phpstan"
         ],
         "test": [
             "sh scripts/tests.sh"
