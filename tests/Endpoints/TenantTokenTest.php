@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-/* @phpstan-ignore-next-line */
-use Datetime;
 use MeiliSearch\Client;
 use MeiliSearch\Exceptions\ApiException;
 use MeiliSearch\Exceptions\InvalidArgumentException;
@@ -115,8 +113,7 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithExpiresAt(): void
     {
-        /* @phpstan-ignore-next-line */
-        $date = new DateTime();
+        $date = new \DateTime();
         $tomorrow = $date->modify('+1 day');
         $options = [
             'expiresAt' => $tomorrow,
@@ -139,8 +136,7 @@ final class TenantTokenTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        /* @phpstan-ignore-next-line */
-        $date = new DateTime();
+        $date = new \DateTime();
         $yesterday = $date->modify('-1 day');
         $options = [
             'expiresAt' => $yesterday,

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Exceptions;
 
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 
-class ApiException extends Exception
+class ApiException extends \Exception
 {
     public $httpStatus = 0;
     public $message = null;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
-use Generator;
 use MeiliSearch\Contracts\DocumentsQuery;
 use MeiliSearch\Contracts\DocumentsResults;
 use MeiliSearch\Exceptions\InvalidArgumentException;
@@ -155,13 +154,14 @@ trait HandlesDocuments
         }
     }
 
-    private static function batchCsvString(string $documents, int $batchSize): Generator
+    private static function batchCsvString(string $documents, int $batchSize): \Generator
     {
         $documents = preg_split("/\r\n|\n|\r/", trim($documents));
         $csvHeader = $documents[0];
         array_shift($documents);
         $batches = array_chunk($documents, $batchSize);
 
+        /** @var array<string> $batch */
         foreach ($batches as $batch) {
             array_unshift($batch, $csvHeader);
             $batch = implode("\n", $batch);
@@ -170,11 +170,12 @@ trait HandlesDocuments
         }
     }
 
-    private static function batchNdjsonString(string $documents, int $batchSize): Generator
+    private static function batchNdjsonString(string $documents, int $batchSize): \Generator
     {
         $documents = preg_split("/\r\n|\n|\r/", trim($documents));
         $batches = array_chunk($documents, $batchSize);
 
+        /** @var array<string> $batch */
         foreach ($batches as $batch) {
             $batch = implode("\n", $batch);
 
@@ -182,7 +183,7 @@ trait HandlesDocuments
         }
     }
 
-    private static function batch(array $documents, int $batchSize): Generator
+    private static function batch(array $documents, int $batchSize): \Generator
     {
         $batches = array_chunk($documents, $batchSize);
         foreach ($batches as $batch) {

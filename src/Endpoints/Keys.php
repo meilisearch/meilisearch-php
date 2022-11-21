@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints;
 
-use DateTime;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Contracts\Http;
 use MeiliSearch\Contracts\KeysQuery;
@@ -20,9 +19,9 @@ class Keys extends Endpoint
     private ?string $description;
     private ?array $actions;
     private ?array $indexes;
-    private ?DateTime $expiresAt;
-    private ?DateTime $createdAt;
-    private ?DateTime $updatedAt;
+    private ?\DateTime $expiresAt;
+    private ?\DateTime $createdAt;
+    private ?\DateTime $updatedAt;
 
     public function __construct(Http $http, $uid = null, $name = null, $key = null, $description = null, $actions = null, $indexes = null, $expiresAt = null, $createdAt = null, $updatedAt = null)
     {
@@ -87,14 +86,14 @@ class Keys extends Endpoint
         return $this;
     }
 
-    protected function createDate($attribute): ?DateTime
+    protected function createDate($attribute): ?\DateTime
     {
         if (!\is_string($attribute)) {
             return null;
         }
 
         if (false === strpos($attribute, '.')) {
-            $date = date_create_from_format(DateTime::ATOM, $attribute);
+            $date = date_create_from_format(\DateTime::ATOM, $attribute);
         } else {
             $attribute = preg_replace('/(\.\d{6})\d+/', '$1', $attribute, 1);
             $date = date_create_from_format('Y-m-d\TH:i:s.uP', $attribute);
@@ -133,17 +132,17 @@ class Keys extends Endpoint
         return $this->indexes;
     }
 
-    public function getExpiresAt(): ?DateTime
+    public function getExpiresAt(): ?\DateTime
     {
         return $this->expiresAt;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
@@ -178,7 +177,7 @@ class Keys extends Endpoint
 
     public function create(array $options = []): self
     {
-        if (isset($options['expiresAt']) && $options['expiresAt'] instanceof DateTime) {
+        if (isset($options['expiresAt']) && $options['expiresAt'] instanceof \DateTime) {
             $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
         }
         $response = $this->http->post(self::PATH, $options);

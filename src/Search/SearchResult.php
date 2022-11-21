@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Search;
 
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
-
-class SearchResult implements Countable, IteratorAggregate
+class SearchResult implements \Countable, \IteratorAggregate
 {
     /**
      * @var array<int, array<string, mixed>>
@@ -173,8 +169,8 @@ class SearchResult implements Countable, IteratorAggregate
         return json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }
 
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->hits);
+        return new \ArrayIterator($this->hits);
     }
 }

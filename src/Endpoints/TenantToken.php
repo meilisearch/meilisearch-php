@@ -24,7 +24,7 @@ class TenantToken extends Endpoint
         if ((!\is_array($searchRules) && !\is_object($searchRules)) || null == $searchRules) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
-        if (\array_key_exists('expiresAt', $options) && new DateTime() > $options['expiresAt']) {
+        if (\array_key_exists('expiresAt', $options) && new \DateTime() > $options['expiresAt']) {
             throw InvalidArgumentException::dateIsExpired($options['expiresAt']);
         }
     }
