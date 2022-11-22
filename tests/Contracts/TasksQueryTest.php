@@ -23,6 +23,14 @@ class TasksQueryTest extends TestCase
         $this->assertEquals($data->toArray(), ['next' => 99]);
     }
 
+    public function testSetAnyDateFilter(): void
+    {
+        $date = new \DateTime();
+        $data = (new TasksQuery())->setBeforeEnqueuedAt($date);
+
+        $this->assertEquals($data->toArray(), ['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
+    }
+
     public function testToArrayWithSetLimit(): void
     {
         $data = (new TasksQuery())->setLimit(10);
@@ -39,7 +47,7 @@ class TasksQueryTest extends TestCase
 
     public function testToArrayWithDifferentSets(): void
     {
-        $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setNext(99)->setStatus(['enqueued']);
+        $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setNext(99)->setStatuses(['enqueued']);
 
         $this->assertEquals($data->toArray(), [
             'limit' => 9, 'next' => 99, 'from' => 10, 'statuses' => 'enqueued',
