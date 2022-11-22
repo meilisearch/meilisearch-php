@@ -109,7 +109,8 @@ final class TasksTest extends TestCase
 
     public function testGetAllTasksByIndexWithFilter(): void
     {
-        $response = $this->index->getTasks((new TasksQuery())->setStatus(['succeeded'])->setLimit(2));
+        $response = $this->index->getTasks((new TasksQuery())
+            ->setAfterEnqueuedAt(new \DateTime('yesterday'))->setStatuses(['succeeded'])->setLimit(2));
 
         $firstIndex = $response->getResults()[0]['uid'];
         $this->assertEquals($response->getResults()[0]['status'], 'succeeded');
