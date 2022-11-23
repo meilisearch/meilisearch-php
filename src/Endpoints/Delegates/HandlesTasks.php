@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints\Delegates;
 
+use MeiliSearch\Contracts\CancelTasksQuery;
 use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Contracts\TasksResults;
 
@@ -21,6 +22,11 @@ trait HandlesTasks
         $response = $this->tasks->all($query);
 
         return new TasksResults($response);
+    }
+
+    public function cancelTasks(CancelTasksQuery $options = null): array
+    {
+        return $this->tasks->cancelTasks($options);
     }
 
     public function waitForTask($uid, int $timeoutInMs = 5000, int $intervalInMs = 50): array
