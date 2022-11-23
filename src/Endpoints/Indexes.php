@@ -153,6 +153,11 @@ class Indexes extends Endpoint
         return $this->http->delete(self::PATH.'/'.$this->uid) ?? [];
     }
 
+    public function swapIndexes(array $indexes): array
+    {
+        return $this->http->post('/swap-indexes', $indexes);
+    }
+
     // Tasks
 
     public function getTask($uid): array

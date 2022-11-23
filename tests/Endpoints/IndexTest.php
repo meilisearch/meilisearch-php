@@ -268,6 +268,14 @@ final class IndexTest extends TestCase
         $this->assertArrayHasKey('enqueuedAt', $res);
     }
 
+    public function testSwapIndexes(): void
+    {
+        $promise = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
+        $response = $this->client->waitForTask($promise['taskUid']);
+
+        $this->assertSame($response['details']['swaps'], [['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]]);
+    }
+
     public function testParseDate(): void
     {
         $date = '2021-01-01T01:23:45.123456Z';
