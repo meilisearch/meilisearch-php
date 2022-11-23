@@ -36,4 +36,11 @@ trait HandlesSystem
     {
         return $this->tenantToken->generateTenantToken($apiKeyUid, $searchRules, $options);
     }
+
+    public function swapIndexes(array $indexes)
+    {
+        $options = array_map(function ($data) { return ['indexes' => $data]; }, $indexes);
+
+        return $this->index->swapIndexes($options);
+    }
 }
