@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use MeiliSearch\Contracts\DeleteTasksQuery;
 use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\TimeOutException;
@@ -274,6 +275,15 @@ final class IndexTest extends TestCase
         $response = $this->client->waitForTask($promise['taskUid']);
 
         $this->assertSame($response['details']['swaps'], [['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]]);
+    }
+
+    public function testDeleteTasks(): void
+    {
+        $promise = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
+        $response = $this->client->waitForTask($promise['taskUid']);
+
+        $this->assertSame($response['details']['originalFilter'], '?uids=1%2C2');
+        $this->assertIsNumeric($response['details']['matchedTasks']);
     }
 
     public function testParseDate(): void

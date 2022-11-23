@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MeiliSearch\Endpoints\Delegates;
 
 use MeiliSearch\Contracts\CancelTasksQuery;
+use MeiliSearch\Contracts\DeleteTasksQuery;
 use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Contracts\TasksResults;
 
@@ -22,6 +23,11 @@ trait HandlesTasks
         $response = $this->tasks->all($query);
 
         return new TasksResults($response);
+    }
+
+    public function deleteTasks(DeleteTasksQuery $options = null): array
+    {
+        return $this->tasks->deleteTasks($options);
     }
 
     public function cancelTasks(CancelTasksQuery $options = null): array
