@@ -3,13 +3,36 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+async_guide_filter_by_date_1: |-
+  $client->getTasks((new TasksQuery())->setAfterEnqueuedAt(new \DateTime('2020-10-11T11:49:53.000Z'));
+async_guide_multiple_filters_1: |-
+  $client->getTasks((new TasksQuery())->setStatuses(['processing'])->setUids(['movies'])->setTypes(['documentAdditionOrUpdate', 'documentDeletion']);
+async_guide_filter_by_ids_1: |-
+  $client->getTasks((new TasksQuery())->setUids([5, 10, 13]));
+async_guide_filter_by_statuses_1: |-
+  $client->getTasks((new TasksQuery())->setStatuses(['failed', 'canceled']));
+async_guide_filter_by_types_1: |-
+  $client->getTasks((new TasksQuery())->setTypes(['dumpCreation', 'indexSwap']));
+async_guide_filter_by_index_uids_1: |-
+  $client->getTasks((new TasksQuery())->setIndexUids(['movies']));
+delete_tasks_1: |-
+  $client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
+cancel_tasks_1: |-
+  $client->cancelTasks((new CancelTasksQuery())->setUids([1, 2]));
+async_guide_canceled_by: |-
+  $client->getTasks((new TasksQuery())->setCanceledBy([9]));
+swap_indexes_1: |-
+  $client->swapIndexes([['indexA', 'indexB'], ['indexX', 'indexY']]);
+search_parameter_guide_hitsperpage_1: |-
+  $client->index('movies')->search('', ['hitsPerPage' => 15])
+search_parameter_guide_page_1: |-
+  $client->index('movies')->search('', ['page' => 2])
 getting_started_typo_tolerance: |-
   $client->index('books')->updateTypoTolerance([
-    'minWordSizeForTypos' => [ 
-      'oneTypo' => 4 
+    'minWordSizeForTypos' => [
+      'oneTypo' => 4
     ]
   ]);
-
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
 list_all_indexes_1: |-
@@ -577,11 +600,6 @@ tenant_token_guide_generate_sdk_1: |-
 tenant_token_guide_search_sdk_1: |-
   $frontEndClient = new Client('http://localhost:7700', $token);
   $frontEndClient->index('patient_medical_records')->search('blood test');
-get_all_tasks_filtering_1: |-
-  $client->index('movies')->getTasks();
-get_all_tasks_filtering_2: |-
-  $taskQuery = (new TasksQuery())->setStatus(['succeeded', 'failed'])->setType(['documentAdditionOrUpdate']);
-  $client->getTasks($taskQuery);
 get_all_tasks_paginating_1: |-
   $taskQuery = (new TasksQuery())->setLimit(2)->setFrom(10));
   $client->getTasks($taskQuery);
