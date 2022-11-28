@@ -24,11 +24,7 @@ final class SearchTest extends TestCase
     {
         $response = $this->index->search('prince');
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertSame(2, $response->getEstimatedTotalHits());
         $this->assertCount(2, $response->getHits());
 
@@ -36,34 +32,36 @@ final class SearchTest extends TestCase
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertArrayHasKey('offset', $response);
-        $this->assertArrayHasKey('limit', $response);
-        $this->assertArrayHasKey('processingTimeMs', $response);
-        $this->assertArrayHasKey('query', $response);
+        $this->assertEstimatedPagination($response);
         $this->assertSame(2, $response['estimatedTotalHits']);
+    }
+
+    public function testBasicSearchWithFinitePagination(): void
+    {
+        $response = $this->index->search('prince', ['hitsPerPage' => 2]);
+
+        $this->assertFinitePagination($response->toArray());
+        $this->assertCount(2, $response->getHits());
+
+        $response = $this->index->search('prince', ['hitsPerPage' => 2], [
+            'raw' => true,
+        ]);
+
+        $this->assertFinitePagination($response);
     }
 
     public function testBasicEmptySearch(): void
     {
         $response = $this->index->search('');
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertCount(7, $response->getHits());
 
         $response = $this->index->search('', [], [
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertArrayHasKey('offset', $response);
-        $this->assertArrayHasKey('limit', $response);
-        $this->assertArrayHasKey('processingTimeMs', $response);
-        $this->assertArrayHasKey('query', $response);
+        $this->assertEstimatedPagination($response);
         $this->assertSame(7, $response['estimatedTotalHits']);
     }
 
@@ -71,22 +69,14 @@ final class SearchTest extends TestCase
     {
         $response = $this->index->search(null);
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertCount(\count(self::DOCUMENTS), $response->getHits());
 
         $response = $this->index->search(null, [], [
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertArrayHasKey('offset', $response);
-        $this->assertArrayHasKey('limit', $response);
-        $this->assertArrayHasKey('processingTimeMs', $response);
-        $this->assertArrayHasKey('query', $response);
+        $this->assertEstimatedPagination($response);
         $this->assertSame(\count(self::DOCUMENTS), $response['estimatedTotalHits']);
     }
 
@@ -109,22 +99,14 @@ final class SearchTest extends TestCase
 
         $res = $emptyIndex->search('prince');
 
-        $this->assertArrayHasKey('hits', $res->toArray());
-        $this->assertArrayHasKey('offset', $res->toArray());
-        $this->assertArrayHasKey('limit', $res->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $res->toArray());
-        $this->assertArrayHasKey('query', $res->toArray());
+        $this->assertEstimatedPagination($res->toArray());
         $this->assertCount(0, $res->getHits());
 
         $res = $emptyIndex->search('prince', [], [
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $res);
-        $this->assertArrayHasKey('offset', $res);
-        $this->assertArrayHasKey('limit', $res);
-        $this->assertArrayHasKey('processingTimeMs', $res);
-        $this->assertArrayHasKey('query', $res);
+        $this->assertEstimatedPagination($res);
         $this->assertSame(0, $res['estimatedTotalHits']);
     }
 
@@ -570,15 +552,11 @@ final class SearchTest extends TestCase
         $this->assertEquals('Harry Potter and the Half-Blood Prince', $response['hits'][0]['title']);
     }
 
-    public function testBasicSerachWithRawSearch(): void
+    public function testBasicSearchWithRawSearch(): void
     {
         $response = $this->index->rawSearch('prince');
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertArrayHasKey('offset', $response);
-        $this->assertArrayHasKey('limit', $response);
-        $this->assertArrayHasKey('processingTimeMs', $response);
-        $this->assertArrayHasKey('query', $response);
+        $this->assertEstimatedPagination($response);
         $this->assertSame(2, $response['estimatedTotalHits']);
         $this->assertCount(2, $response['hits']);
         $this->assertEquals('Le Petit Prince', $response['hits'][0]['title']);
@@ -588,11 +566,7 @@ final class SearchTest extends TestCase
     {
         $response = $this->index->search('prince', [], ['raw' => true]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertArrayHasKey('offset', $response);
-        $this->assertArrayHasKey('limit', $response);
-        $this->assertArrayHasKey('processingTimeMs', $response);
-        $this->assertArrayHasKey('query', $response);
+        $this->assertEstimatedPagination($response);
         $this->assertSame(2, $response['estimatedTotalHits']);
         $this->assertCount(2, $response['hits']);
     }
@@ -608,11 +582,7 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('prince', [], $options = ['transformHits' => $keepLePetitPrinceFunc]);
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertSame('Le Petit Prince', $response->getHit(0)['title']);
         $this->assertSame(2, $response->getEstimatedTotalHits());
         $this->assertSame(1, $response->getHitsCount());
@@ -634,11 +604,7 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('prince', [], ['transformHits' => $titlesToUpperCaseFunc]);
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertSame(2, $response->getEstimatedTotalHits());
         $this->assertSame(2, $response->getHitsCount());
         $this->assertCount(2, $response->getHits());
@@ -659,11 +625,7 @@ final class SearchTest extends TestCase
             'transformHits' => $keepLePetitPrinceFunc,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertArrayHasKey('offset', $response);
-        $this->assertArrayHasKey('limit', $response);
-        $this->assertArrayHasKey('processingTimeMs', $response);
-        $this->assertArrayHasKey('query', $response);
+        $this->assertEstimatedPagination($response);
         $this->assertSame(2, $response['estimatedTotalHits']);
         $this->assertCount(2, $response['hits']);
     }
@@ -679,11 +641,7 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('prince', [], ['transformHits' => $keepLePetitPrinceFunc])->toArray();
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertArrayHasKey('offset', $response);
-        $this->assertArrayHasKey('limit', $response);
-        $this->assertArrayHasKey('processingTimeMs', $response);
-        $this->assertArrayHasKey('query', $response);
+        $this->assertEstimatedPagination($response);
         $this->assertSame(2, $response['estimatedTotalHits']);
         $this->assertCount(1, $response['hits']);
         $this->assertEquals('Le Petit Prince', $response['hits'][0]['title']);
@@ -752,12 +710,7 @@ final class SearchTest extends TestCase
             ['transformFacetDistribution' => $filterAllFacets]
         );
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('facetDistribution', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
         $this->assertNotEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
         $this->assertCount(3, $response->getRaw()['facetDistribution']['genre']);
@@ -790,12 +743,7 @@ final class SearchTest extends TestCase
             ['transformFacetDistribution' => $facetsToUpperFunc]
         );
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('facetDistribution', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
         $this->assertNotEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
         $this->assertCount(3, $response->getFacetDistribution()['genre']);
@@ -825,12 +773,7 @@ final class SearchTest extends TestCase
             ['transformFacetDistribution' => $facetsToUpperFunc]
         );
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertArrayHasKey('facetDistribution', $response->toArray());
-        $this->assertArrayHasKey('offset', $response->toArray());
-        $this->assertArrayHasKey('limit', $response->toArray());
-        $this->assertArrayHasKey('processingTimeMs', $response->toArray());
-        $this->assertArrayHasKey('query', $response->toArray());
+        $this->assertEstimatedPagination($response->toArray());
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
         $this->assertEquals('adventure', array_key_first($response->getFacetDistribution()['genre']));
         $this->assertEquals('romance', array_key_last($response->getFacetDistribution()['genre']));

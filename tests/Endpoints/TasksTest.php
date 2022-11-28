@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use MeiliSearch\Contracts\CancelTasksQuery;
 use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\ApiException;
@@ -109,7 +110,8 @@ final class TasksTest extends TestCase
 
     public function testGetAllTasksByIndexWithFilter(): void
     {
-        $response = $this->index->getTasks((new TasksQuery())->setStatus(['succeeded'])->setLimit(2));
+        $response = $this->index->getTasks((new TasksQuery())
+            ->setAfterEnqueuedAt(new \DateTime('yesterday'))->setStatuses(['succeeded'])->setLimit(2));
 
         $firstIndex = $response->getResults()[0]['uid'];
         $this->assertEquals($response->getResults()[0]['status'], 'succeeded');
@@ -121,6 +123,20 @@ final class TasksTest extends TestCase
         $newFirstIndex = $response->getResults()[0]['uid'];
 
         $this->assertEquals($firstIndex, $newFirstIndex);
+    }
+
+    public function testCancelTasksWithFilter(): void
+    {
+        $date = new \DateTime('yesterday');
+        $query = http_build_query(['afterEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
+        $promise = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date));
+
+        $this->assertEquals($promise['type'], 'taskCancelation');
+        $response = $this->client->waitForTask($promise['taskUid']);
+
+        $this->assertEquals($response['details']['originalFilter'], '?'.$query);
+        $this->assertEquals($response['type'], 'taskCancelation');
+        $this->assertEquals($response['status'], 'succeeded');
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void

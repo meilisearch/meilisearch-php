@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use MeiliSearch\Contracts\DeleteTasksQuery;
 use MeiliSearch\Contracts\TasksQuery;
 use MeiliSearch\Endpoints\Indexes;
 use MeiliSearch\Exceptions\TimeOutException;
@@ -185,7 +186,7 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $this->index->waitForTask($promise['taskUid']);
 
-        $tasks = $this->index->getTasks((new TasksQuery())->setUid(['other-index']));
+        $tasks = $this->index->getTasks((new TasksQuery())->setIndexUids(['other-index']));
 
         $allIndexUids = array_map(function ($val) { return $val['indexUid']; }, $tasks->getResults());
         $results = array_unique($allIndexUids);
@@ -266,6 +267,23 @@ final class IndexTest extends TestCase
         $this->assertArrayHasKey('type', $res);
         $this->assertSame($res['type'], 'indexDeletion');
         $this->assertArrayHasKey('enqueuedAt', $res);
+    }
+
+    public function testSwapIndexes(): void
+    {
+        $promise = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
+        $response = $this->client->waitForTask($promise['taskUid']);
+
+        $this->assertSame($response['details']['swaps'], [['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]]);
+    }
+
+    public function testDeleteTasks(): void
+    {
+        $promise = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
+        $response = $this->client->waitForTask($promise['taskUid']);
+
+        $this->assertSame($response['details']['originalFilter'], '?uids=1%2C2');
+        $this->assertIsNumeric($response['details']['matchedTasks']);
     }
 
     public function testParseDate(): void

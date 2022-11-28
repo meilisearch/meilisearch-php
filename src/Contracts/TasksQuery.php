@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Contracts;
 
+use MeiliSearch\Delegates\TasksQueryTrait;
+
 class TasksQuery
 {
+    use TasksQueryTrait;
+
     private int $from;
     private int $limit;
-    private int $next;
-    private array $type;
-    private array $status;
-    private array $indexUid;
 
     public function setFrom(int $from): TasksQuery
     {
@@ -27,48 +27,23 @@ class TasksQuery
         return $this;
     }
 
-    public function setNext(int $next): TasksQuery
-    {
-        $this->next = $next;
-
-        return $this;
-    }
-
-    public function setTypes(array $types): TasksQuery
-    {
-        $this->type = $types;
-
-        return $this;
-    }
-
-    public function setStatus(array $status): TasksQuery
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function setUid(array $indexUid): TasksQuery
-    {
-        $this->indexUid = $indexUid;
-
-        return $this;
-    }
-
-    public function getUid(): array
-    {
-        return $this->indexUid ?? [];
-    }
-
     public function toArray(): array
     {
         return array_filter([
             'from' => $this->from ?? null,
             'limit' => $this->limit ?? null,
             'next' => $this->next ?? null,
-            'status' => isset($this->status) ? implode(',', $this->status) : null,
-            'type' => isset($this->type) ? implode(',', $this->type) : null,
-            'indexUid' => isset($this->indexUid) ? implode(',', $this->indexUid) : null,
+            'beforeEnqueuedAt' => $this->formatDate($this->beforeEnqueuedAt ?? null),
+            'afterEnqueuedAt' => $this->formatDate($this->afterEnqueuedAt ?? null),
+            'beforeStartedAt' => $this->formatDate($this->beforeStartedAt ?? null),
+            'afterStartedAt' => $this->formatDate($this->afterStartedAt ?? null),
+            'beforeFinishedAt' => $this->formatDate($this->beforeFinishedAt ?? null),
+            'afterFinishedAt' => $this->formatDate($this->afterFinishedAt ?? null),
+            'statuses' => $this->formatArray($this->statuses ?? null),
+            'uids' => $this->formatArray($this->uids ?? null),
+            'canceledBy' => $this->formatArray($this->canceledBy ?? null),
+            'types' => $this->formatArray($this->types ?? null),
+            'indexUids' => $this->formatArray($this->indexUids ?? null),
         ], function ($item) { return null != $item || is_numeric($item); });
     }
 }

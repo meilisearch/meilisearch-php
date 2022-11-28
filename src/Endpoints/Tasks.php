@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MeiliSearch\Endpoints;
 
+use MeiliSearch\Contracts\CancelTasksQuery;
+use MeiliSearch\Contracts\DeleteTasksQuery;
 use MeiliSearch\Contracts\Endpoint;
 use MeiliSearch\Exceptions\TimeOutException;
 
@@ -19,6 +21,22 @@ class Tasks extends Endpoint
     public function all(array $query = []): array
     {
         return $this->http->get(self::PATH.'/', $query);
+    }
+
+    public function cancelTasks(?CancelTasksQuery $options): array
+    {
+        $options = $options ?? new CancelTasksQuery();
+        $response = $this->http->post('/tasks/cancel', null, $options->toArray());
+
+        return $response;
+    }
+
+    public function deleteTasks(?DeleteTasksQuery $options): array
+    {
+        $options = $options ?? new DeleteTasksQuery();
+        $response = $this->http->delete(self::PATH, $options->toArray());
+
+        return $response;
     }
 
     /**

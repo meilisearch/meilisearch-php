@@ -7,7 +7,7 @@ namespace Tests\Contracts;
 use MeiliSearch\Contracts\TasksQuery;
 use PHPUnit\Framework\TestCase;
 
-class TasksQueryTest extends TestCase
+class CancelTasksQueryTest extends TestCase
 {
     public function testSetTypes(): void
     {
@@ -31,18 +31,11 @@ class TasksQueryTest extends TestCase
         $this->assertEquals($data->toArray(), ['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
     }
 
-    public function testToArrayWithSetLimit(): void
+    public function testToArrayWithSetNextWithZero(): void
     {
-        $data = (new TasksQuery())->setLimit(10);
+        $data = (new TasksQuery())->setNext(0);
 
-        $this->assertEquals($data->toArray(), ['limit' => 10]);
-    }
-
-    public function testToArrayWithSetLimitWithZero(): void
-    {
-        $data = (new TasksQuery())->setLimit(0);
-
-        $this->assertEquals($data->toArray(), ['limit' => 0]);
+        $this->assertEquals($data->toArray(), ['next' => 0]);
     }
 
     public function testToArrayWithDifferentSets(): void
