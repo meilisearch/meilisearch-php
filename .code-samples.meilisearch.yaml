@@ -19,8 +19,8 @@ delete_tasks_1: |-
   $client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
 cancel_tasks_1: |-
   $client->cancelTasks((new CancelTasksQuery())->setUids([1, 2]));
-async_guide_canceled_by: |-
-  $client->getTasks((new TasksQuery())->setCanceledBy([9]));
+async_guide_canceled_by_1: |-
+  $client->getTasks((new TasksQuery())->setCanceledBy([9, 15]));
 swap_indexes_1: |-
   $client->swapIndexes([['indexA', 'indexB'], ['indexX', 'indexY']]);
 search_parameter_guide_hitsperpage_1: |-
