@@ -4,7 +4,6 @@ meilisearch_php_version=$(grep 'public const VERSION =' src/MeiliSearch.php | cu
 is_bump_beta=$1
 
 if [ $is_bump_beta = true ]; then
-    meilisearch_php_version="0.1.0-bump-meilisearch-v0.28.0-beta.0"
     # Works with the format X.X.X-bump-meilisearch-vX.X.X-beta.X
     #
     # Examples of correct format:
