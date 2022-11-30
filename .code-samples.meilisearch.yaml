@@ -607,10 +607,30 @@ get_all_tasks_paginating_2: |-
   $taskQuery = (new TasksQuery())->setLimit(2)->setFrom(8));
   $client->getTasks($taskQuery);
 get_pagination_settings_1: |-
+  $client->index('books')->getPagination();
 update_pagination_settings_1: |-
+  $client->index('books')->updateSettings([
+    'pagination' => [
+      'maxTotalHits' => 100
+    ]
+  ]);
 reset_pagination_settings_1: |-
+  $client->index('books')->resetPagination();
 get_faceting_settings_1: |-
+  $client->index('books')->getFaceting();
 update_faceting_settings_1: |-
+  $client->index('books')->updateFaceting([ 'maxValuesPerFacet' => 2 ]);
 reset_faceting_settings_1: |-
+  $client->index('books')->resetFaceting();
 settings_guide_faceting_1: |-
+  $client->index('movies')->updateSettings([
+    'faceting' => [
+      'maxValuesPerFacet' => 5
+    ]
+  ]);
 settings_guide_pagination_1: |-
+  $client->index('books')->updateSettings([
+    'pagination' => [
+      'maxTotalHits' => 50
+    ]
+  ]);
