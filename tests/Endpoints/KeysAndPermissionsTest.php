@@ -318,7 +318,7 @@ final class KeysAndPermissionsTest extends TestCase
           }
         ');
 
-        $newClient = new \Meilisearch\Client('https://localhost:7700', null, $httpClient);
+        $newClient = new Client('https://localhost:7700', null, $httpClient);
 
         $response = $newClient->getKeys();
 
