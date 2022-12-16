@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Http;
 
-use MeiliSearch\Exceptions\ApiException;
-use MeiliSearch\Exceptions\InvalidResponseBodyException;
-use MeiliSearch\Exceptions\JsonDecodingException;
-use MeiliSearch\Exceptions\JsonEncodingException;
-use MeiliSearch\Http\Client;
-use MeiliSearch\MeiliSearch;
+use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Exceptions\InvalidResponseBodyException;
+use Meilisearch\Exceptions\JsonDecodingException;
+use Meilisearch\Exceptions\JsonEncodingException;
+use Meilisearch\Http\Client;
+use Meilisearch\Meilisearch;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
@@ -217,7 +217,7 @@ class ClientTest extends TestCase
             ->withConsecutive(
                 [
                     $this->equalTo('User-Agent'),
-                    $this->equalTo(MeiliSearch::qualifiedVersion()),
+                    $this->equalTo(Meilisearch::qualifiedVersion()),
                 ],
                 [
                     $this->equalTo('Authorization'),
@@ -230,7 +230,7 @@ class ClientTest extends TestCase
             ->method('createRequest')
             ->willReturn($requestStub);
 
-        $client = new \MeiliSearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory);
+        $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory);
 
         $client->health();
     }
@@ -247,7 +247,7 @@ class ClientTest extends TestCase
             ->withConsecutive(
                 [
                     $this->equalTo('User-Agent'),
-                    $this->equalTo($customAgent.';'.MeiliSearch::qualifiedVersion()),
+                    $this->equalTo($customAgent.';'.Meilisearch::qualifiedVersion()),
                 ],
                 [
                     $this->equalTo('Authorization'),
@@ -260,7 +260,7 @@ class ClientTest extends TestCase
             ->method('createRequest')
             ->willReturn($requestStub);
 
-        $client = new \MeiliSearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, [$customAgent]);
+        $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, [$customAgent]);
 
         $client->health();
     }
@@ -276,7 +276,7 @@ class ClientTest extends TestCase
             ->withConsecutive(
                 [
                     $this->equalTo('User-Agent'),
-                    $this->equalTo(MeiliSearch::qualifiedVersion()),
+                    $this->equalTo(Meilisearch::qualifiedVersion()),
                 ],
                 [
                     $this->equalTo('Authorization'),
@@ -289,7 +289,7 @@ class ClientTest extends TestCase
             ->method('createRequest')
             ->willReturn($requestStub);
 
-        $client = new \MeiliSearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, []);
+        $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, []);
 
         $client->health();
     }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints;
+namespace Meilisearch\Endpoints;
 
 use DateTime;
-use MeiliSearch\Contracts\Endpoint;
-use MeiliSearch\Exceptions\InvalidArgumentException;
-use MeiliSearch\Http\Serialize\Json;
+use Meilisearch\Contracts\Endpoint;
+use Meilisearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Http\Serialize\Json;
 
 class TenantToken extends Endpoint
 {

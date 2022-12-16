@@ -27,7 +27,8 @@
     },
     "autoload": {
         "psr-4": {
-            "MeiliSearch\\": "src/"
+            "MeiliSearch\\": "src/",
+            "Meilisearch\\": "src/"
         }
     },
     "autoload-dev": {

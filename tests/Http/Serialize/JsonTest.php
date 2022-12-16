@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Http\Serialize;
 
-use MeiliSearch\Exceptions\JsonDecodingException;
-use MeiliSearch\Exceptions\JsonEncodingException;
-use MeiliSearch\Http\Serialize\Json;
+use Meilisearch\Exceptions\JsonDecodingException;
+use Meilisearch\Exceptions\JsonEncodingException;
+use Meilisearch\Http\Serialize\Json;
 use PHPUnit\Framework\TestCase;
 
 class JsonTest extends TestCase

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Client;
-use MeiliSearch\Exceptions\ApiException;
-use MeiliSearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Client;
+use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Exceptions\InvalidArgumentException;
 use Tests\TestCase;
 
 final class TenantTokenTest extends TestCase

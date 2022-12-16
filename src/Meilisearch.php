@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch;
+namespace Meilisearch;
 
-class MeiliSearch
+class Meilisearch
 {
     public const VERSION = '0.26.0';
 
     public static function qualifiedVersion()
     {
-        return sprintf('Meilisearch PHP (v%s)', MeiliSearch::VERSION);
+        return sprintf('Meilisearch PHP (v%s)', self::VERSION);
     }
 }

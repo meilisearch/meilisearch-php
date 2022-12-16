@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Contracts\DocumentsQuery;
-use MeiliSearch\Exceptions\ApiException;
-use MeiliSearch\Exceptions\InvalidArgumentException;
-use MeiliSearch\Exceptions\JsonEncodingException;
+use Meilisearch\Contracts\DocumentsQuery;
+use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Exceptions\JsonEncodingException;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Exceptions;
 
-use MeiliSearch\Exceptions\CommunicationException;
+use Meilisearch\Exceptions\CommunicationException;
 use Tests\TestCase;
 
 final class CommunicationExceptionTest extends TestCase

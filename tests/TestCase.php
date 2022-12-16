@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use MeiliSearch\Client;
-use MeiliSearch\Endpoints\Indexes;
+use Meilisearch\Client;
+use Meilisearch\Endpoints\Indexes;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;

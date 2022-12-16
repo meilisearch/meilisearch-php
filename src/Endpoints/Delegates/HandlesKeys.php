@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints\Delegates;
+namespace Meilisearch\Endpoints\Delegates;
 
-use MeiliSearch\Contracts\KeysQuery;
-use MeiliSearch\Contracts\KeysResults;
-use MeiliSearch\Endpoints\Keys;
+use Meilisearch\Contracts\KeysQuery;
+use Meilisearch\Contracts\KeysResults;
+use Meilisearch\Endpoints\Keys;
 
 trait HandlesKeys
 {

@@ -423,7 +423,7 @@ getting_started_add_documents_md: |-
 
   require_once __DIR__ . '/vendor/autoload.php';
 
-  use MeiliSearch\Client;
+  use Meilisearch\Client;
 
   $client = new Client('http://localhost:7700');
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Exceptions;
 
-use MeiliSearch\Exceptions\TimeOutException;
+use Meilisearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
 final class TimeOutExceptionTest extends TestCase

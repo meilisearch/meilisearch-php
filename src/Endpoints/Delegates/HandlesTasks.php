@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints\Delegates;
+namespace Meilisearch\Endpoints\Delegates;
 
-use MeiliSearch\Contracts\CancelTasksQuery;
-use MeiliSearch\Contracts\DeleteTasksQuery;
-use MeiliSearch\Contracts\TasksQuery;
-use MeiliSearch\Contracts\TasksResults;
+use Meilisearch\Contracts\CancelTasksQuery;
+use Meilisearch\Contracts\DeleteTasksQuery;
+use Meilisearch\Contracts\TasksQuery;
+use Meilisearch\Contracts\TasksResults;
 
 trait HandlesTasks
 {

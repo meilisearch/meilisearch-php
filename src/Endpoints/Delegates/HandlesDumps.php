@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints\Delegates;
+namespace Meilisearch\Endpoints\Delegates;
 
 trait HandlesDumps
 {

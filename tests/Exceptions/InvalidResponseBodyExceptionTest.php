@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Exceptions;
 
 use Http\Discovery\Psr17FactoryDiscovery;
-use MeiliSearch\Exceptions\InvalidResponseBodyException;
+use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Tests\TestCase;
 
 final class InvalidResponseBodyExceptionTest extends TestCase

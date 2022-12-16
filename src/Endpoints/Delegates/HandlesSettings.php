@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints\Delegates;
+namespace Meilisearch\Endpoints\Delegates;
 
-use MeiliSearch\Contracts\Index\Synonyms;
-use MeiliSearch\Contracts\Index\TypoTolerance;
+use Meilisearch\Contracts\Index\Synonyms;
+use Meilisearch\Contracts\Index\TypoTolerance;
 
 trait HandlesSettings
 {

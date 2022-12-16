@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints;
+namespace Meilisearch\Endpoints;
 
-use MeiliSearch\Contracts\Endpoint;
+use Meilisearch\Contracts\Endpoint;
 
 class Health extends Endpoint
 {

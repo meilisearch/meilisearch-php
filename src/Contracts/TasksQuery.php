@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Contracts;
+namespace Meilisearch\Contracts;
 
-use MeiliSearch\Delegates\TasksQueryTrait;
+use Meilisearch\Delegates\TasksQueryTrait;
 
 class TasksQuery
 {

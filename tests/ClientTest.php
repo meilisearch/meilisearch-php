@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use MeiliSearch\Client;
-use MeiliSearch\Exceptions\CommunicationException;
+use Meilisearch\Client;
+use Meilisearch\Exceptions\CommunicationException;
 
 class ClientTest extends TestCase
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Exceptions;
 
 use Http\Discovery\Psr17FactoryDiscovery;
-use MeiliSearch\Exceptions\ApiException;
+use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class ApiExceptionTest extends TestCase

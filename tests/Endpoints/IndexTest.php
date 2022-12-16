@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Contracts\DeleteTasksQuery;
-use MeiliSearch\Contracts\TasksQuery;
-use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\TimeOutException;
+use Meilisearch\Contracts\DeleteTasksQuery;
+use Meilisearch\Contracts\TasksQuery;
+use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
 final class IndexTest extends TestCase

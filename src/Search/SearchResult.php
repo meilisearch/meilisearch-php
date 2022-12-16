@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Search;
+namespace Meilisearch\Search;
 
 class SearchResult implements \Countable, \IteratorAggregate
 {
