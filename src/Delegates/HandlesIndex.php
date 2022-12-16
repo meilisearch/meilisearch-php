@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Delegates;
+namespace Meilisearch\Delegates;
 
-use MeiliSearch\Contracts\IndexesQuery;
-use MeiliSearch\Contracts\IndexesResults;
-use MeiliSearch\Endpoints\Indexes;
+use Meilisearch\Contracts\IndexesQuery;
+use Meilisearch\Contracts\IndexesResults;
+use Meilisearch\Endpoints\Indexes;
 
 trait HandlesIndex
 {

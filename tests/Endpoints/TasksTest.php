@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Contracts\CancelTasksQuery;
-use MeiliSearch\Contracts\TasksQuery;
-use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\ApiException;
+use Meilisearch\Contracts\CancelTasksQuery;
+use Meilisearch\Contracts\TasksQuery;
+use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class TasksTest extends TestCase

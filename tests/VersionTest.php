@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use MeiliSearch\MeiliSearch;
+use Meilisearch\Meilisearch;
 
 class VersionTest extends TestCase
 {
     public function testQualifiedVersion(): void
     {
-        $qualifiedVersion = sprintf('Meilisearch PHP (v%s)', MeiliSearch::VERSION);
+        $qualifiedVersion = sprintf('Meilisearch PHP (v%s)', Meilisearch::VERSION);
 
-        $this->assertEquals(MeiliSearch::qualifiedVersion(), $qualifiedVersion);
+        $this->assertEquals(Meilisearch::qualifiedVersion(), $qualifiedVersion);
     }
 }

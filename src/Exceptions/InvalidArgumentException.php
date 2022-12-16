@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Exceptions;
+namespace Meilisearch\Exceptions;
 
 final class InvalidArgumentException extends \Exception
 {

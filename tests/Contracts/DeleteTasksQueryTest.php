@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Contracts;
 
-use MeiliSearch\Contracts\TasksQuery;
+use Meilisearch\Contracts\TasksQuery;
 use PHPUnit\Framework\TestCase;
 
 class DeleteTasksQueryTest extends TestCase

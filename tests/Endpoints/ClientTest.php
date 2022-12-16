@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Client;
-use MeiliSearch\Contracts\IndexesQuery;
-use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\ApiException;
+use Meilisearch\Client;
+use Meilisearch\Contracts\IndexesQuery;
+use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class ClientTest extends TestCase

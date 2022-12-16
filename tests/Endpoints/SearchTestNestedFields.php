@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Indexes;
 use Tests\TestCase;
 
 final class SearchTestNestedFields extends TestCase

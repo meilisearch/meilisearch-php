@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints\Delegates;
+namespace Meilisearch\Endpoints\Delegates;
 
-use MeiliSearch\Contracts\DocumentsQuery;
-use MeiliSearch\Contracts\DocumentsResults;
-use MeiliSearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Contracts\DocumentsQuery;
+use Meilisearch\Contracts\DocumentsResults;
+use Meilisearch\Exceptions\InvalidArgumentException;
 
 trait HandlesDocuments
 {

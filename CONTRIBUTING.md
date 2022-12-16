@@ -104,7 +104,7 @@ _[Read more about this](https://github.com/meilisearch/integration-guides/blob/m
 
 ⚠️ Before doing anything, make sure you got through the guide about [Releasing an Integration](https://github.com/meilisearch/integration-guides/blob/main/resources/integration-release.md).
 
-Make a PR modifying the file [`src/MeiliSearch.php`](/src/MeiliSearch.php) with the right version.
+Make a PR modifying the file [`src/Meilisearch.php`](/src/Meilisearch.php) with the right version.
 
 ```php
 const VERSION = 'X.X.X';

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Delegates;
+namespace Meilisearch\Delegates;
 
 trait HandlesSystem
 {

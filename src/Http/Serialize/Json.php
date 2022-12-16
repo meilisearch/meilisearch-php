@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Http\Serialize;
+namespace Meilisearch\Http\Serialize;
 
-use MeiliSearch\Exceptions\JsonDecodingException;
-use MeiliSearch\Exceptions\JsonEncodingException;
+use Meilisearch\Exceptions\JsonDecodingException;
+use Meilisearch\Exceptions\JsonEncodingException;
 
 class Json implements SerializerInterface
 {

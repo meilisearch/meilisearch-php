@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Client;
-use MeiliSearch\Contracts\KeysQuery;
-use MeiliSearch\Exceptions\ApiException;
+use Meilisearch\Client;
+use Meilisearch\Contracts\KeysQuery;
+use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class KeysAndPermissionsTest extends TestCase
@@ -318,7 +318,7 @@ final class KeysAndPermissionsTest extends TestCase
           }
         ');
 
-        $newClient = new \MeiliSearch\Client('https://localhost:7700', null, $httpClient);
+        $newClient = new \Meilisearch\Client('https://localhost:7700', null, $httpClient);
 
         $response = $newClient->getKeys();
 

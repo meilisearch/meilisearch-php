@@ -1,6 +1,6 @@
 #!/bin/sh
 
-meilisearch_php_version=$(grep 'public const VERSION =' ./src/MeiliSearch.php | cut -d ' ' -f 9 | tr -d "'" | tr -d ";")
+meilisearch_php_version=$(grep 'public const VERSION =' ./src/Meilisearch.php | cut -d ' ' -f 9 | tr -d "'" | tr -d ";")
 beta_feature=$(echo $meilisearch_php_version | sed -r 's/[0-9]+.[0-9]+.[0-9]+-meilisearch-//')
 beta_feature=$(echo $beta_feature | sed -r 's/-beta\.[0-9]*$//')
 

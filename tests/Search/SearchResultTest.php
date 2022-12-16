@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Search;
 
-use MeiliSearch\Search\SearchResult;
+use Meilisearch\Search\SearchResult;
 use PHPUnit\Framework\TestCase;
 
 final class SearchResultTest extends TestCase

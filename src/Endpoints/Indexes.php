@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints;
+namespace Meilisearch\Endpoints;
 
-use MeiliSearch\Contracts\Endpoint;
-use MeiliSearch\Contracts\Http;
-use MeiliSearch\Contracts\Index\Settings;
-use MeiliSearch\Contracts\IndexesQuery;
-use MeiliSearch\Contracts\IndexesResults;
-use MeiliSearch\Contracts\TasksQuery;
-use MeiliSearch\Contracts\TasksResults;
-use MeiliSearch\Endpoints\Delegates\HandlesDocuments;
-use MeiliSearch\Endpoints\Delegates\HandlesSettings;
-use MeiliSearch\Endpoints\Delegates\HandlesTasks;
-use MeiliSearch\Exceptions\ApiException;
-use MeiliSearch\Search\SearchResult;
+use Meilisearch\Contracts\Endpoint;
+use Meilisearch\Contracts\Http;
+use Meilisearch\Contracts\Index\Settings;
+use Meilisearch\Contracts\IndexesQuery;
+use Meilisearch\Contracts\IndexesResults;
+use Meilisearch\Contracts\TasksQuery;
+use Meilisearch\Contracts\TasksResults;
+use Meilisearch\Endpoints\Delegates\HandlesDocuments;
+use Meilisearch\Endpoints\Delegates\HandlesSettings;
+use Meilisearch\Endpoints\Delegates\HandlesTasks;
+use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Search\SearchResult;
 
 class Indexes extends Endpoint
 {

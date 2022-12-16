@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints;
+namespace Meilisearch\Endpoints;
 
-use MeiliSearch\Contracts\CancelTasksQuery;
-use MeiliSearch\Contracts\DeleteTasksQuery;
-use MeiliSearch\Contracts\Endpoint;
-use MeiliSearch\Exceptions\TimeOutException;
+use Meilisearch\Contracts\CancelTasksQuery;
+use Meilisearch\Contracts\DeleteTasksQuery;
+use Meilisearch\Contracts\Endpoint;
+use Meilisearch\Exceptions\TimeOutException;
 
 class Tasks extends Endpoint
 {

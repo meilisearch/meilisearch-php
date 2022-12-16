@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Endpoints;
+namespace Meilisearch\Endpoints;
 
-use MeiliSearch\Contracts\Endpoint;
-use MeiliSearch\Contracts\Http;
-use MeiliSearch\Contracts\KeysQuery;
-use MeiliSearch\Contracts\KeysResults;
+use Meilisearch\Contracts\Endpoint;
+use Meilisearch\Contracts\Http;
+use Meilisearch\Contracts\KeysQuery;
+use Meilisearch\Contracts\KeysResults;
 
 class Keys extends Endpoint
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Contracts;
 
-use MeiliSearch\Contracts\IndexesQuery;
+use Meilisearch\Contracts\IndexesQuery;
 use PHPUnit\Framework\TestCase;
 
 class IndexesQueryTest extends TestCase

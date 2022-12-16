@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Contracts;
+namespace Meilisearch\Contracts;
 
-use MeiliSearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Indexes;
 
 class IndexesResults extends Data
 {

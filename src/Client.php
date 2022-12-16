@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch;
+namespace Meilisearch;
 
-use MeiliSearch\Contracts\Http as HttpContract;
-use MeiliSearch\Delegates\HandlesIndex;
-use MeiliSearch\Delegates\HandlesSystem;
-use MeiliSearch\Endpoints\Delegates\HandlesDumps;
-use MeiliSearch\Endpoints\Delegates\HandlesKeys;
-use MeiliSearch\Endpoints\Delegates\HandlesTasks;
-use MeiliSearch\Endpoints\Dumps;
-use MeiliSearch\Endpoints\Health;
-use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Endpoints\Keys;
-use MeiliSearch\Endpoints\Stats;
-use MeiliSearch\Endpoints\Tasks;
-use MeiliSearch\Endpoints\TenantToken;
-use MeiliSearch\Endpoints\Version;
-use MeiliSearch\Http\Client as MeilisearchClientAdapter;
+use Meilisearch\Contracts\Http as HttpContract;
+use Meilisearch\Delegates\HandlesIndex;
+use Meilisearch\Delegates\HandlesSystem;
+use Meilisearch\Endpoints\Delegates\HandlesDumps;
+use Meilisearch\Endpoints\Delegates\HandlesKeys;
+use Meilisearch\Endpoints\Delegates\HandlesTasks;
+use Meilisearch\Endpoints\Dumps;
+use Meilisearch\Endpoints\Health;
+use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Keys;
+use Meilisearch\Endpoints\Stats;
+use Meilisearch\Endpoints\Tasks;
+use Meilisearch\Endpoints\TenantToken;
+use Meilisearch\Endpoints\Version;
+use Meilisearch\Http\Client as MeilisearchClientAdapter;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;

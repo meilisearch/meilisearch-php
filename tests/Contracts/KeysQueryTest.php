@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Contracts;
 
-use MeiliSearch\Contracts\KeysQuery;
+use Meilisearch\Contracts\KeysQuery;
 use PHPUnit\Framework\TestCase;
 
 class KeysQueryTest extends TestCase

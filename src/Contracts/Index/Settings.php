@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Contracts\Index;
+namespace Meilisearch\Contracts\Index;
 
-use MeiliSearch\Contracts\Data;
+use Meilisearch\Contracts\Data;
 
 class Settings extends Data implements \JsonSerializable
 {
