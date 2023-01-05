@@ -9,7 +9,7 @@ use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Exceptions\JsonDecodingException;
 use Meilisearch\Exceptions\JsonEncodingException;
 use Meilisearch\Http\Client;
-use Meilisearch\Meilisearch;
+use Meilisearch\MeiliSearch;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
@@ -217,7 +217,7 @@ class ClientTest extends TestCase
             ->withConsecutive(
                 [
                     $this->equalTo('User-Agent'),
-                    $this->equalTo(Meilisearch::qualifiedVersion()),
+                    $this->equalTo(MeiliSearch::qualifiedVersion()),
                 ],
                 [
                     $this->equalTo('Authorization'),
@@ -247,7 +247,7 @@ class ClientTest extends TestCase
             ->withConsecutive(
                 [
                     $this->equalTo('User-Agent'),
-                    $this->equalTo($customAgent.';'.Meilisearch::qualifiedVersion()),
+                    $this->equalTo($customAgent.';'.MeiliSearch::qualifiedVersion()),
                 ],
                 [
                     $this->equalTo('Authorization'),
@@ -276,7 +276,7 @@ class ClientTest extends TestCase
             ->withConsecutive(
                 [
                     $this->equalTo('User-Agent'),
-                    $this->equalTo(Meilisearch::qualifiedVersion()),
+                    $this->equalTo(MeiliSearch::qualifiedVersion()),
                 ],
                 [
                     $this->equalTo('Authorization'),
