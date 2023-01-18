@@ -14,11 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     name: linter-check
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: 8.1
+          coverage: none
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress
       - name: Run linter
@@ -28,11 +29,12 @@ jobs:
     runs-on: ubuntu-latest
     name: phpstan-tests
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: 8.2
+          coverage: none
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress
       - name: Run types tests with PHPStan
@@ -45,14 +47,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['7.4', '8.0', '8.1', '8.2']
     name: integration-tests (PHP ${{ matrix.php-versions }})
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
+        coverage: none
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
