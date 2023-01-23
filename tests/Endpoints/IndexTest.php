@@ -192,7 +192,7 @@ final class IndexTest extends TestCase
         $results = array_unique($allIndexUids);
         $expected = [$this->index->getUid(), 'other-index'];
 
-        $this->assertSame(sort($results), sort($expected));
+        $this->assertSame($expected, $results);
     }
 
     public function testWaitForTaskDefault(): void
