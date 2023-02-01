@@ -12,10 +12,18 @@ class TasksQuery
 
     private int $from;
     private int $limit;
+    private int $canceledBy;
 
     public function setFrom(int $from): TasksQuery
     {
         $this->from = $from;
+
+        return $this;
+    }
+
+    public function setCanceledBy(int $canceledBy): TasksQuery
+    {
+        $this->canceledBy = $canceledBy;
 
         return $this;
     }
@@ -32,7 +40,6 @@ class TasksQuery
         return array_filter([
             'from' => $this->from ?? null,
             'limit' => $this->limit ?? null,
-            'next' => $this->next ?? null,
             'beforeEnqueuedAt' => $this->formatDate($this->beforeEnqueuedAt ?? null),
             'afterEnqueuedAt' => $this->formatDate($this->afterEnqueuedAt ?? null),
             'beforeStartedAt' => $this->formatDate($this->beforeStartedAt ?? null),
