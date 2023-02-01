@@ -6,25 +6,16 @@ namespace Meilisearch\Delegates;
 
 trait TasksQueryTrait
 {
-    private int $next;
     private array $types;
     private array $statuses;
     private array $indexUids;
     private array $uids;
-    private array $canceledBy;
     private \DateTime $beforeEnqueuedAt;
     private \DateTime $afterEnqueuedAt;
     private \DateTime $beforeStartedAt;
     private \DateTime $afterStartedAt;
     private \DateTime $beforeFinishedAt;
     private \DateTime $afterFinishedAt;
-
-    public function setNext(int $next)
-    {
-        $this->next = $next;
-
-        return $this;
-    }
 
     public function setTypes(array $types)
     {
@@ -55,13 +46,6 @@ trait TasksQueryTrait
     public function setUids(array $uids)
     {
         $this->uids = $uids;
-
-        return $this;
-    }
-
-    public function setCanceledBy(array $canceledBy)
-    {
-        $this->canceledBy = $canceledBy;
 
         return $this;
     }
@@ -110,8 +94,15 @@ trait TasksQueryTrait
 
     public function toArray(): array
     {
-        return array_filter([
-            'next' => $this->next ?? null,
+        return array_filter(
+            $this->baseArray(),
+            function ($item) { return null != $item || is_numeric($item); }
+        );
+    }
+
+    protected function baseArray(): array
+    {
+        return [
             'beforeEnqueuedAt' => $this->formatDate($this->beforeEnqueuedAt ?? null),
             'afterEnqueuedAt' => $this->formatDate($this->afterEnqueuedAt ?? null),
             'beforeStartedAt' => $this->formatDate($this->beforeStartedAt ?? null),
@@ -120,10 +111,9 @@ trait TasksQueryTrait
             'afterFinishedAt' => $this->formatDate($this->afterFinishedAt ?? null),
             'statuses' => $this->formatArray($this->statuses ?? null),
             'uids' => $this->formatArray($this->uids ?? null),
-            'canceledBy' => $this->formatArray($this->canceledBy ?? null),
             'types' => $this->formatArray($this->types ?? null),
             'indexUids' => $this->formatArray($this->indexUids ?? null),
-        ], function ($item) { return null != $item || is_numeric($item); });
+        ];
     }
 
     private function formatDate(?\DateTime $date)
