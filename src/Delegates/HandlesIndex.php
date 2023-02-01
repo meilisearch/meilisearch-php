@@ -10,14 +10,9 @@ use Meilisearch\Endpoints\Indexes;
 
 trait HandlesIndex
 {
-    public function getAllIndexes(IndexesQuery $options = null): IndexesResults
+    public function getIndexes(IndexesQuery $options = null): IndexesResults
     {
         return $this->index->all($options ?? null);
-    }
-
-    public function getAllRawIndexes(IndexesQuery $options = null): array
-    {
-        return $this->index->allRaw($options ?? []);
     }
 
     public function getRawIndex(string $uid): array
@@ -38,17 +33,6 @@ trait HandlesIndex
     public function deleteIndex(string $uid): array
     {
         return $this->index($uid)->delete();
-    }
-
-    public function deleteAllIndexes(): array
-    {
-        $tasks = [];
-        $indexes = $this->getAllIndexes();
-        foreach ($indexes as $index) {
-            $tasks[] = $index->delete();
-        }
-
-        return $tasks;
     }
 
     public function createIndex(string $uid, array $options = []): array
