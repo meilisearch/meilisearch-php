@@ -16,13 +16,6 @@ class TasksQueryTest extends TestCase
         $this->assertEquals($data->toArray(), ['types' => 'abc,xyz']);
     }
 
-    public function testSetNext(): void
-    {
-        $data = (new TasksQuery())->setNext(99);
-
-        $this->assertEquals($data->toArray(), ['next' => 99]);
-    }
-
     public function testSetAnyDateFilter(): void
     {
         $date = new \DateTime();
@@ -47,10 +40,10 @@ class TasksQueryTest extends TestCase
 
     public function testToArrayWithDifferentSets(): void
     {
-        $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setNext(99)->setStatuses(['enqueued']);
+        $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setCanceledBy([1, 4])->setStatuses(['enqueued']);
 
         $this->assertEquals($data->toArray(), [
-            'limit' => 9, 'next' => 99, 'from' => 10, 'statuses' => 'enqueued',
+            'limit' => 9, 'from' => 10, 'statuses' => 'enqueued', 'canceledBy' => '1,4',
         ]);
     }
 }
