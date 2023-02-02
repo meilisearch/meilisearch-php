@@ -85,24 +85,6 @@ final class IndexTest extends TestCase
         $this->assertInstanceOf(\DateTimeInterface::class, $this->index->getUpdatedAt());
     }
 
-    public function testGetCreatedAtString(): void
-    {
-        $indexB = $this->client->index('indexB');
-        $rawInfo = $this->index->fetchRawInfo();
-
-        $this->assertNull($indexB->getCreatedAtString());
-        $this->assertSame($rawInfo['createdAt'], $this->index->getCreatedAtString());
-    }
-
-    public function testGetUpdatedAtString(): void
-    {
-        $indexB = $this->client->index('indexB');
-        $rawInfo = $this->index->fetchRawInfo();
-
-        $this->assertNull($indexB->getUpdatedAtString());
-        $this->assertSame($rawInfo['updatedAt'], $this->index->getUpdatedAtString());
-    }
-
     public function testFetchRawInfo(): void
     {
         $indexName = $this->safeIndexName('books-2');

@@ -27,8 +27,8 @@ class Indexes extends Endpoint
 
     private ?string $uid;
     private ?string $primaryKey;
-    private ?string $createdAt;
-    private ?string $updatedAt;
+    private ?\DateTime $createdAt;
+    private ?\DateTime $updatedAt;
     private Tasks $tasks;
 
     public function __construct(Http $http, $uid = null, $primaryKey = null, $createdAt = null, $updatedAt = null)
@@ -48,8 +48,8 @@ class Indexes extends Endpoint
             $this->http,
             $attributes['uid'],
             $attributes['primaryKey'],
-            $attributes['createdAt'],
-            $attributes['updatedAt'],
+            static::parseDate($attributes['createdAt']),
+            static::parseDate($attributes['updatedAt']),
         );
     }
 
@@ -60,8 +60,8 @@ class Indexes extends Endpoint
     {
         $this->uid = $attributes['uid'];
         $this->primaryKey = $attributes['primaryKey'];
-        $this->createdAt = $attributes['createdAt'];
-        $this->updatedAt = $attributes['updatedAt'];
+        $this->createdAt = static::parseDate($attributes['createdAt']);
+        $this->updatedAt = static::parseDate($attributes['updatedAt']);
 
         return $this;
     }
@@ -113,20 +113,10 @@ class Indexes extends Endpoint
 
     public function getCreatedAt(): ?\DateTime
     {
-        return static::parseDate($this->createdAt);
-    }
-
-    public function getCreatedAtString(): ?string
-    {
         return $this->createdAt;
     }
 
     public function getUpdatedAt(): ?\DateTime
-    {
-        return static::parseDate($this->updatedAt);
-    }
-
-    public function getUpdatedAtString(): ?string
     {
         return $this->updatedAt;
     }
