@@ -26,10 +26,10 @@ class CancelTasksQueryTest extends TestCase
 
     public function testToArrayWithDifferentSets(): void
     {
-        $data = (new CancelTasksQuery())->setCanceledBy([1, 2, 3])->setStatuses(['enqueued']);
+        $data = (new CancelTasksQuery())->setUids([1, 2, 3])->setStatuses(['enqueued']);
 
         $this->assertEquals($data->toArray(), [
-            'canceledBy' => '1,2,3', 'statuses' => 'enqueued',
+            'uids' => '1,2,3', 'statuses' => 'enqueued',
         ]);
     }
 }
