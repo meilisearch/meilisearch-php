@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Meilisearch;
 
 use Meilisearch\Contracts\Http as HttpContract;
-use Meilisearch\Endpoints\Delegates\HandlesIndex;
-use Meilisearch\Endpoints\Delegates\HandlesSystem;
 use Meilisearch\Endpoints\Delegates\HandlesDumps;
+use Meilisearch\Endpoints\Delegates\HandlesIndex;
 use Meilisearch\Endpoints\Delegates\HandlesKeys;
+use Meilisearch\Endpoints\Delegates\HandlesSystem;
 use Meilisearch\Endpoints\Delegates\HandlesTasks;
 use Meilisearch\Endpoints\Dumps;
 use Meilisearch\Endpoints\Health;
