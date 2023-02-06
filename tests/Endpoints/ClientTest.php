@@ -16,9 +16,7 @@ final class ClientTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
         /* @phpstan-ignore-next-line */
-        $this->assertIsIterable($this->client->getAllIndexes());
-        /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getAllRawIndexes()['results']);
+        $this->assertIsIterable($this->client->getIndexes());
         /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->client->getRawIndex($index->getUid()));
     }
@@ -32,23 +30,16 @@ final class ClientTest extends TestCase
         $this->assertInstanceOf(Indexes::class, $this->client->index($index->getUid()));
     }
 
-    public function testGetAllIndexesWhenEmpty(): void
+    public function testgetIndexesWhenEmpty(): void
     {
-        $response = $this->client->getAllIndexes();
+        $response = $this->client->getIndexes();
 
         $this->assertEmpty($response);
     }
 
-    public function testGetAllIndexesWithPagination(): void
+    public function testgetIndexesWithPagination(): void
     {
-        $response = $this->client->getAllIndexes((new IndexesQuery())->setLimit(1)->setOffset(99999));
-
-        $this->assertEmpty($response);
-    }
-
-    public function testGetAllRawIndexesWhenEmpty(): void
-    {
-        $response = $this->client->getAllRawIndexes()['results'];
+        $response = $this->client->getIndexes((new IndexesQuery())->setLimit(1)->setOffset(99999));
 
         $this->assertEmpty($response);
     }
@@ -97,7 +88,7 @@ final class ClientTest extends TestCase
         $this->assertSame('ObjectId', $index->getPrimaryKey());
     }
 
-    public function testGetAllIndexes(): void
+    public function testgetIndexes(): void
     {
         $booksIndex1 = $this->safeIndexName('books-1');
         $booksIndex2 = $this->safeIndexName('books-2');
@@ -106,23 +97,9 @@ final class ClientTest extends TestCase
         $response = $this->client->createIndex($booksIndex2);
         $this->client->waitForTask($response['taskUid']);
 
-        $indexes = $this->client->getAllIndexes();
+        $indexes = $this->client->getIndexes();
 
         $this->assertCount(2, $indexes);
-    }
-
-    public function testGetAllRawIndexes(): void
-    {
-        $booksIndex1 = $this->safeIndexName('books-1');
-        $booksIndex2 = $this->safeIndexName('books-2');
-        $response = $this->client->createIndex($booksIndex1);
-        $this->client->waitForTask($response['taskUid']);
-        $response = $this->client->createIndex($booksIndex2);
-        $this->client->waitForTask($response['taskUid']);
-
-        $res = $this->client->getAllRawIndexes()['results'];
-
-        $this->assertNotInstanceOf(Indexes::class, $res[0]);
     }
 
     public function testGetRawIndex(): void
@@ -151,7 +128,7 @@ final class ClientTest extends TestCase
     {
         $this->createEmptyIndex($this->safeIndexName());
 
-        $response = $this->client->getAllIndexes();
+        $response = $this->client->getIndexes();
         $this->assertCount(1, $response);
 
         $response = $this->client->deleteIndex('index');
@@ -161,44 +138,9 @@ final class ClientTest extends TestCase
         $index = $this->client->getIndex('index');
 
         $this->assertEmpty($index);
-        $indexes = $this->client->getAllIndexes();
+        $indexes = $this->client->getIndexes();
 
         $this->assertCount(0, $indexes);
-    }
-
-    public function testDeleteAllIndexes(): void
-    {
-        $this->createEmptyIndex($this->safeIndexName('books-1'));
-        $this->createEmptyIndex($this->safeIndexName('books-2'));
-
-        $response = $this->client->getAllIndexes();
-
-        $this->assertCount(2, $response);
-
-        $res = $this->client->deleteAllIndexes();
-
-        $taskUids = array_map(function ($task) {
-            return $task['taskUid'];
-        }, $res);
-        $res = $this->client->waitForTasks($taskUids);
-
-        $response = $this->client->getAllIndexes();
-
-        $this->assertCount(0, $response);
-    }
-
-    public function testDeleteAllIndexesWhenThereAreNoIndexes(): void
-    {
-        $response = $this->client->getAllIndexes();
-        $this->assertCount(0, $response);
-
-        $res = $this->client->deleteAllIndexes();
-        $taskUids = array_map(function ($task) {
-            return $task['taskUid'];
-        }, $res);
-        $this->client->waitForTasks($taskUids);
-
-        $this->assertCount(0, $response);
     }
 
     public function testGetIndex(): void

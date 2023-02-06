@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Meilisearch\Client;
+use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Endpoints\Indexes;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;
@@ -53,11 +54,14 @@ abstract class TestCase extends BaseTestCase
 
     protected function tearDown(): void
     {
-        $res = $this->client->deleteAllIndexes();
-        $uids = array_map(function ($task) {
-            return $task['taskUid'];
-        }, $res);
-        $this->client->waitForTasks($uids);
+        $indexes = $this->client->getIndexes((new IndexesQuery())->setLimit(100))->getResults();
+        $tasks = [];
+
+        foreach ($indexes as $index) {
+            array_push($tasks, $index->delete()['taskUid']);
+        }
+
+        $this->client->waitForTasks($tasks);
     }
 
     public function assertIsValidPromise(array $promise): void

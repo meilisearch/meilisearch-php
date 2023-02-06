@@ -212,6 +212,7 @@ class ClientTest extends TestCase
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
 
+        /* @phpstan-ignore-next-line */
         $requestStub->expects($this->any())
             ->method('withAddedHeader')
             ->withConsecutive(
@@ -242,6 +243,7 @@ class ClientTest extends TestCase
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
 
+        /* @phpstan-ignore-next-line */
         $requestStub->expects($this->any())
             ->method('withAddedHeader')
             ->withConsecutive(
@@ -271,6 +273,7 @@ class ClientTest extends TestCase
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
 
+        /* @phpstan-ignore-next-line */
         $requestStub->expects($this->any())
             ->method('withAddedHeader')
             ->withConsecutive(
