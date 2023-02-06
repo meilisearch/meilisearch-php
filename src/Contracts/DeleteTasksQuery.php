@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-use Meilisearch\Delegates\TasksQueryTrait;
+use Meilisearch\Endpoints\Delegates\TasksQueryTrait;
 
 class DeleteTasksQuery
 {

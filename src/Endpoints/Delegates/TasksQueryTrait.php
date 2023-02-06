@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Meilisearch\Delegates;
+namespace Meilisearch\Endpoints\Delegates;
 
 trait TasksQueryTrait
 {
