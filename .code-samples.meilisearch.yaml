@@ -3,10 +3,39 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+getting_started_faceting: |-
+  $client->index('movies')->updateFaceting(['maxValuesPerFacet' => 2]);
+getting_started_pagination: |-
+  $client->index('movies')->updatePagination(['maxTotalHits' => 500]);
+synonyms_guide_1: |-
+  $client->index('movies')->updateSynonyms([
+    'great' => ['fantastic'],
+    'fantastic' => ['great'],
+  ]);
+date_guide_index_1: |-
+  $gamesJson = file_get_contents('games.json');
+  $games = json_decode($gamesJson);
+
+  $client->index('games')->addDocuments($games)
+date_guide_filterable_attributes_1: |-
+  $client->index('games')->updateFilterableAttributes(['release_timestamp']);
+date_guide_filter_1: |-
+  $client->index('games')->search('', [
+    'filter' => ['release_timestamp >= 1514761200 AND release_timestamp < 1672527600']
+  ])
+date_guide_sortable_attributes_1: |-
+  $client->index('games')->updateSortableAttributes(['release_timestamp']);
+date_guide_sort_1: |-
+  $client->index('games')->search('', ['sort' => ['release_timestamp:desc']]);
 async_guide_filter_by_date_1: |-
   $client->getTasks((new TasksQuery())->setAfterEnqueuedAt(new \DateTime('2020-10-11T11:49:53.000Z'));
 async_guide_multiple_filters_1: |-
-  $client->getTasks((new TasksQuery())->setStatuses(['processing'])->setUids(['movies'])->setTypes(['documentAdditionOrUpdate', 'documentDeletion']);
+  $client->getTasks(
+    (new TasksQuery())
+      ->setStatuses(['processing'])
+      ->setUids(['movies'])
+      ->setTypes(['documentAdditionOrUpdate', 'documentDeletion'])
+  );
 async_guide_filter_by_ids_1: |-
   $client->getTasks((new TasksQuery())->setUids([5, 10, 13]));
 async_guide_filter_by_statuses_1: |-
@@ -36,17 +65,13 @@ getting_started_typo_tolerance: |-
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
 list_all_indexes_1: |-
-  $client->getAllIndexes((new IndexesQuery())->setLimit(3));
+  $client->getIndexes((new IndexesQuery())->setLimit(3));
 create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'id']);
 update_an_index_1: |-
   $client->updateIndex('movies', ['primaryKey' => 'id']);
-  // OR
-  $client->index('movies')->update(['primaryKey' => 'id']);
 delete_an_index_1: |-
   $client->deleteIndex('movies');
-  // OR
-  $client->index('movies')->delete();
 get_one_document_1: |-
   $client->index('movies')->getDocument(25684, ['id', 'title', 'poster', 'release_date']);
 get_documents_1: |-
@@ -76,14 +101,7 @@ delete_one_document_1: |-
 delete_documents_1: |-
   $client->index('movies')->deleteDocuments([23488, 153738, 437035, 363869]);
 search_post_1: |-
-  // Do a search
-  $searchResults = $client->index('movies')->search('american ninja');
-
-  // Get results in an Array using a getter
-  $hits = $searchResults->getHits();
-
-  // Get the decoded response of Meilisearch, see response below
-  $response = $searchResults->getRaw();
+  $client->index('movies')->search('american ninja');
 get_all_tasks_1: |-
   $client->getTasks();
 get_task_1: |-
@@ -400,12 +418,12 @@ landing_getting_started_1: |-
   $client = new Client('http://localhost:7700', 'masterKey');
 
   $client->index('movies')->addDocuments([
-    [ 'id' => 1, 'title' => 'Carol'],
-    [ 'id' => 2, 'title' => 'Wonder Woman'],
-    [ 'id' => 3, 'title' => 'Life of Pi'],
-    [ 'id' => 4, 'title' => 'Mad Max: Fury Road'],
-    [ 'id' => 5, 'title' => 'Moana'],
-    [ 'id' => 6, 'title' => 'Philadelphia'],
+    ['id' => 1, 'title' => 'Carol'],
+    ['id' => 2, 'title' => 'Wonder Woman'],
+    ['id' => 3, 'title' => 'Life of Pi'],
+    ['id' => 4, 'title' => 'Mad Max: Fury Road'],
+    ['id' => 5, 'title' => 'Moana'],
+    ['id' => 6, 'title' => 'Philadelphia'],
   ]);
 documents_guide_add_movie_1: |-
   $client->index('movies')->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
@@ -500,11 +518,13 @@ getting_started_communicating_with_a_protected_instance: |-
 faceted_search_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
 faceted_search_filter_1: |-
-  $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
+  $client->index('movies')
+    ->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 faceted_search_facets_1: |-
   $client->index('movies')->search('Batman', ['facets' => ['genres']]);
 faceted_search_walkthrough_filter_1: |-
-  $client->index('movies')->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
+  $client->index('movies')
+    ->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
 post_dump_1: |-
   $client->createDump();
 phrase_search_1: |-
@@ -534,17 +554,21 @@ geosearch_guide_filter_settings_1: |-
     '_geo'
   ]);
 geosearch_guide_filter_usage_1: |-
-  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000)']);
+  $client->index('restaurants')
+    ->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000)']);
 geosearch_guide_filter_usage_2: |-
-  $client->index('restaurants')->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000) AND type = pizza']);
+  $client->index('restaurants')
+    ->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000) AND type = pizza']);
 geosearch_guide_sort_settings_1: |-
   $client->index('restaurants')->updateSortableAttributes([
     '_geo'
   ]);
 geosearch_guide_sort_usage_1: |-
-  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc']]);
+  $client->index('restaurants')
+    ->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc']]);
 geosearch_guide_sort_usage_2: |-
-  $client->index('restaurants')->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc', 'rating:desc']]);
+  $client->index('restaurants')
+    ->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc', 'rating:desc']]);
 primary_field_guide_create_index_primary_key: |-
   $client->createIndex('books', ['primaryKey' => 'reference_number']);
 primary_field_guide_update_document_primary_key: |-
