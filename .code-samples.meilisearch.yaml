@@ -16,13 +16,13 @@ date_guide_index_1: |-
   $gamesJson = file_get_contents('games.json');
   $games = json_decode($gamesJson);
 
-  $client->index('games')->addDocuments($games)
+  $client->index('games')->addDocuments($games);
 date_guide_filterable_attributes_1: |-
   $client->index('games')->updateFilterableAttributes(['release_timestamp']);
 date_guide_filter_1: |-
   $client->index('games')->search('', [
     'filter' => ['release_timestamp >= 1514761200 AND release_timestamp < 1672527600']
-  ])
+  ]);
 date_guide_sortable_attributes_1: |-
   $client->index('games')->updateSortableAttributes(['release_timestamp']);
 date_guide_sort_1: |-
@@ -53,9 +53,9 @@ async_guide_canceled_by_1: |-
 swap_indexes_1: |-
   $client->swapIndexes([['indexA', 'indexB'], ['indexX', 'indexY']]);
 search_parameter_guide_hitsperpage_1: |-
-  $client->index('movies')->search('', ['hitsPerPage' => 15])
+  $client->index('movies')->search('', ['hitsPerPage' => 15]);
 search_parameter_guide_page_1: |-
-  $client->index('movies')->search('', ['page' => 2])
+  $client->index('movies')->search('', ['page' => 2]);
 getting_started_typo_tolerance: |-
   $client->index('books')->updateTypoTolerance([
     'minWordSizeForTypos' => [
@@ -124,7 +124,7 @@ update_a_key_1: |-
       'description' => 'Manage documents: Products/Reviews API key'
     ]);
 delete_a_key_1: |-
-  $client->deleteKey('6062abda-a5aa-4414-ac91-ecd7944c0f8d')
+  $client->deleteKey('6062abda-a5aa-4414-ac91-ecd7944c0f8d');
 get_settings_1: |-
   $client->index('movies')->getSettings();
 update_settings_1: |-
@@ -294,11 +294,17 @@ field_properties_guide_displayed_1: |-
     'release_date'
   ]);
 filtering_guide_1: |-
-  $client->index('movies')->search('Avengers', ['filter' => 'release_date > 795484800']);
+  $client->index('movies')->search('Avengers', [
+    'filter' => 'release_date > 795484800'
+  ]);
 filtering_guide_2: |-
-  $client->index('movies')->search('Batman', ['filter' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")']);
+  $client->index('movies')->search('Batman', [
+    'filter' => 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")'
+  ]);
 filtering_guide_3: |-
-  $client->index('movies')->search('Planet of the Apes', ['filter' => 'rating >= 3 AND (NOT director = "Tim Burton")']);
+  $client->index('movies')->search('Planet of the Apes', [
+    'filter' => 'rating >= 3 AND (NOT director = "Tim Burton")'
+  ]);
 search_parameter_guide_query_1: |-
   $client->index('movies')->search('shifu');
 search_parameter_guide_offset_1: |-
@@ -306,13 +312,23 @@ search_parameter_guide_offset_1: |-
 search_parameter_guide_limit_1: |-
   $client->index('movies')->search('shifu', ['limit' => 2]);
 search_parameter_guide_retrieve_1: |-
-  $client->index('movies')->search('shifu', ['attributesToRetrieve' => ['overview', 'title']]);
+  $client->index('movies')->search('shifu', [
+    'attributesToRetrieve' => ['overview', 'title']
+  ]);
 search_parameter_guide_crop_1: |-
-  $client->index('movies')->search('shifu', ['attributesToCrop' => ['overview'], 'cropLength' => 5]);
+  $client->index('movies')->search('shifu', [
+    'attributesToCrop' => ['overview'],
+    'cropLength' => 5
+  ]);
 search_parameter_guide_crop_marker_1: |-
-  $client->index('movies')->search('shifu', ['attributesToCrop' => ['overview'], 'cropMarker' => '[…]']);
+  $client->index('movies')->search('shifu', [
+    'attributesToCrop' => ['overview'],
+    'cropMarker' => '[…]'
+  ]);
 search_parameter_guide_highlight_1: |-
-  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview']]);
+  $client->index('movies')->search('winter feast', [
+    'attributesToHighlight' => ['overview']
+  ]);
 search_parameter_guide_highlight_tag_1: |-
   $client->index('movies')->search('winter feast', [
     'attributesToHighlight' => ['overview'],
@@ -320,11 +336,14 @@ search_parameter_guide_highlight_tag_1: |-
     'highlightPostTag' => '</span>'
   ]);
 search_parameter_guide_show_matches_position_1: |-
-  $client->index('movies')->search('winter feast', ['attributesToHighlight' => ['overview'], 'showMatchesPosition' => true]);
+  $client->index('movies')->search('winter feast', [
+    'attributesToHighlight' => ['overview'],
+    'showMatchesPosition' => true
+  ]);
 search_parameter_guide_matching_strategy_1: |-
-  $client->index('movies')->search('big fat liar', [ 'matchingStrategy' => 'last' ]);
+  $client->index('movies')->search('big fat liar', ['matchingStrategy' => 'last']);
 search_parameter_guide_matching_strategy_2: |-
-  $client->index('movies')->search('big fat liar', [ 'matchingStrategy' => 'all' ]);
+  $client->index('movies')->search('big fat liar', ['matchingStrategy' => 'all']);
 settings_guide_synonyms_1: |-
   $client->index('tops')->updateSettings([
     'synonyms' => [
@@ -413,7 +432,7 @@ add_movies_json_1: |-
   $moviesJson = file_get_contents('movies.json');
   $movies = json_decode($moviesJson);
 
-  $client->index('movies')->addDocuments($movies)
+  $client->index('movies')->addDocuments($movies);
 landing_getting_started_1: |-
   $client = new Client('http://localhost:7700', 'masterKey');
 
@@ -494,13 +513,22 @@ getting_started_synonyms: |-
     'piglet' => ['winnie']
   ]);
 getting_started_filtering: |-
-  $client->index('meteorites')->search('', ['filter' => 'mass < 200']);
+  $client->index('meteorites')->search('', [
+    'filter' => 'mass < 200'
+  ]);
 getting_started_geo_radius: |-
-  $client->index('meteorites')->search('', ['filter' => '_geoRadius(46.9480, 7.4474, 210000)']);
+  $client->index('meteorites')->search('', [
+    'filter' => '_geoRadius(46.9480, 7.4474, 210000)'
+  ]);
 getting_started_geo_point: |-
-  $client->index('meteorites')->search('', ['sort' => ['_geoPoint(48.8583701,2.2922926):asc']]);
+  $client->index('meteorites')->search('', [
+    'sort' => ['_geoPoint(48.8583701,2.2922926):asc']
+  ]);
 getting_started_sorting: |-
-  $client->index('meteorites')->search('', ['filter' => 'mass < 200', 'sort' => ['mass:asc']]);
+  $client->index('meteorites')->search('', [
+    'filter' => 'mass < 200',
+    'sort' => ['mass:asc']
+  ]);
 getting_started_configure_settings: |-
   $client->index('meteorites')->updateSettings([
     'filterableAttributes' => [
@@ -518,13 +546,15 @@ getting_started_communicating_with_a_protected_instance: |-
 faceted_search_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
 faceted_search_filter_1: |-
-  $client->index('movies')
-    ->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
+  $client->index('movies')->search('thriller', [
+    'filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']
+  ]);
 faceted_search_facets_1: |-
   $client->index('movies')->search('Batman', ['facets' => ['genres']]);
 faceted_search_walkthrough_filter_1: |-
-  $client->index('movies')
-    ->search('thriller', ['filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']]);
+  $client->index('movies')->search('thriller', [
+    'filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']
+  ]);
 post_dump_1: |-
   $client->createDump();
 phrase_search_1: |-
@@ -554,21 +584,25 @@ geosearch_guide_filter_settings_1: |-
     '_geo'
   ]);
 geosearch_guide_filter_usage_1: |-
-  $client->index('restaurants')
-    ->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000)']);
+  $client->index('restaurants')->search('', [
+    'filter' => '_geoRadius(45.472735, 9.184019, 2000)'
+  ]);
 geosearch_guide_filter_usage_2: |-
-  $client->index('restaurants')
-    ->search('', ['filter' => '_geoRadius(45.472735, 9.184019, 2000) AND type = pizza']);
+  $client->index('restaurants')->search('', [
+    'filter' => '_geoRadius(45.472735, 9.184019, 2000) AND type = pizza'
+  ]);
 geosearch_guide_sort_settings_1: |-
   $client->index('restaurants')->updateSortableAttributes([
     '_geo'
   ]);
 geosearch_guide_sort_usage_1: |-
-  $client->index('restaurants')
-    ->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc']]);
+  $client->index('restaurants')->search('', [
+    'sort' => ['_geoPoint(48.8561446,2.2978204):asc']
+  ]);
 geosearch_guide_sort_usage_2: |-
-  $client->index('restaurants')
-    ->search('', ['sort' => ['_geoPoint(48.8561446,2.2978204):asc', 'rating:desc']]);
+  $client->index('restaurants')->search('', [
+    'sort' => ['_geoPoint(48.8561446,2.2978204):asc', 'rating:desc']
+  ]);
 primary_field_guide_create_index_primary_key: |-
   $client->createIndex('books', ['primaryKey' => 'reference_number']);
 primary_field_guide_update_document_primary_key: |-
