@@ -16,7 +16,7 @@ jobs:
         php-versions: ['7.4', '8.0', '8.1']
     name: integration-tests-against-rc (PHP ${{ matrix.php-versions }})
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
