@@ -114,7 +114,7 @@ final class TasksTest extends TestCase
             ->setAfterEnqueuedAt(new \DateTime('yesterday'))->setStatuses(['succeeded'])->setLimit(2));
 
         $firstIndex = $response->getResults()[0]['uid'];
-        $this->assertEquals($response->getResults()[0]['status'], 'succeeded');
+        $this->assertEquals('succeeded', $response->getResults()[0]['status']);
 
         $newIndex = $this->createEmptyIndex($this->safeIndexName('movie-1'));
         $newIndex->updateDocuments(self::DOCUMENTS);
@@ -131,12 +131,12 @@ final class TasksTest extends TestCase
         $query = http_build_query(['afterEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
         $promise = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date));
 
-        $this->assertEquals($promise['type'], 'taskCancelation');
+        $this->assertEquals('taskCancelation', $promise['type']);
         $response = $this->client->waitForTask($promise['taskUid']);
 
         $this->assertEquals($response['details']['originalFilter'], '?'.$query);
-        $this->assertEquals($response['type'], 'taskCancelation');
-        $this->assertEquals($response['status'], 'succeeded');
+        $this->assertEquals('taskCancelation', $response['type']);
+        $this->assertEquals('succeeded', $response['status']);
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void
