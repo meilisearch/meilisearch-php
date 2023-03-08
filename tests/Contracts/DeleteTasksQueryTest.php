@@ -13,7 +13,7 @@ class DeleteTasksQueryTest extends TestCase
     {
         $data = (new DeleteTasksQuery())->setTypes(['abc', 'xyz']);
 
-        $this->assertEquals($data->toArray(), ['types' => 'abc,xyz']);
+        $this->assertEquals(['types' => 'abc,xyz'], $data->toArray());
     }
 
     public function testSetAnyDateFilter(): void
@@ -21,15 +21,16 @@ class DeleteTasksQueryTest extends TestCase
         $date = new \DateTime();
         $data = (new DeleteTasksQuery())->setCanceledBy([null])->setBeforeEnqueuedAt($date);
 
-        $this->assertEquals($data->toArray(), ['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
+        $this->assertEquals(['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)], $data->toArray());
     }
 
     public function testToArrayWithDifferentSets(): void
     {
         $data = (new DeleteTasksQuery())->setCanceledBy([1, 2])->setStatuses(['enqueued']);
 
-        $this->assertEquals($data->toArray(), [
+        $this->assertEquals([
             'canceledBy' => '1,2', 'statuses' => 'enqueued',
-        ]);
+        ], $data->toArray()
+        );
     }
 }
