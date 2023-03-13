@@ -7,7 +7,7 @@ namespace Meilisearch\Endpoints\Delegates;
 trait HandlesMultiSearch
 {
     /**
-     * @param list<SearchQuery> $queries
+     * @param list<\Meilisearch\Contracts\SearchQuery> $queries
      */
     public function multiSearch(array $queries = [])
     {
