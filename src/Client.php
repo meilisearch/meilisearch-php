@@ -8,6 +8,7 @@ use Meilisearch\Contracts\Http as HttpContract;
 use Meilisearch\Endpoints\Delegates\HandlesDumps;
 use Meilisearch\Endpoints\Delegates\HandlesIndex;
 use Meilisearch\Endpoints\Delegates\HandlesKeys;
+use Meilisearch\Endpoints\Delegates\HandlesMultiSearch;
 use Meilisearch\Endpoints\Delegates\HandlesSystem;
 use Meilisearch\Endpoints\Delegates\HandlesTasks;
 use Meilisearch\Endpoints\Dumps;
@@ -30,6 +31,7 @@ class Client
     use HandlesTasks;
     use HandlesKeys;
     use HandlesSystem;
+    use HandlesMultiSearch;
 
     private HttpContract $http;
     private Indexes $index;
