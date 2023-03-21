@@ -84,6 +84,26 @@ final class DocumentsTest extends TestCase
         $this->assertCount(20, $response);
     }
 
+    public function testAddDocumentsCsvWithCustomSeparator(): void
+    {
+        $index = $this->client->index('documentCsvWithCustomSeparator');
+
+        $csv = file_get_contents('./tests/datasets/songs-custom-separator.csv', true);
+
+        $promise = $index->addDocumentsCsv($csv, null, '|');
+
+        $this->assertIsValidPromise($promise);
+
+        $update = $index->waitForTask($promise['taskUid']);
+
+        $this->assertEquals($update['status'], 'succeeded');
+        $this->assertEquals($update['details']['receivedDocuments'], 6);
+
+        $documents = $index->getDocuments()->getResults();
+        $this->assertEquals('Teenage Neon Jungle', $documents[4]['album']);
+        $this->assertEquals('631152000', $documents[5]['released-timestamp']);
+    }
+
     public function testAddDocumentsJson(): void
     {
         $index = $this->client->index('documentJson');
@@ -278,6 +298,40 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
         $this->assertSame($total, $response->getTotal());
+    }
+
+    public function testAddDocumentsCsvInBatchesWithDelimiter(): void
+    {
+        $matcher = $this->exactly(2);
+        $documentCsv = 'id;title'.PHP_EOL;
+        $documentCsv .= '888221515;Young folks'.PHP_EOL;
+        $documentCsv .= '235115704;Mister Klein'.PHP_EOL;
+
+        $index = $this
+            ->getMockBuilder('\Meilisearch\Endpoints\Indexes')
+            ->onlyMethods(['addDocumentsCsv'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $index->expects($matcher)
+              ->method('addDocumentsCsv')
+              ->willReturnCallback(function (string $param) use ($matcher): void {
+                  // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
+                  // @phpstan-ignore-next-line
+                  switch ($matcher->numberOfInvocations()) {
+                      case 1:
+                          $this->assertEquals($param, ["id;title\n888221515;Young folks", null, ';']);
+                          break;
+                      case 2:
+                          $this->assertEquals($param, ["id;title\n235115704;Mister Klein", null, ';']);
+                          break;
+                      default:
+                          self::fail();
+                  }
+              })
+              ->willReturnOnConsecutiveCalls([], []);
+
+        $index->addDocumentsCsvInBatches($documentCsv, 1, null, ';');
     }
 
     public function testAddDocumentsNdjsonInBatches(): void
@@ -549,6 +603,27 @@ final class DocumentsTest extends TestCase
         $this->assertSame(499, $documents->getTotal());
     }
 
+    public function testUpdateDocumentsCsvWithDelimiter(): void
+    {
+        $index = $this->client->index('documentCsv');
+
+        $csv = file_get_contents('./tests/datasets/songs.csv', true);
+
+        $promise = $index->addDocumentsCsv($csv);
+        $index->waitForTask($promise['taskUid']);
+
+        $replacement = 'id|title'.PHP_EOL;
+        $replacement .= '888221515|Young folks'.PHP_EOL;
+
+        $promise = $index->updateDocumentsCsv($replacement, null, '|');
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocument(888221515);
+
+        $this->assertSame(888221515, (int) $response['id']);
+        $this->assertSame('Young folks', $response['title']);
+    }
+
     public function testUpdateDocumentsNdjson(): void
     {
         $index = $this->client->index('documentNdJson');
@@ -583,9 +658,7 @@ final class DocumentsTest extends TestCase
     {
         $index = $this->client->index('documentCsv');
 
-        $fileCsv = fopen('./tests/datasets/songs.csv', 'r');
-        $documentCsv = fread($fileCsv, filesize('./tests/datasets/songs.csv'));
-        fclose($fileCsv);
+        $documentCsv = file_get_contents('./tests/datasets/songs.csv', true);
 
         $addPromise = $index->addDocumentsCsv($documentCsv);
         $index->waitForTask($addPromise['taskUid']);
@@ -608,6 +681,40 @@ final class DocumentsTest extends TestCase
         $response = $index->getDocument(235115704);
         $this->assertSame(235115704, (int) $response['id']);
         $this->assertSame('Mister Klein', $response['title']);
+    }
+
+    public function testUpdateDocumentsCsvInBatchesWithDelimiter(): void
+    {
+        $matcher = $this->atLeastOnce();
+        $replacement = 'id;title'.PHP_EOL;
+        $replacement .= '888221515;Young folks'.PHP_EOL;
+        $replacement .= '235115704;Mister Klein'.PHP_EOL;
+
+        $index = $this
+            ->getMockBuilder('\Meilisearch\Endpoints\Indexes')
+            ->onlyMethods(['updateDocumentsCsv'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $index->expects($matcher)
+              ->method('updateDocumentsCsv')
+              ->willReturnCallback(function (string $param) use ($matcher): void {
+                  // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
+                  // @phpstan-ignore-next-line
+                  switch ($matcher->numberOfInvocations()) {
+                      case 1:
+                          $this->assertEquals($param, ["id;title\n888221515;Young folks", null, ';']);
+                          break;
+                      case 2:
+                          $this->assertEquals($param, ["id;title\n235115704;Mister Klein", null, ';']);
+                          break;
+                      default:
+                          self::fail();
+                  }
+              })
+              ->willReturnOnConsecutiveCalls([], []);
+
+        $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
     }
 
     public function testUpdateDocumentsNdjsonInBatches(): void
