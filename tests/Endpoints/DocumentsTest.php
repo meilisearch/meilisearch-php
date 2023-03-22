@@ -77,8 +77,8 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        $this->assertEquals($update['status'], 'succeeded');
-        $this->assertNotEquals($update['details']['receivedDocuments'], 0);
+        $this->assertEquals('succeeded', $update['status']);
+        $this->assertNotEquals(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
         $this->assertCount(20, $response);
@@ -98,8 +98,8 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        $this->assertEquals($update['status'], 'succeeded');
-        $this->assertNotEquals($update['details']['receivedDocuments'], 0);
+        $this->assertEquals('succeeded', $update['status']);
+        $this->assertNotEquals(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
         $this->assertCount(20, $response);
@@ -119,8 +119,8 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        $this->assertEquals($update['status'], 'succeeded');
-        $this->assertNotEquals($update['details']['receivedDocuments'], 0);
+        $this->assertEquals('succeeded', $update['status']);
+        $this->assertNotEquals(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
         $this->assertCount(20, $response);
