@@ -173,6 +173,6 @@ class SearchQuery
             'limit' => $this->limit ?? null,
             'hitsPerPage' => $this->hitsPerPage ?? null,
             'page' => $this->page ?? null,
-        ], function ($item) { return null != $item || is_numeric($item); });
+        ], function ($item) { return null !== $item || is_numeric($item); });
     }
 }
