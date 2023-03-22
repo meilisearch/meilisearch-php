@@ -6,6 +6,9 @@ namespace Meilisearch\Endpoints\Delegates;
 
 trait HandlesMultiSearch
 {
+    /**
+     * @param list<SearchQuery> $queries
+     */
     public function multiSearch(array $queries = [])
     {
         $body = [];
