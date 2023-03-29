@@ -305,6 +305,10 @@ filtering_guide_3: |-
   $client->index('movies')->search('Planet of the Apes', [
     'filter' => 'rating >= 3 AND (NOT director = "Tim Burton")'
   ]);
+filtering_guide_nested_1: |-
+  $client->index('movie_ratings')->search('thriller', [
+    'filter' => 'rating.users >= 90'
+  ]);
 search_parameter_guide_query_1: |-
   $client->index('movies')->search('shifu');
 search_parameter_guide_offset_1: |-
@@ -344,71 +348,6 @@ search_parameter_guide_matching_strategy_1: |-
   $client->index('movies')->search('big fat liar', ['matchingStrategy' => 'last']);
 search_parameter_guide_matching_strategy_2: |-
   $client->index('movies')->search('big fat liar', ['matchingStrategy' => 'all']);
-settings_guide_synonyms_1: |-
-  $client->index('tops')->updateSettings([
-    'synonyms' => [
-      'sweater' => ['jumper'],
-      'jumper' => ['sweater']
-    ]
-  ]);
-settings_guide_stop_words_1: |-
-  $client->index('movies')->updateSettings([
-    'stopWords' => [
-      'the',
-      'a',
-      'an'
-    ],
-  ]);
-settings_guide_ranking_rules_1: |-
-  $client->index('movies')->updateSettings([
-    'rankingRules' => [
-      'words',
-      'typo',
-      'proximity',
-      'attribute',
-      'sort',
-      'exactness',
-      'release_date:asc',
-      'rank:desc'
-    ]
-  ]);
-settings_guide_distinct_1: |-
-  $client->index('jackets')->updateSettings([
-    'distinctAttribute' => 'product_id'
-  ]);
-settings_guide_searchable_1: |-
-  $client->index('movies')->updateSettings([
-    'searchableAttributes' => [
-      'title',
-      'overview',
-      'genres'
-    ],
-  ]);
-settings_guide_displayed_1: |-
-  $client->index('movies')->updateSettings([
-    'displayedAttributes' => [
-      'title',
-      'overview',
-      'genres',
-      'release_date'
-    ]
-  ]);
-settings_guide_sortable_1: |-
-  $client->index('books')->updateSettings([
-    'sortableAttributes' => [
-      'price',
-      'author'
-    ]
-  ]);
-settings_guide_typo_tolerance_1: |-
-  $client->index('movies')->updateTypoTolerance([
-    'minWordSizeForTypos' => [
-      'twoTypos' => 12
-    ],
-    'disableOnAttributes' => [
-      'title'
-    ]
-  ]);
 typo_tolerance_guide_1: |-
   $client->index('movies')->updateTypoTolerance([
     'enabled' => false
@@ -577,6 +516,8 @@ sorting_guide_sort_parameter_1: |-
   $client->index('books')->search('science fiction', ['sort' => ['price:asc']]);
 sorting_guide_sort_parameter_2: |-
   $client->index('books')->search('butler', ['sort' => ['author:desc']]);
+sorting_guide_sort_nested_1: |-
+  $client->index('books')->search('science fiction', ['sort' => ['rating.users:asc']]);
 search_parameter_guide_sort_1: |-
   $client->index('books')->search('science fiction', ['sort' => ['price:asc']]);
 geosearch_guide_filter_settings_1: |-
@@ -680,15 +621,3 @@ update_faceting_settings_1: |-
   $client->index('books')->updateFaceting([ 'maxValuesPerFacet' => 2 ]);
 reset_faceting_settings_1: |-
   $client->index('books')->resetFaceting();
-settings_guide_faceting_1: |-
-  $client->index('movies')->updateSettings([
-    'faceting' => [
-      'maxValuesPerFacet' => 5
-    ]
-  ]);
-settings_guide_pagination_1: |-
-  $client->index('books')->updateSettings([
-    'pagination' => [
-      'maxTotalHits' => 50
-    ]
-  ]);
