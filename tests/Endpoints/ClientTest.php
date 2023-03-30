@@ -143,6 +143,21 @@ final class ClientTest extends TestCase
         $this->assertCount(0, $indexes);
     }
 
+    public function testDeleteAllIndexes(): void
+    {
+        $this->createEmptyIndex('index-1');
+        $this->createEmptyIndex('index-2');
+
+        $response = $this->client->getIndexes();
+        $this->assertCount(2, $response);
+
+        $response = $this->client->deleteAllIndexes();
+        $this->client->waitForTask($response['taskUid']);
+
+        $response = $this->client->getIndexes();
+        $this->assertCount(0, $response);
+    }
+
     public function testGetIndex(): void
     {
         $indexName = $this->safeIndexName();
