@@ -651,7 +651,7 @@ update_faceting_settings_1: |-
 reset_faceting_settings_1: |-
   $client->index('books')->resetFaceting();
 multi_search_1: |-
-  $response = $this->client->multiSearch([
+  client->multiSearch([
       (new SearchQuery())
           ->setIndexUid('movies')
           ->setQuery('pooh')
