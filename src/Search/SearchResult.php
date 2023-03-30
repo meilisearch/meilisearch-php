@@ -39,6 +39,11 @@ class SearchResult implements \Countable, \IteratorAggregate
     /**
      * @var array<string, mixed>
      */
+    private array $facetStats;
+
+    /**
+     * @var array<string, mixed>
+     */
     private array $raw;
 
     public function __construct(array $body)
@@ -64,6 +69,7 @@ class SearchResult implements \Countable, \IteratorAggregate
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->query = $body['query'];
         $this->facetDistribution = $body['facetDistribution'] ?? [];
+        $this->facetStats = $body['facetStats'] ?? [];
         $this->raw = $body;
     }
 
@@ -177,6 +183,14 @@ class SearchResult implements \Countable, \IteratorAggregate
     public function getFacetDistribution(): array
     {
         return $this->facetDistribution;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getFacetStats(): array
+    {
+        return $this->facetStats;
     }
 
     /**
