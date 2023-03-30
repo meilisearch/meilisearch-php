@@ -35,6 +35,17 @@ trait HandlesIndex
         return $this->index($uid)->delete();
     }
 
+    public function deleteAllIndexes(): array
+    {
+        $indexes = $this->getIndexes();
+
+        foreach ($indexes as $index) {
+            $response = $index->delete();
+        }
+
+        return $response ?? [];
+    }
+
     public function createIndex(string $uid, array $options = []): array
     {
         return $this->index->create($uid, $options);
