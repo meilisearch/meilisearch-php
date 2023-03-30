@@ -501,7 +501,7 @@ faceted_search_1: |-
     'facets' => ['genres', 'rating', 'language']
   ]);
 faceted_search_2: |-
-  $response = $this->client->multiSearch([
+  client->multiSearch([
     (new SearchQuery())
         ->setIndexUid('books')
         ->setFacets(['language', 'genres', 'author', 'format'])
