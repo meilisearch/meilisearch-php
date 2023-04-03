@@ -36,9 +36,9 @@ trait HandlesDocuments
         return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
     }
 
-    public function addDocumentsCsv(string $documents, ?string $primaryKey = null)
+    public function addDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv');
     }
 
     public function addDocumentsNdjson(string $documents, ?string $primaryKey = null)
@@ -56,11 +56,12 @@ trait HandlesDocuments
         return $promises;
     }
 
-    public function addDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    public function addDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null)
     {
         $promises = [];
+
         foreach (self::batchCsvString($documents, $batchSize) as $batch) {
-            $promises[] = $this->addDocumentsCsv($batch, $primaryKey);
+            $promises[] = $this->addDocumentsCsv($batch, $primaryKey, $delimiter);
         }
 
         return $promises;
@@ -86,9 +87,9 @@ trait HandlesDocuments
         return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
     }
 
-    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null)
+    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null)
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'text/csv');
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv');
     }
 
     public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null)
@@ -106,11 +107,11 @@ trait HandlesDocuments
         return $promises;
     }
 
-    public function updateDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
+    public function updateDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null)
     {
         $promises = [];
         foreach (self::batchCsvString($documents, $batchSize) as $batch) {
-            $promises[] = $this->updateDocumentsCsv($batch, $primaryKey);
+            $promises[] = $this->updateDocumentsCsv($batch, $primaryKey, $delimiter);
         }
 
         return $promises;
