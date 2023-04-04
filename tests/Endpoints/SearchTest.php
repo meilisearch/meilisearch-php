@@ -782,4 +782,20 @@ final class SearchTest extends TestCase
         $this->assertEquals(2, $response->getFacetDistribution()['genre']['fantasy']);
         $this->assertEquals(1, $response->getFacetDistribution()['genre']['adventure']);
     }
+
+    public function testSearchAndRetrieveFacetStats(): void
+    {
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
+        $this->index->updateFilterableAttributes(['info.reviewNb']);
+
+        $promise = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
+        $this->index->waitForTask($promise['taskUid']);
+
+        $response = $this->index->search(
+            null,
+            ['facets' => ['info.reviewNb']],
+        );
+
+        $this->assertEquals(['info.reviewNb' => ['min' => 50, 'max' => 1000]], $response->getFacetStats());
+    }
 }

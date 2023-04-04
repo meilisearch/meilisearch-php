@@ -6,7 +6,7 @@ namespace Meilisearch;
 
 class Meilisearch
 {
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.1.0';
 
     public static function qualifiedVersion()
     {

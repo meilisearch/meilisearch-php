@@ -26,7 +26,7 @@ final class TenantTokenTest extends TestCase
         $this->key = $this->client->createKey([
             'description' => 'tenant token key',
             'actions' => ['*'],
-            'indexes' => ['*'],
+            'indexes' => ['tenant*'],
             'expiresAt' => '2055-10-02T00:00:00Z',
         ]);
 
