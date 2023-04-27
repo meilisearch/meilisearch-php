@@ -107,7 +107,7 @@ $documents = [
 $index->addDocuments($documents); // => { "uid": 0 }
 ```
 
-With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://docs.meilisearch.com/reference/api/tasks.html#get-task).
+With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/tasks#get-task).
 
 #### Basic Search <!-- omit in toc -->
 
@@ -136,7 +136,7 @@ Array
 
 #### Custom Search <!-- omit in toc -->
 
-All the supported options are described in the [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html) section of the documentation.
+All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters) section of the documentation.
 
 💡 **More about the `search()` method in [the Wiki](https://github.com/meilisearch/meilisearch-php/wiki/Search).**
 
