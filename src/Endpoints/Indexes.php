@@ -206,7 +206,7 @@ class Indexes extends Endpoint
         // patch to prevent breaking in laravel/scout getTotalCount method,
         // affects only Meilisearch >= v0.28.0.
         if (isset($result['estimatedTotalHits'])) {
-            $result['nbHits'] = $result['estimatedTotalHits'];
+            $result['totalHits'] = $result['nbHits'] = $result['estimatedTotalHits'];
         }
 
         return $result;
