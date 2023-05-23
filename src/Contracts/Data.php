@@ -39,6 +39,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * {@inheritDoc}
+     * @return mixed 
      */
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
