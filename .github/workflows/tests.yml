@@ -86,6 +86,7 @@ jobs:
     - name: Run test suite - kriswallsmith/buzz
       run: |
         composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
+        composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
         sh scripts/tests.sh
         composer remove --dev kriswallsmith/buzz nyholm/psr7
 
