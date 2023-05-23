@@ -451,6 +451,23 @@ final class DocumentsTest extends TestCase
         $this->assertNull($this->findDocumentWithId($response, $documentIds[1]));
     }
 
+    public function testDeleteMultipleDocumentsWithFilter(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->addDocuments(self::DOCUMENTS);
+        $index->updateFilterableAttributes(['id']);
+
+        $filter = ['filter' => ['id > 0']];
+        $promise = $index->deleteDocuments($filter);
+
+        $this->assertIsValidPromise($promise);
+
+        $index->waitForTask($promise['taskUid']);
+        $response = $index->getDocuments();
+
+        $this->assertEmpty($response);
+    }
+
     public function testDeleteMultipleDocumentsWithDocumentIdAsString(): void
     {
         $documents = [
