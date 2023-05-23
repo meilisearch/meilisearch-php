@@ -6,10 +6,10 @@ namespace Meilisearch\Exceptions;
 
 class TimeOutException extends \Exception
 {
-    public $code = null;
-    public $message = null;
+    public $code;
+    public $message;
 
-    public function __construct(?string $message = null, ?int $code = null, ?\Throwable $previous = null)
+    public function __construct(string $message = null, int $code = null, \Throwable $previous = null)
     {
         $this->message = $message ?? 'Request timed out';
         $this->code = $code ?? 408;

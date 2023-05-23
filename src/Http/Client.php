@@ -58,8 +58,6 @@ class Client implements Http
     }
 
     /**
-     * @return mixed
-     *
      * @throws ClientExceptionInterface
      * @throws ApiException
      * @throws CommunicationException
@@ -76,8 +74,6 @@ class Client implements Http
 
     /**
      * @param mixed|null $body
-     *
-     * @return mixed
      *
      * @throws ApiException
      * @throws ClientExceptionInterface
@@ -119,8 +115,6 @@ class Client implements Http
     /**
      * @param mixed|null $body
      *
-     * @return mixed
-     *
      * @throws ApiException
      * @throws JsonEncodingException
      */
@@ -136,8 +130,6 @@ class Client implements Http
     }
 
     /**
-     * @return mixed
-     *
      * @throws ClientExceptionInterface
      * @throws ApiException
      */
@@ -152,8 +144,6 @@ class Client implements Http
     }
 
     /**
-     * @return mixed
-     *
      * @throws ApiException
      * @throws ClientExceptionInterface
      * @throws CommunicationException
@@ -177,8 +167,6 @@ class Client implements Http
     }
 
     /**
-     * @return mixed
-     *
      * @throws ApiException
      * @throws InvalidResponseBodyException
      * @throws JsonDecodingException
