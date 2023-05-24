@@ -15,7 +15,7 @@ class ApiException extends \Exception
     public ?string $errorLink;
     public $httpBody;
 
-    public const HINT_MESSAGE = "Hint: It might not be working because maybe you're not up to date with the Meilisearch version that `_METHOD_` call requires.";
+    public const HINT_MESSAGE = "Hint: It might not be working because maybe you're not up to date with the Meilisearch version that `%s` call requires.";
 
     public function __construct(ResponseInterface $response, $httpBody, $previous = null)
     {
@@ -90,6 +90,6 @@ class ApiException extends \Exception
 
     public static function rethrowWithHint(\Exception $e, string $methodName)
     {
-        return new \Exception(str_replace('_METHOD_', $methodName, self::HINT_MESSAGE), 0, $e);
+        return new \Exception(sprintf(self::HINT_MESSAGE, $methodName), 0, $e);
     }
 }
