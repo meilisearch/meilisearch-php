@@ -12,9 +12,6 @@ class Json implements SerializerInterface
     private const JSON_ENCODE_ERROR_MESSAGE = 'Encoding payload to json failed: "%s".';
     private const JSON_DECODE_ERROR_MESSAGE = 'Decoding payload to json failed: "%s".';
 
-    /**
-     * {@inheritDoc}
-     */
     public function serialize($data)
     {
         try {
@@ -26,9 +23,6 @@ class Json implements SerializerInterface
         return $encoded;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function unserialize(string $string)
     {
         try {

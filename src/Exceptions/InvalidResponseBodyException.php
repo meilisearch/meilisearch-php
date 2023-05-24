@@ -9,8 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 class InvalidResponseBodyException extends \Exception
 {
     public $httpStatus = 0;
-    public $httpBody = null;
-    public $message = null;
+    public $httpBody;
+    public $message;
 
     public function __construct(ResponseInterface $response, $httpBody, $previous = null)
     {
