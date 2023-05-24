@@ -474,9 +474,11 @@ final class DocumentsTest extends TestCase
 
     public function testMessageHintException(): void
     {
-        try {
-            $mockedException = new InvalidResponseBodyException($this->createMock(ResponseInterface::class), 'Invalid response');
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(0);
+        $mockedException = new InvalidResponseBodyException($responseMock, 'Invalid response');
 
+        try {
             $httpMock = $this->createMock(Http::class);
             $httpMock->expects(self::once())
                 ->method('post')
@@ -600,9 +602,11 @@ final class DocumentsTest extends TestCase
 
     public function testGetDocumentsMessageHintException(): void
     {
-        try {
-            $mockedException = new InvalidResponseBodyException($this->createMock(ResponseInterface::class), 'Invalid response');
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(0);
+        $mockedException = new InvalidResponseBodyException($responseMock, 'Invalid response');
 
+        try {
             $httpMock = $this->createMock(Http::class);
             $httpMock->expects(self::once())
                 ->method('post')
