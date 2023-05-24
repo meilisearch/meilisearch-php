@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DocumentsQuery;
+use Meilisearch\Contracts\Http;
+use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Exceptions\JsonEncodingException;
+use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase
@@ -466,6 +470,26 @@ final class DocumentsTest extends TestCase
         $response = $index->getDocuments();
 
         $this->assertEmpty($response);
+    }
+
+    public function testMessageHintException(): void
+    {
+        try {
+            $mockedException = new InvalidResponseBodyException($this->createMock(ResponseInterface::class), 'Invalid response');
+
+            $httpMock = $this->createMock(Http::class);
+            $httpMock->expects(self::once())
+                ->method('post')
+                ->willThrowException($mockedException);
+
+            $indexMock = new Indexes($httpMock, 'uid');
+            $indexMock->deleteDocuments(['filter' => ['id > 0']]);
+        } catch (\Exception $ex) {
+            $rethrowed = ApiException::rethrowWithHint($mockedException, 'deleteDocuments');
+
+            $this->assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
+            $this->assertSame($ex->getMessage(), $rethrowed->getMessage());
+        }
     }
 
     public function testDeleteMultipleDocumentsWithDocumentIdAsString(): void
