@@ -146,11 +146,11 @@ trait HandlesDocuments
         try {
             if (\array_key_exists('filter', $options) && $options['filter']) {
                 return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', $options);
-            } else {
-                // backwards compatibility:
-                // expect to be a array to send alongside as $documents_ids.
-                return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $options);
             }
+
+            // backwards compatibility:
+            // expect to be a array to send alongside as $documents_ids.
+            return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $options);
         } catch (InvalidResponseBodyException $e) {
             throw ApiException::rethrowWithHint($e, __FUNCTION__);
         }
