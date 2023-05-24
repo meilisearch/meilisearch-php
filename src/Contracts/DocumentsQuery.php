@@ -9,6 +9,7 @@ class DocumentsQuery
     private int $offset;
     private int $limit;
     private array $fields;
+    private array $filter;
 
     public function setOffset(int $offset): DocumentsQuery
     {
@@ -31,11 +32,24 @@ class DocumentsQuery
         return $this;
     }
 
+    public function setFilter(array $filter): DocumentsQuery
+    {
+        $this->filter = $filter;
+
+        return $this;
+    }
+
+    public function hasFilter(): bool
+    {
+        return isset($this->filter);
+    }
+
     public function toArray(): array
     {
         return array_filter([
             'offset' => $this->offset ?? null,
             'limit' => $this->limit ?? null,
+            'filter' => $this->filter ?? null,
             'fields' => isset($this->fields) ? implode(',', $this->fields) : null,
         ], function ($item) { return null != $item || is_numeric($item); });
     }

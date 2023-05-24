@@ -586,6 +586,38 @@ final class DocumentsTest extends TestCase
         $this->assertCount(3, $response);
     }
 
+    public function testGetDocumentsWithFilter(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->updateFilterableAttributes(['genre', 'id']);
+        $promise = $index->addDocuments(self::DOCUMENTS);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocuments((new DocumentsQuery())->setFilter(['id > 100']));
+
+        $this->assertCount(3, $response);
+    }
+
+    public function testGetDocumentsMessageHintException(): void
+    {
+        try {
+            $mockedException = new InvalidResponseBodyException($this->createMock(ResponseInterface::class), 'Invalid response');
+
+            $httpMock = $this->createMock(Http::class);
+            $httpMock->expects(self::once())
+                ->method('post')
+                ->willThrowException($mockedException);
+
+            $indexMock = new Indexes($httpMock, 'uid');
+            $indexMock->getDocuments((new DocumentsQuery())->setFilter(['id > 1']));
+        } catch (\Exception $ex) {
+            $rethrowed = ApiException::rethrowWithHint($mockedException, 'getDocuments');
+
+            $this->assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
+            $this->assertSame($ex->getMessage(), $rethrowed->getMessage());
+        }
+    }
+
     public function testUpdateDocumentsJson(): void
     {
         $index = $this->client->index('documentJson');
