@@ -59,4 +59,20 @@ final class ApiExceptionTest extends TestCase
             $this->assertEquals($expectedExceptionToString, (string) $apiException);
         }
     }
+
+    public function testRethrowWithHintException(): void
+    {
+        $e = new \Exception('Any error message that caused the root problem should be shown');
+        $apiException = ApiException::rethrowWithHint($e, 'deleteDocuments');
+
+        $this->assertStringContainsString(
+            'with the Meilisearch version that `deleteDocuments` call',
+            $apiException->getMessage()
+        );
+
+        $this->assertStringContainsString(
+            'Any error message that caused the root problem should be shown',
+            $apiException->getPrevious()->getMessage()
+        );
+    }
 }

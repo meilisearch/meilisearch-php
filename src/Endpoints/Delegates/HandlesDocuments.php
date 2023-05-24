@@ -6,7 +6,9 @@ namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\DocumentsQuery;
 use Meilisearch\Contracts\DocumentsResults;
+use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Exceptions\InvalidResponseBodyException;
 
 trait HandlesDocuments
 {
@@ -139,9 +141,19 @@ trait HandlesDocuments
         return $this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId);
     }
 
-    public function deleteDocuments(array $documents): array
+    public function deleteDocuments(array $options): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documents);
+        try {
+            if (\array_key_exists('filter', $options) && $options['filter']) {
+                return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', $options);
+            }
+
+            // backwards compatibility:
+            // expect to be a array to send alongside as $documents_ids.
+            return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $options);
+        } catch (InvalidResponseBodyException $e) {
+            throw ApiException::rethrowWithHint($e, __FUNCTION__);
+        }
     }
 
     private function assertValidDocumentId($documentId): void
