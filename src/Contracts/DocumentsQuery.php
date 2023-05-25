@@ -49,7 +49,7 @@ class DocumentsQuery
     /**
      * Checks if the $filter attribute has been set.
      *
-     * @return bool true when filter contains at least an empty array
+     * @return bool true when filter contains at least a non-empty array
      */
     public function hasFilter(): bool
     {
