@@ -74,6 +74,9 @@ curl -L https://install.meilisearch.com | sh
 
 # Launch Meilisearch
 ./meilisearch --master-key=masterKey
+
+# Or with docker (this example saves the data across docker sessions in ../meili_data)
+docker run --rm --name meili -d -p 7700:7700 -v $(pwd)/../meili_data:/meili_data getmeili/meilisearch meilisearch --master-key=secretMasterKey
 ```
 
 NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
