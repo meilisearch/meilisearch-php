@@ -32,6 +32,13 @@ class DocumentsQuery
         return $this;
     }
 
+    /**
+     * Sets the filter for the DocumentsQuery.
+     *
+     * @param list<non-empty-string|list<non-empty-string>> $filter a filter expression written as an array of strings
+     *
+     * @return DocumentsQuery the updated DocumentsQuery instance
+     */
     public function setFilter(array $filter): DocumentsQuery
     {
         $this->filter = $filter;
@@ -39,6 +46,11 @@ class DocumentsQuery
         return $this;
     }
 
+    /**
+     * Checks if the $filter attribute has been set.
+     *
+     * @return bool true when filter contains at least an empty array
+     */
     public function hasFilter(): bool
     {
         return isset($this->filter);
