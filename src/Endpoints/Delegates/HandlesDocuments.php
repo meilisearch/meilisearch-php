@@ -22,10 +22,20 @@ trait HandlesDocuments
 
     public function getDocuments(DocumentsQuery $options = null): DocumentsResults
     {
-        $query = isset($options) ? $options->toArray() : [];
-        $response = $this->http->get(self::PATH.'/'.$this->uid.'/documents', $query);
+        try {
+            $options = $options ?? new DocumentsQuery();
+            $query = $options->toArray();
 
-        return new DocumentsResults($response);
+            if ($options->hasFilter()) {
+                $response = $this->http->post(self::PATH.'/'.$this->uid.'/documents/fetch', $query);
+            } else {
+                $response = $this->http->get(self::PATH.'/'.$this->uid.'/documents', $query);
+            }
+
+            return new DocumentsResults($response);
+        } catch (\Exception $e) {
+            throw ApiException::rethrowWithHint($e, __FUNCTION__);
+        }
     }
 
     public function addDocuments(array $documents, string $primaryKey = null)
