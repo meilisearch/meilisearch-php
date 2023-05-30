@@ -21,13 +21,13 @@ class TenantToken extends Endpoint
      */
     private function validateTenantTokenArguments($searchRules, array $options = []): void
     {
-        if (!\array_key_exists('apiKey', $options) || '' === $options['apiKey'] || \strlen($options['apiKey']) <= 8) {
+        if (!isset($options['apiKey']) || ('' === $options['apiKey'] || \strlen($options['apiKey']) <= 8)) {
             throw InvalidArgumentException::emptyArgument('api key');
         }
-        if (!\is_array($searchRules) && !\is_object($searchRules)) {
+        if ((!\is_array($searchRules) || [] === $searchRules) && !\is_object($searchRules)) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
-        if (\array_key_exists('expiresAt', $options) && new \DateTime() > $options['expiresAt']) {
+        if (isset($options['expiresAt']) && new \DateTime() > $options['expiresAt']) {
             throw InvalidArgumentException::dateIsExpired($options['expiresAt']);
         }
     }
@@ -43,7 +43,7 @@ class TenantToken extends Endpoint
      */
     public function generateTenantToken(string $uid, $searchRules, array $options = []): string
     {
-        if (!\array_key_exists('apiKey', $options) || '' === $options['apiKey']) {
+        if (!isset($options['apiKey']) || '' === $options['apiKey']) {
             $options['apiKey'] = $this->apiKey;
         }
 
@@ -62,7 +62,7 @@ class TenantToken extends Endpoint
         $payload = [];
         $payload['apiKeyUid'] = $uid;
         $payload['searchRules'] = $searchRules;
-        if (\array_key_exists('expiresAt', $options)) {
+        if (isset($options['expiresAt'])) {
             $payload['exp'] = $options['expiresAt']->getTimestamp();
         }
 
