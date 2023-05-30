@@ -2,9 +2,12 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
          bootstrap="vendor/autoload.php"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
          stopOnFailure="false"
-         colors="true"
-         cacheDirectory=".phpunit.cache">
+         cacheResult="false"
+         colors="true">
     <testsuites>
         <testsuite name="Tests">
             <directory suffix="Test.php">./tests</directory>
