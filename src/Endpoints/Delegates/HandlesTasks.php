@@ -8,9 +8,12 @@ use Meilisearch\Contracts\CancelTasksQuery;
 use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
+use Meilisearch\Endpoints\Tasks;
 
 trait HandlesTasks
 {
+    protected Tasks $tasks;
+
     public function getTask($uid): array
     {
         return $this->tasks->get($uid);

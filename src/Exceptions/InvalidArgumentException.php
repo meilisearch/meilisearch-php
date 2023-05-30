@@ -24,7 +24,7 @@ final class InvalidArgumentException extends \Exception
         );
     }
 
-    public static function dateIsExpired(\DateTime $date): self
+    public static function dateIsExpired(\DateTimeInterface $date): self
     {
         return new self(
             sprintf('DateTime "%s" is expired. The date expiresAt should be in the future.', $date->format('Y-m-d H:i:s')),

@@ -11,17 +11,20 @@ use Meilisearch\Http\Serialize\Json;
 
 class TenantToken extends Endpoint
 {
-    private function base64url_encode($data)
+    private function base64url_encode(string $data): string
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    private function validateTenantTokenArguments($searchRules, ?array $options = []): void
+    /**
+     * @param array{apiKey?: ?string, expiresAt?: ?\DateTimeInterface} $options
+     */
+    private function validateTenantTokenArguments($searchRules, array $options = []): void
     {
-        if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey'] || \strlen($options['apiKey']) <= 8) {
+        if (!\array_key_exists('apiKey', $options) || '' === $options['apiKey'] || \strlen($options['apiKey']) <= 8) {
             throw InvalidArgumentException::emptyArgument('api key');
         }
-        if ((!\is_array($searchRules) && !\is_object($searchRules)) || null == $searchRules) {
+        if (!\is_array($searchRules) && !\is_object($searchRules)) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
         if (\array_key_exists('expiresAt', $options) && new \DateTime() > $options['expiresAt']) {
@@ -35,10 +38,12 @@ class TenantToken extends Endpoint
      * The $options parameter is an array, and the following keys are accepted:
      * - apiKey: The API key parent of the token. If you leave it empty the client API Key will be used.
      * - expiresAt: A DateTime when the key will expire. Note that if an expiresAt value is included it should be in UTC time.
+     *
+     * @param array{apiKey?: ?string, expiresAt?: ?\DateTimeInterface} $options
      */
-    public function generateTenantToken(string $uid, $searchRules, ?array $options = []): string
+    public function generateTenantToken(string $uid, $searchRules, array $options = []): string
     {
-        if (!\array_key_exists('apiKey', $options) || '' == $options['apiKey']) {
+        if (!\array_key_exists('apiKey', $options) || '' === $options['apiKey']) {
             $options['apiKey'] = $this->apiKey;
         }
 
@@ -51,7 +56,7 @@ class TenantToken extends Endpoint
         $header = [
             'typ' => 'JWT',
             'alg' => 'HS256',
-          ];
+        ];
 
         // Add the required fields to the payload
         $payload = [];
@@ -80,8 +85,6 @@ class TenantToken extends Endpoint
         $encodedSignature = $this->base64url_encode($signature);
 
         // Create JWT
-        $jwtToken = $encodedHeader.'.'.$encodedPayload.'.'.$encodedSignature;
-
-        return $jwtToken;
+        return $encodedHeader.'.'.$encodedPayload.'.'.$encodedSignature;
     }
 }
