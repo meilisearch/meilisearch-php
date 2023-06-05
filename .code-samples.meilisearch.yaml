@@ -4,21 +4,16 @@
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
 get_documents_post_1: |-
-  POST http://localhost:7700/indexes/books/documents/fetch
-  with data: { 
-    "filter": "(rating > 3 AND (genres = Adventure OR genres = Fiction)) AND language = English",
-    "fields": ["title", "genres", "rating", "language"],
-    "limit": 3
-  }
-
+  $client->index('books')->getDocuments(
+    (new DocumentsQuery())
+      ->setFilter('(rating > 3 AND (genres = Adventure OR genres = Fiction)) AND language = English')
+      ->setLimit(3)
+      ->setFields(['title', 'genres', 'rating', 'language'])
+  );
 delete_documents_by_filter_1: |-
-  POST http://localhost:7700/indexes/movies/documents/delete
-  with data: { "filter": "genres = action OR genres = adventure" }
-
-get_documents_1: |- 
-  GET 'http://localhost:7700/indexes/movies/documents?limit=2&filter=genres=action
-  mind the filter in the query param (use the POST route in the integrations)
-
+  $client->index('movies')->deleteDocuments(['filter' => 'genres = action OR genres = adventure']);
+get_documents_1: |-
+  $client->index('movies')->getDocuments((new DocumentsQuery())->setFilter('genres = action')->setLimit(2));
 getting_started_faceting: |-
   $client->index('movies')->updateFaceting(['maxValuesPerFacet' => 2]);
 getting_started_pagination: |-
