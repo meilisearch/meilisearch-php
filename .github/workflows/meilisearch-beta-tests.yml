@@ -4,9 +4,9 @@ name: Meilisearch Prototype Beta tests
 # Will only run for PRs and pushes to *-beta
 on:
   push:
-    branches: ['meilisearch-**-beta']
+    branches: ['meilisearch-*-beta']
   pull_request:
-    branches: ['meilisearch-**-beta']
+    branches: ['meilisearch-*-beta']
 
 jobs:
   meilisearch-version:

@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DocumentsQuery;
+use Meilisearch\Contracts\Http;
+use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Exceptions\JsonEncodingException;
+use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase
@@ -451,6 +455,45 @@ final class DocumentsTest extends TestCase
         $this->assertNull($this->findDocumentWithId($response, $documentIds[1]));
     }
 
+    public function testDeleteMultipleDocumentsWithFilter(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->addDocuments(self::DOCUMENTS);
+        $index->updateFilterableAttributes(['id']);
+
+        $filter = ['filter' => ['id > 0']];
+        $promise = $index->deleteDocuments($filter);
+
+        $this->assertIsValidPromise($promise);
+
+        $index->waitForTask($promise['taskUid']);
+        $response = $index->getDocuments();
+
+        $this->assertEmpty($response);
+    }
+
+    public function testMessageHintException(): void
+    {
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(0);
+        $mockedException = new InvalidResponseBodyException($responseMock, 'Invalid response');
+
+        try {
+            $httpMock = $this->createMock(Http::class);
+            $httpMock->expects(self::once())
+                ->method('post')
+                ->willThrowException($mockedException);
+
+            $indexMock = new Indexes($httpMock, 'uid');
+            $indexMock->deleteDocuments(['filter' => ['id > 0']]);
+        } catch (\Exception $ex) {
+            $rethrowed = ApiException::rethrowWithHint($mockedException, 'deleteDocuments');
+
+            $this->assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
+            $this->assertSame($ex->getMessage(), $rethrowed->getMessage());
+        }
+    }
+
     public function testDeleteMultipleDocumentsWithDocumentIdAsString(): void
     {
         $documents = [
@@ -543,6 +586,40 @@ final class DocumentsTest extends TestCase
         $response = $index->getDocuments((new DocumentsQuery())->setLimit(3));
 
         $this->assertCount(3, $response);
+    }
+
+    public function testGetDocumentsWithFilter(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->updateFilterableAttributes(['genre', 'id']);
+        $promise = $index->addDocuments(self::DOCUMENTS);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocuments((new DocumentsQuery())->setFilter(['id > 100']));
+
+        $this->assertCount(3, $response);
+    }
+
+    public function testGetDocumentsMessageHintException(): void
+    {
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(0);
+        $mockedException = new InvalidResponseBodyException($responseMock, 'Invalid response');
+
+        try {
+            $httpMock = $this->createMock(Http::class);
+            $httpMock->expects(self::once())
+                ->method('post')
+                ->willThrowException($mockedException);
+
+            $indexMock = new Indexes($httpMock, 'uid');
+            $indexMock->getDocuments((new DocumentsQuery())->setFilter(['id > 1']));
+        } catch (\Exception $ex) {
+            $rethrowed = ApiException::rethrowWithHint($mockedException, 'getDocuments');
+
+            $this->assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
+            $this->assertSame($ex->getMessage(), $rethrowed->getMessage());
+        }
     }
 
     public function testUpdateDocumentsJson(): void

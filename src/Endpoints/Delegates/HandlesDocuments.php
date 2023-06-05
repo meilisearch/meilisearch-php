@@ -6,7 +6,9 @@ namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\DocumentsQuery;
 use Meilisearch\Contracts\DocumentsResults;
+use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
+use Meilisearch\Exceptions\InvalidResponseBodyException;
 
 trait HandlesDocuments
 {
@@ -20,10 +22,20 @@ trait HandlesDocuments
 
     public function getDocuments(DocumentsQuery $options = null): DocumentsResults
     {
-        $query = isset($options) ? $options->toArray() : [];
-        $response = $this->http->get(self::PATH.'/'.$this->uid.'/documents', $query);
+        try {
+            $options = $options ?? new DocumentsQuery();
+            $query = $options->toArray();
 
-        return new DocumentsResults($response);
+            if ($options->hasFilter()) {
+                $response = $this->http->post(self::PATH.'/'.$this->uid.'/documents/fetch', $query);
+            } else {
+                $response = $this->http->get(self::PATH.'/'.$this->uid.'/documents', $query);
+            }
+
+            return new DocumentsResults($response);
+        } catch (\Exception $e) {
+            throw ApiException::rethrowWithHint($e, __FUNCTION__);
+        }
     }
 
     public function addDocuments(array $documents, string $primaryKey = null)
@@ -139,9 +151,19 @@ trait HandlesDocuments
         return $this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId);
     }
 
-    public function deleteDocuments(array $documents): array
+    public function deleteDocuments(array $options): array
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documents);
+        try {
+            if (\array_key_exists('filter', $options) && $options['filter']) {
+                return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', $options);
+            }
+
+            // backwards compatibility:
+            // expect to be a array to send alongside as $documents_ids.
+            return $this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $options);
+        } catch (InvalidResponseBodyException $e) {
+            throw ApiException::rethrowWithHint($e, __FUNCTION__);
+        }
     }
 
     private function assertValidDocumentId($documentId): void
