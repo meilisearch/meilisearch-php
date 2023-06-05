@@ -3,6 +3,17 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+get_documents_post_1: |-
+  $client->index('books')->getDocuments(
+    (new DocumentsQuery())
+      ->setFilter('(rating > 3 AND (genres = Adventure OR genres = Fiction)) AND language = English')
+      ->setLimit(3)
+      ->setFields(['title', 'genres', 'rating', 'language'])
+  );
+delete_documents_by_filter_1: |-
+  $client->index('movies')->deleteDocuments(['filter' => 'genres = action OR genres = adventure']);
+get_documents_1: |-
+  $client->index('movies')->getDocuments((new DocumentsQuery())->setFilter('genres = action')->setLimit(2));
 getting_started_faceting: |-
   $client->index('movies')->updateFaceting(['maxValuesPerFacet' => 2]);
 getting_started_pagination: |-
@@ -98,7 +109,7 @@ delete_all_documents_1: |-
   $client->index('movies')->deleteAllDocuments();
 delete_one_document_1: |-
   $client->index('movies')->deleteDocument(25684);
-delete_documents_1: |-
+delete_documents_by_batch_1: |-
   $client->index('movies')->deleteDocuments([23488, 153738, 437035, 363869]);
 search_post_1: |-
   $client->index('movies')->search('american ninja');
