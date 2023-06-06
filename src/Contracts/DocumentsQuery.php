@@ -56,13 +56,33 @@ class DocumentsQuery
         return isset($this->filter);
     }
 
+    /**
+     * Prepares fields for request
+     *
+     * @return array
+     */
+    private function fields(): string|array|null
+    {
+        if (! isset($this->fields)) {
+            return null;
+        }
+
+        if ($this->hasFilter()) {
+            return $this->fields;
+        }
+
+        else {
+            return implode(",", $this->fields);
+        }
+    }
+
     public function toArray(): array
     {
         return array_filter([
             'offset' => $this->offset ?? null,
             'limit' => $this->limit ?? null,
             'filter' => $this->filter ?? null,
-            'fields' => isset($this->fields) ? implode(',', $this->fields) : null,
+            'fields' => $this->fields,
         ], function ($item) { return null != $item || is_numeric($item); });
     }
 }
