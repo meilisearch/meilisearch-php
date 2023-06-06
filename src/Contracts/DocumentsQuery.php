@@ -64,7 +64,7 @@ class DocumentsQuery
      *
      * @return array|string|null
      */
-    private function fields(): mixed
+    private function fields()
     {
         if (!isset($this->fields)) {
             return null;
