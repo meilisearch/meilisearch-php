@@ -600,6 +600,32 @@ final class DocumentsTest extends TestCase
         $this->assertCount(3, $response);
     }
 
+    public function testGetDocumentsWithFilterCorrectFieldFormat(): void
+    {
+        $fields = ['the', 'clash'];
+
+        $queryFields = (new DocumentsQuery())
+            ->setFields($fields)
+            ->setFilter(['id > 100'])
+            ->toArray()['fields'];
+
+        $this->assertEquals($fields, $queryFields);
+    }
+
+    public function testGetDocumentsWithoutFilterCorrectFieldsFormat(): void
+    {
+        $fields = ['anti', 'flag'];
+
+        $queryFields = (new DocumentsQuery())
+            ->setFields($fields)
+            ->toArray()['fields'];
+
+        $this->assertEquals(
+            implode(',', $fields),
+            $queryFields
+        );
+    }
+
     public function testGetDocumentsMessageHintException(): void
     {
         $responseMock = $this->createMock(ResponseInterface::class);

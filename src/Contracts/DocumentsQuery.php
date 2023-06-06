@@ -58,21 +58,22 @@ class DocumentsQuery
 
     /**
      * Prepares fields for request
+     * Fix for 1.2 document/fetch.
      *
-     * @return array
+     * @see https://github.com/meilisearch/meilisearch-php/issues/522
+     *
+     * @return array|string|null
      */
-    private function fields(): string|array|null
+    private function fields(): mixed
     {
-        if (! isset($this->fields)) {
+        if (!isset($this->fields)) {
             return null;
         }
 
         if ($this->hasFilter()) {
             return $this->fields;
-        }
-
-        else {
-            return implode(",", $this->fields);
+        } else {
+            return implode(',', $this->fields);
         }
     }
 
@@ -82,7 +83,7 @@ class DocumentsQuery
             'offset' => $this->offset ?? null,
             'limit' => $this->limit ?? null,
             'filter' => $this->filter ?? null,
-            'fields' => $this->fields,
+            'fields' => $this->fields(),
         ], function ($item) { return null != $item || is_numeric($item); });
     }
 }
