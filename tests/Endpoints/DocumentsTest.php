@@ -321,7 +321,6 @@ final class DocumentsTest extends TestCase
               ->method('addDocumentsCsv')
               ->willReturnCallback(function (string $param) use ($matcher): void {
                   // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
-                  // @phpstan-ignore-next-line
                   switch ($matcher->numberOfInvocations()) {
                       case 1:
                           $this->assertEquals($param, ["id;title\n888221515;Young folks", null, ';']);
@@ -803,7 +802,6 @@ final class DocumentsTest extends TestCase
               ->method('updateDocumentsCsv')
               ->willReturnCallback(function (string $param) use ($matcher): void {
                   // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
-                  // @phpstan-ignore-next-line
                   switch ($matcher->numberOfInvocations()) {
                       case 1:
                           $this->assertEquals($param, ["id;title\n888221515;Young folks", null, ';']);
@@ -872,7 +870,7 @@ final class DocumentsTest extends TestCase
         $index->deleteDocument($documentId);
     }
 
-    public function invalidDocumentIds(): array
+    public static function invalidDocumentIds(): array
     {
         return [
             'documentId as null' => [null],
@@ -888,9 +886,11 @@ final class DocumentsTest extends TestCase
     private function findDocumentWithId($documents, $documentId)
     {
         foreach ($documents as $document) {
-            if ($document['id'] == $documentId) {
+            if ($document['id'] === $documentId) {
                 return $document;
             }
         }
+
+        return null;
     }
 }
