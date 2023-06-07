@@ -22,6 +22,9 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
+/**
+ * @final since 1.3.0
+ */
 class Client implements Http
 {
     private ClientInterface $http;

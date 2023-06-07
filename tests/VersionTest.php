@@ -6,7 +6,7 @@ namespace Tests;
 
 use Meilisearch\Meilisearch;
 
-class VersionTest extends TestCase
+final class VersionTest extends TestCase
 {
     public function testQualifiedVersion(): void
     {

@@ -6,6 +6,9 @@ namespace Meilisearch\Contracts;
 
 use Meilisearch\Endpoints\Indexes;
 
+/**
+ * @final since 1.3.0
+ */
 class IndexesResults extends Data
 {
     private int $offset;

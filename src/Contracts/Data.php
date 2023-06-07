@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class Data implements \ArrayAccess, \Countable, \IteratorAggregate
+abstract class Data implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     protected $data = [];
 

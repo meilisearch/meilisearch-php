@@ -9,6 +9,9 @@ use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Exceptions\InvalidArgumentException;
 use Meilisearch\Http\Serialize\Json;
 
+/**
+ * @final since 1.3.0
+ */
 class TenantToken extends Endpoint
 {
     private function base64url_encode($data)

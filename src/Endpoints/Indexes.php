@@ -17,6 +17,9 @@ use Meilisearch\Endpoints\Delegates\HandlesTasks;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Search\SearchResult;
 
+/**
+ * @final since 1.3.0
+ */
 class Indexes extends Endpoint
 {
     use HandlesDocuments;

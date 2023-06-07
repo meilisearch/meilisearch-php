@@ -7,7 +7,7 @@ namespace Tests;
 use Meilisearch\Client;
 use Meilisearch\Exceptions\CommunicationException;
 
-class ClientTest extends TestCase
+final class ClientTest extends TestCase
 {
     public function testThrowCommunicationException(): void
     {

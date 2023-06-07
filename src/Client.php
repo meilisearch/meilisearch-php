@@ -24,6 +24,9 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
+/**
+ * @final since 1.3.0
+ */
 class Client
 {
     use HandlesDumps;

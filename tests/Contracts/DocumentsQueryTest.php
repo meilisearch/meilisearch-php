@@ -7,7 +7,7 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\DocumentsQuery;
 use PHPUnit\Framework\TestCase;
 
-class DocumentsQueryTest extends TestCase
+final class DocumentsQueryTest extends TestCase
 {
     public function testSetFields(): void
     {

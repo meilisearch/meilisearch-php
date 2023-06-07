@@ -19,7 +19,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
-class ClientTest extends TestCase
+final class ClientTest extends TestCase
 {
     public function testGetExecutesRequest(): void
     {

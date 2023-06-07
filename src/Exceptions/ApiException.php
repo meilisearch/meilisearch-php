@@ -6,6 +6,9 @@ namespace Meilisearch\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @final since 1.3.0
+ */
 class ApiException extends \Exception
 {
     public $httpStatus = 0;

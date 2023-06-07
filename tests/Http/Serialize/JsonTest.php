@@ -9,7 +9,7 @@ use Meilisearch\Exceptions\JsonEncodingException;
 use Meilisearch\Http\Serialize\Json;
 use PHPUnit\Framework\TestCase;
 
-class JsonTest extends TestCase
+final class JsonTest extends TestCase
 {
     public function testSerialize(): void
     {

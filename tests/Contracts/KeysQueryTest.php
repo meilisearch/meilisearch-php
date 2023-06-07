@@ -7,7 +7,7 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\KeysQuery;
 use PHPUnit\Framework\TestCase;
 
-class KeysQueryTest extends TestCase
+final class KeysQueryTest extends TestCase
 {
     public function testToArrayWithSetOffsetAndSetLimit(): void
     {

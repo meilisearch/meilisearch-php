@@ -7,7 +7,7 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\IndexesQuery;
 use PHPUnit\Framework\TestCase;
 
-class IndexesQueryTest extends TestCase
+final class IndexesQueryTest extends TestCase
 {
     public function testToArrayWithSetOffsetAndSetLimit(): void
     {

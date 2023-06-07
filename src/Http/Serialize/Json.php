@@ -7,6 +7,9 @@ namespace Meilisearch\Http\Serialize;
 use Meilisearch\Exceptions\JsonDecodingException;
 use Meilisearch\Exceptions\JsonEncodingException;
 
+/**
+ * @final since 1.3.0
+ */
 class Json implements SerializerInterface
 {
     private const JSON_ENCODE_ERROR_MESSAGE = 'Encoding payload to json failed: "%s".';

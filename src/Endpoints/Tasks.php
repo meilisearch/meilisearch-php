@@ -9,6 +9,9 @@ use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Exceptions\TimeOutException;
 
+/**
+ * @final since 1.3.0
+ */
 class Tasks extends Endpoint
 {
     protected const PATH = '/tasks';

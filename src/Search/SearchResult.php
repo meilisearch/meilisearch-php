@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Meilisearch\Search;
 
+/**
+ * @final since 1.3.0
+ */
 class SearchResult implements \Countable, \IteratorAggregate
 {
     /**

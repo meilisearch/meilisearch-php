@@ -7,7 +7,7 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\TasksQuery;
 use PHPUnit\Framework\TestCase;
 
-class TasksQueryTest extends TestCase
+final class TasksQueryTest extends TestCase
 {
     public function testSetTypes(): void
     {

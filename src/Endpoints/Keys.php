@@ -9,6 +9,9 @@ use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\KeysQuery;
 use Meilisearch\Contracts\KeysResults;
 
+/**
+ * @final since 1.3.0
+ */
 class Keys extends Endpoint
 {
     protected const PATH = '/keys';

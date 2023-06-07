@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @final since 1.3.0
+ */
 class IndexesQuery
 {
     private int $offset;
