@@ -10,6 +10,8 @@ use Meilisearch\Endpoints\Indexes;
 
 trait HandlesIndex
 {
+    protected Indexes $index;
+
     public function getIndexes(IndexesQuery $options = null): IndexesResults
     {
         return $this->index->all($options ?? null);

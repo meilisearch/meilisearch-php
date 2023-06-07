@@ -29,7 +29,6 @@ class Indexes extends Endpoint
     private ?string $primaryKey;
     private ?\DateTime $createdAt;
     private ?\DateTime $updatedAt;
-    private Tasks $tasks;
 
     public function __construct(Http $http, $uid = null, $primaryKey = null, $createdAt = null, $updatedAt = null)
     {
