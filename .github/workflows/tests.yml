@@ -10,6 +10,16 @@ on:
       - main
 
 jobs:
+  yaml-lint:
+    name: Yaml linting check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Yaml lint check
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
+
   lint:
     runs-on: ubuntu-latest
     name: linter-check
