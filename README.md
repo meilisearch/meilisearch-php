@@ -6,6 +6,7 @@
 
 <h4 align="center">
   <a href="https://github.com/meilisearch/meilisearch">Meilisearch</a> |
+  <a href="https://www.meilisearch.com/pricing?utm_campaign=oss&utm_source=integration&utm_medium=meilisearch-php">Meilisearch Cloud</a> |
   <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://discord.meilisearch.com">Discord</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
@@ -29,6 +30,7 @@
 ## Table of Contents <!-- omit in toc -->
 
 - [📖 Documentation](#-documentation)
+- [⚡ Supercharge your Meilisearch experience](#-supercharge-your-meilisearch-experience)
 - [🔧 Installation](#-installation)
 - [🚀 Getting started](#-getting-started)
 - [🤖 Compatibility with Meilisearch](#-compatibility-with-meilisearch)
@@ -40,7 +42,11 @@
 ## 📖 Documentation
 
 
-To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://meilisearch.github.io/meilisearch-php/). To learn more about Meilisearch in general, refer to our [documentation](https://www.meilisearch.com/docs/learn/getting_started/quick_start.html) or our [API reference](https://www.meilisearch.com/docs/reference/api/overview.html).
+To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://meilisearch.github.io/meilisearch-php/). To learn more about Meilisearch in general, refer to our [documentation](https://www.meilisearch.com/docs/learn/getting_started/quick_start) or our [API reference](https://www.meilisearch.com/docs/reference/api/overview).
+
+## ⚡ Supercharge your Meilisearch experience
+
+Say goodbye to server deployment and manual updates with [Meilisearch Cloud](https://www.meilisearch.com/pricing?utm_campaign=oss&utm_source=integration&utm_medium=meilisearch-php). No credit card required.
 
 ## 🔧 Installation
 
@@ -64,7 +70,7 @@ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.
 
 ### Run Meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a Meilisearch instance](https://www.meilisearch.com/docs/reference/features/installation.html#download-and-launch).
+There are many easy ways to [download and run a Meilisearch instance](https://www.meilisearch.com/docs/learn/getting_started/installation).
 
 For example, using the `curl` command in your [Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
 
@@ -184,7 +190,7 @@ $index->updateFilterableAttributes([
 
 You only need to perform this operation once.
 
-Note that Meilisearch will rebuild your index whenever you update `filterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [tasks](https://www.meilisearch.com/docs/reference/api/tasks)).
+Note that Meilisearch will rebuild your index whenever you update `filterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [tasks](https://www.meilisearch.com/docs/reference/api/tasks#get-tasks)).
 
 Then, you can perform the search:
 
@@ -222,10 +228,10 @@ This package guarantees compatibility with [version v1.x of Meilisearch](https:/
 
 The following sections in our main documentation website may interest you:
 
-- **Manipulate documents**: see the [API references](https://www.meilisearch.com/docs/reference/api/documents) or read more about [documents](https://www.meilisearch.com/docs/learn/core_concepts/documents.html).
+- **Manipulate documents**: see the [API references](https://www.meilisearch.com/docs/reference/api/documents) or read more about [documents](https://www.meilisearch.com/docs/learn/core_concepts/documents).
 - **Search**: see the [API references](https://www.meilisearch.com/docs/reference/api/search) or follow our guide on [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters).
-- **Manage the indexes**: see the [API references](https://www.meilisearch.com/docs/reference/api/indexes) or read more about [indexes](https://www.meilisearch.com/docs/learn/core_concepts/indexes.html).
-- **Configure the index settings**: see the [API references](https://www.meilisearch.com/docs/reference/api/settings) or follow our guide on [settings parameters](https://www.meilisearch.com/docs/reference/api/settings#settings_parameters).
+- **Manage the indexes**: see the [API references](https://www.meilisearch.com/docs/reference/api/indexes) or read more about [indexes](https://www.meilisearch.com/docs/learn/core_concepts/indexes).
+- **Configure the index settings**: see the [API references](https://www.meilisearch.com/docs/reference/api/settings) or follow our guide on [settings parameters](https://www.meilisearch.com/docs/reference/api/settings).
 
 ## 🧰 HTTP Client Compatibilities
 

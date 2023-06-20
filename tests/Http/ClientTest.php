@@ -211,29 +211,24 @@ class ClientTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '{}');
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
-
-        /* @phpstan-ignore-next-line */
-        $requestStub->expects($this->any())
+        $requestStub->expects($this->exactly(2))
             ->method('withAddedHeader')
-            ->withConsecutive(
-                [
-                    $this->equalTo('User-Agent'),
-                    $this->equalTo(Meilisearch::qualifiedVersion()),
-                ],
-                [
-                    $this->equalTo('Authorization'),
-                    $this->equalTo('Bearer masterKey'),
-                ],
-            )
-            ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
+            ->willReturnCallback(function ($name, $value) use ($requestStub) {
+                if ('User-Agent' === $name) {
+                    $this->assertSame(Meilisearch::qualifiedVersion(), $value);
+                } elseif ('Authorization' === $name) {
+                    $this->assertSame('Bearer masterKey', $value);
+                }
 
-        $reqFactory->expects($this->any())
+                return $requestStub;
+            });
+        $reqFactory->expects($this->once())
             ->method('createRequest')
             ->willReturn($requestStub);
 
         $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory);
 
-        $client->health();
+        $this->assertTrue($client->isHealthy());
     }
 
     public function testClientHasCustomUserAgent(): void
@@ -242,59 +237,24 @@ class ClientTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '{}');
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
-
-        /* @phpstan-ignore-next-line */
-        $requestStub->expects($this->any())
+        $requestStub->expects($this->exactly(2))
             ->method('withAddedHeader')
-            ->withConsecutive(
-                [
-                    $this->equalTo('User-Agent'),
-                    $this->equalTo($customAgent.';'.Meilisearch::qualifiedVersion()),
-                ],
-                [
-                    $this->equalTo('Authorization'),
-                    $this->equalTo('Bearer masterKey'),
-                ],
-            )
-            ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
+            ->willReturnCallback(function ($name, $value) use ($requestStub, $customAgent) {
+                if ('User-Agent' === $name) {
+                    $this->assertSame($customAgent.';'.Meilisearch::qualifiedVersion(), $value);
+                } elseif ('Authorization' === $name) {
+                    $this->assertSame('Bearer masterKey', $value);
+                }
 
-        $reqFactory->expects($this->any())
+                return $requestStub;
+            });
+        $reqFactory->expects($this->once())
             ->method('createRequest')
             ->willReturn($requestStub);
 
         $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, [$customAgent]);
 
-        $client->health();
-    }
-
-    public function testClientHasEmptyCustomUserAgentArray(): void
-    {
-        $httpClient = $this->createHttpClientMock(200, '{}');
-        $reqFactory = $this->createMock(RequestFactoryInterface::class);
-        $requestStub = $this->createMock(RequestInterface::class);
-
-        /* @phpstan-ignore-next-line */
-        $requestStub->expects($this->any())
-            ->method('withAddedHeader')
-            ->withConsecutive(
-                [
-                    $this->equalTo('User-Agent'),
-                    $this->equalTo(Meilisearch::qualifiedVersion()),
-                ],
-                [
-                    $this->equalTo('Authorization'),
-                    $this->equalTo('Bearer masterKey'),
-                ],
-            )
-            ->willReturnOnConsecutiveCalls($requestStub, $requestStub);
-
-        $reqFactory->expects($this->any())
-            ->method('createRequest')
-            ->willReturn($requestStub);
-
-        $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, []);
-
-        $client->health();
+        $this->assertTrue($client->isHealthy());
     }
 
     public function testParseResponseReturnsNullForNoContent(): void
@@ -318,7 +278,7 @@ class ClientTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function provideStatusCodes(): iterable
+    public static function provideStatusCodes(): iterable
     {
         yield [200];
         yield [300];

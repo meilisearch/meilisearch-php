@@ -16,7 +16,7 @@ final class ApiExceptionTest extends TestCase
             'message' => 'This is the message',
             'code' => 'this_is_the_error_code',
             'type' => 'this_is_the_error_type',
-            'link' => 'https://docs.meilisearch.com/errors',
+            'link' => 'https://www.meilisearch.com/docs/errors',
         ];
         $statusCode = 400;
 
@@ -58,5 +58,21 @@ final class ApiExceptionTest extends TestCase
             $expectedExceptionToString = "Meilisearch ApiException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
             $this->assertEquals($expectedExceptionToString, (string) $apiException);
         }
+    }
+
+    public function testRethrowWithHintException(): void
+    {
+        $e = new \Exception('Any error message that caused the root problem should be shown');
+        $apiException = ApiException::rethrowWithHint($e, 'deleteDocuments');
+
+        $this->assertStringContainsString(
+            'with the Meilisearch version that `deleteDocuments` call',
+            $apiException->getMessage()
+        );
+
+        $this->assertStringContainsString(
+            'Any error message that caused the root problem should be shown',
+            $apiException->getPrevious()->getMessage()
+        );
     }
 }

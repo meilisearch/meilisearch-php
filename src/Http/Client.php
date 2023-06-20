@@ -27,13 +27,13 @@ class Client implements Http
     private ClientInterface $http;
     private RequestFactoryInterface $requestFactory;
     private StreamFactoryInterface $streamFactory;
+    /** @var array<string,string> */
     private array $headers;
-    private ?string $apiKey;
     private string $baseUrl;
     private Json $json;
 
     /**
-     * Client constructor.
+     * @param array<int, string> $clientAgents
      */
     public function __construct(
         string $url,
@@ -44,15 +44,14 @@ class Client implements Http
         StreamFactoryInterface $streamFactory = null
     ) {
         $this->baseUrl = $url;
-        $this->apiKey = $apiKey;
         $this->http = $httpClient ?? Psr18ClientDiscovery::find();
         $this->requestFactory = $reqFactory ?? Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
         $this->headers = array_filter([
             'User-Agent' => implode(';', array_merge($clientAgents, [Meilisearch::qualifiedVersion()])),
         ]);
-        if (null != $this->apiKey) {
-            $this->headers['Authorization'] = sprintf('Bearer %s', $this->apiKey);
+        if (null !== $apiKey) {
+            $this->headers['Authorization'] = sprintf('Bearer %s', $apiKey);
         }
         $this->json = new Json();
     }

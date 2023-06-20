@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Meilisearch;
 
-use Meilisearch\Contracts\Http as HttpContract;
 use Meilisearch\Endpoints\Delegates\HandlesDumps;
 use Meilisearch\Endpoints\Delegates\HandlesIndex;
 use Meilisearch\Endpoints\Delegates\HandlesKeys;
@@ -33,16 +32,9 @@ class Client
     use HandlesSystem;
     use HandlesMultiSearch;
 
-    private HttpContract $http;
-    private Indexes $index;
-    private Health $health;
-    private Version $version;
-    private Keys $keys;
-    private Stats $stats;
-    private Tasks $tasks;
-    private Dumps $dumps;
-    private TenantToken $tenantToken;
-
+    /**
+     * @param array<int, string> $clientAgents
+     */
     public function __construct(
         string $url,
         string $apiKey = null,

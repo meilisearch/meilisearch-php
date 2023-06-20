@@ -9,6 +9,7 @@ class DocumentsQuery
     private int $offset;
     private int $limit;
     private array $fields;
+    private array $filter;
 
     public function setOffset(int $offset): DocumentsQuery
     {
@@ -31,12 +32,58 @@ class DocumentsQuery
         return $this;
     }
 
+    /**
+     * Sets the filter for the DocumentsQuery.
+     *
+     * @param list<non-empty-string|list<non-empty-string>> $filter a filter expression written as an array of strings
+     *
+     * @return DocumentsQuery the updated DocumentsQuery instance
+     */
+    public function setFilter(array $filter): DocumentsQuery
+    {
+        $this->filter = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Checks if the $filter attribute has been set.
+     *
+     * @return bool true when filter contains at least a non-empty array
+     */
+    public function hasFilter(): bool
+    {
+        return isset($this->filter);
+    }
+
+    /**
+     * Prepares fields for request
+     * Fix for 1.2 document/fetch.
+     *
+     * @see https://github.com/meilisearch/meilisearch-php/issues/522
+     *
+     * @return array|string|null
+     */
+    private function fields()
+    {
+        if (!isset($this->fields)) {
+            return null;
+        }
+
+        if ($this->hasFilter()) {
+            return $this->fields;
+        } else {
+            return implode(',', $this->fields);
+        }
+    }
+
     public function toArray(): array
     {
         return array_filter([
             'offset' => $this->offset ?? null,
             'limit' => $this->limit ?? null,
-            'fields' => isset($this->fields) ? implode(',', $this->fields) : null,
+            'filter' => $this->filter ?? null,
+            'fields' => $this->fields(),
         ], function ($item) { return null != $item || is_numeric($item); });
     }
 }

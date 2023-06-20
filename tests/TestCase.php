@@ -58,7 +58,7 @@ abstract class TestCase extends BaseTestCase
         $tasks = [];
 
         foreach ($indexes as $index) {
-            array_push($tasks, $index->delete()['taskUid']);
+            $tasks[] = $index->delete()['taskUid'];
         }
 
         $this->client->waitForTasks($tasks);
@@ -75,9 +75,13 @@ abstract class TestCase extends BaseTestCase
         $validBody = ['hitsPerPage', 'totalHits', 'totalPages', 'page', 'processingTimeMs', 'query', 'hits'];
 
         foreach ($validBody as $value) {
-            $this->assertTrue(
-                \in_array($value, $currentKeys, true),
-                'Not a valid finite pagination response, since the "'.$value.'" key is not present in: ['.implode(', ', $currentKeys).']'
+            $this->assertContains(
+                $value,
+                $currentKeys,
+                'Not a valid finite pagination response, since the "'.$value.'" key is not present in: ['.implode(
+                    ', ',
+                    $currentKeys
+                ).']'
             );
         }
     }
@@ -88,9 +92,13 @@ abstract class TestCase extends BaseTestCase
         $validBody = ['offset', 'limit', 'estimatedTotalHits', 'processingTimeMs', 'query', 'hits'];
 
         foreach ($validBody as $value) {
-            $this->assertTrue(
-                \in_array($value, $currentKeys, true),
-                'Not a valid estimated pagination response, since the "'.$value.'" key is not present in: ['.implode(', ', $currentKeys).']'
+            $this->assertContains(
+                $value,
+                $currentKeys,
+                'Not a valid estimated pagination response, since the "'.$value.'" key is not present in: ['.implode(
+                    ', ',
+                    $currentKeys
+                ).']'
             );
         }
     }

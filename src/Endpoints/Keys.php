@@ -13,6 +13,9 @@ class Keys extends Endpoint
 {
     protected const PATH = '/keys';
 
+    protected Keys $keys;
+    protected Http $http;
+
     private ?string $uid;
     private ?string $name;
     private ?string $key;
