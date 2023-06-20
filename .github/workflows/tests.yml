@@ -60,45 +60,45 @@ jobs:
         php-versions: ['7.4', '8.0', '8.1', '8.2']
     name: integration-tests (PHP ${{ matrix.php-versions }})
     steps:
-    - uses: actions/checkout@v3
-    - name: Install PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        coverage: none
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-    - name: Install dependencies
-      run: |
-        composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
-        composer update --prefer-dist --no-progress
-    - name: Meilisearch (latest version) setup with Docker
-      run: docker run -d -p 7700:7700 getmeili/meilisearch:latest meilisearch --master-key=masterKey --no-analytics
-    - name: Run test suite - default HTTP client (Guzzle 7)
-      run: |
-        sh scripts/tests.sh
-        composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
-    - name: Run test suite - php-http/guzzle7-adapter
-      run: |
-        composer require --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
-        sh scripts/tests.sh
-        composer remove --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
-    - name: Run test suite - symfony/http-client
-      run: |
-        composer require --dev symfony/http-client nyholm/psr7
-        sh scripts/tests.sh
-        composer remove --dev symfony/http-client nyholm/psr7
-    - name: Run test suite - php-http/curl-client
-      run: |
-        composer require --dev php-http/curl-client nyholm/psr7
-        sh scripts/tests.sh
-        composer remove --dev php-http/curl-client nyholm/psr7
-    - name: Run test suite - kriswallsmith/buzz
-      run: |
-        composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
-        composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
-        sh scripts/tests.sh
-        composer remove --dev kriswallsmith/buzz nyholm/psr7
+      - uses: actions/checkout@v3
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Install dependencies
+        run: |
+          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
+          composer update --prefer-dist --no-progress
+      - name: Meilisearch (latest version) setup with Docker
+        run: docker run -d -p 7700:7700 getmeili/meilisearch:latest meilisearch --master-key=masterKey --no-analytics
+      - name: Run test suite - default HTTP client (Guzzle 7)
+        run: |
+          sh scripts/tests.sh
+          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
+      - name: Run test suite - php-http/guzzle7-adapter
+        run: |
+          composer require --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
+          sh scripts/tests.sh
+          composer remove --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
+      - name: Run test suite - symfony/http-client
+        run: |
+          composer require --dev symfony/http-client nyholm/psr7
+          sh scripts/tests.sh
+          composer remove --dev symfony/http-client nyholm/psr7
+      - name: Run test suite - php-http/curl-client
+        run: |
+          composer require --dev php-http/curl-client nyholm/psr7
+          sh scripts/tests.sh
+          composer remove --dev php-http/curl-client nyholm/psr7
+      - name: Run test suite - kriswallsmith/buzz
+        run: |
+          composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
+          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
+          sh scripts/tests.sh
+          composer remove --dev kriswallsmith/buzz nyholm/psr7
 
   test_php_7_guzzle_6:
     # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)
@@ -107,23 +107,23 @@ jobs:
     runs-on: ubuntu-latest
     name: integration-tests (PHP 7.4 & Guzzle 6)
     steps:
-    - uses: actions/checkout@v3
-    - name: Install PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '7.4'
-        coverage: none
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-    - name: Install dependencies
-      run: |
-        composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
-        composer update --prefer-dist --no-progress
-        composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
-        composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
-    - name: Meilisearch (latest version) setup with Docker
-      run: docker run -d -p 7700:7700 getmeili/meilisearch:latest meilisearch --master-key=masterKey --no-analytics
-    - name: Run test suite - php-http/guzzle6-adapter
-      run: |
-        composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
-        sh scripts/tests.sh
+      - uses: actions/checkout@v3
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Install dependencies
+        run: |
+          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
+          composer update --prefer-dist --no-progress
+          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
+          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
+      - name: Meilisearch (latest version) setup with Docker
+        run: docker run -d -p 7700:7700 getmeili/meilisearch:latest meilisearch --master-key=masterKey --no-analytics
+      - name: Run test suite - php-http/guzzle6-adapter
+        run: |
+          composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+          sh scripts/tests.sh
