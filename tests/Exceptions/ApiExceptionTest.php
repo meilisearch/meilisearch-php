@@ -16,7 +16,7 @@ final class ApiExceptionTest extends TestCase
             'message' => 'This is the message',
             'code' => 'this_is_the_error_code',
             'type' => 'this_is_the_error_type',
-            'link' => 'https://docs.meilisearch.com/errors',
+            'link' => 'https://www.meilisearch.com/docs/errors',
         ];
         $statusCode = 400;
 
