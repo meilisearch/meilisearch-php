@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Exceptions;
 
-final class InvalidArgumentException extends \Exception
+final class InvalidArgumentException extends \Exception implements ExceptionInterface
 {
     public static function invalidType(string $argumentName, array $validTypes): self
     {
