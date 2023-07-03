@@ -394,7 +394,7 @@ landing_getting_started_1: |-
   ]);
 documents_guide_add_movie_1: |-
   $client->index('movies')->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
-PLEASE_UPDATE_ME>>>>>>>>>>>>>getting_started_add_documents_md: |-
+getting_started_add_documents_md: |-
   Using `meilisearch-php` with the Guzzle HTTP client:
 
   ```bash
@@ -410,7 +410,7 @@ PLEASE_UPDATE_ME>>>>>>>>>>>>>getting_started_add_documents_md: |-
 
   use Meilisearch\Client;
 
-  $client = new Client('http://localhost:7700');
+  $client = new Client('http://localhost:7700', 'aSampleMasterKey');
 
   $movies_json = file_get_contents('movies.json');
   $movies = json_decode($movies_json);
