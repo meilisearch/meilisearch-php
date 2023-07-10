@@ -707,6 +707,17 @@ final class SearchTest extends TestCase
         $this->assertArrayHasKey('_semanticScore', $hit);
     }
 
+    public function testShowRankingScoreDetails(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['scoreDetails' => true]);
+
+        $response = $this->index->search('the', ['showRankingScoreDetails' => true]);
+        $hit = $response->getHits()[0];
+
+        $this->assertArrayHasKey('_rankingScoreDetails', $hit);
+    }
+
     public function testBasicSearchWithTransformFacetsDritributionOptionToFilter(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
