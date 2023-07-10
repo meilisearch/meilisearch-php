@@ -749,6 +749,13 @@ final class SearchTest extends TestCase
         $this->assertEquals('The best book', $response->getHits()[0]['comment']);
     }
 
+    public function testSearchWithShowRankingScore(): void
+    {
+        $response = $this->index->search('the', ['showRankingScore' => true]);
+
+        $this->assertArrayHasKey('_rankingScore', $response->getHits()[0]);
+    }
+
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
