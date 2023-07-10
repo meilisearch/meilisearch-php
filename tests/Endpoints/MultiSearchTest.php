@@ -80,12 +80,14 @@ final class MultiSearchTest extends TestCase
             ->setIndexUid($this->booksIndex->getUid())
             ->setVector([1, 0.9, [0.9874]])
             ->setAttributesToSearchOn(['comment'])
-            ->setShowRankingScore(true);
+            ->setShowRankingScore(true)
+            ->setShowRankingScoreDetails(true);
 
         $result = $query->toArray();
 
         $this->assertEquals([1, 0.9, [0.9874]], $result['vector']);
         $this->assertEquals(['comment'], $result['attributesToSearchOn']);
         $this->assertEquals(true, $result['showRankingScore']);
+        $this->assertEquals(true, $result['showRankingScoreDetails']);
     }
 }

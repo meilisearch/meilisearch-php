@@ -28,6 +28,7 @@ class SearchQuery
     private ?array $vector;
     private ?array $attributesToSearchOn = null;
     private ?bool $showRankingScore = null;
+    private ?bool $showRankingScoreDetails;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -109,6 +110,22 @@ class SearchQuery
     public function setShowRankingScore(?bool $showRankingScore): SearchQuery
     {
         $this->showRankingScore = $showRankingScore;
+
+        return $this;
+    }
+
+    /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     * It's available after Meilisearch v1.3.
+     * To enable it properly and use ranking scoring details its required to opt-in through the /experimental-features route.
+     *
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     *
+     * @param bool $showRankingScoreDetails whether the feature is enabled or not
+     */
+    public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): SearchQuery
+    {
+        $this->showRankingScoreDetails = $showRankingScoreDetails;
 
         return $this;
     }
