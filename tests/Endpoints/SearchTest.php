@@ -6,6 +6,7 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class SearchTest extends TestCase
@@ -685,6 +686,24 @@ final class SearchTest extends TestCase
         $this->assertCount(1, $response->getRaw()['facetDistribution']['genre']);
         $this->assertEquals($response->getRaw()['hits'], $response->getHits());
         $this->assertEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
+    }
+
+    public function testVectorSearch(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['vectorStore' => true]);
+
+        $response = $this->index->addDocuments([
+            ['id' => 32, 'title' => 'The Witcher', '_vectors' => [1, 0.3]],
+            ['id' => 32, 'title' => 'Interestellar', '_vectors' => [0.5, 0.53]],
+        ]);
+        $this->index->waitForTask($response['taskUid']);
+
+        $response = $this->index->search('', ['vector' => [0.5921]]);
+        $hit = $response->getHits()[0];
+
+        $this->assertEquals($hit['title'], 'Interestellar');
+        $this->assertEquals($hit['_vectors'], [0.5, 0.53]);
     }
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToFilter(): void
