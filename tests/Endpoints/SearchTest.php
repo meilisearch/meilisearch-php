@@ -738,6 +738,16 @@ final class SearchTest extends TestCase
         $this->assertEquals(2, $response->getFacetDistribution()['genre']['fantasy']);
     }
 
+    public function testSearchWithAttributesToSearchOn(): void
+    {
+        $response = $this->index->updateSearchableAttributes(['comment', 'title']);
+        $this->index->waitForTask($response['taskUid']);
+
+        $response = $this->index->search('the', ['attributesToSearchOn' => ['comment']]);
+
+        $this->assertEquals('The best book', $response->getHits()[0]['comment']);
+    }
+
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
