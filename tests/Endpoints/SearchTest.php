@@ -704,6 +704,7 @@ final class SearchTest extends TestCase
 
         $this->assertEquals($hit['title'], 'Interestellar');
         $this->assertEquals($hit['_vectors'], [0.5, 0.53]);
+        $this->assertArrayHasKey('_semanticScore', $hit);
     }
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToFilter(): void
