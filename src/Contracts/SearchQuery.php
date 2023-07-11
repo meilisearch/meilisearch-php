@@ -156,7 +156,7 @@ class SearchQuery
     /**
      * This is an EXPERIMENTAL feature, which may break without a major version.
      * It's available from Meilisearch v1.3.
-     * To enable it properly and use vector store capabilities its required to opt-in through the /experimental-features route.
+     * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
      *
      * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
      *
