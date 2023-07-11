@@ -26,6 +26,35 @@ class SearchQuery
     private ?int $hitsPerPage;
     private ?int $page;
 
+    // @phpstan-ignore-next-line
+    public function __construct(
+        string $indexUid = null,
+        string $q = null,
+        array $filter = null,
+        array $attributesToRetrieve = null,
+        array $attributesToCrop = null,
+        int $cropLength = null,
+        array $attributesToHighlight = null,
+        string $cropMarker = null,
+        string $highlightPreTag = null,
+        string $highlightPostTag = null,
+        array $facets = null,
+        bool $showMatchesPosition = null,
+        array $sort = null,
+        string $matchingStrategy = null,
+        int $offset = null,
+        int $limit = null,
+        int $hitsPerPage = null,
+        int $page = null,
+    ) {
+        foreach (get_defined_vars() as $name => $value) {
+            if (!\is_null($value) && property_exists($this, $name)) {
+                // @phpstan-ignore-next-line
+                $this->$name = $value;
+            }
+        }
+    }
+
     public function setQuery(string $q): SearchQuery
     {
         $this->q = $q;
