@@ -27,6 +27,7 @@ class SearchQuery
     private ?int $page;
     private ?array $vector;
     private ?array $attributesToSearchOn = null;
+    private ?bool $showRankingScore = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -101,6 +102,13 @@ class SearchQuery
     public function setShowMatchesPosition(?bool $showMatchesPosition): SearchQuery
     {
         $this->showMatchesPosition = $showMatchesPosition;
+
+        return $this;
+    }
+
+    public function setShowRankingScore(?bool $showRankingScore): SearchQuery
+    {
+        $this->showRankingScore = $showRankingScore;
 
         return $this;
     }
@@ -203,6 +211,7 @@ class SearchQuery
             'page' => $this->page ?? null,
             'vector' => $this->vector ?? null,
             'attributesToSearchOn' => $this->attributesToSearchOn,
+            'showRankingScore' => $this->showRankingScore,
         ], function ($item) { return null !== $item; });
     }
 }
