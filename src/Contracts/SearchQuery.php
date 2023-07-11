@@ -170,6 +170,9 @@ class SearchQuery
         return $this;
     }
 
+    /**
+     * @param list<non-empty-string> $attributesToSearchOn
+     */
     public function setAttributesToSearchOn(array $attributesToSearchOn): SearchQuery
     {
         $this->attributesToSearchOn = $attributesToSearchOn;
