@@ -25,6 +25,7 @@ class SearchQuery
     private ?int $limit;
     private ?int $hitsPerPage;
     private ?int $page;
+    private ?array $vector;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -152,6 +153,22 @@ class SearchQuery
         return $this;
     }
 
+    /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     * It's available from Meilisearch v1.3.
+     * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
+     *
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     *
+     * @param array<float> $vector a multi-level array floats
+     */
+    public function setVector(array $vector): SearchQuery
+    {
+        $this->vector = $vector;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         return array_filter([
@@ -173,6 +190,7 @@ class SearchQuery
             'limit' => $this->limit ?? null,
             'hitsPerPage' => $this->hitsPerPage ?? null,
             'page' => $this->page ?? null,
+            'vector' => $this->vector ?? null,
         ], function ($item) { return null !== $item; });
     }
 }
