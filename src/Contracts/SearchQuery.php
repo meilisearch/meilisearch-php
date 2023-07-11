@@ -26,7 +26,7 @@ class SearchQuery
     private ?int $hitsPerPage;
     private ?int $page;
     private ?array $vector;
-    private ?array $attributesToSearchOn;
+    private ?array $attributesToSearchOn = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -202,7 +202,7 @@ class SearchQuery
             'hitsPerPage' => $this->hitsPerPage ?? null,
             'page' => $this->page ?? null,
             'vector' => $this->vector ?? null,
-            'attributesToSearchOn' => $this->attributesToSearchOn ?? null,
+            'attributesToSearchOn' => $this->attributesToSearchOn,
         ], function ($item) { return null !== $item; });
     }
 }
