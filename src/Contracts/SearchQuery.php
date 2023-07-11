@@ -28,7 +28,7 @@ class SearchQuery
     private ?array $vector;
     private ?array $attributesToSearchOn = null;
     private ?bool $showRankingScore = null;
-    private ?bool $showRankingScoreDetails;
+    private ?bool $showRankingScoreDetails = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -229,6 +229,7 @@ class SearchQuery
             'vector' => $this->vector ?? null,
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
+            'showRankingScoreDetails' => $this->showRankingScoreDetails,
         ], function ($item) { return null !== $item; });
     }
 }
