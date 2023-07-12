@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\Endpoint;
+use Meilisearch\Contracts\FacetSearchQuery;
 use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\IndexesQuery;
@@ -15,6 +16,7 @@ use Meilisearch\Endpoints\Delegates\HandlesDocuments;
 use Meilisearch\Endpoints\Delegates\HandlesSettings;
 use Meilisearch\Endpoints\Delegates\HandlesTasks;
 use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Search\FacetSearchResult;
 use Meilisearch\Search\SearchResult;
 
 class Indexes extends Endpoint
@@ -209,6 +211,15 @@ class Indexes extends Endpoint
         }
 
         return $result;
+    }
+
+    // Facet Search
+
+    public function facetSearch(FacetSearchQuery $params): FacetSearchResult
+    {
+        $response = $this->http->post(self::PATH.'/'.$this->uid.'/facet-search', $params->toArray());
+
+        return new FacetSearchResult($response);
     }
 
     // Stats
