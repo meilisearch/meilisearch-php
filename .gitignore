@@ -4,4 +4,3 @@
 .php-cs-fixer.cache
 composer.lock
 phpunit.xml
-.vercel
