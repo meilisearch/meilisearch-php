@@ -58,12 +58,8 @@
         "lint:fix": [
             "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
         ],
-        "phpstan": [
-            "php -d memory_limit=256M ./vendor/bin/phpstan"
-        ],
-        "test": [
-            "sh scripts/tests.sh"
-        ]
+        "phpstan": "./vendor/bin/phpstan",
+        "test": ["sh scripts/tests.sh"]
     },
     "config": {
         "allow-plugins": {
