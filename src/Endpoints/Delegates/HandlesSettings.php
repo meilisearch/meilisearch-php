@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
+use Meilisearch\Contracts\Index\Faceting;
 use Meilisearch\Contracts\Index\Synonyms;
 use Meilisearch\Contracts\Index\TypoTolerance;
 
@@ -81,7 +82,8 @@ trait HandlesSettings
 
     public function getFaceting(): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting');
+        return (new Faceting($this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting')))
+            ->getIterator()->getArrayCopy();
     }
 
     public function updateFaceting(array $faceting): array
