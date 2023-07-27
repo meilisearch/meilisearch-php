@@ -123,6 +123,7 @@ final class TasksTest extends TestCase
         $newFirstIndex = $response->getResults()[0]['uid'];
 
         $this->assertEquals($firstIndex, $newFirstIndex);
+        $this->assertGreaterThan(0, $response->getTotal());
     }
 
     public function testCancelTasksWithFilter(): void
