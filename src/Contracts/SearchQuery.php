@@ -186,7 +186,7 @@ class SearchQuery
      *
      * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
      *
-     * @param array<float> $vector a multi-level array floats
+     * @param list<float|list<float>> $vector a multi-level array floats
      */
     public function setVector(array $vector): SearchQuery
     {
