@@ -6,9 +6,21 @@ namespace Meilisearch\Contracts;
 
 class TasksResults extends Data
 {
+    /**
+     * @var int<0, max>
+     */
     private int $next;
+    /**
+     * @var int<0, max>
+     */
     private int $limit;
+    /**
+     * @var int<0, max>
+     */
     private int $from;
+    /**
+     * @var int<0, max>
+     */
     private int $total;
 
     public function __construct(array $params)
