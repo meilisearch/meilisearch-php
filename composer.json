@@ -45,7 +45,7 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "guzzlehttp/guzzle": "^7.1",
         "http-interop/http-factory-guzzle": "^1.0",
-        "phpstan/phpstan": "1.10.16",
+        "phpstan/phpstan": "1.10.25",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-strict-rules": "^1.1",
         "phpstan/phpstan-phpunit": "^1.0",
@@ -58,12 +58,8 @@
         "lint:fix": [
             "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
         ],
-        "phpstan": [
-            "php -d memory_limit=256M ./vendor/bin/phpstan"
-        ],
-        "test": [
-            "sh scripts/tests.sh"
-        ]
+        "phpstan": "./vendor/bin/phpstan",
+        "test": ["sh scripts/tests.sh"]
     },
     "config": {
         "allow-plugins": {

@@ -1,0 +1,11 @@
+{# 
+Extending the default phpDocumentor layout
+https://github.com/phpDocumentor/phpDocumentor/blob/master/data/templates/default/layout.html.twig 
+#}
+
+{% extends 'layout.html.twig' %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="https://cdn.usefathom.com/script.js" data-site="QNBPJXIV" defer></script>
+{% endblock %}

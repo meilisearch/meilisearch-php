@@ -42,11 +42,11 @@
 ## 📖 Documentation
 
 
-To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://meilisearch.github.io/meilisearch-php/). To learn more about Meilisearch in general, refer to our [documentation](https://www.meilisearch.com/docs/learn/getting_started/quick_start) or our [API reference](https://www.meilisearch.com/docs/reference/api/overview).
+To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://php-sdk.meilisearch.com). To learn more about Meilisearch in general, refer to our [documentation](https://www.meilisearch.com/docs/learn/getting_started/quick_start) or our [API reference](https://www.meilisearch.com/docs/reference/api/overview).
 
 ## ⚡ Supercharge your Meilisearch experience
 
-Say goodbye to server deployment and manual updates with [Meilisearch Cloud](https://www.meilisearch.com/pricing?utm_campaign=oss&utm_source=integration&utm_medium=meilisearch-php). No credit card required.
+Say goodbye to server deployment and manual updates with [Meilisearch Cloud](https://www.meilisearch.com/pricing?utm_campaign=oss&utm_source=integration&utm_medium=meilisearch-php). Get started with a 14-day free trial! No credit card required.
 
 ## 🔧 Installation
 
