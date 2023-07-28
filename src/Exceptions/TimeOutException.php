@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Exceptions;
 
-class TimeOutException extends \Exception
+class TimeOutException extends \Exception implements ExceptionInterface
 {
     public $code;
     public $message;
