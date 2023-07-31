@@ -73,4 +73,21 @@ final class MultiSearchTest extends TestCase
         $this->assertArrayHasKey('totalPages', $response['results'][1]);
         $this->assertCount(1, $response['results'][1]['hits']);
     }
+
+    public function testSupportedQueryParams(): void
+    {
+        $query = (new SearchQuery())
+            ->setIndexUid($this->booksIndex->getUid())
+            ->setVector([1, 0.9, [0.9874]])
+            ->setAttributesToSearchOn(['comment'])
+            ->setShowRankingScore(true)
+            ->setShowRankingScoreDetails(true);
+
+        $result = $query->toArray();
+
+        $this->assertEquals([1, 0.9, [0.9874]], $result['vector']);
+        $this->assertEquals(['comment'], $result['attributesToSearchOn']);
+        $this->assertEquals(true, $result['showRankingScore']);
+        $this->assertEquals(true, $result['showRankingScoreDetails']);
+    }
 }

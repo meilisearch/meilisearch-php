@@ -34,7 +34,12 @@ final class IndexTest extends TestCase
         );
         $this->assertSame([], $this->index->getFilterableAttributes());
         $this->assertSame(['*'], $this->index->getDisplayedAttributes());
-        $this->assertSame(['maxValuesPerFacet' => 100], $this->index->getFaceting());
+        $this->assertSame([
+            'maxValuesPerFacet' => 100,
+            'sortFacetValuesBy' => [
+                '*' => 'alpha',
+            ],
+        ], $this->index->getFaceting());
         $this->assertSame(['maxTotalHits' => 1000], $this->index->getPagination());
         $this->assertSame(
             [

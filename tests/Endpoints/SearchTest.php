@@ -6,6 +6,7 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class SearchTest extends TestCase
@@ -687,6 +688,36 @@ final class SearchTest extends TestCase
         $this->assertEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
     }
 
+    public function testVectorSearch(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['vectorStore' => true]);
+
+        $response = $this->index->addDocuments([
+            ['id' => 32, 'title' => 'The Witcher', '_vectors' => [1, 0.3]],
+            ['id' => 32, 'title' => 'Interestellar', '_vectors' => [0.5, 0.53]],
+        ]);
+        $this->index->waitForTask($response['taskUid']);
+
+        $response = $this->index->search('', ['vector' => [0.5921]]);
+        $hit = $response->getHits()[0];
+
+        $this->assertEquals($hit['title'], 'Interestellar');
+        $this->assertEquals($hit['_vectors'], [0.5, 0.53]);
+        $this->assertArrayHasKey('_semanticScore', $hit);
+    }
+
+    public function testShowRankingScoreDetails(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['scoreDetails' => true]);
+
+        $response = $this->index->search('the', ['showRankingScoreDetails' => true]);
+        $hit = $response->getHits()[0];
+
+        $this->assertArrayHasKey('_rankingScoreDetails', $hit);
+    }
+
     public function testBasicSearchWithTransformFacetsDritributionOptionToFilter(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
@@ -717,6 +748,23 @@ final class SearchTest extends TestCase
         $this->assertCount(2, $response->getFacetDistribution()['genre']);
         $this->assertEquals(3, $response->getFacetDistribution()['genre']['romance']);
         $this->assertEquals(2, $response->getFacetDistribution()['genre']['fantasy']);
+    }
+
+    public function testSearchWithAttributesToSearchOn(): void
+    {
+        $response = $this->index->updateSearchableAttributes(['comment', 'title']);
+        $this->index->waitForTask($response['taskUid']);
+
+        $response = $this->index->search('the', ['attributesToSearchOn' => ['comment']]);
+
+        $this->assertEquals('The best book', $response->getHits()[0]['comment']);
+    }
+
+    public function testSearchWithShowRankingScore(): void
+    {
+        $response = $this->index->search('the', ['showRankingScore' => true]);
+
+        $this->assertArrayHasKey('_rankingScore', $response->getHits()[0]);
     }
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void

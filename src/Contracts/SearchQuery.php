@@ -25,6 +25,10 @@ class SearchQuery
     private ?int $limit;
     private ?int $hitsPerPage;
     private ?int $page;
+    private ?array $vector;
+    private ?array $attributesToSearchOn = null;
+    private ?bool $showRankingScore = null;
+    private ?bool $showRankingScoreDetails = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -103,6 +107,29 @@ class SearchQuery
         return $this;
     }
 
+    public function setShowRankingScore(?bool $showRankingScore): SearchQuery
+    {
+        $this->showRankingScore = $showRankingScore;
+
+        return $this;
+    }
+
+    /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     * It's available after Meilisearch v1.3.
+     * To enable it properly and use ranking scoring details its required to opt-in through the /experimental-features route.
+     *
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     *
+     * @param bool $showRankingScoreDetails whether the feature is enabled or not
+     */
+    public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): SearchQuery
+    {
+        $this->showRankingScoreDetails = $showRankingScoreDetails;
+
+        return $this;
+    }
+
     public function setSort(array $sort): SearchQuery
     {
         $this->sort = $sort;
@@ -152,6 +179,32 @@ class SearchQuery
         return $this;
     }
 
+    /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     * It's available from Meilisearch v1.3.
+     * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
+     *
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     *
+     * @param list<float|list<float>> $vector a multi-level array floats
+     */
+    public function setVector(array $vector): SearchQuery
+    {
+        $this->vector = $vector;
+
+        return $this;
+    }
+
+    /**
+     * @param list<non-empty-string> $attributesToSearchOn
+     */
+    public function setAttributesToSearchOn(array $attributesToSearchOn): SearchQuery
+    {
+        $this->attributesToSearchOn = $attributesToSearchOn;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         return array_filter([
@@ -173,6 +226,10 @@ class SearchQuery
             'limit' => $this->limit ?? null,
             'hitsPerPage' => $this->hitsPerPage ?? null,
             'page' => $this->page ?? null,
+            'vector' => $this->vector ?? null,
+            'attributesToSearchOn' => $this->attributesToSearchOn,
+            'showRankingScore' => $this->showRankingScore,
+            'showRankingScoreDetails' => $this->showRankingScoreDetails,
         ], function ($item) { return null !== $item; });
     }
 }
