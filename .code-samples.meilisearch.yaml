@@ -3,6 +3,29 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+facet_search_1: |-
+  $client->index('books')->facetSearch(
+    (new FacetSearchQuery())
+        ->setFacetQuery('fiction')
+        ->setFacetName('genres')
+        ->setFilter(['rating > 3'])
+  );
+facet_search_2: |-
+  $client->index('books')->updateFaceting(['sortFacetValuesBy' => ['genres' => 'count']]);
+facet_search_3: |-
+  $client->index('books')->facetSearch(
+    (new FacetSearchQuery())
+        ->setFacetQuery('c')
+        ->setFacetName('genres')
+  );
+search_parameter_guide_show_ranking_score_1: |-
+  $client->index('movies')->search('dragon', [
+    'showRankingScore' => true
+  ]);
+search_parameter_guide_attributes_to_search_on_1: |-
+  $client->index('movies')->search('adventure', [
+    'attributesToSearchOn' => ['overview']
+  ]);
 get_documents_post_1: |-
   $client->index('books')->getDocuments(
     (new DocumentsQuery())
@@ -15,7 +38,11 @@ delete_documents_by_filter_1: |-
 get_documents_1: |-
   $client->index('movies')->getDocuments((new DocumentsQuery())->setFilter('genres = action')->setLimit(2));
 getting_started_faceting: |-
-  $client->index('movies')->updateFaceting(['maxValuesPerFacet' => 2]);
+  $client->index('movies')
+    ->updateFaceting([
+      'maxValuesPerFacet' => 2, 
+      'sortFacetValuesBy' => ['*' => 'count']
+    ]);
 getting_started_pagination: |-
   $client->index('movies')->updatePagination(['maxTotalHits' => 500]);
 synonyms_guide_1: |-
@@ -656,7 +683,10 @@ reset_pagination_settings_1: |-
 get_faceting_settings_1: |-
   $client->index('books')->getFaceting();
 update_faceting_settings_1: |-
-  $client->index('books')->updateFaceting([ 'maxValuesPerFacet' => 2 ]);
+  $client->index('books')->updateFaceting([
+    'maxValuesPerFacet' => 2,
+    'sortFacetValuesBy' => ['*' => 'alpha', 'genres' => 'count']
+  ]);
 reset_faceting_settings_1: |-
   $client->index('books')->resetFaceting();
 multi_search_1: |-
