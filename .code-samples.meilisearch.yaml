@@ -40,7 +40,7 @@ get_documents_1: |-
 getting_started_faceting: |-
   $client->index('movies')
     ->updateFaceting([
-      'maxValuesPerFacet' => 2, 
+      'maxValuesPerFacet' => 2,
       'sortFacetValuesBy' => ['*' => 'count']
     ]);
 getting_started_pagination: |-
