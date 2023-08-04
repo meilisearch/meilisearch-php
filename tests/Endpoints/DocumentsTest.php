@@ -332,7 +332,7 @@ final class DocumentsTest extends TestCase
                           self::fail();
                   }
               })
-              ->willReturnOnConsecutiveCalls([], []);
+              ->willReturn([], []);
 
         $index->addDocumentsCsvInBatches($documentCsv, 1, null, ';');
     }
@@ -813,7 +813,7 @@ final class DocumentsTest extends TestCase
                           self::fail();
                   }
               })
-              ->willReturnOnConsecutiveCalls([], []);
+              ->willReturn([], []);
 
         $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
     }
