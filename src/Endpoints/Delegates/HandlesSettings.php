@@ -12,11 +12,17 @@ trait HandlesSettings
 {
     // Settings - Ranking rules
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getRankingRules(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/ranking-rules');
     }
 
+    /**
+     * @param list<non-empty-string> $rankingRules
+     */
     public function updateRankingRules(array $rankingRules): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/ranking-rules', $rankingRules);
@@ -29,11 +35,17 @@ trait HandlesSettings
 
     // Settings - Distinct attribute
 
-    public function getDistinctAttribute()
+    /**
+     * @return non-empty-string|null
+     */
+    public function getDistinctAttribute(): ?string
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/distinct-attribute');
     }
 
+    /**
+     * @param non-empty-string $distinctAttribute
+     */
     public function updateDistinctAttribute(string $distinctAttribute): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/distinct-attribute', $distinctAttribute);
@@ -46,11 +58,17 @@ trait HandlesSettings
 
     // Settings - Searchable attributes
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getSearchableAttributes(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/searchable-attributes');
     }
 
+    /**
+     * @param list<non-empty-string> $searchableAttributes
+     */
     public function updateSearchableAttributes(array $searchableAttributes): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchableAttributes);
@@ -63,11 +81,17 @@ trait HandlesSettings
 
     // Settings - Displayed attributes
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getDisplayedAttributes(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
+    /**
+     * @param list<non-empty-string> $displayedAttributes
+     */
     public function updateDisplayedAttributes(array $displayedAttributes): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayedAttributes);
@@ -80,12 +104,18 @@ trait HandlesSettings
 
     // Settings - Faceting
 
+    /**
+     * @return array{maxValuesPerFacet: int, sortFacetValuesBy: array<non-empty-string, 'count'|'alpha'>}
+     */
     public function getFaceting(): array
     {
         return (new Faceting($this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting')))
             ->getIterator()->getArrayCopy();
     }
 
+    /**
+     * @param array{maxValuesPerFacet?: int, sortFacetValuesBy?: array<non-empty-string, 'count'|'alpha'>} $faceting
+     */
     public function updateFaceting(array $faceting): array
     {
         return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $faceting);
@@ -98,11 +128,17 @@ trait HandlesSettings
 
     // Settings - Pagination
 
+    /**
+     * @return array{maxTotalHits: positive-int}
+     */
     public function getPagination(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/pagination');
     }
 
+    /**
+     * @param array{maxTotalHits: positive-int} $pagination
+     */
     public function updatePagination(array $pagination): array
     {
         return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/pagination', $pagination);
@@ -115,11 +151,17 @@ trait HandlesSettings
 
     // Settings - Stop-words
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getStopWords(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/stop-words');
     }
 
+    /**
+     * @param list<non-empty-string> $stopWords
+     */
     public function updateStopWords(array $stopWords): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/stop-words', $stopWords);
@@ -132,12 +174,18 @@ trait HandlesSettings
 
     // Settings - Synonyms
 
+    /**
+     * @return array<non-empty-string, list<non-empty-string>>
+     */
     public function getSynonyms(): array
     {
         return (new Synonyms($this->http->get(self::PATH.'/'.$this->uid.'/settings/synonyms')))
             ->getIterator()->getArrayCopy();
     }
 
+    /**
+     * @param array<non-empty-string, list<non-empty-string>> $synonyms
+     */
     public function updateSynonyms(array $synonyms): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/synonyms', new Synonyms($synonyms));
@@ -150,11 +198,17 @@ trait HandlesSettings
 
     // Settings - Filterable Attributes
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getFilterableAttributes(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/filterable-attributes');
     }
 
+    /**
+     * @param list<non-empty-string> $filterableAttributes
+     */
     public function updateFilterableAttributes(array $filterableAttributes): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $filterableAttributes);
@@ -167,11 +221,17 @@ trait HandlesSettings
 
     // Settings - Sortable Attributes
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getSortableAttributes(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/sortable-attributes');
     }
 
+    /**
+     * @param list<non-empty-string> $sortableAttributes
+     */
     public function updateSortableAttributes(array $sortableAttributes): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/sortable-attributes', $sortableAttributes);
@@ -184,12 +244,28 @@ trait HandlesSettings
 
     // Settings - Typo Tolerance
 
+    /**
+     * @return array{
+     *     enabled: bool,
+     *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
+     *     disableOnWords: list<non-empty-string>,
+     *     disableOnAttributes: list<non-empty-string>
+     * }
+     */
     public function getTypoTolerance(): array
     {
         return (new TypoTolerance($this->http->get(self::PATH.'/'.$this->uid.'/settings/typo-tolerance')))
             ->getIterator()->getArrayCopy();
     }
 
+    /**
+     * @param array{
+     *     enabled: bool,
+     *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
+     *     disableOnWords: list<non-empty-string>,
+     *     disableOnAttributes: list<non-empty-string>
+     * } $typoTolerance
+     */
     public function updateTypoTolerance(array $typoTolerance): array
     {
         return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/typo-tolerance', new TypoTolerance($typoTolerance));
