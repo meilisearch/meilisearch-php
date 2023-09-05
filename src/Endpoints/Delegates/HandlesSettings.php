@@ -275,4 +275,27 @@ trait HandlesSettings
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/typo-tolerance');
     }
+
+    // Settings - Word dictionary
+
+    /**
+     * @return list<non-empty-string>
+     */
+    public function getWordDictionary(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/dictionary');
+    }
+
+    /**
+     * @param list<non-empty-string> $wordDictionary
+     */
+    public function updateWordDictionary(array $wordDictionary): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/dictionary', $wordDictionary);
+    }
+
+    public function resetWordDictionary(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/dictionary');
+    }
 }
