@@ -3,9 +3,12 @@ tag-template: 'v$RESOLVED_VERSION'
 exclude-labels:
   - 'skip-changelog'
 version-resolver:
-  minor:
+  major:
     labels:
       - 'breaking-change'
+  minor:
+    labels:
+      - 'enhancement'
   default: patch
 categories:
   - title: '⚠️ Breaking changes'
