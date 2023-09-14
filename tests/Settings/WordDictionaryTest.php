@@ -21,7 +21,7 @@ final class WordDictionaryTest extends TestCase
 
     public function testGetDefaultWordDictionary(): void
     {
-        $response = $this->index->getWordDictionary();
+        $response = $this->index->getDictionary();
 
         $this->assertSame(self::DEFAULT_WORD_DICTIONARY, $response);
     }
@@ -33,21 +33,21 @@ final class WordDictionaryTest extends TestCase
             'J. R. R.',
         ];
 
-        $promise = $this->index->updateWordDictionary($newWordDictionary);
+        $promise = $this->index->updateDictionary($newWordDictionary);
 
         $this->index->waitForTask($promise['taskUid']);
 
-        $wordDictionary = $this->index->getWordDictionary();
+        $wordDictionary = $this->index->getDictionary();
 
         $this->assertSame($newWordDictionary, $wordDictionary);
     }
 
     public function testResetWordDictionary(): void
     {
-        $promise = $this->index->resetWordDictionary();
+        $promise = $this->index->resetDictionary();
 
         $this->index->waitForTask($promise['taskUid']);
-        $wordDictionary = $this->index->getWordDictionary();
+        $wordDictionary = $this->index->getDictionary();
 
         $this->assertSame(self::DEFAULT_WORD_DICTIONARY, $wordDictionary);
     }

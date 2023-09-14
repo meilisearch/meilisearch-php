@@ -281,7 +281,7 @@ trait HandlesSettings
     /**
      * @return list<non-empty-string>
      */
-    public function getWordDictionary(): array
+    public function getDictionary(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/dictionary');
     }
@@ -289,12 +289,12 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $wordDictionary
      */
-    public function updateWordDictionary(array $wordDictionary): array
+    public function updateDictionary(array $wordDictionary): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/dictionary', $wordDictionary);
     }
 
-    public function resetWordDictionary(): array
+    public function resetDictionary(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/dictionary');
     }
