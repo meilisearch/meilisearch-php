@@ -408,19 +408,6 @@ add_movies_json_1: |-
   $movies = json_decode($moviesJson);
 
   $client->index('movies')->addDocuments($movies);
-landing_getting_started_1: |-
-  $client = new Client('http://localhost:7700', 'masterKey');
-
-  $client->index('movies')->addDocuments([
-    ['id' => 1, 'title' => 'Carol'],
-    ['id' => 2, 'title' => 'Wonder Woman'],
-    ['id' => 3, 'title' => 'Life of Pi'],
-    ['id' => 4, 'title' => 'Mad Max: Fury Road'],
-    ['id' => 5, 'title' => 'Moana'],
-    ['id' => 6, 'title' => 'Philadelphia'],
-  ]);
-documents_guide_add_movie_1: |-
-  $client->index('movies')->addDocuments([['movie_id' => '123sq178', 'title' => 'Amelie Poulain']]);
 getting_started_add_documents_md: |-
   Using `meilisearch-php` with the Guzzle HTTP client:
 
@@ -515,13 +502,8 @@ getting_started_configure_settings: |-
       '_geo'
     ]
   ]);
-getting_started_communicating_with_a_protected_instance: |-
-  $client = new Client('http://localhost:7700', 'apiKey');
-  $client->index('movies')->search();
 filtering_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
-faceted_search_facets_1: |-
-  $client->index('movies')->search('Batman', ['facets' => ['genres']]);
 faceted_search_walkthrough_filter_1: |-
   $client->index('movies')->search('thriller', [
     'filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']
@@ -531,21 +513,6 @@ faceted_search_update_settings_1: |-
 faceted_search_1: |-
   $client->index('books')->search('classic', [
     'facets' => ['genres', 'rating', 'language']
-  ]);
-faceted_search_2: |-
-  client->multiSearch([
-    (new SearchQuery())
-        ->setIndexUid('books')
-        ->setFacets(['language', 'genres', 'author', 'format'])
-        ->setFilter('(language = English AND language = French) OR genres = Fiction')
-    (new SearchQuery())
-        ->setIndexUid('books')
-        ->setFacets(['language'])
-        ->setFilter('genres = Fiction')
-    (new SearchQuery())
-        ->setIndexUid('books')
-        ->setFacets(['genres'])
-        ->setFilter('language = English OR language = French')
   ]);
 post_dump_1: |-
   $client->createDump();
