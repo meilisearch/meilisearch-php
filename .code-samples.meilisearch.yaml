@@ -408,6 +408,17 @@ add_movies_json_1: |-
   $movies = json_decode($moviesJson);
 
   $client->index('movies')->addDocuments($movies);
+landing_getting_started_1: |-
+  $client = new Client('http://localhost:7700', 'masterKey');
+
+  $client->index('movies')->addDocuments([
+    ['id' => 1, 'title' => 'Carol'],
+    ['id' => 2, 'title' => 'Wonder Woman'],
+    ['id' => 3, 'title' => 'Life of Pi'],
+    ['id' => 4, 'title' => 'Mad Max: Fury Road'],
+    ['id' => 5, 'title' => 'Moana'],
+    ['id' => 6, 'title' => 'Philadelphia'],
+  ]);
 getting_started_add_documents_md: |-
   Using `meilisearch-php` with the Guzzle HTTP client:
 
