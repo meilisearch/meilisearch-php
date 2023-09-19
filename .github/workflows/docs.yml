@@ -32,7 +32,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-phpdocumentor-
       - name: Build with phpDocumentor
-        run: docker run --rm --volume "$(pwd):/data" phpdoc/phpdoc:3 -i tests/ -vv --target docs --cache-folder .phpdoc/cache --template default --title "$DOCUMENTATION_TITLE"
+        run: docker run --rm --volume "$(pwd):/data" phpdoc/phpdoc:3 run -d /data -i tests/ -vv --target /data/docs --cache-folder /data/.phpdoc/cache --template default --title "$DOCUMENTATION_TITLE"
       - name: Upload artifact to GitHub Pages
         uses: actions/upload-pages-artifact@v2
         with:
