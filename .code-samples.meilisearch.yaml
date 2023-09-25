@@ -677,3 +677,21 @@ multi_search_1: |-
           ->setIndexUid('movie_ratings')
           ->setQuery('us')
     ]);
+get_dictionary_1: |-
+  $client->index('books')->getDictionary();
+update_dictionary_1: |-
+  $client->index('books')->updateDictionary(['J. R. R.', 'W. E. B.']);
+reset_dictionary_1: |-
+  $client->index('books')->resetDictionary();
+get_separator_tokens_1: |-
+  $client->index('articles')->getSeparatorTokens();
+update_separator_tokens_1: |-
+  $client->index('articles')->updateSeparatorTokens(['|', '&hellip;']);
+reset_separator_tokens_1: |-
+  $client->index('articles')->resetSeparatorTokens();
+get_non_separator_tokens_1: |-
+  $client->index('articles')->getNonSeparatorTokens();
+update_non_separator_tokens_1: |-
+  $client->index('articles')->updateNonSeparatorTokens(['@', '#']);
+reset_non_separator_tokens_1: |-
+  $client->index('articles')->resetNonSeparatorTokens();

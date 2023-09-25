@@ -50,6 +50,7 @@ final class IndexTest extends TestCase
             ],
             $this->index->getTypoTolerance(),
         );
+        $this->assertSame([], $this->index->getDictionary());
     }
 
     public function testGetPrimaryKey(): void

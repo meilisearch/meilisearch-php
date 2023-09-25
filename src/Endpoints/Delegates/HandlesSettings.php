@@ -275,4 +275,70 @@ trait HandlesSettings
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/typo-tolerance');
     }
+
+    // Settings - Word dictionary
+
+    /**
+     * @return list<non-empty-string>
+     */
+    public function getDictionary(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/dictionary');
+    }
+
+    /**
+     * @param list<non-empty-string> $wordDictionary
+     */
+    public function updateDictionary(array $wordDictionary): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/dictionary', $wordDictionary);
+    }
+
+    public function resetDictionary(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/dictionary');
+    }
+
+    // Settings - Separator tokens
+
+    public function getSeparatorTokens(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/separator-tokens');
+    }
+
+    /**
+     * @param list<non-empty-string> $separatorTokens
+     */
+    public function updateSeparatorTokens(array $separatorTokens): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/separator-tokens', $separatorTokens);
+    }
+
+    public function resetSeparatorTokens(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/separator-tokens');
+    }
+
+    // Settings - Non-Separator tokens
+
+    /**
+     * @return list<non-empty-string>
+     */
+    public function getNonSeparatorTokens(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens');
+    }
+
+    /**
+     * @param list<non-empty-string> $nonSeparatorTokens
+     */
+    public function updateNonSeparatorTokens(array $nonSeparatorTokens): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens', $nonSeparatorTokens);
+    }
+
+    public function resetNonSeparatorTokens(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens');
+    }
 }
