@@ -14,7 +14,7 @@ jobs:
     outputs:
       version: ${{ steps.grep-step.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Grep docker beta version of Meilisearch
         id: grep-step
         run: |
@@ -37,7 +37,7 @@ jobs:
         php-versions: ['7.4', '8.0', '8.1']
     name: integration-tests-against-rc (PHP ${{ matrix.php-versions }})
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:

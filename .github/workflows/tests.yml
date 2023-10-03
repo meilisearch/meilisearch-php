@@ -14,7 +14,7 @@ jobs:
     name: Yaml linting check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Yaml lint check
         uses: ibiqlik/action-yamllint@v3
         with:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     name: linter-check
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     name: phpstan-tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -68,7 +68,7 @@ jobs:
         php-versions: ['7.4', '8.0', '8.1', '8.2']
     name: integration-tests (PHP ${{ matrix.php-versions }})
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -121,7 +121,7 @@ jobs:
           MEILI_NO_ANALYTICS: true
     name: integration-tests (PHP 7.4 & Guzzle 6)
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
