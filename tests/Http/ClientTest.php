@@ -231,6 +231,29 @@ class ClientTest extends TestCase
         $this->assertTrue($client->isHealthy());
     }
 
+    public function testEmptyMasterkeyRemovesAuthHeader(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+        $reqFactory = $this->createMock(RequestFactoryInterface::class);
+        $requestStub = $this->createMock(RequestInterface::class);
+        $requestStub->expects($this->exactly(1))
+            ->method('withAddedHeader')
+            ->willReturnCallback(function ($name, $value) use ($requestStub) {
+                if ('Authorization' === $name) {
+                    $this->assertSame('Bearer ', $value);
+                }
+
+                return $requestStub;
+            });
+        $reqFactory->expects($this->once())
+            ->method('createRequest')
+            ->willReturn($requestStub);
+
+        $client = new \Meilisearch\Client('http://localhost:7070', '', $httpClient, $reqFactory);
+
+        $this->assertTrue($client->isHealthy());
+    }
+
     public function testClientHasCustomUserAgent(): void
     {
         $customAgent = 'Meilisearch Symfony (v0.10.0)';
