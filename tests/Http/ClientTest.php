@@ -239,11 +239,8 @@ class ClientTest extends TestCase
         $requestStub->expects($this->once())
             ->method('withAddedHeader')
             ->willReturnCallback(function ($name, $value) use ($requestStub) {
-                if ('User-Agent' === $name) {
-                    $this->assertSame(Meilisearch::qualifiedVersion(), $value);
-                } else {
-                    $this->fail('There should be nothing else than User-Agent header');
-                }
+                $this->assertSame('User-Agent', $name);
+                $this->assertSame(Meilisearch::qualifiedVersion(), $value);
 
                 return $requestStub;
             });
