@@ -236,7 +236,7 @@ class ClientTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '{}');
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
-        $requestStub->expects($this->exactly(1))
+        $requestStub->expects($this->once())
             ->method('withAddedHeader')
             ->willReturnCallback(function ($name, $value) use ($requestStub) {
                 if ('Authorization' === $name) {
