@@ -50,7 +50,7 @@ class Client implements Http
         $this->headers = array_filter([
             'User-Agent' => implode(';', array_merge($clientAgents, [Meilisearch::qualifiedVersion()])),
         ]);
-        if (null !== $apiKey) {
+        if (null !== $apiKey && '' !== $apiKey) {
             $this->headers['Authorization'] = sprintf('Bearer %s', $apiKey);
         }
         $this->json = new Json();
