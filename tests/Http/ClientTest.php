@@ -248,7 +248,7 @@ class ClientTest extends TestCase
             ->method('createRequest')
             ->willReturn($requestStub);
 
-        $client = new Client('http://localhost:7070', '', $httpClient, $reqFactory);
+        $client = new \Meilisearch\Client('http://localhost:7070', '', $httpClient, $reqFactory);
 
         $this->assertTrue($client->isHealthy());
     }
