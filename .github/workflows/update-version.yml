@@ -21,7 +21,7 @@ jobs:
       - name: Update Meilisearch.php file
         run: |
           raw_new_version=$(echo $NEW_VERSION | cut -d 'v' -f 2)
-          new_string="VERSION = '$raw_new_version'"
+          new_string="VERSION = '$raw_new_version';"
           sed -i "s/VERSION = .*/$new_string/" src/Meilisearch.php
       - name: Commit and push the changes to the ${{ env.NEW_BRANCH }} branch
         uses: EndBug/add-and-commit@v9
