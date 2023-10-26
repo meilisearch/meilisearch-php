@@ -104,6 +104,10 @@ _[Read more about this](https://github.com/meilisearch/integration-guides/blob/m
 
 ⚠️ Before doing anything, make sure you got through the guide about [Releasing an Integration](https://github.com/meilisearch/integration-guides/blob/main/resources/integration-release.md).
 
+Use [our automation](https://github.com/meilisearch/meilisearch-php/actions/workflows/update-version.yml) to update the version: click on `Run workflow`, and fill the appropriate version before validating. A PR updating the version in the [`src/Meilisearch.php`](/src/Meilisearch.php) file will be created.
+
+Or do it manually:
+
 Make a PR modifying the file [`src/Meilisearch.php`](/src/Meilisearch.php) with the right version.
 
 ```php
