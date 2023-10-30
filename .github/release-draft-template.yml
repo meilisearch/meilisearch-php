@@ -19,6 +19,10 @@ categories:
     label: 'bug'
   - title: '🔒 Security'
     label: 'security'
+  - title: '⚙️ Maintenance/misc'
+    label:
+      - 'maintenance'
+      - 'documentation'
 template: |
   $CHANGES
 
