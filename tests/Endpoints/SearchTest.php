@@ -699,7 +699,7 @@ final class SearchTest extends TestCase
         ]);
         $this->index->waitForTask($response['taskUid']);
 
-        $response = $this->index->search('', ['vector' => [0.5921]]);
+        $response = $this->index->search('', ['vector' => [1, 0.5921]]);
         $hit = $response->getHits()[0];
 
         $this->assertEquals($hit['title'], 'Interestellar');
