@@ -527,6 +527,8 @@ faceted_search_1: |-
   ]);
 post_dump_1: |-
   $client->createDump();
+create_snapshot_1: |-
+  $client->createSnapshot();
 phrase_search_1: |-
   $client->index('movies')->search('"african american" horror');
 sorting_guide_update_sortable_attributes_1: |-
