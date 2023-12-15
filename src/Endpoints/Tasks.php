@@ -56,6 +56,9 @@ class Tasks extends Endpoint
         throw new TimeOutException();
     }
 
+    /**
+     * @throws TimeOutException
+     */
     public function waitTasks(array $taskUids, int $timeoutInMs, int $intervalInMs): array
     {
         $tasks = [];
