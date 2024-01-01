@@ -34,7 +34,7 @@ jobs:
       - name: Build with phpDocumentor
         run: docker run --rm --volume "$(pwd):/data" phpdoc/phpdoc:3 run -d /data -i tests/ -vv --target /data/docs --cache-folder /data/.phpdoc/cache --template default --title "$DOCUMENTATION_TITLE"
       - name: Upload artifact to GitHub Pages
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: docs
 
