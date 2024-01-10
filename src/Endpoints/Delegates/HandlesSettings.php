@@ -355,12 +355,15 @@ trait HandlesSettings
     /**
      * @param non-empty-string $type
      */
-    public function updateProximityPrecision(string $type): array
+    public function updateProximityPrecision(string $type): string
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/proximity-precision', $type);
     }
 
-    public function resetProximityPrecision(): array
+    /**
+     * @return non-empty-string
+     */
+    public function resetProximityPrecision(): string
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/proximity-precision');
     }
