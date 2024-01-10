@@ -697,3 +697,9 @@ update_non_separator_tokens_1: |-
   $client->index('articles')->updateNonSeparatorTokens(['@', '#']);
 reset_non_separator_tokens_1: |-
   $client->index('articles')->resetNonSeparatorTokens();
+get_proximity_precision_settings_1: |-
+  $client->index('books')->getProximityPrecision();
+update_proximity_precision_settings_1: |-
+  $client->index('books')->updateProximityPrecision("byAttribute");
+reset_proximity_precision_settings_1: |-
+  $client->index('books')->resetProximityPrecision();
