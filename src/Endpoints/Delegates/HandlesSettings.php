@@ -364,7 +364,7 @@ trait HandlesSettings
 
     // Settings - Experimental: Embedders (hybrid search)
 
-    public function getEmbedders(): array
+    public function getEmbedders(): ?array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/embedders');
     }

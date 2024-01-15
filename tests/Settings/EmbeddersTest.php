@@ -22,7 +22,7 @@ final class EmbeddersTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
         $embedders = $index->getEmbedders();
 
-        $this->assertEquals([], $embedders);
+        $this->assertEmpty($embedders);
     }
 
     public function testUpdateEmbeddersWithOpenAi(): void
@@ -98,7 +98,6 @@ final class EmbeddersTest extends TestCase
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
-        $embedders = $index->getEmbedders();
-        $this->assertEquals([], $embedders);
+        $this->assertEmpty($index->getEmbedders());
     }
 }
