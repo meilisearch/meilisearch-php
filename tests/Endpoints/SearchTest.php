@@ -692,19 +692,15 @@ final class SearchTest extends TestCase
     {
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
         $http->patch('/experimental-features', ['vectorStore' => true]);
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $response = $this->index->addDocuments([
-            ['id' => 32, 'title' => 'The Witcher', '_vectors' => [1, 0.3]],
-            ['id' => 32, 'title' => 'Interestellar', '_vectors' => [0.5, 0.53]],
-        ]);
-        $this->index->waitForTask($response['taskUid']);
+        $promise = $index->updateEmbedders(['default' => ['source' => 'userProvided', 'dimensions' => 1]]);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
 
-        $response = $this->index->search('', ['vector' => [1, 0.5921]]);
-        $hit = $response->getHits()[0];
+        $response = $index->search('', ['vector' => [1], 'hybrid' => ['semanticRatio' => 1.0]]);
 
-        $this->assertEquals($hit['title'], 'Interestellar');
-        $this->assertEquals($hit['_vectors'], [0.5, 0.53]);
-        $this->assertArrayHasKey('_semanticScore', $hit);
+        $this->assertEmpty($response->getHits());
     }
 
     public function testShowRankingScoreDetails(): void

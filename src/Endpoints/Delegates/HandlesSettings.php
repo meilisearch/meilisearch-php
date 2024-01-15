@@ -341,4 +341,41 @@ trait HandlesSettings
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens');
     }
+
+    // Settings - proximityPrecision
+
+    /**
+     * @return non-empty-string
+     */
+    public function getProximityPrecision(): string
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/proximity-precision');
+    }
+
+    public function updateProximityPrecision(string $type): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/proximity-precision', $type);
+    }
+
+    public function resetProximityPrecision(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/proximity-precision');
+    }
+
+    // Settings - Experimental: Embedders (hybrid search)
+
+    public function getEmbedders(): ?array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/embedders');
+    }
+
+    public function updateEmbedders(array $embedders): array
+    {
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/embedders', $embedders);
+    }
+
+    public function resetEmbedders(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/embedders');
+    }
 }

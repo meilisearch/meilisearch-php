@@ -13,6 +13,9 @@ class Settings extends Data implements \JsonSerializable
         $data['synonyms'] = new Synonyms($data['synonyms'] ?? []);
         $data['typoTolerance'] = new TypoTolerance($data['typoTolerance'] ?? []);
         $data['faceting'] = new Faceting($data['faceting'] ?? []);
+        if (\array_key_exists('embedders', $data)) {
+            $data['embedders'] = new Embedders($data['embedders'] ?? []);
+        }
 
         parent::__construct($data);
     }
