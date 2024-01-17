@@ -345,13 +345,16 @@ trait HandlesSettings
     // Settings - proximityPrecision
 
     /**
-     * @return non-empty-string
+     * @return 'byWord'|'byAttribute'
      */
     public function getProximityPrecision(): string
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/proximity-precision');
     }
 
+    /**
+     * @param 'byWord'|'byAttribute' $type
+     */
     public function updateProximityPrecision(string $type): array
     {
         return $this->http->put(self::PATH.'/'.$this->uid.'/settings/proximity-precision', $type);
