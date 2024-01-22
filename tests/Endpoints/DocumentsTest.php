@@ -306,7 +306,6 @@ final class DocumentsTest extends TestCase
 
     public function testAddDocumentsCsvInBatchesWithDelimiter(): void
     {
-        $matcher = $this->exactly(2);
         $documentCsv = 'id;title'.PHP_EOL;
         $documentCsv .= '888221515;Young folks'.PHP_EOL;
         $documentCsv .= '235115704;Mister Klein'.PHP_EOL;
@@ -317,22 +316,22 @@ final class DocumentsTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $index->expects($matcher)
+        $index->expects($this->exactly(2))
               ->method('addDocumentsCsv')
-              ->willReturnCallback(function (string $param) use ($matcher): void {
+              ->willReturnCallback(function (string $documents, $primaryKey, $delimiter): void {
+                  static $invocation = 0;
                   // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
-                  switch ($matcher->numberOfInvocations()) {
+                  switch (++$invocation) {
                       case 1:
-                          $this->assertEquals($param, ["id;title\n888221515;Young folks", null, ';']);
+                          static::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       case 2:
-                          $this->assertEquals($param, ["id;title\n235115704;Mister Klein", null, ';']);
+                          static::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       default:
                           self::fail();
                   }
-              })
-              ->willReturn([], []);
+              });
 
         $index->addDocumentsCsvInBatches($documentCsv, 1, null, ';');
     }
