@@ -31,7 +31,7 @@ final class DistinctAttributeTest extends TestCase
         $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
-        self::assertEquals($distinctAttribute, $this->index->getDistinctAttribute());
+        self::assertSame($distinctAttribute, $this->index->getDistinctAttribute());
     }
 
     public function testResetDistinctAttribute(): void

@@ -86,7 +86,7 @@ class ClientTest extends TestCase
             $client->post('/', '');
             self::fail('ApiException not raised.');
         } catch (ApiException $e) {
-            self::assertEquals('internal', $e->errorCode);
+            self::assertSame('internal', $e->errorCode);
         }
     }
 
@@ -133,7 +133,7 @@ class ClientTest extends TestCase
             $client->put('/', '');
             self::fail('ApiException not raised.');
         } catch (ApiException $e) {
-            self::assertEquals('internal', $e->errorCode);
+            self::assertSame('internal', $e->errorCode);
         }
     }
 
@@ -180,7 +180,7 @@ class ClientTest extends TestCase
             $client->patch('/', '');
             self::fail('ApiException not raised.');
         } catch (ApiException $e) {
-            self::assertEquals('internal', $e->errorCode);
+            self::assertSame('internal', $e->errorCode);
         }
     }
 

@@ -29,7 +29,7 @@ final class FilterableAttributesTest extends TestCase
 
         $filterableAttributes = $index->getFilterableAttributes();
 
-        self::assertEquals($newAttributes, $filterableAttributes);
+        self::assertSame($newAttributes, $filterableAttributes);
     }
 
     public function testResetFilterableAttributes(): void

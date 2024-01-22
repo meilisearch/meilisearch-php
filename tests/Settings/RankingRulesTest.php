@@ -30,7 +30,7 @@ final class RankingRulesTest extends TestCase
     {
         $response = $this->index->getRankingRules();
 
-        self::assertEquals(self::DEFAULT_RANKING_RULES, $response);
+        self::assertSame(self::DEFAULT_RANKING_RULES, $response);
     }
 
     public function testUpdateRankingRules(): void
@@ -48,7 +48,7 @@ final class RankingRulesTest extends TestCase
 
         $rankingRules = $this->index->getRankingRules();
 
-        self::assertEquals($newRankingRules, $rankingRules);
+        self::assertSame($newRankingRules, $rankingRules);
     }
 
     public function testResetRankingRules(): void
@@ -60,6 +60,6 @@ final class RankingRulesTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $rankingRules = $this->index->getRankingRules();
 
-        self::assertEquals(self::DEFAULT_RANKING_RULES, $rankingRules);
+        self::assertSame(self::DEFAULT_RANKING_RULES, $rankingRules);
     }
 }

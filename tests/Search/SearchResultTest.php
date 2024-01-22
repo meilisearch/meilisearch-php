@@ -76,14 +76,14 @@ final class SearchResultTest extends TestCase
         self::assertCount(2, $this->basicResult);
         self::assertNotEmpty($this->basicResult->getHits());
 
-        self::assertEquals([
+        self::assertSame([
             'id' => '1',
             'title' => 'American Pie 2',
             'poster' => 'https://image.tmdb.org/t/p/w1280/q4LNgUnRfltxzp3gf1MAGiK5LhV.jpg',
             'overview' => 'The whole gang are back and as close as ever. They decide to get even closer by spending the summer together at a beach house. They decide to hold the biggest...',
             'release_date' => 997405200,
         ], $this->basicResult->getHit(0));
-        self::assertEquals([
+        self::assertSame([
             'id' => '190859',
             'title' => 'American Sniper',
             'poster' => 'https://image.tmdb.org/t/p/w1280/svPHnYE7N5NAGO49dBmRhq0vDQ3.jpg',
@@ -126,7 +126,7 @@ final class SearchResultTest extends TestCase
         self::assertCount(1, $filteredResults);
         self::assertSame(1, $filteredResults->getHitsCount());
         self::assertSame(976, $filteredResults->getEstimatedTotalHits());
-        self::assertEquals([
+        self::assertSame([
             'id' => '190859',
             'title' => 'American Sniper',
             'poster' => 'https://image.tmdb.org/t/p/w1280/svPHnYE7N5NAGO49dBmRhq0vDQ3.jpg',
@@ -151,7 +151,7 @@ final class SearchResultTest extends TestCase
         self::assertIsIterable($this->basicResult);
         self::assertCount(2, $iterator);
 
-        self::assertEquals([
+        self::assertSame([
             'id' => '1',
             'title' => 'American Pie 2',
             'poster' => 'https://image.tmdb.org/t/p/w1280/q4LNgUnRfltxzp3gf1MAGiK5LhV.jpg',
@@ -161,7 +161,7 @@ final class SearchResultTest extends TestCase
 
         $iterator->next();
 
-        self::assertEquals([
+        self::assertSame([
             'id' => '190859',
             'title' => 'American Sniper',
             'poster' => 'https://image.tmdb.org/t/p/w1280/svPHnYE7N5NAGO49dBmRhq0vDQ3.jpg',
@@ -172,7 +172,7 @@ final class SearchResultTest extends TestCase
 
     public function testGetRaw(): void
     {
-        self::assertEquals($this->basicServerResponse, $this->basicResult->getRaw());
+        self::assertSame($this->basicServerResponse, $this->basicResult->getRaw());
     }
 
     public function testTransformHitsMethod(): void
@@ -220,11 +220,11 @@ final class SearchResultTest extends TestCase
         self::assertArrayHasKey('limit', $response->toArray());
         self::assertArrayHasKey('processingTimeMs', $response->toArray());
         self::assertArrayHasKey('query', $response->toArray());
-        self::assertEquals($response->getRaw()['hits'], $response->getHits());
-        self::assertNotEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
+        self::assertSame($response->getRaw()['hits'], $response->getHits());
+        self::assertNotSame($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
         self::assertCount(3, $response->getFacetDistribution()['genre']);
-        self::assertEquals(0, $response->getFacetDistribution()['genre']['ROMANCE']);
-        self::assertEquals(1, $response->getFacetDistribution()['genre']['FANTASY']);
-        self::assertEquals(1, $response->getFacetDistribution()['genre']['ADVENTURE']);
+        self::assertSame(0, $response->getFacetDistribution()['genre']['ROMANCE']);
+        self::assertSame(1, $response->getFacetDistribution()['genre']['FANTASY']);
+        self::assertSame(1, $response->getFacetDistribution()['genre']['ADVENTURE']);
     }
 }

@@ -34,7 +34,7 @@ final class SynonymsTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $synonyms = $this->index->getSynonyms();
 
-        self::assertEquals($newSynonyms, $synonyms);
+        self::assertSame($newSynonyms, $synonyms);
     }
 
     public function testUpdateSynonymsWithEmptyArray(): void
@@ -47,7 +47,7 @@ final class SynonymsTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $synonyms = $this->index->getSynonyms();
 
-        self::assertEquals($newSynonyms, $synonyms);
+        self::assertSame($newSynonyms, $synonyms);
     }
 
     public function testResetSynonyms(): void

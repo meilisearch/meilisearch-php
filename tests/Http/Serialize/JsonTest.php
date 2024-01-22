@@ -15,7 +15,7 @@ class JsonTest extends TestCase
     {
         $data = ['id' => 287947, 'title' => 'Some ID'];
         $json = new Json();
-        self::assertEquals(json_encode($data), $json->serialize($data));
+        self::assertSame(json_encode($data), $json->serialize($data));
     }
 
     public function testSerializeWithInvalidData(): void
@@ -24,14 +24,14 @@ class JsonTest extends TestCase
         $json = new Json();
         $this->expectException(JsonEncodingException::class);
         $this->expectExceptionMessage('Encoding payload to json failed: "Inf and NaN cannot be JSON encoded".');
-        self::assertEquals(json_encode($data), $json->serialize($data));
+        self::assertSame(json_encode($data), $json->serialize($data));
     }
 
     public function testUnserialize(): void
     {
         $data = '{"id":287947,"title":"Some ID"}';
         $json = new Json();
-        self::assertEquals(['id' => 287947, 'title' => 'Some ID'], $json->unserialize($data));
+        self::assertSame(['id' => 287947, 'title' => 'Some ID'], $json->unserialize($data));
     }
 
     public function testUnserializeWithInvalidData(): void
@@ -40,6 +40,6 @@ class JsonTest extends TestCase
         $json = new Json();
         $this->expectException(JsonDecodingException::class);
         $this->expectExceptionMessage('Decoding payload to json failed: "Syntax error"');
-        self::assertEquals(['id' => 287947, 'title' => 'Some ID'], $json->unserialize($data));
+        self::assertSame(['id' => 287947, 'title' => 'Some ID'], $json->unserialize($data));
     }
 }

@@ -35,7 +35,7 @@ final class MultiSearchTest extends TestCase
     {
         $data = (new SearchQuery())->setIndexUid($this->booksIndex->getUid())->setQuery('butler')->setSort(['author:desc']);
 
-        self::assertEquals([
+        self::assertSame([
             'indexUid' => $this->booksIndex->getUid(),
             'q' => 'butler',
             'sort' => ['author:desc'],
@@ -85,9 +85,9 @@ final class MultiSearchTest extends TestCase
 
         $result = $query->toArray();
 
-        self::assertEquals([1, 0.9, [0.9874]], $result['vector']);
-        self::assertEquals(['comment'], $result['attributesToSearchOn']);
-        self::assertEquals(true, $result['showRankingScore']);
-        self::assertEquals(true, $result['showRankingScoreDetails']);
+        self::assertSame([1, 0.9, [0.9874]], $result['vector']);
+        self::assertSame(['comment'], $result['attributesToSearchOn']);
+        self::assertTrue($result['showRankingScore']);
+        self::assertTrue($result['showRankingScoreDetails']);
     }
 }

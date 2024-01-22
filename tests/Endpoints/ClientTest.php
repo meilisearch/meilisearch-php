@@ -184,7 +184,7 @@ final class ClientTest extends TestCase
     {
         $response = $this->client->health();
 
-        self::assertEquals('available', $response['status']);
+        self::assertSame('available', $response['status']);
     }
 
     public function testIsHealthyIsTrue(): void
@@ -233,7 +233,7 @@ final class ClientTest extends TestCase
 
         $response = $client->health();
 
-        self::assertEquals('available', $response['status']);
+        self::assertSame('available', $response['status']);
         $this->expectException(ApiException::class);
         $response = $client->stats();
     }

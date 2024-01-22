@@ -81,8 +81,8 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        self::assertEquals('succeeded', $update['status']);
-        self::assertNotEquals(0, $update['details']['receivedDocuments']);
+        self::assertSame('succeeded', $update['status']);
+        self::assertNotSame(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
         self::assertCount(20, $response);
@@ -100,12 +100,12 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        self::assertEquals($update['status'], 'succeeded');
-        self::assertEquals($update['details']['receivedDocuments'], 6);
+        self::assertSame($update['status'], 'succeeded');
+        self::assertSame($update['details']['receivedDocuments'], 6);
 
         $documents = $index->getDocuments()->getResults();
-        self::assertEquals('Teenage Neon Jungle', $documents[4]['album']);
-        self::assertEquals('631152000', $documents[5]['released-timestamp']);
+        self::assertSame('Teenage Neon Jungle', $documents[4]['album']);
+        self::assertSame('631152000', $documents[5]['released-timestamp']);
     }
 
     public function testAddDocumentsJson(): void
@@ -122,8 +122,8 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        self::assertEquals('succeeded', $update['status']);
-        self::assertNotEquals(0, $update['details']['receivedDocuments']);
+        self::assertSame('succeeded', $update['status']);
+        self::assertNotSame(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
         self::assertCount(20, $response);
@@ -143,8 +143,8 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        self::assertEquals('succeeded', $update['status']);
-        self::assertNotEquals(0, $update['details']['receivedDocuments']);
+        self::assertSame('succeeded', $update['status']);
+        self::assertNotSame(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
         self::assertCount(20, $response);
@@ -323,10 +323,10 @@ final class DocumentsTest extends TestCase
                   // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
                   switch (++$invocation) {
                       case 1:
-                          static::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
+                          self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       case 2:
-                          static::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
+                          self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       default:
                           self::fail();
@@ -607,7 +607,7 @@ final class DocumentsTest extends TestCase
             ->setFilter(['id > 100'])
             ->toArray()['fields'];
 
-        self::assertEquals($fields, $queryFields);
+        self::assertSame($fields, $queryFields);
     }
 
     public function testGetDocumentsWithoutFilterCorrectFieldsFormat(): void
@@ -618,7 +618,7 @@ final class DocumentsTest extends TestCase
             ->setFields($fields)
             ->toArray()['fields'];
 
-        self::assertEquals(
+        self::assertSame(
             implode(',', $fields),
             $queryFields
         );
@@ -786,7 +786,6 @@ final class DocumentsTest extends TestCase
 
     public function testUpdateDocumentsCsvInBatchesWithDelimiter(): void
     {
-        $matcher = self::atLeastOnce();
         $replacement = 'id;title'.PHP_EOL;
         $replacement .= '888221515;Young folks'.PHP_EOL;
         $replacement .= '235115704;Mister Klein'.PHP_EOL;
@@ -797,22 +796,22 @@ final class DocumentsTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $index->expects($matcher)
+        $index->expects(self::atLeastOnce())
               ->method('updateDocumentsCsv')
-              ->willReturnCallback(function (string $param) use ($matcher): void {
+              ->willReturnCallback(function (string $documents, $primaryKey, $delimiter): void {
+                  static $invocation = 0;
                   // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
-                  switch ($matcher->numberOfInvocations()) {
+                  switch (++$invocation) {
                       case 1:
-                          self::assertEquals($param, ["id;title\n888221515;Young folks", null, ';']);
+                          self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       case 2:
-                          self::assertEquals($param, ["id;title\n235115704;Mister Klein", null, ';']);
+                          self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       default:
                           self::fail();
                   }
-              })
-              ->willReturn([], []);
+              });
 
         $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
     }

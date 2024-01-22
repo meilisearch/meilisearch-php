@@ -60,7 +60,7 @@ final class KeysAndPermissionsTest extends TestCase
         $index = $this->safeIndexName();
         $this->createEmptyIndex($index);
         $response = $this->client->index($index)->getSettings();
-        self::assertEquals(['*'], $response['searchableAttributes']);
+        self::assertSame(['*'], $response['searchableAttributes']);
 
         $newClient = new Client($this->host, 'bad-key');
 
@@ -231,7 +231,7 @@ final class KeysAndPermissionsTest extends TestCase
         ]);
 
         self::assertNotNull($key->getKey());
-        self::assertEquals('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
+        self::assertSame('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
 
         $this->client->deleteKey($key->getKey());
     }

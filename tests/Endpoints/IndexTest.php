@@ -128,7 +128,7 @@ final class IndexTest extends TestCase
         $stats = $this->index->stats();
 
         self::assertArrayHasKey('numberOfDocuments', $stats);
-        self::assertEquals(0, $stats['numberOfDocuments']);
+        self::assertSame(0, $stats['numberOfDocuments']);
         self::assertArrayHasKey('isIndexing', $stats);
         self::assertArrayHasKey('fieldDistribution', $stats);
     }

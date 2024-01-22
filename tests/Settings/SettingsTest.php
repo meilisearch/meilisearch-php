@@ -42,12 +42,12 @@ final class SettingsTest extends TestCase
                 ['primaryKey' => $primaryKey]
             )->getSettings();
 
-        self::assertEquals(self::DEFAULT_RANKING_RULES, $settingA['rankingRules']);
+        self::assertSame(self::DEFAULT_RANKING_RULES, $settingA['rankingRules']);
         self::assertNull($settingA['distinctAttribute']);
         self::assertIsArray($settingA['searchableAttributes']);
-        self::assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingA['searchableAttributes']);
+        self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingA['searchableAttributes']);
         self::assertIsArray($settingA['displayedAttributes']);
-        self::assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingA['displayedAttributes']);
+        self::assertSame(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingA['displayedAttributes']);
         self::assertIsArray($settingA['stopWords']);
         self::assertEmpty($settingA['stopWords']);
         self::assertIsIterable($settingA['synonyms']);
@@ -57,12 +57,12 @@ final class SettingsTest extends TestCase
         self::assertIsArray($settingA['sortableAttributes']);
         self::assertEmpty($settingA['sortableAttributes']);
         self::assertIsIterable($settingA['typoTolerance']);
-        self::assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingA['typoTolerance']));
+        self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingA['typoTolerance']));
 
-        self::assertEquals(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
+        self::assertSame(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
         self::assertNull($settingB['distinctAttribute']);
-        self::assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingB['searchableAttributes']);
-        self::assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingB['displayedAttributes']);
+        self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingB['searchableAttributes']);
+        self::assertSame(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingB['displayedAttributes']);
         self::assertIsArray($settingB['stopWords']);
         self::assertEmpty($settingB['stopWords']);
         self::assertIsIterable($settingB['synonyms']);
@@ -72,7 +72,7 @@ final class SettingsTest extends TestCase
         self::assertIsArray($settingB['sortableAttributes']);
         self::assertEmpty($settingB['sortableAttributes']);
         self::assertIsIterable($settingB['typoTolerance']);
-        self::assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingB['typoTolerance']));
+        self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingB['typoTolerance']));
     }
 
     public function testUpdateSettings(): void
@@ -88,20 +88,20 @@ final class SettingsTest extends TestCase
 
         $settings = $index->getSettings();
 
-        self::assertEquals(['title:asc', 'typo'], $settings['rankingRules']);
-        self::assertEquals('title', $settings['distinctAttribute']);
+        self::assertSame(['title:asc', 'typo'], $settings['rankingRules']);
+        self::assertSame('title', $settings['distinctAttribute']);
         self::assertIsArray($settings['searchableAttributes']);
-        self::assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
+        self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
         self::assertIsArray($settings['displayedAttributes']);
-        self::assertEquals(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settings['displayedAttributes']);
-        self::assertEquals(['the'], $settings['stopWords']);
+        self::assertSame(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settings['displayedAttributes']);
+        self::assertSame(['the'], $settings['stopWords']);
         self::assertIsIterable($settings['synonyms']);
         self::assertEmpty($settings['synonyms']);
         self::assertIsArray($settings['filterableAttributes']);
         self::assertEmpty($settings['filterableAttributes']);
         self::assertIsArray($settings['sortableAttributes']);
         self::assertEmpty($settings['sortableAttributes']);
-        self::assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
+        self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
     }
 
     public function testUpdateSettingsWithoutOverwritingThem(): void
@@ -136,19 +136,19 @@ final class SettingsTest extends TestCase
 
         $settings = $index->getSettings();
 
-        self::assertEquals(['title:asc', 'typo'], $settings['rankingRules']);
-        self::assertEquals('title', $settings['distinctAttribute']);
-        self::assertEquals(['title'], $settings['searchableAttributes']);
+        self::assertSame(['title:asc', 'typo'], $settings['rankingRules']);
+        self::assertSame('title', $settings['distinctAttribute']);
+        self::assertSame(['title'], $settings['searchableAttributes']);
         self::assertIsArray($settings['displayedAttributes']);
-        self::assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
-        self::assertEquals(['the'], $settings['stopWords']);
+        self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
+        self::assertSame(['the'], $settings['stopWords']);
         self::assertIsIterable($settings['synonyms']);
         self::assertEmpty($settings['synonyms']);
         self::assertIsArray($settings['filterableAttributes']);
         self::assertEmpty($settings['filterableAttributes']);
         self::assertIsArray($settings['sortableAttributes']);
         self::assertEmpty($settings['sortableAttributes']);
-        self::assertEquals($new_typo_tolerance, iterator_to_array($settings['typoTolerance']));
+        self::assertSame($new_typo_tolerance, iterator_to_array($settings['typoTolerance']));
     }
 
     public function testResetSettings(): void
@@ -169,12 +169,12 @@ final class SettingsTest extends TestCase
 
         $settings = $index->getSettings();
 
-        self::assertEquals(self::DEFAULT_RANKING_RULES, $settings['rankingRules']);
+        self::assertSame(self::DEFAULT_RANKING_RULES, $settings['rankingRules']);
         self::assertNull($settings['distinctAttribute']);
         self::assertIsArray($settings['searchableAttributes']);
-        self::assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
+        self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
         self::assertIsArray($settings['displayedAttributes']);
-        self::assertEquals(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
+        self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
         self::assertIsArray($settings['stopWords']);
         self::assertEmpty($settings['stopWords']);
         self::assertIsIterable($settings['synonyms']);
@@ -183,7 +183,7 @@ final class SettingsTest extends TestCase
         self::assertEmpty($settings['filterableAttributes']);
         self::assertIsArray($settings['sortableAttributes']);
         self::assertEmpty($settings['sortableAttributes']);
-        self::assertEquals(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
+        self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
     }
 
     // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.

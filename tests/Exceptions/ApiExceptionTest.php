@@ -29,14 +29,14 @@ final class ApiExceptionTest extends TestCase
 
             throw new ApiException($response, $httpBodyExample);
         } catch (ApiException $apiException) {
-            self::assertEquals($statusCode, $apiException->httpStatus);
-            self::assertEquals($httpBodyExample['message'], $apiException->message);
-            self::assertEquals($httpBodyExample['code'], $apiException->errorCode);
-            self::assertEquals($httpBodyExample['type'], $apiException->errorType);
-            self::assertEquals($httpBodyExample['link'], $apiException->errorLink);
+            self::assertSame($statusCode, $apiException->httpStatus);
+            self::assertSame($httpBodyExample['message'], $apiException->message);
+            self::assertSame($httpBodyExample['code'], $apiException->errorCode);
+            self::assertSame($httpBodyExample['type'], $apiException->errorType);
+            self::assertSame($httpBodyExample['link'], $apiException->errorLink);
 
             $expectedExceptionToString = "Meilisearch ApiException: Http Status: {$statusCode} - Message: {$httpBodyExample['message']} - Code: {$httpBodyExample['code']} - Type: {$httpBodyExample['type']} - Link: {$httpBodyExample['link']}";
-            self::assertEquals($expectedExceptionToString, (string) $apiException);
+            self::assertSame($expectedExceptionToString, (string) $apiException);
         }
     }
 
@@ -49,14 +49,14 @@ final class ApiExceptionTest extends TestCase
         try {
             throw new ApiException($response, null);
         } catch (ApiException $apiException) {
-            self::assertEquals($statusCode, $apiException->httpStatus);
-            self::assertEquals($response->getReasonPhrase(), $apiException->message);
+            self::assertSame($statusCode, $apiException->httpStatus);
+            self::assertSame($response->getReasonPhrase(), $apiException->message);
             self::assertNull($apiException->errorCode);
             self::assertNull($apiException->errorType);
             self::assertNull($apiException->errorLink);
 
             $expectedExceptionToString = "Meilisearch ApiException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
-            self::assertEquals($expectedExceptionToString, (string) $apiException);
+            self::assertSame($expectedExceptionToString, (string) $apiException);
         }
     }
 

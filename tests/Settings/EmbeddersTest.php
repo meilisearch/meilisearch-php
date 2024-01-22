@@ -29,8 +29,8 @@ final class EmbeddersTest extends TestCase
     {
         $embedderConfig = [
             'source' => 'openAi',
-            'apiKey' => '<your-OpenAI-API-key>',
             'model' => 'text-embedding-ada-002',
+            'apiKey' => '<your-OpenAI-API-key>',
             'documentTemplate' => "A movie titled '{{doc.title}}' whose description starts with {{doc.overview|truncatewords: 20}}",
         ];
         $index = $this->createEmptyIndex($this->safeIndexName());
@@ -42,7 +42,7 @@ final class EmbeddersTest extends TestCase
 
         $embedders = $index->getEmbedders();
 
-        self::assertEquals($embedderConfig, $embedders['myEmbedder']);
+        self::assertSame($embedderConfig, $embedders['myEmbedder']);
     }
 
     public function testUpdateEmbeddersWithUserProvided(): void
@@ -60,7 +60,7 @@ final class EmbeddersTest extends TestCase
 
         $embedders = $index->getEmbedders();
 
-        self::assertEquals($embedderConfig, $embedders['myEmbedder']);
+        self::assertSame($embedderConfig, $embedders['myEmbedder']);
     }
 
     public function testUpdateEmbeddersWithHuggingFace(): void
@@ -79,7 +79,7 @@ final class EmbeddersTest extends TestCase
 
         $embedders = $index->getEmbedders();
 
-        self::assertEquals($embedderConfig, $embedders['myEmbedder']);
+        self::assertSame($embedderConfig, $embedders['myEmbedder']);
     }
 
     public function testResetEmbedders(): void

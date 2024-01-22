@@ -16,8 +16,8 @@ final class SearchableAttributesTest extends TestCase
         $searchableAttributesA = $indexA->getSearchableAttributes();
         $searchableAttributesB = $indexB->getSearchableAttributes();
 
-        self::assertEquals(['*'], $searchableAttributesA);
-        self::assertEquals(['*'], $searchableAttributesB);
+        self::assertSame(['*'], $searchableAttributesA);
+        self::assertSame(['*'], $searchableAttributesB);
     }
 
     public function testUpdateSearchableAttributes(): void
@@ -35,7 +35,7 @@ final class SearchableAttributesTest extends TestCase
         $indexA->waitForTask($promise['taskUid']);
         $updatedAttributes = $indexA->getSearchableAttributes();
 
-        self::assertEquals($searchableAttributes, $updatedAttributes);
+        self::assertSame($searchableAttributes, $updatedAttributes);
     }
 
     public function testResetSearchableAttributes(): void
@@ -48,6 +48,6 @@ final class SearchableAttributesTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $searchableAttributes = $index->getSearchableAttributes();
 
-        self::assertEquals(['*'], $searchableAttributes);
+        self::assertSame(['*'], $searchableAttributes);
     }
 }

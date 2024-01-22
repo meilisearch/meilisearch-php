@@ -549,8 +549,8 @@ final class SearchTest extends TestCase
         $response = $this->index->rawSearch('coco "harry"');
 
         self::assertCount(1, $response['hits']);
-        self::assertEquals(4, $response['hits'][0]['id']);
-        self::assertEquals('Harry Potter and the Half-Blood Prince', $response['hits'][0]['title']);
+        self::assertSame(4, $response['hits'][0]['id']);
+        self::assertSame('Harry Potter and the Half-Blood Prince', $response['hits'][0]['title']);
     }
 
     public function testBasicSearchWithRawSearch(): void
@@ -560,7 +560,7 @@ final class SearchTest extends TestCase
         $this->assertEstimatedPagination($response);
         self::assertSame(2, $response['estimatedTotalHits']);
         self::assertCount(2, $response['hits']);
-        self::assertEquals('Le Petit Prince', $response['hits'][0]['title']);
+        self::assertSame('Le Petit Prince', $response['hits'][0]['title']);
     }
 
     public function testBasicSearchWithRawOption(): void
@@ -645,7 +645,7 @@ final class SearchTest extends TestCase
         $this->assertEstimatedPagination($response);
         self::assertSame(2, $response['estimatedTotalHits']);
         self::assertCount(1, $response['hits']);
-        self::assertEquals('Le Petit Prince', $response['hits'][0]['title']);
+        self::assertSame('Le Petit Prince', $response['hits'][0]['title']);
     }
 
     public function testBasicSearchWithFacetsOption(): void
@@ -659,11 +659,11 @@ final class SearchTest extends TestCase
         );
 
         self::assertCount(2, $response->getFacetDistribution()['genre']);
-        self::assertEquals(1, $response->getFacetDistribution()['genre']['adventure']);
-        self::assertEquals(1, $response->getFacetDistribution()['genre']['fantasy']);
+        self::assertSame(1, $response->getFacetDistribution()['genre']['adventure']);
+        self::assertSame(1, $response->getFacetDistribution()['genre']['fantasy']);
         self::assertCount(2, $response->getRaw()['facetDistribution']['genre']);
-        self::assertEquals($response->getRaw()['hits'], $response->getHits());
-        self::assertEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
+        self::assertSame($response->getRaw()['hits'], $response->getHits());
+        self::assertSame($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
     }
 
     public function testBasicSearchWithFacetsOptionAndMultipleFacets(): void
@@ -679,13 +679,13 @@ final class SearchTest extends TestCase
         );
 
         self::assertCount(1, $response->getFacetDistribution()['genre']);
-        self::assertEquals(1, $response->getFacetDistribution()['genre']['adventure']);
+        self::assertSame(1, $response->getFacetDistribution()['genre']['adventure']);
         self::assertCount(1, $response->getFacetDistribution()['adaptation']);
-        self::assertEquals(1, $response->getFacetDistribution()['adaptation']['video game']);
+        self::assertSame(1, $response->getFacetDistribution()['adaptation']['video game']);
         self::assertCount(1, $response->getRaw()['facetDistribution']['adaptation']);
         self::assertCount(1, $response->getRaw()['facetDistribution']['genre']);
-        self::assertEquals($response->getRaw()['hits'], $response->getHits());
-        self::assertEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
+        self::assertSame($response->getRaw()['hits'], $response->getHits());
+        self::assertSame($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
     }
 
     public function testVectorSearch(): void
@@ -738,12 +738,12 @@ final class SearchTest extends TestCase
         );
 
         $this->assertEstimatedPagination($response->toArray());
-        self::assertEquals($response->getRaw()['hits'], $response->getHits());
-        self::assertNotEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
+        self::assertSame($response->getRaw()['hits'], $response->getHits());
+        self::assertNotSame($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
         self::assertCount(3, $response->getRaw()['facetDistribution']['genre']);
         self::assertCount(2, $response->getFacetDistribution()['genre']);
-        self::assertEquals(3, $response->getFacetDistribution()['genre']['romance']);
-        self::assertEquals(2, $response->getFacetDistribution()['genre']['fantasy']);
+        self::assertSame(3, $response->getFacetDistribution()['genre']['romance']);
+        self::assertSame(2, $response->getFacetDistribution()['genre']['fantasy']);
     }
 
     public function testSearchWithAttributesToSearchOn(): void
@@ -753,7 +753,7 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search('the', ['attributesToSearchOn' => ['comment']]);
 
-        self::assertEquals('The best book', $response->getHits()[0]['comment']);
+        self::assertSame('The best book', $response->getHits()[0]['comment']);
     }
 
     public function testSearchWithShowRankingScore(): void
@@ -788,12 +788,12 @@ final class SearchTest extends TestCase
         );
 
         $this->assertEstimatedPagination($response->toArray());
-        self::assertEquals($response->getRaw()['hits'], $response->getHits());
-        self::assertNotEquals($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
+        self::assertSame($response->getRaw()['hits'], $response->getHits());
+        self::assertNotSame($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
         self::assertCount(3, $response->getFacetDistribution()['genre']);
-        self::assertEquals(3, $response->getFacetDistribution()['genre']['ROMANCE']);
-        self::assertEquals(2, $response->getFacetDistribution()['genre']['FANTASY']);
-        self::assertEquals(1, $response->getFacetDistribution()['genre']['ADVENTURE']);
+        self::assertSame(3, $response->getFacetDistribution()['genre']['ROMANCE']);
+        self::assertSame(2, $response->getFacetDistribution()['genre']['FANTASY']);
+        self::assertSame(1, $response->getFacetDistribution()['genre']['ADVENTURE']);
     }
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToOder(): void
@@ -818,13 +818,13 @@ final class SearchTest extends TestCase
         );
 
         $this->assertEstimatedPagination($response->toArray());
-        self::assertEquals($response->getRaw()['hits'], $response->getHits());
-        self::assertEquals('adventure', array_key_first($response->getFacetDistribution()['genre']));
-        self::assertEquals('romance', array_key_last($response->getFacetDistribution()['genre']));
+        self::assertSame($response->getRaw()['hits'], $response->getHits());
+        self::assertSame('adventure', array_key_first($response->getFacetDistribution()['genre']));
+        self::assertSame('romance', array_key_last($response->getFacetDistribution()['genre']));
         self::assertCount(3, $response->getFacetDistribution()['genre']);
-        self::assertEquals(3, $response->getFacetDistribution()['genre']['romance']);
-        self::assertEquals(2, $response->getFacetDistribution()['genre']['fantasy']);
-        self::assertEquals(1, $response->getFacetDistribution()['genre']['adventure']);
+        self::assertSame(3, $response->getFacetDistribution()['genre']['romance']);
+        self::assertSame(2, $response->getFacetDistribution()['genre']['fantasy']);
+        self::assertSame(1, $response->getFacetDistribution()['genre']['adventure']);
     }
 
     public function testSearchAndRetrieveFacetStats(): void
@@ -840,6 +840,6 @@ final class SearchTest extends TestCase
             ['facets' => ['info.reviewNb']],
         );
 
-        self::assertEquals(['info.reviewNb' => ['min' => 50, 'max' => 1000]], $response->getFacetStats());
+        self::assertSame(['info.reviewNb' => ['min' => 50.0, 'max' => 1000.0]], $response->getFacetStats());
     }
 }

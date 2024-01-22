@@ -34,7 +34,7 @@ final class StopWordsTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $stopWords = $this->index->getStopWords();
 
-        self::assertEquals($newStopWords, $stopWords);
+        self::assertSame($newStopWords, $stopWords);
     }
 
     public function testResetStopWords(): void

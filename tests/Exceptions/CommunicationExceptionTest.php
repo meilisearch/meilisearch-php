@@ -14,10 +14,10 @@ final class CommunicationExceptionTest extends TestCase
         try {
             throw new CommunicationException('Connection refused');
         } catch (CommunicationException $CommunicationException) {
-            self::assertEquals('Connection refused', $CommunicationException->getMessage());
+            self::assertSame('Connection refused', $CommunicationException->getMessage());
 
             $expectedExceptionToString = 'Meilisearch CommunicationException: Connection refused';
-            self::assertEquals($expectedExceptionToString, (string) $CommunicationException);
+            self::assertSame($expectedExceptionToString, (string) $CommunicationException);
         }
     }
 }

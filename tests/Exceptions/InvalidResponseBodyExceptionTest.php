@@ -24,11 +24,11 @@ final class InvalidResponseBodyExceptionTest extends TestCase
 
             throw new InvalidResponseBodyException($response, $httpBodyExample);
         } catch (InvalidResponseBodyException $invalidResponseBodyException) {
-            self::assertEquals($statusCode, $invalidResponseBodyException->httpStatus);
-            self::assertEquals('Gateway Timeout', $invalidResponseBodyException->message);
+            self::assertSame($statusCode, $invalidResponseBodyException->httpStatus);
+            self::assertSame('Gateway Timeout', $invalidResponseBodyException->message);
 
             $expectedExceptionToString = "Meilisearch InvalidResponseBodyException: Http Status: {$statusCode} - Message: Gateway Timeout";
-            self::assertEquals($expectedExceptionToString, (string) $invalidResponseBodyException);
+            self::assertSame($expectedExceptionToString, (string) $invalidResponseBodyException);
         }
     }
 
@@ -41,11 +41,11 @@ final class InvalidResponseBodyExceptionTest extends TestCase
         try {
             throw new InvalidResponseBodyException($response, null);
         } catch (InvalidResponseBodyException $invalidResponseBodyException) {
-            self::assertEquals($statusCode, $invalidResponseBodyException->httpStatus);
-            self::assertEquals($response->getReasonPhrase(), $invalidResponseBodyException->message);
+            self::assertSame($statusCode, $invalidResponseBodyException->httpStatus);
+            self::assertSame($response->getReasonPhrase(), $invalidResponseBodyException->message);
 
             $expectedExceptionToString = "Meilisearch InvalidResponseBodyException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
-            self::assertEquals($expectedExceptionToString, (string) $invalidResponseBodyException);
+            self::assertSame($expectedExceptionToString, (string) $invalidResponseBodyException);
         }
     }
 }

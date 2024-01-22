@@ -29,7 +29,7 @@ final class SortableAttributesTest extends TestCase
 
         $sortableAttributes = $index->getSortableAttributes();
 
-        self::assertEquals($newAttributes, $sortableAttributes);
+        self::assertSame($newAttributes, $sortableAttributes);
     }
 
     public function testResetSortableAttributes(): void

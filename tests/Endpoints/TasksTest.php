@@ -66,7 +66,7 @@ final class TasksTest extends TestCase
         $response = $this->client->getTasks();
         $newFirstIndex = $response->getResults()[0]['uid'];
 
-        self::assertNotEquals($firstIndex, $newFirstIndex);
+        self::assertNotSame($firstIndex, $newFirstIndex);
     }
 
     public function testGetAllTasksClientWithPagination(): void
@@ -105,7 +105,7 @@ final class TasksTest extends TestCase
         $response = $this->index->getTasks();
         $newFirstIndex = $response->getResults()[0]['uid'];
 
-        self::assertEquals($firstIndex, $newFirstIndex);
+        self::assertSame($firstIndex, $newFirstIndex);
     }
 
     public function testGetAllTasksByIndexWithFilter(): void
@@ -114,7 +114,7 @@ final class TasksTest extends TestCase
             ->setAfterEnqueuedAt(new \DateTime('yesterday'))->setStatuses(['succeeded'])->setLimit(2));
 
         $firstIndex = $response->getResults()[0]['uid'];
-        self::assertEquals('succeeded', $response->getResults()[0]['status']);
+        self::assertSame('succeeded', $response->getResults()[0]['status']);
 
         $newIndex = $this->createEmptyIndex($this->safeIndexName('movie-1'));
         $newIndex->updateDocuments(self::DOCUMENTS);
@@ -122,7 +122,7 @@ final class TasksTest extends TestCase
         $response = $this->index->getTasks();
         $newFirstIndex = $response->getResults()[0]['uid'];
 
-        self::assertEquals($firstIndex, $newFirstIndex);
+        self::assertSame($firstIndex, $newFirstIndex);
         self::assertGreaterThan(0, $response->getTotal());
     }
 
@@ -132,12 +132,12 @@ final class TasksTest extends TestCase
         $query = http_build_query(['afterEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
         $promise = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date));
 
-        self::assertEquals('taskCancelation', $promise['type']);
+        self::assertSame('taskCancelation', $promise['type']);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertEquals($response['details']['originalFilter'], '?'.$query);
-        self::assertEquals('taskCancelation', $response['type']);
-        self::assertEquals('succeeded', $response['status']);
+        self::assertSame($response['details']['originalFilter'], '?'.$query);
+        self::assertSame('taskCancelation', $response['type']);
+        self::assertSame('succeeded', $response['status']);
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void
