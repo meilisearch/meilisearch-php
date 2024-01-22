@@ -26,35 +26,35 @@ final class TasksTest extends TestCase
     {
         [$promise, $response] = $this->seedIndex();
 
-        $this->assertIsArray($response);
-        $this->assertArrayHasKey('status', $response);
-        $this->assertSame($response['uid'], $promise['taskUid']);
-        $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
-        $this->assertArrayHasKey('indexUid', $response);
-        $this->assertSame($response['indexUid'], $this->indexName);
-        $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('startedAt', $response);
-        $this->assertArrayHasKey('finishedAt', $response);
-        $this->assertIsArray($response['details']);
+        self::assertIsArray($response);
+        self::assertArrayHasKey('status', $response);
+        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertArrayHasKey('type', $response);
+        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertArrayHasKey('indexUid', $response);
+        self::assertSame($response['indexUid'], $this->indexName);
+        self::assertArrayHasKey('enqueuedAt', $response);
+        self::assertArrayHasKey('startedAt', $response);
+        self::assertArrayHasKey('finishedAt', $response);
+        self::assertIsArray($response['details']);
     }
 
     public function testGetOneTaskClient(): void
     {
         [$promise, $response] = $this->seedIndex();
 
-        $this->assertIsArray($promise);
+        self::assertIsArray($promise);
         $response = $this->client->getTask($promise['taskUid']);
-        $this->assertArrayHasKey('status', $response);
-        $this->assertSame($response['uid'], $promise['taskUid']);
-        $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
-        $this->assertArrayHasKey('indexUid', $response);
-        $this->assertSame($response['indexUid'], $this->indexName);
-        $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('startedAt', $response);
-        $this->assertArrayHasKey('finishedAt', $response);
-        $this->assertIsArray($response['details']);
+        self::assertArrayHasKey('status', $response);
+        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertArrayHasKey('type', $response);
+        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertArrayHasKey('indexUid', $response);
+        self::assertSame($response['indexUid'], $this->indexName);
+        self::assertArrayHasKey('enqueuedAt', $response);
+        self::assertArrayHasKey('startedAt', $response);
+        self::assertArrayHasKey('finishedAt', $response);
+        self::assertIsArray($response['details']);
     }
 
     public function testGetAllTasksClient(): void
@@ -66,32 +66,32 @@ final class TasksTest extends TestCase
         $response = $this->client->getTasks();
         $newFirstIndex = $response->getResults()[0]['uid'];
 
-        $this->assertNotEquals($firstIndex, $newFirstIndex);
+        self::assertNotEquals($firstIndex, $newFirstIndex);
     }
 
     public function testGetAllTasksClientWithPagination(): void
     {
         $response = $this->client->getTasks((new TasksQuery())->setLimit(0));
 
-        $this->assertEmpty($response->getResults());
+        self::assertEmpty($response->getResults());
     }
 
     public function testGetOneTaskIndex(): void
     {
         [$promise, $response] = $this->seedIndex();
 
-        $this->assertIsArray($promise);
+        self::assertIsArray($promise);
         $response = $this->index->getTask($promise['taskUid']);
-        $this->assertArrayHasKey('status', $response);
-        $this->assertSame($response['uid'], $promise['taskUid']);
-        $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
-        $this->assertArrayHasKey('indexUid', $response);
-        $this->assertSame($response['indexUid'], $this->indexName);
-        $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('startedAt', $response);
-        $this->assertArrayHasKey('finishedAt', $response);
-        $this->assertIsArray($response['details']);
+        self::assertArrayHasKey('status', $response);
+        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertArrayHasKey('type', $response);
+        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertArrayHasKey('indexUid', $response);
+        self::assertSame($response['indexUid'], $this->indexName);
+        self::assertArrayHasKey('enqueuedAt', $response);
+        self::assertArrayHasKey('startedAt', $response);
+        self::assertArrayHasKey('finishedAt', $response);
+        self::assertIsArray($response['details']);
     }
 
     public function testGetAllTasksByIndex(): void
@@ -105,7 +105,7 @@ final class TasksTest extends TestCase
         $response = $this->index->getTasks();
         $newFirstIndex = $response->getResults()[0]['uid'];
 
-        $this->assertEquals($firstIndex, $newFirstIndex);
+        self::assertEquals($firstIndex, $newFirstIndex);
     }
 
     public function testGetAllTasksByIndexWithFilter(): void
@@ -114,7 +114,7 @@ final class TasksTest extends TestCase
             ->setAfterEnqueuedAt(new \DateTime('yesterday'))->setStatuses(['succeeded'])->setLimit(2));
 
         $firstIndex = $response->getResults()[0]['uid'];
-        $this->assertEquals('succeeded', $response->getResults()[0]['status']);
+        self::assertEquals('succeeded', $response->getResults()[0]['status']);
 
         $newIndex = $this->createEmptyIndex($this->safeIndexName('movie-1'));
         $newIndex->updateDocuments(self::DOCUMENTS);
@@ -122,8 +122,8 @@ final class TasksTest extends TestCase
         $response = $this->index->getTasks();
         $newFirstIndex = $response->getResults()[0]['uid'];
 
-        $this->assertEquals($firstIndex, $newFirstIndex);
-        $this->assertGreaterThan(0, $response->getTotal());
+        self::assertEquals($firstIndex, $newFirstIndex);
+        self::assertGreaterThan(0, $response->getTotal());
     }
 
     public function testCancelTasksWithFilter(): void
@@ -132,12 +132,12 @@ final class TasksTest extends TestCase
         $query = http_build_query(['afterEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
         $promise = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date));
 
-        $this->assertEquals('taskCancelation', $promise['type']);
+        self::assertEquals('taskCancelation', $promise['type']);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        $this->assertEquals($response['details']['originalFilter'], '?'.$query);
-        $this->assertEquals('taskCancelation', $response['type']);
-        $this->assertEquals('succeeded', $response['status']);
+        self::assertEquals($response['details']['originalFilter'], '?'.$query);
+        self::assertEquals('taskCancelation', $response['type']);
+        self::assertEquals('succeeded', $response['status']);
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void

@@ -3,5 +3,3 @@ parameters:
     paths:
         - src
         - tests
-    ignoreErrors:
-        - '#Dynamic call to static method PHPUnit\\Framework\\.*#'

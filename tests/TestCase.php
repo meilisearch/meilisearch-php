@@ -66,7 +66,7 @@ abstract class TestCase extends BaseTestCase
 
     public function assertIsValidPromise(array $promise): void
     {
-        $this->assertArrayHasKey('taskUid', $promise);
+        self::assertArrayHasKey('taskUid', $promise);
     }
 
     public function assertFinitePagination(array $response): void
@@ -75,7 +75,7 @@ abstract class TestCase extends BaseTestCase
         $validBody = ['hitsPerPage', 'totalHits', 'totalPages', 'page', 'processingTimeMs', 'query', 'hits'];
 
         foreach ($validBody as $value) {
-            $this->assertContains(
+            self::assertContains(
                 $value,
                 $currentKeys,
                 'Not a valid finite pagination response, since the "'.$value.'" key is not present in: ['.implode(
@@ -92,7 +92,7 @@ abstract class TestCase extends BaseTestCase
         $validBody = ['offset', 'limit', 'estimatedTotalHits', 'processingTimeMs', 'query', 'hits'];
 
         foreach ($validBody as $value) {
-            $this->assertContains(
+            self::assertContains(
                 $value,
                 $currentKeys,
                 'Not a valid estimated pagination response, since the "'.$value.'" key is not present in: ['.implode(

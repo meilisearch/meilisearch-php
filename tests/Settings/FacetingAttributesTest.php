@@ -14,7 +14,7 @@ final class FacetingAttributesTest extends TestCase
 
         $attributes = $index->getFaceting();
 
-        $this->assertEquals([
+        self::assertEquals([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => [
                 '*' => 'alpha',
@@ -32,7 +32,7 @@ final class FacetingAttributesTest extends TestCase
 
         $faceting = $index->getFaceting();
 
-        $this->assertEquals([
+        self::assertEquals([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'count'],
         ], $faceting);
@@ -50,7 +50,7 @@ final class FacetingAttributesTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $faceting = $index->getFaceting();
-        $this->assertEquals([
+        self::assertEquals([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'alpha'],
         ], $faceting);

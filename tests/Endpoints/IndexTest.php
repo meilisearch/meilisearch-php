@@ -24,24 +24,24 @@ final class IndexTest extends TestCase
 
     public function testIndexGetSettings(): void
     {
-        $this->assertSame([], $this->index->getSynonyms());
-        $this->assertSame([], $this->index->getStopWords());
-        $this->assertSame([], $this->index->getSortableAttributes());
-        $this->assertSame(['*'], $this->index->getSearchableAttributes());
-        $this->assertSame(
+        self::assertSame([], $this->index->getSynonyms());
+        self::assertSame([], $this->index->getStopWords());
+        self::assertSame([], $this->index->getSortableAttributes());
+        self::assertSame(['*'], $this->index->getSearchableAttributes());
+        self::assertSame(
             ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
             $this->index->getRankingRules()
         );
-        $this->assertSame([], $this->index->getFilterableAttributes());
-        $this->assertSame(['*'], $this->index->getDisplayedAttributes());
-        $this->assertSame([
+        self::assertSame([], $this->index->getFilterableAttributes());
+        self::assertSame(['*'], $this->index->getDisplayedAttributes());
+        self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => [
                 '*' => 'alpha',
             ],
         ], $this->index->getFaceting());
-        $this->assertSame(['maxTotalHits' => 1000], $this->index->getPagination());
-        $this->assertSame(
+        self::assertSame(['maxTotalHits' => 1000], $this->index->getPagination());
+        self::assertSame(
             [
                 'enabled' => true,
                 'minWordSizeForTypos' => ['oneTypo' => 5, 'twoTypos' => 9],
@@ -50,7 +50,7 @@ final class IndexTest extends TestCase
             ],
             $this->index->getTypoTolerance(),
         );
-        $this->assertSame([], $this->index->getDictionary());
+        self::assertSame([], $this->index->getDictionary());
     }
 
     public function testGetPrimaryKey(): void
@@ -60,8 +60,8 @@ final class IndexTest extends TestCase
             ['primaryKey' => 'objectId']
         );
 
-        $this->assertNull($this->index->getPrimaryKey());
-        $this->assertSame('objectId', $index->getPrimaryKey());
+        self::assertNull($this->index->getPrimaryKey());
+        self::assertSame('objectId', $index->getPrimaryKey());
     }
 
     public function testGetUid(): void
@@ -71,24 +71,24 @@ final class IndexTest extends TestCase
             $indexName,
             ['primaryKey' => 'objectId']
         );
-        $this->assertSame($this->indexName, $this->index->getUid());
-        $this->assertSame($indexName, $index->getUid());
+        self::assertSame($this->indexName, $this->index->getUid());
+        self::assertSame($indexName, $index->getUid());
     }
 
     public function testGetCreatedAt(): void
     {
         $indexB = $this->client->index('indexB');
 
-        $this->assertNull($indexB->getCreatedAt());
-        $this->assertInstanceOf(\DateTimeInterface::class, $this->index->getCreatedAt());
+        self::assertNull($indexB->getCreatedAt());
+        self::assertInstanceOf(\DateTimeInterface::class, $this->index->getCreatedAt());
     }
 
     public function testGetUpdatedAt(): void
     {
         $indexB = $this->client->index('indexB');
 
-        $this->assertNull($indexB->getUpdatedAt());
-        $this->assertInstanceOf(\DateTimeInterface::class, $this->index->getUpdatedAt());
+        self::assertNull($indexB->getUpdatedAt());
+        self::assertInstanceOf(\DateTimeInterface::class, $this->index->getUpdatedAt());
     }
 
     public function testFetchRawInfo(): void
@@ -101,12 +101,12 @@ final class IndexTest extends TestCase
 
         $response = $index->fetchRawInfo();
 
-        $this->assertArrayHasKey('primaryKey', $response);
-        $this->assertArrayHasKey('uid', $response);
-        $this->assertArrayHasKey('createdAt', $response);
-        $this->assertArrayHasKey('updatedAt', $response);
-        $this->assertSame($response['primaryKey'], 'objectId');
-        $this->assertSame($response['uid'], $indexName);
+        self::assertArrayHasKey('primaryKey', $response);
+        self::assertArrayHasKey('uid', $response);
+        self::assertArrayHasKey('createdAt', $response);
+        self::assertArrayHasKey('updatedAt', $response);
+        self::assertSame($response['primaryKey'], 'objectId');
+        self::assertSame($response['uid'], $indexName);
     }
 
     public function testPrimaryKeyUpdate(): void
@@ -117,20 +117,20 @@ final class IndexTest extends TestCase
         $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
-        $this->assertSame($index->getPrimaryKey(), $primaryKey);
-        $this->assertSame($index->getUid(), $this->indexName);
-        $this->assertSame($index->getPrimaryKey(), $primaryKey);
-        $this->assertSame($this->index->getUid(), $this->indexName);
+        self::assertSame($index->getPrimaryKey(), $primaryKey);
+        self::assertSame($index->getUid(), $this->indexName);
+        self::assertSame($index->getPrimaryKey(), $primaryKey);
+        self::assertSame($this->index->getUid(), $this->indexName);
     }
 
     public function testIndexStats(): void
     {
         $stats = $this->index->stats();
 
-        $this->assertArrayHasKey('numberOfDocuments', $stats);
-        $this->assertEquals(0, $stats['numberOfDocuments']);
-        $this->assertArrayHasKey('isIndexing', $stats);
-        $this->assertArrayHasKey('fieldDistribution', $stats);
+        self::assertArrayHasKey('numberOfDocuments', $stats);
+        self::assertEquals(0, $stats['numberOfDocuments']);
+        self::assertArrayHasKey('isIndexing', $stats);
+        self::assertArrayHasKey('fieldDistribution', $stats);
     }
 
     public function testFetchInfo(): void
@@ -142,13 +142,13 @@ final class IndexTest extends TestCase
         );
 
         $index = $this->client->index($indexName);
-        $this->assertNull($index->getPrimaryKey());
+        self::assertNull($index->getPrimaryKey());
 
         $index = $index->fetchInfo();
-        $this->assertSame('objectID', $index->getPrimaryKey());
-        $this->assertSame($indexName, $index->getUid());
-        $this->assertInstanceOf(\DateTimeInterface::class, $index->getCreatedAt());
-        $this->assertInstanceOf(\DateTimeInterface::class, $index->getUpdatedAt());
+        self::assertSame('objectID', $index->getPrimaryKey());
+        self::assertSame($indexName, $index->getUid());
+        self::assertInstanceOf(\DateTimeInterface::class, $index->getCreatedAt());
+        self::assertInstanceOf(\DateTimeInterface::class, $index->getUpdatedAt());
     }
 
     public function testGetAndFetchPrimaryKey(): void
@@ -160,9 +160,9 @@ final class IndexTest extends TestCase
         );
 
         $index = $this->client->index($indexName);
-        $this->assertNull($index->getPrimaryKey());
-        $this->assertSame('objectID', $index->fetchPrimaryKey());
-        $this->assertSame('objectID', $index->getPrimaryKey());
+        self::assertNull($index->getPrimaryKey());
+        self::assertSame('objectID', $index->fetchPrimaryKey());
+        self::assertSame('objectID', $index->getPrimaryKey());
     }
 
     public function testGetTasks(): void
@@ -180,7 +180,7 @@ final class IndexTest extends TestCase
         $results = array_unique($allIndexUids);
         $expected = [$this->index->getUid(), 'other-index'];
 
-        $this->assertSame($expected, $results);
+        self::assertSame($expected, $results);
     }
 
     public function testWaitForTaskDefault(): void
@@ -190,14 +190,14 @@ final class IndexTest extends TestCase
         $response = $this->index->waitForTask($promise['taskUid']);
 
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($response);
-        $this->assertSame($response['status'], 'succeeded');
-        $this->assertSame($response['uid'], $promise['taskUid']);
-        $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
-        $this->assertArrayHasKey('duration', $response);
-        $this->assertArrayHasKey('startedAt', $response);
-        $this->assertArrayHasKey('finishedAt', $response);
+        self::assertIsArray($response);
+        self::assertSame($response['status'], 'succeeded');
+        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertArrayHasKey('type', $response);
+        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertArrayHasKey('duration', $response);
+        self::assertArrayHasKey('startedAt', $response);
+        self::assertArrayHasKey('finishedAt', $response);
     }
 
     public function testWaitForTaskWithTimeoutAndInterval(): void
@@ -205,14 +205,14 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForTask($promise['taskUid'], 100, 20);
 
-        $this->assertSame($response['status'], 'succeeded');
-        $this->assertSame($response['uid'], $promise['taskUid']);
-        $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
-        $this->assertArrayHasKey('duration', $response);
-        $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('startedAt', $response);
-        $this->assertArrayHasKey('finishedAt', $response);
+        self::assertSame($response['status'], 'succeeded');
+        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertArrayHasKey('type', $response);
+        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertArrayHasKey('duration', $response);
+        self::assertArrayHasKey('enqueuedAt', $response);
+        self::assertArrayHasKey('startedAt', $response);
+        self::assertArrayHasKey('finishedAt', $response);
     }
 
     public function testWaitForTaskWithTimeout(): void
@@ -220,14 +220,14 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForTask($promise['taskUid'], 100);
 
-        $this->assertSame($response['status'], 'succeeded');
-        $this->assertSame($response['uid'], $promise['taskUid']);
-        $this->assertArrayHasKey('type', $response);
-        $this->assertSame($response['type'], 'documentAdditionOrUpdate');
-        $this->assertArrayHasKey('duration', $response);
-        $this->assertArrayHasKey('enqueuedAt', $response);
-        $this->assertArrayHasKey('startedAt', $response);
-        $this->assertArrayHasKey('finishedAt', $response);
+        self::assertSame($response['status'], 'succeeded');
+        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertArrayHasKey('type', $response);
+        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertArrayHasKey('duration', $response);
+        self::assertArrayHasKey('enqueuedAt', $response);
+        self::assertArrayHasKey('startedAt', $response);
+        self::assertArrayHasKey('finishedAt', $response);
     }
 
     public function testExceptionWhenTaskTimeOut(): void
@@ -245,16 +245,16 @@ final class IndexTest extends TestCase
         $index = $this->createEmptyIndex($indexName2);
 
         $res = $this->index->delete();
-        $this->assertSame($res['indexUid'], $indexName1);
-        $this->assertArrayHasKey('type', $res);
-        $this->assertSame($res['type'], 'indexDeletion');
-        $this->assertArrayHasKey('enqueuedAt', $res);
+        self::assertSame($res['indexUid'], $indexName1);
+        self::assertArrayHasKey('type', $res);
+        self::assertSame($res['type'], 'indexDeletion');
+        self::assertArrayHasKey('enqueuedAt', $res);
 
         $res = $index->delete();
-        $this->assertSame($res['indexUid'], $indexName2);
-        $this->assertArrayHasKey('type', $res);
-        $this->assertSame($res['type'], 'indexDeletion');
-        $this->assertArrayHasKey('enqueuedAt', $res);
+        self::assertSame($res['indexUid'], $indexName2);
+        self::assertArrayHasKey('type', $res);
+        self::assertSame($res['type'], 'indexDeletion');
+        self::assertArrayHasKey('enqueuedAt', $res);
     }
 
     public function testSwapIndexes(): void
@@ -262,7 +262,7 @@ final class IndexTest extends TestCase
         $promise = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        $this->assertSame($response['details']['swaps'], [['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]]);
+        self::assertSame($response['details']['swaps'], [['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]]);
     }
 
     public function testDeleteTasks(): void
@@ -270,8 +270,8 @@ final class IndexTest extends TestCase
         $promise = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        $this->assertSame($response['details']['originalFilter'], '?uids=1%2C2');
-        $this->assertIsNumeric($response['details']['matchedTasks']);
+        self::assertSame($response['details']['originalFilter'], '?uids=1%2C2');
+        self::assertIsNumeric($response['details']['matchedTasks']);
     }
 
     public function testParseDate(): void
@@ -280,8 +280,8 @@ final class IndexTest extends TestCase
         $dateTime = Indexes::parseDate($date);
         $formattedDate = '2021-01-01T01:23:45.123456+00:00';
 
-        $this->assertInstanceOf(\DateTimeInterface::class, $dateTime);
-        $this->assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
+        self::assertInstanceOf(\DateTimeInterface::class, $dateTime);
+        self::assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
     }
 
     public function testParseDateWithExtraFractionalSeconds(): void
@@ -290,14 +290,14 @@ final class IndexTest extends TestCase
         $dateTime = Indexes::parseDate($date);
         $formattedDate = '2021-01-01T01:23:45.123456+00:00';
 
-        $this->assertInstanceOf(\DateTimeInterface::class, $dateTime);
-        $this->assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
+        self::assertInstanceOf(\DateTimeInterface::class, $dateTime);
+        self::assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
     }
 
     public function testParseDateWhenNull(): void
     {
         $dateTime = Indexes::parseDate(null);
 
-        $this->assertNull($dateTime);
+        self::assertNull($dateTime);
     }
 }

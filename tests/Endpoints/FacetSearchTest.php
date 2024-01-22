@@ -26,7 +26,7 @@ final class FacetSearchTest extends TestCase
     {
         $response = $this->index->search('prince', ['facets' => ['genre']]);
 
-        $this->assertSame(array_keys($response->getFacetDistribution()['genre']), [
+        self::assertSame(array_keys($response->getFacetDistribution()['genre']), [
             'adventure', 'fantasy',
         ]);
 
@@ -37,6 +37,6 @@ final class FacetSearchTest extends TestCase
                 ->setQuery('prince')
         );
 
-        $this->assertSame(array_column($response->getFacetHits(), 'value'), ['fantasy']);
+        self::assertSame(array_column($response->getFacetHits(), 'value'), ['fantasy']);
     }
 }

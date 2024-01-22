@@ -14,6 +14,6 @@ final class DumpTest extends TestCase
 
         $task = $this->client->createDump();
 
-        $this->assertEquals($expectedKeys, array_keys($task));
+        self::assertEquals($expectedKeys, array_keys($task));
     }
 }

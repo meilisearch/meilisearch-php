@@ -17,11 +17,11 @@ final class TimeOutExceptionTest extends TestCase
         try {
             throw new TimeOutException($message, $code);
         } catch (TimeOutException $timeOutException) {
-            $this->assertEquals($message, $timeOutException->getMessage());
-            $this->assertEquals($code, $timeOutException->getCode());
+            self::assertEquals($message, $timeOutException->getMessage());
+            self::assertEquals($code, $timeOutException->getCode());
 
             $expectedExceptionToString = "Meilisearch TimeOutException: Code: {$code} - Message: {$message}";
-            $this->assertEquals($expectedExceptionToString, (string) $timeOutException);
+            self::assertEquals($expectedExceptionToString, (string) $timeOutException);
         }
     }
 
@@ -33,11 +33,11 @@ final class TimeOutExceptionTest extends TestCase
         try {
             throw new TimeOutException();
         } catch (TimeOutException $timeOutException) {
-            $this->assertEquals($message, $timeOutException->getMessage());
-            $this->assertEquals($code, $timeOutException->getCode());
+            self::assertEquals($message, $timeOutException->getMessage());
+            self::assertEquals($code, $timeOutException->getCode());
 
             $expectedExceptionToString = "Meilisearch TimeOutException: Code: {$code} - Message: {$message}";
-            $this->assertEquals($expectedExceptionToString, (string) $timeOutException);
+            self::assertEquals($expectedExceptionToString, (string) $timeOutException);
         }
     }
 
@@ -46,10 +46,10 @@ final class TimeOutExceptionTest extends TestCase
         try {
             throw new TimeOutException('');
         } catch (TimeOutException $timeOutException) {
-            $this->assertEquals('', $timeOutException->getMessage());
+            self::assertEquals('', $timeOutException->getMessage());
 
             $expectedExceptionToString = 'Meilisearch TimeOutException: Code: 408';
-            $this->assertEquals($expectedExceptionToString, (string) $timeOutException);
+            self::assertEquals($expectedExceptionToString, (string) $timeOutException);
         }
     }
 }

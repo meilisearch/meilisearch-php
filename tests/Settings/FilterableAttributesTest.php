@@ -14,7 +14,7 @@ final class FilterableAttributesTest extends TestCase
 
         $attributes = $index->getFilterableAttributes();
 
-        $this->assertEmpty($attributes);
+        self::assertEmpty($attributes);
     }
 
     public function testUpdateFilterableAttributes(): void
@@ -29,7 +29,7 @@ final class FilterableAttributesTest extends TestCase
 
         $filterableAttributes = $index->getFilterableAttributes();
 
-        $this->assertEquals($newAttributes, $filterableAttributes);
+        self::assertEquals($newAttributes, $filterableAttributes);
     }
 
     public function testResetFilterableAttributes(): void
@@ -47,6 +47,6 @@ final class FilterableAttributesTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $filterableAttributes = $index->getFilterableAttributes();
-        $this->assertEmpty($filterableAttributes);
+        self::assertEmpty($filterableAttributes);
     }
 }

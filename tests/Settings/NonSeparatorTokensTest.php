@@ -23,7 +23,7 @@ final class NonSeparatorTokensTest extends TestCase
     {
         $response = $this->index->getNonSeparatorTokens();
 
-        $this->assertEquals(self::DEFAULT_NON_SEPARATOR_TOKENS, $response);
+        self::assertEquals(self::DEFAULT_NON_SEPARATOR_TOKENS, $response);
     }
 
     public function testUpdateNonSeparatorTokens(): void
@@ -40,7 +40,7 @@ final class NonSeparatorTokensTest extends TestCase
 
         $nonSeparatorTokens = $this->index->getNonSeparatorTokens();
 
-        $this->assertEquals($newNonSeparatorTokens, $nonSeparatorTokens);
+        self::assertEquals($newNonSeparatorTokens, $nonSeparatorTokens);
     }
 
     public function testResetNonSeparatorTokens(): void
@@ -50,6 +50,6 @@ final class NonSeparatorTokensTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $nonSeparatorTokens = $this->index->getNonSeparatorTokens();
 
-        $this->assertEquals(self::DEFAULT_NON_SEPARATOR_TOKENS, $nonSeparatorTokens);
+        self::assertEquals(self::DEFAULT_NON_SEPARATOR_TOKENS, $nonSeparatorTokens);
     }
 }

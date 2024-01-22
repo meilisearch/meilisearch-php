@@ -22,7 +22,7 @@ final class EmbeddersTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
         $embedders = $index->getEmbedders();
 
-        $this->assertEmpty($embedders);
+        self::assertEmpty($embedders);
     }
 
     public function testUpdateEmbeddersWithOpenAi(): void
@@ -42,7 +42,7 @@ final class EmbeddersTest extends TestCase
 
         $embedders = $index->getEmbedders();
 
-        $this->assertEquals($embedderConfig, $embedders['myEmbedder']);
+        self::assertEquals($embedderConfig, $embedders['myEmbedder']);
     }
 
     public function testUpdateEmbeddersWithUserProvided(): void
@@ -60,7 +60,7 @@ final class EmbeddersTest extends TestCase
 
         $embedders = $index->getEmbedders();
 
-        $this->assertEquals($embedderConfig, $embedders['myEmbedder']);
+        self::assertEquals($embedderConfig, $embedders['myEmbedder']);
     }
 
     public function testUpdateEmbeddersWithHuggingFace(): void
@@ -79,7 +79,7 @@ final class EmbeddersTest extends TestCase
 
         $embedders = $index->getEmbedders();
 
-        $this->assertEquals($embedderConfig, $embedders['myEmbedder']);
+        self::assertEquals($embedderConfig, $embedders['myEmbedder']);
     }
 
     public function testResetEmbedders(): void
@@ -98,6 +98,6 @@ final class EmbeddersTest extends TestCase
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
-        $this->assertEmpty($index->getEmbedders());
+        self::assertEmpty($index->getEmbedders());
     }
 }

@@ -16,32 +16,32 @@ final class ClientTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
         /* @phpstan-ignore-next-line */
-        $this->assertIsIterable($this->client->getIndexes());
+        self::assertIsIterable($this->client->getIndexes());
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getRawIndex($index->getUid()));
+        self::assertIsArray($this->client->getRawIndex($index->getUid()));
     }
 
     public function testClientIndexMethodsAlwaysReturnsIndexesInstance(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
         /* @phpstan-ignore-next-line */
-        $this->assertInstanceOf(Indexes::class, $this->client->getIndex($index->getUid()));
+        self::assertInstanceOf(Indexes::class, $this->client->getIndex($index->getUid()));
         /* @phpstan-ignore-next-line */
-        $this->assertInstanceOf(Indexes::class, $this->client->index($index->getUid()));
+        self::assertInstanceOf(Indexes::class, $this->client->index($index->getUid()));
     }
 
     public function testgetIndexesWhenEmpty(): void
     {
         $response = $this->client->getIndexes();
 
-        $this->assertEmpty($response);
+        self::assertEmpty($response);
     }
 
     public function testgetIndexesWithPagination(): void
     {
         $response = $this->client->getIndexes((new IndexesQuery())->setLimit(1)->setOffset(99999));
 
-        $this->assertEmpty($response);
+        self::assertEmpty($response);
     }
 
     public function testExceptionIsThrownOnGetRawIndexWhenIndexDoesNotExist(): void
@@ -57,8 +57,8 @@ final class ClientTest extends TestCase
         $indexName = $this->safeIndexName();
         $index = $this->createEmptyIndex($indexName);
 
-        $this->assertSame($indexName, $index->getUid());
-        $this->assertNull($index->getPrimaryKey());
+        self::assertSame($indexName, $index->getUid());
+        self::assertNull($index->getPrimaryKey());
     }
 
     public function testCreateIndexWithUidAndPrimaryKey(): void
@@ -69,8 +69,8 @@ final class ClientTest extends TestCase
             ['primaryKey' => 'ObjectId']
         );
 
-        $this->assertSame($indexName, $index->getUid());
-        $this->assertSame('ObjectId', $index->getPrimaryKey());
+        self::assertSame($indexName, $index->getUid());
+        self::assertSame('ObjectId', $index->getPrimaryKey());
     }
 
     public function testCreateIndexWithUidInOptions(): void
@@ -84,8 +84,8 @@ final class ClientTest extends TestCase
             ]
         );
 
-        $this->assertSame($indexName, $index->getUid());
-        $this->assertSame('ObjectId', $index->getPrimaryKey());
+        self::assertSame($indexName, $index->getUid());
+        self::assertSame('ObjectId', $index->getPrimaryKey());
     }
 
     public function testgetIndexes(): void
@@ -99,7 +99,7 @@ final class ClientTest extends TestCase
 
         $indexes = $this->client->getIndexes();
 
-        $this->assertCount(2, $indexes);
+        self::assertCount(2, $indexes);
     }
 
     public function testGetRawIndex(): void
@@ -108,7 +108,7 @@ final class ClientTest extends TestCase
 
         $res = $this->client->getRawIndex('books-1');
 
-        $this->assertArrayHasKey('uid', $res);
+        self::assertArrayHasKey('uid', $res);
     }
 
     public function testUpdateIndex(): void
@@ -120,8 +120,8 @@ final class ClientTest extends TestCase
         $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
-        $this->assertSame($index->getPrimaryKey(), 'id');
-        $this->assertSame($index->getUid(), $indexName);
+        self::assertSame($index->getPrimaryKey(), 'id');
+        self::assertSame($index->getUid(), $indexName);
     }
 
     public function testDeleteIndex(): void
@@ -129,7 +129,7 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex($this->safeIndexName());
 
         $response = $this->client->getIndexes();
-        $this->assertCount(1, $response);
+        self::assertCount(1, $response);
 
         $response = $this->client->deleteIndex('index');
         $this->client->waitForTask($response['taskUid']);
@@ -137,10 +137,10 @@ final class ClientTest extends TestCase
         $this->expectException(ApiException::class);
         $index = $this->client->getIndex('index');
 
-        $this->assertEmpty($index);
+        self::assertEmpty($index);
         $indexes = $this->client->getIndexes();
 
-        $this->assertCount(0, $indexes);
+        self::assertCount(0, $indexes);
     }
 
     public function testGetIndex(): void
@@ -149,8 +149,8 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex($indexName);
 
         $index = $this->client->getIndex($indexName);
-        $this->assertSame($indexName, $index->getUid());
-        $this->assertNull($index->getPrimaryKey());
+        self::assertSame($indexName, $index->getUid());
+        self::assertNull($index->getPrimaryKey());
     }
 
     public function testIndex(): void
@@ -158,8 +158,8 @@ final class ClientTest extends TestCase
         $this->createEmptyIndex($this->safeIndexName());
 
         $index = $this->client->index('index');
-        $this->assertSame('index', $index->getUid());
-        $this->assertNull($index->getPrimaryKey());
+        self::assertSame('index', $index->getUid());
+        self::assertNull($index->getPrimaryKey());
     }
 
     public function testExceptionIfUidIsNullWhenCreating(): void
@@ -184,14 +184,14 @@ final class ClientTest extends TestCase
     {
         $response = $this->client->health();
 
-        $this->assertEquals('available', $response['status']);
+        self::assertEquals('available', $response['status']);
     }
 
     public function testIsHealthyIsTrue(): void
     {
         $response = $this->client->isHealthy();
 
-        $this->assertTrue($response);
+        self::assertTrue($response);
     }
 
     public function testIsHealthyIsFalse(): void
@@ -199,25 +199,25 @@ final class ClientTest extends TestCase
         $client = new Client('http://127.0.0.1.com:1234', 'masterKey');
         $response = $client->isHealthy();
 
-        $this->assertFalse($response);
+        self::assertFalse($response);
     }
 
     public function testVersion(): void
     {
         $response = $this->client->version();
 
-        $this->assertArrayHasKey('commitSha', $response);
-        $this->assertArrayHasKey('commitDate', $response);
-        $this->assertArrayHasKey('pkgVersion', $response);
+        self::assertArrayHasKey('commitSha', $response);
+        self::assertArrayHasKey('commitDate', $response);
+        self::assertArrayHasKey('pkgVersion', $response);
     }
 
     public function testStats(): void
     {
         $response = $this->client->stats();
 
-        $this->assertArrayHasKey('databaseSize', $response);
-        $this->assertArrayHasKey('lastUpdate', $response);
-        $this->assertArrayHasKey('indexes', $response);
+        self::assertArrayHasKey('databaseSize', $response);
+        self::assertArrayHasKey('lastUpdate', $response);
+        self::assertArrayHasKey('indexes', $response);
     }
 
     public function testBadClientUrl(): void
@@ -233,7 +233,7 @@ final class ClientTest extends TestCase
 
         $response = $client->health();
 
-        $this->assertEquals('available', $response['status']);
+        self::assertEquals('available', $response['status']);
         $this->expectException(ApiException::class);
         $response = $client->stats();
     }

@@ -23,46 +23,46 @@ final class SearchTestNestedFields extends TestCase
     {
         $response = $this->index->search('An awesome');
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertCount(1, $response->getHits());
+        self::assertArrayHasKey('hits', $response->toArray());
+        self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [], [
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['estimatedTotalHits']);
-        $this->assertSame(5, $response['hits'][0]['id']);
+        self::assertArrayHasKey('hits', $response);
+        self::assertSame(1, $response['estimatedTotalHits']);
+        self::assertSame(5, $response['hits'][0]['id']);
     }
 
     public function testSearchOnNestedFieldWithMultiplesResultsOnNestedFields(): void
     {
         $response = $this->index->search('book');
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertCount(6, $response->getHits());
+        self::assertArrayHasKey('hits', $response->toArray());
+        self::assertCount(6, $response->getHits());
 
         $response = $this->index->search('book', [], [
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(6, $response['estimatedTotalHits']);
-        $this->assertSame(4, $response['hits'][0]['id']);
+        self::assertArrayHasKey('hits', $response);
+        self::assertSame(6, $response['estimatedTotalHits']);
+        self::assertSame(4, $response['hits'][0]['id']);
     }
 
     public function testSearchOnNestedFieldWithOptions(): void
     {
         $response = $this->index->search('book', ['limit' => 1]);
 
-        $this->assertCount(1, $response->getHits());
+        self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('book', ['limit' => 1], [
             'raw' => true,
         ]);
 
-        $this->assertCount(1, $response['hits']);
-        $this->assertSame(4, $response['hits'][0]['id']);
+        self::assertCount(1, $response['hits']);
+        self::assertSame(4, $response['hits'][0]['id']);
     }
 
     public function testSearchOnNestedFieldWithSearchableAtributes(): void
@@ -72,16 +72,16 @@ final class SearchTestNestedFields extends TestCase
 
         $response = $this->index->search('An awesome');
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertCount(1, $response->getHits());
+        self::assertArrayHasKey('hits', $response->toArray());
+        self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [], [
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['estimatedTotalHits']);
-        $this->assertSame(5, $response['hits'][0]['id']);
+        self::assertArrayHasKey('hits', $response);
+        self::assertSame(1, $response['estimatedTotalHits']);
+        self::assertSame(5, $response['hits'][0]['id']);
     }
 
     public function testSearchOnNestedFieldWithSortableAtributes(): void
@@ -91,8 +91,8 @@ final class SearchTestNestedFields extends TestCase
 
         $response = $this->index->search('An awesome');
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertCount(1, $response->getHits());
+        self::assertArrayHasKey('hits', $response->toArray());
+        self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [
             'sort' => ['info.reviewNb:desc'],
@@ -100,9 +100,9 @@ final class SearchTestNestedFields extends TestCase
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['estimatedTotalHits']);
-        $this->assertSame(5, $response['hits'][0]['id']);
+        self::assertArrayHasKey('hits', $response);
+        self::assertSame(1, $response['estimatedTotalHits']);
+        self::assertSame(5, $response['hits'][0]['id']);
     }
 
     public function testSearchOnNestedFieldWithSortableAtributesAndSearchableAttributes(): void
@@ -115,8 +115,8 @@ final class SearchTestNestedFields extends TestCase
 
         $response = $this->index->search('An awesome');
 
-        $this->assertArrayHasKey('hits', $response->toArray());
-        $this->assertCount(1, $response->getHits());
+        self::assertArrayHasKey('hits', $response->toArray());
+        self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [
             'sort' => ['info.reviewNb:desc'],
@@ -124,8 +124,8 @@ final class SearchTestNestedFields extends TestCase
             'raw' => true,
         ]);
 
-        $this->assertArrayHasKey('hits', $response);
-        $this->assertSame(1, $response['estimatedTotalHits']);
-        $this->assertSame(5, $response['hits'][0]['id']);
+        self::assertArrayHasKey('hits', $response);
+        self::assertSame(1, $response['estimatedTotalHits']);
+        self::assertSame(5, $response['hits'][0]['id']);
     }
 }
