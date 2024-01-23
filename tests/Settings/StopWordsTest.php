@@ -21,7 +21,7 @@ final class StopWordsTest extends TestCase
     {
         $response = $this->index->getStopWords();
 
-        $this->assertEmpty($response);
+        self::assertEmpty($response);
     }
 
     public function testUpdateStopWords(): void
@@ -34,7 +34,7 @@ final class StopWordsTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $stopWords = $this->index->getStopWords();
 
-        $this->assertEquals($newStopWords, $stopWords);
+        self::assertSame($newStopWords, $stopWords);
     }
 
     public function testResetStopWords(): void
@@ -49,6 +49,6 @@ final class StopWordsTest extends TestCase
 
         $stopWords = $this->index->getStopWords();
 
-        $this->assertEmpty($stopWords);
+        self::assertEmpty($stopWords);
     }
 }

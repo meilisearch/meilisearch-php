@@ -13,27 +13,27 @@ class KeysQueryTest extends TestCase
     {
         $data = (new KeysQuery())->setLimit(10)->setOffset(18);
 
-        $this->assertEquals(['limit' => 10, 'offset' => 18], $data->toArray());
+        self::assertSame(['offset' => 18, 'limit' => 10], $data->toArray());
     }
 
     public function testToArrayWithSetOffset(): void
     {
         $data = (new KeysQuery())->setOffset(5);
 
-        $this->assertEquals(['offset' => 5], $data->toArray());
+        self::assertSame(['offset' => 5], $data->toArray());
     }
 
     public function testToArrayWithoutSet(): void
     {
         $data = new KeysQuery();
 
-        $this->assertEmpty($data->toArray());
+        self::assertEmpty($data->toArray());
     }
 
     public function testToArrayWithZeros(): void
     {
         $data = (new KeysQuery())->setLimit(0)->setOffset(0);
 
-        $this->assertEquals(['limit' => 0, 'offset' => 0], $data->toArray());
+        self::assertSame(['offset' => 0, 'limit' => 0], $data->toArray());
     }
 }

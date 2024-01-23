@@ -14,7 +14,7 @@ final class SortableAttributesTest extends TestCase
 
         $attributes = $index->getSortableAttributes();
 
-        $this->assertEmpty($attributes);
+        self::assertEmpty($attributes);
     }
 
     public function testUpdateSortableAttributes(): void
@@ -29,7 +29,7 @@ final class SortableAttributesTest extends TestCase
 
         $sortableAttributes = $index->getSortableAttributes();
 
-        $this->assertEquals($newAttributes, $sortableAttributes);
+        self::assertSame($newAttributes, $sortableAttributes);
     }
 
     public function testResetSortableAttributes(): void
@@ -47,6 +47,6 @@ final class SortableAttributesTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $sortableAttributes = $index->getSortableAttributes();
-        $this->assertEmpty($sortableAttributes);
+        self::assertEmpty($sortableAttributes);
     }
 }

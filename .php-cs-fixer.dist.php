@@ -12,6 +12,8 @@ $rules = [
     'declare_strict_types' => true,
     'void_return' => true,
     'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'namespaced'],
+    'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
+    'php_unit_strict' => true,
 ];
 
 $config = new PhpCsFixer\Config();

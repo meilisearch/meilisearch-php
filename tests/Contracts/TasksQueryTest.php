@@ -13,7 +13,7 @@ class TasksQueryTest extends TestCase
     {
         $data = (new TasksQuery())->setTypes(['abc', 'xyz']);
 
-        $this->assertEquals(['types' => 'abc,xyz'], $data->toArray());
+        self::assertSame(['types' => 'abc,xyz'], $data->toArray());
     }
 
     public function testSetAnyDateFilter(): void
@@ -21,29 +21,27 @@ class TasksQueryTest extends TestCase
         $date = new \DateTime();
         $data = (new TasksQuery())->setBeforeEnqueuedAt($date);
 
-        $this->assertEquals($data->toArray(), ['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
+        self::assertSame(['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)], $data->toArray());
     }
 
     public function testToArrayWithSetLimit(): void
     {
         $data = (new TasksQuery())->setLimit(10);
 
-        $this->assertEquals(['limit' => 10], $data->toArray());
+        self::assertSame(['limit' => 10], $data->toArray());
     }
 
     public function testToArrayWithSetLimitWithZero(): void
     {
         $data = (new TasksQuery())->setLimit(0);
 
-        $this->assertEquals(['limit' => 0], $data->toArray());
+        self::assertSame(['limit' => 0], $data->toArray());
     }
 
     public function testToArrayWithDifferentSets(): void
     {
         $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setCanceledBy([1, 4])->setStatuses(['enqueued']);
 
-        $this->assertEquals([
-            'limit' => 9, 'from' => 10, 'statuses' => 'enqueued', 'canceledBy' => '1,4',
-        ], $data->toArray());
+        self::assertSame(['statuses' => 'enqueued', 'from' => 10, 'limit' => 9, 'canceledBy' => '1,4'], $data->toArray());
     }
 }

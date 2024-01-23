@@ -35,7 +35,7 @@ final class MultiSearchTest extends TestCase
     {
         $data = (new SearchQuery())->setIndexUid($this->booksIndex->getUid())->setQuery('butler')->setSort(['author:desc']);
 
-        $this->assertEquals([
+        self::assertSame([
             'indexUid' => $this->booksIndex->getUid(),
             'q' => 'butler',
             'sort' => ['author:desc'],
@@ -54,24 +54,24 @@ final class MultiSearchTest extends TestCase
                 ->setFilter(['duration-float > 3']),
         ]);
 
-        $this->assertCount(2, $response['results']);
+        self::assertCount(2, $response['results']);
 
-        $this->assertArrayHasKey('indexUid', $response['results'][0]);
-        $this->assertArrayHasKey('hits', $response['results'][0]);
-        $this->assertArrayHasKey('query', $response['results'][0]);
-        $this->assertArrayHasKey('limit', $response['results'][0]);
-        $this->assertArrayHasKey('offset', $response['results'][0]);
-        $this->assertArrayHasKey('estimatedTotalHits', $response['results'][0]);
-        $this->assertCount(2, $response['results'][0]['hits']);
+        self::assertArrayHasKey('indexUid', $response['results'][0]);
+        self::assertArrayHasKey('hits', $response['results'][0]);
+        self::assertArrayHasKey('query', $response['results'][0]);
+        self::assertArrayHasKey('limit', $response['results'][0]);
+        self::assertArrayHasKey('offset', $response['results'][0]);
+        self::assertArrayHasKey('estimatedTotalHits', $response['results'][0]);
+        self::assertCount(2, $response['results'][0]['hits']);
 
-        $this->assertArrayHasKey('indexUid', $response['results'][0]);
-        $this->assertArrayHasKey('hits', $response['results'][1]);
-        $this->assertArrayHasKey('query', $response['results'][1]);
-        $this->assertArrayHasKey('page', $response['results'][1]);
-        $this->assertArrayHasKey('hitsPerPage', $response['results'][1]);
-        $this->assertArrayHasKey('totalHits', $response['results'][1]);
-        $this->assertArrayHasKey('totalPages', $response['results'][1]);
-        $this->assertCount(1, $response['results'][1]['hits']);
+        self::assertArrayHasKey('indexUid', $response['results'][0]);
+        self::assertArrayHasKey('hits', $response['results'][1]);
+        self::assertArrayHasKey('query', $response['results'][1]);
+        self::assertArrayHasKey('page', $response['results'][1]);
+        self::assertArrayHasKey('hitsPerPage', $response['results'][1]);
+        self::assertArrayHasKey('totalHits', $response['results'][1]);
+        self::assertArrayHasKey('totalPages', $response['results'][1]);
+        self::assertCount(1, $response['results'][1]['hits']);
     }
 
     public function testSupportedQueryParams(): void
@@ -85,9 +85,9 @@ final class MultiSearchTest extends TestCase
 
         $result = $query->toArray();
 
-        $this->assertEquals([1, 0.9, [0.9874]], $result['vector']);
-        $this->assertEquals(['comment'], $result['attributesToSearchOn']);
-        $this->assertEquals(true, $result['showRankingScore']);
-        $this->assertEquals(true, $result['showRankingScoreDetails']);
+        self::assertSame([1, 0.9, [0.9874]], $result['vector']);
+        self::assertSame(['comment'], $result['attributesToSearchOn']);
+        self::assertTrue($result['showRankingScore']);
+        self::assertTrue($result['showRankingScoreDetails']);
     }
 }

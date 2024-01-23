@@ -29,14 +29,14 @@ final class ApiExceptionTest extends TestCase
 
             throw new ApiException($response, $httpBodyExample);
         } catch (ApiException $apiException) {
-            $this->assertEquals($statusCode, $apiException->httpStatus);
-            $this->assertEquals($httpBodyExample['message'], $apiException->message);
-            $this->assertEquals($httpBodyExample['code'], $apiException->errorCode);
-            $this->assertEquals($httpBodyExample['type'], $apiException->errorType);
-            $this->assertEquals($httpBodyExample['link'], $apiException->errorLink);
+            self::assertSame($statusCode, $apiException->httpStatus);
+            self::assertSame($httpBodyExample['message'], $apiException->message);
+            self::assertSame($httpBodyExample['code'], $apiException->errorCode);
+            self::assertSame($httpBodyExample['type'], $apiException->errorType);
+            self::assertSame($httpBodyExample['link'], $apiException->errorLink);
 
             $expectedExceptionToString = "Meilisearch ApiException: Http Status: {$statusCode} - Message: {$httpBodyExample['message']} - Code: {$httpBodyExample['code']} - Type: {$httpBodyExample['type']} - Link: {$httpBodyExample['link']}";
-            $this->assertEquals($expectedExceptionToString, (string) $apiException);
+            self::assertSame($expectedExceptionToString, (string) $apiException);
         }
     }
 
@@ -49,14 +49,14 @@ final class ApiExceptionTest extends TestCase
         try {
             throw new ApiException($response, null);
         } catch (ApiException $apiException) {
-            $this->assertEquals($statusCode, $apiException->httpStatus);
-            $this->assertEquals($response->getReasonPhrase(), $apiException->message);
-            $this->assertNull($apiException->errorCode);
-            $this->assertNull($apiException->errorType);
-            $this->assertNull($apiException->errorLink);
+            self::assertSame($statusCode, $apiException->httpStatus);
+            self::assertSame($response->getReasonPhrase(), $apiException->message);
+            self::assertNull($apiException->errorCode);
+            self::assertNull($apiException->errorType);
+            self::assertNull($apiException->errorLink);
 
             $expectedExceptionToString = "Meilisearch ApiException: Http Status: {$statusCode} - Message: {$response->getReasonPhrase()}";
-            $this->assertEquals($expectedExceptionToString, (string) $apiException);
+            self::assertSame($expectedExceptionToString, (string) $apiException);
         }
     }
 
@@ -65,12 +65,12 @@ final class ApiExceptionTest extends TestCase
         $e = new \Exception('Any error message that caused the root problem should be shown');
         $apiException = ApiException::rethrowWithHint($e, 'deleteDocuments');
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             'with the Meilisearch version that `deleteDocuments` call',
             $apiException->getMessage()
         );
 
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             'Any error message that caused the root problem should be shown',
             $apiException->getPrevious()->getMessage()
         );

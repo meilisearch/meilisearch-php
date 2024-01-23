@@ -28,7 +28,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
         $result = $client->get('/');
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     public function testPostExecutesRequest(): void
@@ -38,7 +38,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
         $result = $client->post('/');
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     public function testPostExecutesRequestWithCustomStreamFactory(): void
@@ -50,7 +50,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient, null, [], $streamFactory);
         $result = $client->post('/');
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     public function testPostThrowsWithInvalidBody(): void
@@ -84,9 +84,9 @@ class ClientTest extends TestCase
             $httpClient = $this->createHttpClientMock(300, '{"message":"internal error","code":"internal"}');
             $client = new Client('https://localhost', null, $httpClient);
             $client->post('/', '');
-            $this->fail('ApiException not raised.');
+            self::fail('ApiException not raised.');
         } catch (ApiException $e) {
-            $this->assertEquals('internal', $e->errorCode);
+            self::assertSame('internal', $e->errorCode);
         }
     }
 
@@ -97,7 +97,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
         $result = $client->put('/');
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     public function testPutThrowsWithInvalidBody(): void
@@ -131,9 +131,9 @@ class ClientTest extends TestCase
             $httpClient = $this->createHttpClientMock(300, '{"message":"internal error","code":"internal"}');
             $client = new Client('https://localhost', null, $httpClient);
             $client->put('/', '');
-            $this->fail('ApiException not raised.');
+            self::fail('ApiException not raised.');
         } catch (ApiException $e) {
-            $this->assertEquals('internal', $e->errorCode);
+            self::assertSame('internal', $e->errorCode);
         }
     }
 
@@ -144,7 +144,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
         $result = $client->patch('/');
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     public function testPatchThrowsWithInvalidBody(): void
@@ -178,9 +178,9 @@ class ClientTest extends TestCase
             $httpClient = $this->createHttpClientMock(300, '{"message":"internal error","code":"internal"}');
             $client = new Client('https://localhost', null, $httpClient);
             $client->patch('/', '');
-            $this->fail('ApiException not raised.');
+            self::fail('ApiException not raised.');
         } catch (ApiException $e) {
-            $this->assertEquals('internal', $e->errorCode);
+            self::assertSame('internal', $e->errorCode);
         }
     }
 
@@ -191,7 +191,7 @@ class ClientTest extends TestCase
         $client = new Client('https://localhost', null, $httpClient);
         $result = $client->delete('/');
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     public function testInvalidResponseContentTypeThrowsException(): void
@@ -211,24 +211,24 @@ class ClientTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '{}');
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
-        $requestStub->expects($this->exactly(2))
+        $requestStub->expects(self::exactly(2))
             ->method('withAddedHeader')
             ->willReturnCallback(function ($name, $value) use ($requestStub) {
                 if ('User-Agent' === $name) {
-                    $this->assertSame(Meilisearch::qualifiedVersion(), $value);
+                    self::assertSame(Meilisearch::qualifiedVersion(), $value);
                 } elseif ('Authorization' === $name) {
-                    $this->assertSame('Bearer masterKey', $value);
+                    self::assertSame('Bearer masterKey', $value);
                 }
 
                 return $requestStub;
             });
-        $reqFactory->expects($this->once())
+        $reqFactory->expects(self::once())
             ->method('createRequest')
             ->willReturn($requestStub);
 
         $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory);
 
-        $this->assertTrue($client->isHealthy());
+        self::assertTrue($client->isHealthy());
     }
 
     public function testEmptyMasterkeyRemovesAuthHeader(): void
@@ -236,21 +236,21 @@ class ClientTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '{}');
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
-        $requestStub->expects($this->once())
+        $requestStub->expects(self::once())
             ->method('withAddedHeader')
             ->willReturnCallback(function ($name, $value) use ($requestStub) {
-                $this->assertSame('User-Agent', $name);
-                $this->assertSame(Meilisearch::qualifiedVersion(), $value);
+                self::assertSame('User-Agent', $name);
+                self::assertSame(Meilisearch::qualifiedVersion(), $value);
 
                 return $requestStub;
             });
-        $reqFactory->expects($this->once())
+        $reqFactory->expects(self::once())
             ->method('createRequest')
             ->willReturn($requestStub);
 
         $client = new \Meilisearch\Client('http://localhost:7070', '', $httpClient, $reqFactory);
 
-        $this->assertTrue($client->isHealthy());
+        self::assertTrue($client->isHealthy());
     }
 
     public function testClientHasCustomUserAgent(): void
@@ -259,24 +259,24 @@ class ClientTest extends TestCase
         $httpClient = $this->createHttpClientMock(200, '{}');
         $reqFactory = $this->createMock(RequestFactoryInterface::class);
         $requestStub = $this->createMock(RequestInterface::class);
-        $requestStub->expects($this->exactly(2))
+        $requestStub->expects(self::exactly(2))
             ->method('withAddedHeader')
             ->willReturnCallback(function ($name, $value) use ($requestStub, $customAgent) {
                 if ('User-Agent' === $name) {
-                    $this->assertSame($customAgent.';'.Meilisearch::qualifiedVersion(), $value);
+                    self::assertSame($customAgent.';'.Meilisearch::qualifiedVersion(), $value);
                 } elseif ('Authorization' === $name) {
-                    $this->assertSame('Bearer masterKey', $value);
+                    self::assertSame('Bearer masterKey', $value);
                 }
 
                 return $requestStub;
             });
-        $reqFactory->expects($this->once())
+        $reqFactory->expects(self::once())
             ->method('createRequest')
             ->willReturn($requestStub);
 
         $client = new \Meilisearch\Client('http://localhost:7070', 'masterKey', $httpClient, $reqFactory, [$customAgent]);
 
-        $this->assertTrue($client->isHealthy());
+        self::assertTrue($client->isHealthy());
     }
 
     public function testParseResponseReturnsNullForNoContent(): void
@@ -297,7 +297,7 @@ class ClientTest extends TestCase
 
         $result = $client->get('/');
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public static function provideStatusCodes(): iterable

@@ -25,7 +25,7 @@ final class DocumentsTest extends TestCase
 
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocuments();
-        $this->assertCount(\count(self::DOCUMENTS), $response);
+        self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testAddDocumentsInBatches(): void
@@ -33,7 +33,7 @@ final class DocumentsTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $promises = $index->addDocumentsInBatches(self::DOCUMENTS, 2);
 
-        $this->assertCount(4, $promises);
+        self::assertCount(4, $promises);
 
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
@@ -41,7 +41,7 @@ final class DocumentsTest extends TestCase
         }
 
         $response = $index->getDocuments();
-        $this->assertCount(\count(self::DOCUMENTS), $response);
+        self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testAddDocumentWithSpecialChars(): void
@@ -59,11 +59,11 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $response = $index->getDocuments();
-        $this->assertCount(\count($documents), $response);
+        self::assertCount(\count($documents), $response);
 
         foreach ($documents as $k => $document) {
-            $this->assertSame($document['title'], $response[$k]['title']);
-            $this->assertSame($document['comment'], $response[$k]['comment']);
+            self::assertSame($document['title'], $response[$k]['title']);
+            self::assertSame($document['comment'], $response[$k]['comment']);
         }
     }
 
@@ -81,11 +81,11 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        $this->assertEquals('succeeded', $update['status']);
-        $this->assertNotEquals(0, $update['details']['receivedDocuments']);
+        self::assertSame('succeeded', $update['status']);
+        self::assertNotSame(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
-        $this->assertCount(20, $response);
+        self::assertCount(20, $response);
     }
 
     public function testAddDocumentsCsvWithCustomSeparator(): void
@@ -100,12 +100,12 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        $this->assertEquals($update['status'], 'succeeded');
-        $this->assertEquals($update['details']['receivedDocuments'], 6);
+        self::assertSame('succeeded', $update['status']);
+        self::assertSame(6, $update['details']['receivedDocuments']);
 
         $documents = $index->getDocuments()->getResults();
-        $this->assertEquals('Teenage Neon Jungle', $documents[4]['album']);
-        $this->assertEquals('631152000', $documents[5]['released-timestamp']);
+        self::assertSame('Teenage Neon Jungle', $documents[4]['album']);
+        self::assertSame('631152000', $documents[5]['released-timestamp']);
     }
 
     public function testAddDocumentsJson(): void
@@ -122,11 +122,11 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        $this->assertEquals('succeeded', $update['status']);
-        $this->assertNotEquals(0, $update['details']['receivedDocuments']);
+        self::assertSame('succeeded', $update['status']);
+        self::assertNotSame(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
-        $this->assertCount(20, $response);
+        self::assertCount(20, $response);
     }
 
     public function testAddDocumentsNdJson(): void
@@ -143,11 +143,11 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        $this->assertEquals('succeeded', $update['status']);
-        $this->assertNotEquals(0, $update['details']['receivedDocuments']);
+        self::assertSame('succeeded', $update['status']);
+        self::assertNotSame(0, $update['details']['receivedDocuments']);
 
         $response = $index->getDocuments();
-        $this->assertCount(20, $response);
+        self::assertCount(20, $response);
     }
 
     public function testCannotAddDocumentWhenJsonEncodingFails(): void
@@ -169,9 +169,9 @@ final class DocumentsTest extends TestCase
         $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
         $response = $index->getDocument($doc['id']);
 
-        $this->assertIsArray($response);
-        $this->assertSame($doc['id'], $response['id']);
-        $this->assertSame($doc['title'], $response['title']);
+        self::assertIsArray($response);
+        self::assertSame($doc['id'], $response['id']);
+        self::assertSame($doc['title'], $response['title']);
     }
 
     public function testGetSingleDocumentWithFields(): void
@@ -182,9 +182,9 @@ final class DocumentsTest extends TestCase
         $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
         $response = $index->getDocument($doc['id'], ['title']);
 
-        $this->assertIsArray($response);
-        $this->assertSame($doc['title'], $response['title']);
-        $this->assertArrayNotHasKey('id', $response);
+        self::assertIsArray($response);
+        self::assertSame($doc['title'], $response['title']);
+        self::assertArrayNotHasKey('id', $response);
     }
 
     public function testGetSingleDocumentWithStringDocumentId(): void
@@ -195,8 +195,8 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($addDocumentResponse['taskUid']);
         $response = $index->getDocument($stringDocumentId);
 
-        $this->assertIsArray($response);
-        $this->assertSame($stringDocumentId, $response['id']);
+        self::assertIsArray($response);
+        self::assertSame($stringDocumentId, $response['id']);
     }
 
     public function testReplaceDocuments(): void
@@ -215,11 +215,11 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($response['taskUid']);
         $response = $index->getDocument($replacement['id']);
 
-        $this->assertSame($replacement['id'], $response['id']);
-        $this->assertSame($replacement['title'], $response['title']);
-        $this->assertFalse(array_search('comment', $response, true));
+        self::assertSame($replacement['id'], $response['id']);
+        self::assertSame($replacement['title'], $response['title']);
+        self::assertFalse(array_search('comment', $response, true));
         $response = $index->getDocuments();
-        $this->assertCount(\count(self::DOCUMENTS), $response);
+        self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testUpdateDocuments(): void
@@ -238,13 +238,13 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocument($replacement['id']);
 
-        $this->assertSame($replacement['id'], $response['id']);
-        $this->assertSame($replacement['title'], $response['title']);
-        $this->assertArrayHasKey('comment', $response);
+        self::assertSame($replacement['id'], $response['id']);
+        self::assertSame($replacement['title'], $response['title']);
+        self::assertArrayHasKey('comment', $response);
 
         $response = $index->getDocuments();
 
-        $this->assertCount(\count(self::DOCUMENTS), $response);
+        self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testUpdateDocumentsInBatches(): void
@@ -262,7 +262,7 @@ final class DocumentsTest extends TestCase
             ['id' => 456, 'title' => 'The Little Prince'],
         ];
         $promises = $index->updateDocumentsInBatches($replacements, 4);
-        $this->assertCount(2, $promises);
+        self::assertCount(2, $promises);
 
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
@@ -271,13 +271,13 @@ final class DocumentsTest extends TestCase
 
         foreach ($replacements as $replacement) {
             $response = $index->getDocument($replacement['id']);
-            $this->assertSame($replacement['id'], $response['id']);
-            $this->assertSame($replacement['title'], $response['title']);
-            $this->assertArrayHasKey('comment', $response);
+            self::assertSame($replacement['id'], $response['id']);
+            self::assertSame($replacement['title'], $response['title']);
+            self::assertArrayHasKey('comment', $response);
         }
 
         $response = $index->getDocuments();
-        $this->assertCount(\count(self::DOCUMENTS), $response);
+        self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
     public function testAddDocumentsCsvInBatches(): void
@@ -293,7 +293,7 @@ final class DocumentsTest extends TestCase
 
         $promises = $index->addDocumentsCsvInBatches($documentCsv, 250);
 
-        $this->assertCount(2, $promises);
+        self::assertCount(2, $promises);
 
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
@@ -301,7 +301,7 @@ final class DocumentsTest extends TestCase
         }
 
         $response = $index->getDocuments();
-        $this->assertSame($total, $response->getTotal());
+        self::assertSame($total, $response->getTotal());
     }
 
     public function testAddDocumentsCsvInBatchesWithDelimiter(): void
@@ -316,17 +316,17 @@ final class DocumentsTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $index->expects($this->exactly(2))
+        $index->expects(self::exactly(2))
               ->method('addDocumentsCsv')
               ->willReturnCallback(function (string $documents, $primaryKey, $delimiter): void {
                   static $invocation = 0;
                   // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
                   switch (++$invocation) {
                       case 1:
-                          static::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
+                          self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       case 2:
-                          static::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
+                          self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       default:
                           self::fail();
@@ -348,7 +348,7 @@ final class DocumentsTest extends TestCase
 
         $promises = $index->addDocumentsNdjsonInBatches($documentNdJson, 150);
 
-        $this->assertCount(2, $promises);
+        self::assertCount(2, $promises);
 
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
@@ -356,7 +356,7 @@ final class DocumentsTest extends TestCase
         }
 
         $response = $index->getDocuments();
-        $this->assertSame($total, $response->getTotal());
+        self::assertSame($total, $response->getTotal());
     }
 
     public function testAddWithUpdateDocuments(): void
@@ -375,13 +375,13 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocument($document['id']);
 
-        $this->assertSame($document['id'], $response['id']);
-        $this->assertSame($document['title'], $response['title']);
-        $this->assertFalse(array_search('comment', $response, true));
+        self::assertSame($document['id'], $response['id']);
+        self::assertSame($document['title'], $response['title']);
+        self::assertFalse(array_search('comment', $response, true));
 
         $response = $index->getDocuments();
 
-        $this->assertCount(\count(self::DOCUMENTS) + 1, $response);
+        self::assertCount(\count(self::DOCUMENTS) + 1, $response);
     }
 
     public function testDeleteNonExistingDocument(): void
@@ -398,8 +398,8 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocuments();
 
-        $this->assertCount(\count(self::DOCUMENTS), $response);
-        $this->assertNull($this->findDocumentWithId($response, $documentId));
+        self::assertCount(\count(self::DOCUMENTS), $response);
+        self::assertNull($this->findDocumentWithId($response, $documentId));
     }
 
     public function testDeleteSingleExistingDocumentWithDocumentIdAsInteger(): void
@@ -416,8 +416,8 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocuments();
 
-        $this->assertCount(\count(self::DOCUMENTS) - 1, $response);
-        $this->assertNull($this->findDocumentWithId($response, $documentId));
+        self::assertCount(\count(self::DOCUMENTS) - 1, $response);
+        self::assertNull($this->findDocumentWithId($response, $documentId));
     }
 
     public function testDeleteSingleExistingDocumentWithDocumentIdAsString(): void
@@ -432,7 +432,7 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
 
-        $this->assertEmpty($response);
+        self::assertEmpty($response);
     }
 
     public function testDeleteMultipleDocumentsWithDocumentIdAsInteger(): void
@@ -448,9 +448,9 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocuments();
 
-        $this->assertCount(\count(self::DOCUMENTS) - 2, $response);
-        $this->assertNull($this->findDocumentWithId($response, $documentIds[0]));
-        $this->assertNull($this->findDocumentWithId($response, $documentIds[1]));
+        self::assertCount(\count(self::DOCUMENTS) - 2, $response);
+        self::assertNull($this->findDocumentWithId($response, $documentIds[0]));
+        self::assertNull($this->findDocumentWithId($response, $documentIds[1]));
     }
 
     public function testDeleteMultipleDocumentsWithFilter(): void
@@ -467,7 +467,7 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocuments();
 
-        $this->assertEmpty($response);
+        self::assertEmpty($response);
     }
 
     public function testMessageHintException(): void
@@ -487,8 +487,8 @@ final class DocumentsTest extends TestCase
         } catch (\Exception $ex) {
             $rethrowed = ApiException::rethrowWithHint($mockedException, 'deleteDocuments');
 
-            $this->assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
-            $this->assertSame($ex->getMessage(), $rethrowed->getMessage());
+            self::assertSame('Invalid response', $ex->getPrevious()->getMessage());
+            self::assertSame($rethrowed->getMessage(), $ex->getMessage());
         }
     }
 
@@ -507,8 +507,8 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $response = $index->getDocuments();
-        $this->assertCount(1, $response);
-        $this->assertSame([['id' => 'myUniqueId2']], $response->getResults());
+        self::assertCount(1, $response);
+        self::assertSame([['id' => 'myUniqueId2']], $response->getResults());
     }
 
     public function testDeleteAllDocuments(): void
@@ -523,7 +523,7 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
         $response = $index->getDocuments();
 
-        $this->assertCount(0, $response);
+        self::assertCount(0, $response);
     }
 
     public function testExceptionIfNoDocumentIdWhenGetting(): void
@@ -547,11 +547,11 @@ final class DocumentsTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName('movies-1'));
         $response = $index->addDocuments($documents, 'unique');
 
-        $this->assertArrayHasKey('taskUid', $response);
+        self::assertArrayHasKey('taskUid', $response);
         $index->waitForTask($response['taskUid']);
 
-        $this->assertSame('unique', $index->fetchPrimaryKey());
-        $this->assertCount(1, $index->getDocuments());
+        self::assertSame('unique', $index->fetchPrimaryKey());
+        self::assertCount(1, $index->getDocuments());
     }
 
     public function testUpdateDocumentWithPrimaryKey(): void
@@ -570,8 +570,8 @@ final class DocumentsTest extends TestCase
 
         $index->waitForTask($promise['taskUid']);
 
-        $this->assertSame('unique', $index->fetchPrimaryKey());
-        $this->assertCount(1, $index->getDocuments());
+        self::assertSame('unique', $index->fetchPrimaryKey());
+        self::assertCount(1, $index->getDocuments());
     }
 
     public function testGetDocumentsWithPagination(): void
@@ -583,7 +583,7 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments((new DocumentsQuery())->setLimit(3));
 
-        $this->assertCount(3, $response);
+        self::assertCount(3, $response);
     }
 
     public function testGetDocumentsWithFilter(): void
@@ -595,7 +595,7 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments((new DocumentsQuery())->setFilter(['id > 100']));
 
-        $this->assertCount(3, $response);
+        self::assertCount(3, $response);
     }
 
     public function testGetDocumentsWithFilterCorrectFieldFormat(): void
@@ -607,7 +607,7 @@ final class DocumentsTest extends TestCase
             ->setFilter(['id > 100'])
             ->toArray()['fields'];
 
-        $this->assertEquals($fields, $queryFields);
+        self::assertSame($fields, $queryFields);
     }
 
     public function testGetDocumentsWithoutFilterCorrectFieldsFormat(): void
@@ -618,7 +618,7 @@ final class DocumentsTest extends TestCase
             ->setFields($fields)
             ->toArray()['fields'];
 
-        $this->assertEquals(
+        self::assertSame(
             implode(',', $fields),
             $queryFields
         );
@@ -641,8 +641,8 @@ final class DocumentsTest extends TestCase
         } catch (\Exception $ex) {
             $rethrowed = ApiException::rethrowWithHint($mockedException, 'getDocuments');
 
-            $this->assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
-            $this->assertSame($ex->getMessage(), $rethrowed->getMessage());
+            self::assertSame('Invalid response', $ex->getPrevious()->getMessage());
+            self::assertSame($rethrowed->getMessage(), $ex->getMessage());
         }
     }
 
@@ -669,12 +669,12 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocument($replacement[0]['id']);
 
-        $this->assertSame($replacement[0]['id'], $response['id']);
-        $this->assertSame($replacement[0]['title'], $response['title']);
+        self::assertSame($replacement[0]['id'], $response['id']);
+        self::assertSame($replacement[0]['title'], $response['title']);
 
         $documents = $index->getDocuments();
 
-        $this->assertCount(20, $documents);
+        self::assertCount(20, $documents);
     }
 
     public function testUpdateDocumentsCsv(): void
@@ -696,12 +696,12 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocument(888221515);
 
-        $this->assertSame(888221515, (int) $response['id']);
-        $this->assertSame('Young folks', $response['title']);
+        self::assertSame(888221515, (int) $response['id']);
+        self::assertSame('Young folks', $response['title']);
 
         $documents = $index->getDocuments();
 
-        $this->assertSame(499, $documents->getTotal());
+        self::assertSame(499, $documents->getTotal());
     }
 
     public function testUpdateDocumentsCsvWithDelimiter(): void
@@ -721,8 +721,8 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocument(888221515);
 
-        $this->assertSame(888221515, (int) $response['id']);
-        $this->assertSame('Young folks', $response['title']);
+        self::assertSame(888221515, (int) $response['id']);
+        self::assertSame('Young folks', $response['title']);
     }
 
     public function testUpdateDocumentsNdjson(): void
@@ -743,16 +743,16 @@ final class DocumentsTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $response = $index->getDocument(412559401);
-        $this->assertSame(412559401, (int) $response['id']);
-        $this->assertSame('WASPTHOVEN', $response['title']);
+        self::assertSame(412559401, (int) $response['id']);
+        self::assertSame('WASPTHOVEN', $response['title']);
 
         $response = $index->getDocument(70764404);
-        $this->assertSame(70764404, (int) $response['id']);
-        $this->assertSame('Ailitp', $response['artist']);
+        self::assertSame(70764404, (int) $response['id']);
+        self::assertSame('Ailitp', $response['artist']);
 
         $documents = $index->getDocuments();
 
-        $this->assertSame(225, $documents->getTotal());
+        self::assertSame(225, $documents->getTotal());
     }
 
     public function testUpdateDocumentsCsvInBatches(): void
@@ -769,24 +769,23 @@ final class DocumentsTest extends TestCase
         $replacement .= '235115704,Mister Klein'.PHP_EOL;
 
         $promises = $index->updateDocumentsCsvInBatches($replacement, 1);
-        $this->assertCount(2, $promises);
+        self::assertCount(2, $promises);
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
             $index->waitForTask($promise['taskUid']);
         }
 
         $response = $index->getDocument(888221515);
-        $this->assertSame(888221515, (int) $response['id']);
-        $this->assertSame('Young folks', $response['title']);
+        self::assertSame(888221515, (int) $response['id']);
+        self::assertSame('Young folks', $response['title']);
 
         $response = $index->getDocument(235115704);
-        $this->assertSame(235115704, (int) $response['id']);
-        $this->assertSame('Mister Klein', $response['title']);
+        self::assertSame(235115704, (int) $response['id']);
+        self::assertSame('Mister Klein', $response['title']);
     }
 
     public function testUpdateDocumentsCsvInBatchesWithDelimiter(): void
     {
-        $matcher = $this->atLeastOnce();
         $replacement = 'id;title'.PHP_EOL;
         $replacement .= '888221515;Young folks'.PHP_EOL;
         $replacement .= '235115704;Mister Klein'.PHP_EOL;
@@ -797,22 +796,22 @@ final class DocumentsTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $index->expects($matcher)
+        $index->expects(self::atLeastOnce())
               ->method('updateDocumentsCsv')
-              ->willReturnCallback(function (string $param) use ($matcher): void {
+              ->willReturnCallback(function (string $documents, $primaryKey, $delimiter): void {
+                  static $invocation = 0;
                   // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
-                  switch ($matcher->numberOfInvocations()) {
+                  switch (++$invocation) {
                       case 1:
-                          $this->assertEquals($param, ["id;title\n888221515;Young folks", null, ';']);
+                          self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       case 2:
-                          $this->assertEquals($param, ["id;title\n235115704;Mister Klein", null, ';']);
+                          self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
                           break;
                       default:
                           self::fail();
                   }
-              })
-              ->willReturn([], []);
+              });
 
         $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
     }
@@ -832,19 +831,19 @@ final class DocumentsTest extends TestCase
         $replacement .= json_encode(['id' => 70764404, 'artist' => 'Ailitp']).PHP_EOL;
 
         $promises = $index->updateDocumentsNdjsonInBatches($replacement, 1);
-        $this->assertCount(2, $promises);
+        self::assertCount(2, $promises);
         foreach ($promises as $promise) {
             $this->assertIsValidPromise($promise);
             $index->waitForTask($promise['taskUid']);
         }
 
         $response = $index->getDocument(412559401);
-        $this->assertSame(412559401, (int) $response['id']);
-        $this->assertSame('WASPTHOVEN', $response['title']);
+        self::assertSame(412559401, (int) $response['id']);
+        self::assertSame('WASPTHOVEN', $response['title']);
 
         $response = $index->getDocument(70764404);
-        $this->assertSame(70764404, (int) $response['id']);
-        $this->assertSame('Ailitp', $response['artist']);
+        self::assertSame(70764404, (int) $response['id']);
+        self::assertSame('Ailitp', $response['artist']);
     }
 
     /**

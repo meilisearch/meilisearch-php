@@ -14,37 +14,37 @@ final class KeysAndPermissionsTest extends TestCase
     public function testGetRawKeysAlwaysReturnsArray(): void
     {
         /* @phpstan-ignore-next-line */
-        $this->assertIsArray($this->client->getRawKeys());
+        self::assertIsArray($this->client->getRawKeys());
     }
 
     public function testGetKeysAlwaysReturnsArray(): void
     {
         /* @phpstan-ignore-next-line */
-        $this->assertIsIterable($this->client->getKeys());
+        self::assertIsIterable($this->client->getKeys());
     }
 
     public function testGetKeysDefault(): void
     {
         $response = $this->client->getKeys();
 
-        $this->assertGreaterThan(0, $response->count());
-        $this->assertIsArray($response[0]->getActions());
-        $this->assertIsArray($response[0]->getIndexes());
-        $this->assertNull($response[0]->getExpiresAt());
-        $this->assertNotNull($response[0]->getCreatedAt());
-        $this->assertNotNull($response[0]->getUpdatedAt());
+        self::assertGreaterThan(0, $response->count());
+        self::assertIsArray($response[0]->getActions());
+        self::assertIsArray($response[0]->getIndexes());
+        self::assertNull($response[0]->getExpiresAt());
+        self::assertNotNull($response[0]->getCreatedAt());
+        self::assertNotNull($response[0]->getUpdatedAt());
     }
 
     public function testGetRawKeysDefault(): void
     {
         $response = $this->client->getRawKeys();
 
-        $this->assertGreaterThan(2, $response['results']);
-        $this->assertArrayHasKey('actions', $response['results'][0]);
-        $this->assertArrayHasKey('indexes', $response['results'][0]);
-        $this->assertArrayHasKey('createdAt', $response['results'][0]);
-        $this->assertArrayHasKey('expiresAt', $response['results'][0]);
-        $this->assertArrayHasKey('updatedAt', $response['results'][0]);
+        self::assertGreaterThan(2, $response['results']);
+        self::assertArrayHasKey('actions', $response['results'][0]);
+        self::assertArrayHasKey('indexes', $response['results'][0]);
+        self::assertArrayHasKey('createdAt', $response['results'][0]);
+        self::assertArrayHasKey('expiresAt', $response['results'][0]);
+        self::assertArrayHasKey('updatedAt', $response['results'][0]);
     }
 
     public function testExceptionIfNoMasterKeyProvided(): void
@@ -60,7 +60,7 @@ final class KeysAndPermissionsTest extends TestCase
         $index = $this->safeIndexName();
         $this->createEmptyIndex($index);
         $response = $this->client->index($index)->getSettings();
-        $this->assertEquals(['*'], $response['searchableAttributes']);
+        self::assertSame(['*'], $response['searchableAttributes']);
 
         $newClient = new Client($this->host, 'bad-key');
 
@@ -79,14 +79,14 @@ final class KeysAndPermissionsTest extends TestCase
     {
         $response = $this->client->getKeys((new KeysQuery())->setLimit(1));
 
-        $this->assertCount(1, $response);
+        self::assertCount(1, $response);
     }
 
     public function testGetKeysWithOffset(): void
     {
         $response = $this->client->getKeys((new KeysQuery())->setOffset(100));
 
-        $this->assertCount(0, $response);
+        self::assertCount(0, $response);
     }
 
     public function testGetKey(): void
@@ -94,13 +94,13 @@ final class KeysAndPermissionsTest extends TestCase
         $key = $this->client->createKey(self::INFO_KEY);
         $response = $this->client->getKey($key->getKey());
 
-        $this->assertNotNull($response->getKey());
-        $this->assertNull($response->getDescription());
-        $this->assertIsArray($response->getActions());
-        $this->assertIsArray($response->getIndexes());
-        $this->assertNull($response->getExpiresAt());
-        $this->assertNotNull($response->getCreatedAt());
-        $this->assertNotNull($response->getUpdatedAt());
+        self::assertNotNull($response->getKey());
+        self::assertNull($response->getDescription());
+        self::assertIsArray($response->getActions());
+        self::assertIsArray($response->getIndexes());
+        self::assertNull($response->getExpiresAt());
+        self::assertNotNull($response->getCreatedAt());
+        self::assertNotNull($response->getUpdatedAt());
 
         $this->client->deleteKey($key->getKey());
     }
@@ -115,15 +115,15 @@ final class KeysAndPermissionsTest extends TestCase
     {
         $key = $this->client->createKey(self::INFO_KEY);
 
-        $this->assertNotNull($key->getKey());
-        $this->assertNull($key->getDescription());
-        $this->assertIsArray($key->getActions());
-        $this->assertSame($key->getActions(), self::INFO_KEY['actions']);
-        $this->assertIsArray($key->getIndexes());
-        $this->assertSame($key->getIndexes(), self::INFO_KEY['indexes']);
-        $this->assertNull($key->getExpiresAt());
-        $this->assertNotNull($key->getCreatedAt());
-        $this->assertNotNull($key->getUpdatedAt());
+        self::assertNotNull($key->getKey());
+        self::assertNull($key->getDescription());
+        self::assertIsArray($key->getActions());
+        self::assertSame(self::INFO_KEY['actions'], $key->getActions());
+        self::assertIsArray($key->getIndexes());
+        self::assertSame(self::INFO_KEY['indexes'], $key->getIndexes());
+        self::assertNull($key->getExpiresAt());
+        self::assertNotNull($key->getCreatedAt());
+        self::assertNotNull($key->getUpdatedAt());
 
         $this->client->deleteKey($key->getKey());
     }
@@ -136,8 +136,8 @@ final class KeysAndPermissionsTest extends TestCase
             'expiresAt' => null,
         ]);
 
-        $this->assertIsArray($key->getActions());
-        $this->assertSame($key->getActions(), ['tasks.*', 'indexes.get']);
+        self::assertIsArray($key->getActions());
+        self::assertSame(['tasks.*', 'indexes.get'], $key->getActions());
 
         $this->client->deleteKey($key->getKey());
     }
@@ -152,16 +152,16 @@ final class KeysAndPermissionsTest extends TestCase
         ];
         $response = $this->client->createKey($key);
 
-        $this->assertNotNull($response->getKey());
-        $this->assertNotNull($response->getDescription());
-        $this->assertSame($response->getDescription(), 'test create');
-        $this->assertIsArray($response->getActions());
-        $this->assertSame($response->getActions(), ['search']);
-        $this->assertIsArray($response->getIndexes());
-        $this->assertSame($response->getIndexes(), ['index']);
-        $this->assertNotNull($response->getExpiresAt());
-        $this->assertNotNull($response->getCreatedAt());
-        $this->assertNotNull($response->getUpdatedAt());
+        self::assertNotNull($response->getKey());
+        self::assertNotNull($response->getDescription());
+        self::assertSame('test create', $response->getDescription());
+        self::assertIsArray($response->getActions());
+        self::assertSame(['search'], $response->getActions());
+        self::assertIsArray($response->getIndexes());
+        self::assertSame(['index'], $response->getIndexes());
+        self::assertNotNull($response->getExpiresAt());
+        self::assertNotNull($response->getCreatedAt());
+        self::assertNotNull($response->getUpdatedAt());
 
         $this->client->deleteKey($response->getKey());
     }
@@ -176,16 +176,16 @@ final class KeysAndPermissionsTest extends TestCase
         ];
         $response = $this->client->createKey($key);
 
-        $this->assertNotNull($response->getKey());
-        $this->assertNotNull($response->getDescription());
-        $this->assertSame($response->getDescription(), 'test create');
-        $this->assertIsArray($response->getActions());
-        $this->assertSame($response->getActions(), ['search']);
-        $this->assertIsArray($response->getIndexes());
-        $this->assertSame($response->getIndexes(), ['index']);
-        $this->assertNotNull($response->getExpiresAt());
-        $this->assertNotNull($response->getCreatedAt());
-        $this->assertNotNull($response->getUpdatedAt());
+        self::assertNotNull($response->getKey());
+        self::assertNotNull($response->getDescription());
+        self::assertSame('test create', $response->getDescription());
+        self::assertIsArray($response->getActions());
+        self::assertSame(['search'], $response->getActions());
+        self::assertIsArray($response->getIndexes());
+        self::assertSame(['index'], $response->getIndexes());
+        self::assertNotNull($response->getExpiresAt());
+        self::assertNotNull($response->getCreatedAt());
+        self::assertNotNull($response->getUpdatedAt());
 
         $this->client->deleteKey($response->getKey());
     }
@@ -207,16 +207,16 @@ final class KeysAndPermissionsTest extends TestCase
             'description' => 'test update',
         ]);
 
-        $this->assertNotNull($response->getKey());
-        $this->assertNotNull($response->getDescription());
-        $this->assertSame($response->getDescription(), 'test update');
-        $this->assertIsArray($response->getActions());
-        $this->assertSame($response->getActions(), self::INFO_KEY['actions']);
-        $this->assertIsArray($response->getIndexes());
-        $this->assertSame($response->getIndexes(), ['index']);
-        $this->assertNull($response->getExpiresAt());
-        $this->assertNotNull($response->getCreatedAt());
-        $this->assertNotNull($response->getUpdatedAt());
+        self::assertNotNull($response->getKey());
+        self::assertNotNull($response->getDescription());
+        self::assertSame('test update', $response->getDescription());
+        self::assertIsArray($response->getActions());
+        self::assertSame(self::INFO_KEY['actions'], $response->getActions());
+        self::assertIsArray($response->getIndexes());
+        self::assertSame(['index'], $response->getIndexes());
+        self::assertNull($response->getExpiresAt());
+        self::assertNotNull($response->getCreatedAt());
+        self::assertNotNull($response->getUpdatedAt());
 
         $this->client->deleteKey($response->getKey());
     }
@@ -230,8 +230,8 @@ final class KeysAndPermissionsTest extends TestCase
             'expiresAt' => null,
         ]);
 
-        $this->assertNotNull($key->getKey());
-        $this->assertEquals('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
+        self::assertNotNull($key->getKey());
+        self::assertSame('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
 
         $this->client->deleteKey($key->getKey());
     }
@@ -245,16 +245,16 @@ final class KeysAndPermissionsTest extends TestCase
             'expiresAt' => date_create_from_format('Y-m-d', date('Y-m-d', strtotime('+1 day'))),
         ]);
 
-        $this->assertNotNull($response->getKey());
-        $this->assertNotNull($response->getDescription());
-        $this->assertSame($response->getDescription(), 'test update');
-        $this->assertIsArray($response->getActions());
-        $this->assertSame($response->getActions(), self::INFO_KEY['actions']);
-        $this->assertIsArray($response->getIndexes());
-        $this->assertSame($response->getIndexes(), ['index']);
-        $this->assertNull($response->getExpiresAt());
-        $this->assertNotNull($response->getCreatedAt());
-        $this->assertNotNull($response->getUpdatedAt());
+        self::assertNotNull($response->getKey());
+        self::assertNotNull($response->getDescription());
+        self::assertSame('test update', $response->getDescription());
+        self::assertIsArray($response->getActions());
+        self::assertSame(self::INFO_KEY['actions'], $response->getActions());
+        self::assertIsArray($response->getIndexes());
+        self::assertSame(['index'], $response->getIndexes());
+        self::assertNull($response->getExpiresAt());
+        self::assertNotNull($response->getCreatedAt());
+        self::assertNotNull($response->getUpdatedAt());
 
         $this->client->deleteKey($response->getKey());
     }
@@ -322,12 +322,12 @@ final class KeysAndPermissionsTest extends TestCase
 
         $response = $newClient->getKeys();
 
-        $this->assertCount(3, $response);
+        self::assertCount(3, $response);
 
         for ($i = 0; $i < 3; ++$i) {
-            $this->assertNotNull($response[$i]->getExpiresAt(), (string) $i);
-            $this->assertNotNull($response[$i]->getCreatedAt(), (string) $i);
-            $this->assertNotNull($response[$i]->getUpdatedAt(), (string) $i);
+            self::assertNotNull($response[$i]->getExpiresAt(), (string) $i);
+            self::assertNotNull($response[$i]->getCreatedAt(), (string) $i);
+            self::assertNotNull($response[$i]->getUpdatedAt(), (string) $i);
         }
     }
 }

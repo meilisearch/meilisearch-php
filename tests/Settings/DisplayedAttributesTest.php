@@ -16,8 +16,8 @@ final class DisplayedAttributesTest extends TestCase
         $attributesA = $indexA->getDisplayedAttributes();
         $attributesB = $indexB->getDisplayedAttributes();
 
-        $this->assertEquals(['*'], $attributesA);
-        $this->assertEquals(['*'], $attributesB);
+        self::assertSame(['*'], $attributesA);
+        self::assertSame(['*'], $attributesB);
     }
 
     public function testUpdateDisplayedAttributes(): void
@@ -32,7 +32,7 @@ final class DisplayedAttributesTest extends TestCase
 
         $displayedAttributes = $index->getDisplayedAttributes();
 
-        $this->assertEquals($newAttributes, $displayedAttributes);
+        self::assertSame($newAttributes, $displayedAttributes);
     }
 
     public function testResetDisplayedAttributes(): void
@@ -50,6 +50,6 @@ final class DisplayedAttributesTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $displayedAttributes = $index->getDisplayedAttributes();
-        $this->assertEquals(['*'], $displayedAttributes);
+        self::assertSame(['*'], $displayedAttributes);
     }
 }
