@@ -120,8 +120,8 @@ final class ClientTest extends TestCase
         $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
-        self::assertSame($index->getPrimaryKey(), 'id');
-        self::assertSame($index->getUid(), $indexName);
+        self::assertSame('id', $index->getPrimaryKey());
+        self::assertSame($indexName, $index->getUid());
     }
 
     public function testDeleteIndex(): void

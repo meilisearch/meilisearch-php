@@ -21,7 +21,7 @@ class TasksQueryTest extends TestCase
         $date = new \DateTime();
         $data = (new TasksQuery())->setBeforeEnqueuedAt($date);
 
-        self::assertSame($data->toArray(), ['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
+        self::assertSame(['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)], $data->toArray());
     }
 
     public function testToArrayWithSetLimit(): void
@@ -42,8 +42,6 @@ class TasksQueryTest extends TestCase
     {
         $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setCanceledBy([1, 4])->setStatuses(['enqueued']);
 
-        self::assertSame([
-            'statuses' => 'enqueued', 'from' => 10, 'limit' => 9, 'canceledBy' => '1,4',
-        ], $data->toArray());
+        self::assertSame(['statuses' => 'enqueued', 'from' => 10, 'limit' => 9, 'canceledBy' => '1,4'], $data->toArray());
     }
 }

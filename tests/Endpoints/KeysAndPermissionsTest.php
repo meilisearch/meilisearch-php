@@ -118,9 +118,9 @@ final class KeysAndPermissionsTest extends TestCase
         self::assertNotNull($key->getKey());
         self::assertNull($key->getDescription());
         self::assertIsArray($key->getActions());
-        self::assertSame($key->getActions(), self::INFO_KEY['actions']);
+        self::assertSame(self::INFO_KEY['actions'], $key->getActions());
         self::assertIsArray($key->getIndexes());
-        self::assertSame($key->getIndexes(), self::INFO_KEY['indexes']);
+        self::assertSame(self::INFO_KEY['indexes'], $key->getIndexes());
         self::assertNull($key->getExpiresAt());
         self::assertNotNull($key->getCreatedAt());
         self::assertNotNull($key->getUpdatedAt());
@@ -137,7 +137,7 @@ final class KeysAndPermissionsTest extends TestCase
         ]);
 
         self::assertIsArray($key->getActions());
-        self::assertSame($key->getActions(), ['tasks.*', 'indexes.get']);
+        self::assertSame(['tasks.*', 'indexes.get'], $key->getActions());
 
         $this->client->deleteKey($key->getKey());
     }
@@ -154,11 +154,11 @@ final class KeysAndPermissionsTest extends TestCase
 
         self::assertNotNull($response->getKey());
         self::assertNotNull($response->getDescription());
-        self::assertSame($response->getDescription(), 'test create');
+        self::assertSame('test create', $response->getDescription());
         self::assertIsArray($response->getActions());
-        self::assertSame($response->getActions(), ['search']);
+        self::assertSame(['search'], $response->getActions());
         self::assertIsArray($response->getIndexes());
-        self::assertSame($response->getIndexes(), ['index']);
+        self::assertSame(['index'], $response->getIndexes());
         self::assertNotNull($response->getExpiresAt());
         self::assertNotNull($response->getCreatedAt());
         self::assertNotNull($response->getUpdatedAt());
@@ -178,11 +178,11 @@ final class KeysAndPermissionsTest extends TestCase
 
         self::assertNotNull($response->getKey());
         self::assertNotNull($response->getDescription());
-        self::assertSame($response->getDescription(), 'test create');
+        self::assertSame('test create', $response->getDescription());
         self::assertIsArray($response->getActions());
-        self::assertSame($response->getActions(), ['search']);
+        self::assertSame(['search'], $response->getActions());
         self::assertIsArray($response->getIndexes());
-        self::assertSame($response->getIndexes(), ['index']);
+        self::assertSame(['index'], $response->getIndexes());
         self::assertNotNull($response->getExpiresAt());
         self::assertNotNull($response->getCreatedAt());
         self::assertNotNull($response->getUpdatedAt());
@@ -209,11 +209,11 @@ final class KeysAndPermissionsTest extends TestCase
 
         self::assertNotNull($response->getKey());
         self::assertNotNull($response->getDescription());
-        self::assertSame($response->getDescription(), 'test update');
+        self::assertSame('test update', $response->getDescription());
         self::assertIsArray($response->getActions());
-        self::assertSame($response->getActions(), self::INFO_KEY['actions']);
+        self::assertSame(self::INFO_KEY['actions'], $response->getActions());
         self::assertIsArray($response->getIndexes());
-        self::assertSame($response->getIndexes(), ['index']);
+        self::assertSame(['index'], $response->getIndexes());
         self::assertNull($response->getExpiresAt());
         self::assertNotNull($response->getCreatedAt());
         self::assertNotNull($response->getUpdatedAt());
@@ -247,11 +247,11 @@ final class KeysAndPermissionsTest extends TestCase
 
         self::assertNotNull($response->getKey());
         self::assertNotNull($response->getDescription());
-        self::assertSame($response->getDescription(), 'test update');
+        self::assertSame('test update', $response->getDescription());
         self::assertIsArray($response->getActions());
-        self::assertSame($response->getActions(), self::INFO_KEY['actions']);
+        self::assertSame(self::INFO_KEY['actions'], $response->getActions());
         self::assertIsArray($response->getIndexes());
-        self::assertSame($response->getIndexes(), ['index']);
+        self::assertSame(['index'], $response->getIndexes());
         self::assertNull($response->getExpiresAt());
         self::assertNotNull($response->getCreatedAt());
         self::assertNotNull($response->getUpdatedAt());

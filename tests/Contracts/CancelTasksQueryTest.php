@@ -28,10 +28,6 @@ class CancelTasksQueryTest extends TestCase
     {
         $data = (new CancelTasksQuery())->setUids([1, 2, 3])->setStatuses(['enqueued']);
 
-        self::assertSame([
-            'statuses' => 'enqueued', 'uids' => '1,2,3',
-        ],
-            $data->toArray()
-        );
+        self::assertSame(['statuses' => 'enqueued', 'uids' => '1,2,3'], $data->toArray());
     }
 }

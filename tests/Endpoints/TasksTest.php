@@ -30,9 +30,9 @@ final class TasksTest extends TestCase
         self::assertArrayHasKey('status', $response);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);
-        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('indexUid', $response);
-        self::assertSame($response['indexUid'], $this->indexName);
+        self::assertSame($this->indexName, $response['indexUid']);
         self::assertArrayHasKey('enqueuedAt', $response);
         self::assertArrayHasKey('startedAt', $response);
         self::assertArrayHasKey('finishedAt', $response);
@@ -48,9 +48,9 @@ final class TasksTest extends TestCase
         self::assertArrayHasKey('status', $response);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);
-        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('indexUid', $response);
-        self::assertSame($response['indexUid'], $this->indexName);
+        self::assertSame($this->indexName, $response['indexUid']);
         self::assertArrayHasKey('enqueuedAt', $response);
         self::assertArrayHasKey('startedAt', $response);
         self::assertArrayHasKey('finishedAt', $response);
@@ -85,9 +85,9 @@ final class TasksTest extends TestCase
         self::assertArrayHasKey('status', $response);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);
-        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('indexUid', $response);
-        self::assertSame($response['indexUid'], $this->indexName);
+        self::assertSame($this->indexName, $response['indexUid']);
         self::assertArrayHasKey('enqueuedAt', $response);
         self::assertArrayHasKey('startedAt', $response);
         self::assertArrayHasKey('finishedAt', $response);
@@ -135,7 +135,7 @@ final class TasksTest extends TestCase
         self::assertSame('taskCancelation', $promise['type']);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertSame($response['details']['originalFilter'], '?'.$query);
+        self::assertSame('?'.$query, $response['details']['originalFilter']);
         self::assertSame('taskCancelation', $response['type']);
         self::assertSame('succeeded', $response['status']);
     }

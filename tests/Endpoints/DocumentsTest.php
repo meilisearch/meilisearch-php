@@ -100,8 +100,8 @@ final class DocumentsTest extends TestCase
 
         $update = $index->waitForTask($promise['taskUid']);
 
-        self::assertSame($update['status'], 'succeeded');
-        self::assertSame($update['details']['receivedDocuments'], 6);
+        self::assertSame('succeeded', $update['status']);
+        self::assertSame(6, $update['details']['receivedDocuments']);
 
         $documents = $index->getDocuments()->getResults();
         self::assertSame('Teenage Neon Jungle', $documents[4]['album']);
@@ -487,8 +487,8 @@ final class DocumentsTest extends TestCase
         } catch (\Exception $ex) {
             $rethrowed = ApiException::rethrowWithHint($mockedException, 'deleteDocuments');
 
-            self::assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
-            self::assertSame($ex->getMessage(), $rethrowed->getMessage());
+            self::assertSame('Invalid response', $ex->getPrevious()->getMessage());
+            self::assertSame($rethrowed->getMessage(), $ex->getMessage());
         }
     }
 
@@ -641,8 +641,8 @@ final class DocumentsTest extends TestCase
         } catch (\Exception $ex) {
             $rethrowed = ApiException::rethrowWithHint($mockedException, 'getDocuments');
 
-            self::assertSame($ex->getPrevious()->getMessage(), 'Invalid response');
-            self::assertSame($ex->getMessage(), $rethrowed->getMessage());
+            self::assertSame('Invalid response', $ex->getPrevious()->getMessage());
+            self::assertSame($rethrowed->getMessage(), $ex->getMessage());
         }
     }
 

@@ -105,8 +105,8 @@ final class IndexTest extends TestCase
         self::assertArrayHasKey('uid', $response);
         self::assertArrayHasKey('createdAt', $response);
         self::assertArrayHasKey('updatedAt', $response);
-        self::assertSame($response['primaryKey'], 'objectId');
-        self::assertSame($response['uid'], $indexName);
+        self::assertSame('objectId', $response['primaryKey']);
+        self::assertSame($indexName, $response['uid']);
     }
 
     public function testPrimaryKeyUpdate(): void
@@ -117,10 +117,9 @@ final class IndexTest extends TestCase
         $this->client->waitForTask($response['taskUid']);
         $index = $this->client->getIndex($response['indexUid']);
 
-        self::assertSame($index->getPrimaryKey(), $primaryKey);
-        self::assertSame($index->getUid(), $this->indexName);
-        self::assertSame($index->getPrimaryKey(), $primaryKey);
-        self::assertSame($this->index->getUid(), $this->indexName);
+        self::assertSame($primaryKey, $index->getPrimaryKey());
+        self::assertSame($this->indexName, $index->getUid());
+        self::assertSame($this->indexName, $this->index->getUid());
     }
 
     public function testIndexStats(): void
@@ -191,10 +190,10 @@ final class IndexTest extends TestCase
 
         /* @phpstan-ignore-next-line */
         self::assertIsArray($response);
-        self::assertSame($response['status'], 'succeeded');
+        self::assertSame('succeeded', $response['status']);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);
-        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
         self::assertArrayHasKey('startedAt', $response);
         self::assertArrayHasKey('finishedAt', $response);
@@ -205,10 +204,10 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForTask($promise['taskUid'], 100, 20);
 
-        self::assertSame($response['status'], 'succeeded');
+        self::assertSame('succeeded', $response['status']);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);
-        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
         self::assertArrayHasKey('enqueuedAt', $response);
         self::assertArrayHasKey('startedAt', $response);
@@ -220,10 +219,10 @@ final class IndexTest extends TestCase
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
         $response = $this->index->waitForTask($promise['taskUid'], 100);
 
-        self::assertSame($response['status'], 'succeeded');
+        self::assertSame('succeeded', $response['status']);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);
-        self::assertSame($response['type'], 'documentAdditionOrUpdate');
+        self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
         self::assertArrayHasKey('enqueuedAt', $response);
         self::assertArrayHasKey('startedAt', $response);
@@ -245,15 +244,15 @@ final class IndexTest extends TestCase
         $index = $this->createEmptyIndex($indexName2);
 
         $res = $this->index->delete();
-        self::assertSame($res['indexUid'], $indexName1);
+        self::assertSame($indexName1, $res['indexUid']);
         self::assertArrayHasKey('type', $res);
-        self::assertSame($res['type'], 'indexDeletion');
+        self::assertSame('indexDeletion', $res['type']);
         self::assertArrayHasKey('enqueuedAt', $res);
 
         $res = $index->delete();
-        self::assertSame($res['indexUid'], $indexName2);
+        self::assertSame($indexName2, $res['indexUid']);
         self::assertArrayHasKey('type', $res);
-        self::assertSame($res['type'], 'indexDeletion');
+        self::assertSame('indexDeletion', $res['type']);
         self::assertArrayHasKey('enqueuedAt', $res);
     }
 
@@ -262,7 +261,7 @@ final class IndexTest extends TestCase
         $promise = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertSame($response['details']['swaps'], [['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]]);
+        self::assertSame([['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]], $response['details']['swaps']);
     }
 
     public function testDeleteTasks(): void
@@ -270,7 +269,7 @@ final class IndexTest extends TestCase
         $promise = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertSame($response['details']['originalFilter'], '?uids=1%2C2');
+        self::assertSame('?uids=1%2C2', $response['details']['originalFilter']);
         self::assertIsNumeric($response['details']['matchedTasks']);
     }
 

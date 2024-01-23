@@ -15,6 +15,6 @@ final class SnapshotsTest extends TestCase
         $task = $this->client->createSnapshot();
 
         self::assertSame($expectedKeys, array_keys($task));
-        self::assertSame($task['type'], 'snapshotCreation');
+        self::assertSame('snapshotCreation', $task['type']);
     }
 }

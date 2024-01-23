@@ -28,9 +28,6 @@ class DeleteTasksQueryTest extends TestCase
     {
         $data = (new DeleteTasksQuery())->setCanceledBy([1, 2])->setStatuses(['enqueued']);
 
-        self::assertSame([
-            'statuses' => 'enqueued', 'canceledBy' => '1,2',
-        ], $data->toArray()
-        );
+        self::assertSame(['statuses' => 'enqueued', 'canceledBy' => '1,2'], $data->toArray());
     }
 }
