@@ -8,6 +8,7 @@ on:
       - trying
       - staging
       - main
+      - feature/**
 
 jobs:
   yaml-lint:
@@ -73,7 +74,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          coverage: none
+          coverage: pcov
       - name: Validate composer.json and composer.lock
         run: composer validate
       - name: Install dependencies
@@ -82,29 +83,34 @@ jobs:
           composer update --prefer-dist --no-progress
       - name: Run test suite - default HTTP client (Guzzle 7)
         run: |
-          sh scripts/tests.sh
+          sh scripts/tests.sh --coverage-clover coverage-guzzle7.xml
           composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
       - name: Run test suite - php-http/guzzle7-adapter
         run: |
           composer require --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
-          sh scripts/tests.sh
+          sh scripts/tests.sh --coverage-clover coverage-guzzle7-adapter.xml
           composer remove --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
       - name: Run test suite - symfony/http-client
         run: |
           composer require --dev symfony/http-client nyholm/psr7
-          sh scripts/tests.sh
+          sh scripts/tests.sh --coverage-clover coverage-symfony-http-client.xml
           composer remove --dev symfony/http-client nyholm/psr7
       - name: Run test suite - php-http/curl-client
         run: |
           composer require --dev php-http/curl-client nyholm/psr7
-          sh scripts/tests.sh
+          sh scripts/tests.sh --coverage-clover coverage-nyholm-psr7.xml
           composer remove --dev php-http/curl-client nyholm/psr7
       - name: Run test suite - kriswallsmith/buzz
         run: |
           composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
           composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
-          sh scripts/tests.sh
+          sh scripts/tests.sh --coverage-clover coverage-kriswallsmith-buzz.xml
           composer remove --dev kriswallsmith/buzz nyholm/psr7
+      - name: Upload coverage file
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'phpunit-${{ matrix.php-versions }}-coverage'
+          path: 'coverage*.xml'
 
   test_php_7_guzzle_6:
     # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)
@@ -139,3 +145,25 @@ jobs:
         run: |
           composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
           sh scripts/tests.sh
+
+  upload-coverage:
+    name: Upload coverage to Codecov
+    runs-on: ubuntu-latest
+    needs:
+      - tests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Download coverage files
+        uses: actions/download-artifact@v4
+        with:
+          path: reports
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: reports
