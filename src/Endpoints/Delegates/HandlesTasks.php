@@ -20,7 +20,7 @@ trait HandlesTasks
         return $this->tasks->get($uid);
     }
 
-    public function getTasks(TasksQuery $options = null): TasksResults
+    public function getTasks(?TasksQuery $options = null): TasksResults
     {
         $query = isset($options) ? $options->toArray() : [];
 
@@ -29,12 +29,12 @@ trait HandlesTasks
         return new TasksResults($response);
     }
 
-    public function deleteTasks(DeleteTasksQuery $options = null): array
+    public function deleteTasks(?DeleteTasksQuery $options = null): array
     {
         return $this->tasks->deleteTasks($options);
     }
 
-    public function cancelTasks(CancelTasksQuery $options = null): array
+    public function cancelTasks(?CancelTasksQuery $options = null): array
     {
         return $this->tasks->cancelTasks($options);
     }
