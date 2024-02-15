@@ -40,11 +40,11 @@ class Client
      */
     public function __construct(
         string $url,
-        string $apiKey = null,
-        ClientInterface $httpClient = null,
-        RequestFactoryInterface $requestFactory = null,
+        ?string $apiKey = null,
+        ?ClientInterface $httpClient = null,
+        ?RequestFactoryInterface $requestFactory = null,
         array $clientAgents = [],
-        StreamFactoryInterface $streamFactory = null
+        ?StreamFactoryInterface $streamFactory = null
     ) {
         $this->http = new MeilisearchClientAdapter($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory);
         $this->index = new Indexes($this->http);
