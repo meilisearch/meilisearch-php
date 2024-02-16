@@ -706,7 +706,6 @@ final class SearchTest extends TestCase
     public function testShowRankingScoreDetails(): void
     {
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['scoreDetails' => true]);
 
         $response = $this->index->search('the', ['showRankingScoreDetails' => true]);
         $hit = $response->getHits()[0];
