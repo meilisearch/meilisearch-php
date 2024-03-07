@@ -22,6 +22,10 @@ search_parameter_guide_show_ranking_score_1: |-
   $client->index('movies')->search('dragon', [
     'showRankingScore' => true
   ]);
+search_parameter_guide_show_ranking_score_details_1: |-
+  $client->index('movies')->search('dragon', [
+    'showRankingScoreDetails' => true
+  ]);
 search_parameter_guide_attributes_to_search_on_1: |-
   $client->index('movies')->search('adventure', [
     'attributesToSearchOn' => ['overview']
