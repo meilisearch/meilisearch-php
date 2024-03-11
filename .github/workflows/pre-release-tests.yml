@@ -60,7 +60,7 @@ jobs:
 
   test_php_7_guzzle_6:
     runs-on: ubuntu-latest
-    name: integration-tests (PHP 7.4 & Guzzle 6)
+    name: integration-tests-against-rc (PHP 7.4 & Guzzle 6)
     steps:
       - uses: actions/checkout@v4
       - name: Install PHP
