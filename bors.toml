@@ -4,7 +4,8 @@ status = [
     'integration-tests (PHP 7.4)',
     'integration-tests (PHP 8.0)',
     'integration-tests (PHP 8.1)',
-    'integration-tests (PHP 8.2)'
+    'integration-tests (PHP 8.2)',
+    'integration-tests (PHP 8.3)'
 ]
 # 1 hour timeout
 timeout-sec = 3600
