@@ -41,6 +41,7 @@ final class EmbeddersTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $embedders = $index->getEmbedders();
+        $embedderConfig['apiKey'] = '<yoXXXXX...';
 
         self::assertSame($embedderConfig, $embedders['myEmbedder']);
     }
