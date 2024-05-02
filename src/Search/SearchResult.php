@@ -20,6 +20,7 @@ class SearchResult implements \Countable, \IteratorAggregate
     private ?int $hitsCount;
     private ?int $offset;
     private ?int $limit;
+    private ?int $semanticHitCount;
 
     private ?int $hitsPerPage;
     private ?int $page;
@@ -65,6 +66,7 @@ class SearchResult implements \Countable, \IteratorAggregate
             $this->hitsCount = $body['totalHits'];
         }
 
+        $this->semanticHitCount = $body['semanticHitCount'] ?? 0;
         $this->hits = $body['hits'] ?? [];
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->query = $body['query'];
@@ -135,6 +137,11 @@ class SearchResult implements \Countable, \IteratorAggregate
     public function getHitsCount(): int
     {
         return $this->hitsCount;
+    }
+
+    public function getSemanticHitCount(): int
+    {
+        return $this->semanticHitCount;
     }
 
     public function count(): int
