@@ -51,7 +51,7 @@ final class EmbeddersTest extends TestCase
         $embedderConfig = [
             'source' => 'userProvided',
             'dimensions' => 1,
-            'distribution' => ['mean' => 0.7, 'sigma' => 0.3]
+            'distribution' => ['mean' => 0.7, 'sigma' => 0.3],
         ];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
@@ -71,7 +71,7 @@ final class EmbeddersTest extends TestCase
             'source' => 'huggingFace',
             'model' => 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2',
             'documentTemplate' => "A movie titled '{{doc.title}}' whose description starts with {{doc.overview|truncatewords: 20}}",
-            'distribution' => ['mean' => 0.7, 'sigma' => 0.3]
+            'distribution' => ['mean' => 0.7, 'sigma' => 0.3],
         ];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
