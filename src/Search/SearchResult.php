@@ -139,6 +139,9 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->hitsCount;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getSemanticHitCount(): int
     {
         return $this->semanticHitCount;
