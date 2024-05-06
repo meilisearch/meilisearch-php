@@ -365,6 +365,23 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/proximity-precision');
     }
 
+    // Settings - searchCutoffMs
+
+    public function getSearchCutoffMs(): ?int
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms');
+    }
+
+    public function updateSearchCutoffMs(int $value): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms', $value);
+    }
+
+    public function resetSearchCutoffMs(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms');
+    }
+
     // Settings - Experimental: Embedders (hybrid search)
 
     public function getEmbedders(): ?array
