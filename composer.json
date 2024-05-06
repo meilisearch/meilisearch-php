@@ -13,7 +13,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Clementine Urquizar",
+            "name": "Clementine",
             "email": "clementine@meilisearch.com"
         }
     ],
@@ -45,7 +45,7 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "guzzlehttp/guzzle": "^7.1",
         "http-interop/http-factory-guzzle": "^1.0",
-        "phpstan/phpstan": "1.10.66",
+        "phpstan/phpstan": "1.10.67",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-strict-rules": "^1.1",
         "phpstan/phpstan-phpunit": "^1.0",
