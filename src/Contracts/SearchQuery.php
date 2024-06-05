@@ -29,6 +29,7 @@ class SearchQuery
     private ?array $attributesToSearchOn = null;
     private ?bool $showRankingScore = null;
     private ?bool $showRankingScoreDetails = null;
+    private ?float $rankingScoreThreshold = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -126,6 +127,13 @@ class SearchQuery
     public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): SearchQuery
     {
         $this->showRankingScoreDetails = $showRankingScoreDetails;
+
+        return $this;
+    }
+
+    public function setRankingScoreThreshold(?float $rankingScoreThreshold): SearchQuery
+    {
+        $this->rankingScoreThreshold = $rankingScoreThreshold;
 
         return $this;
     }
@@ -230,6 +238,7 @@ class SearchQuery
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
+            'rankingScoreThreshold' => $this->rankingScoreThreshold ?? null,
         ], function ($item) { return null !== $item; });
     }
 }

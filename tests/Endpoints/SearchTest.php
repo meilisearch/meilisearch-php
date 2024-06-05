@@ -763,6 +763,18 @@ final class SearchTest extends TestCase
         self::assertArrayHasKey('_rankingScore', $response->getHits()[0]);
     }
 
+    public function testSearchWithRankingScoreThreshold(): void
+    {
+        $response = $this->index->search('the', ['showRankingScore' => true, 'rankingScoreThreshold' => 0.9]);
+
+        self::assertArrayHasKey('_rankingScore', $response->getHits()[0]);
+        self::assertSame(3, $response->getHitsCount());
+
+        $response = $this->index->search('the', ['showRankingScore' => true, 'rankingScoreThreshold' => 0.99]);
+
+        self::assertSame(0, $response->getHitsCount());
+    }
+
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void
     {
         $response = $this->index->updateFilterableAttributes(['genre']);
