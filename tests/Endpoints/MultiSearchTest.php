@@ -42,6 +42,22 @@ final class MultiSearchTest extends TestCase
         ], $data->toArray());
     }
 
+    public function testSearchQueryDataInitArgs(): void
+    {
+        $data = new SearchQuery(...[
+            'indexUid' => $this->booksIndex->getUid(),
+            'q' => 'butler',
+            'sort' => ['author:desc'],
+            'page' => null,
+        ]);
+
+        $this->assertEquals([
+            'indexUid' => $this->booksIndex->getUid(),
+            'q' => 'butler',
+            'sort' => ['author:desc'],
+        ], $data->toArray());
+    }
+
     public function testMultiSearch(): void
     {
         $response = $this->client->multiSearch([
