@@ -77,7 +77,7 @@ class SimilarDocumentsQuery
     }
 
     /**
-     * @param bool $showRankingScore boolean value to show ranking score
+     * @param bool|null $showRankingScore boolean value to show ranking score
      */
     public function setShowRankingScore(?bool $showRankingScore): SimilarDocumentsQuery
     {
