@@ -15,6 +15,39 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends BaseTestCase
 {
+    protected const VECTOR_MOVIES = [
+        [
+            'title' => 'Shazam!',
+            'release_year' => 2019,
+            'id' => '287947',
+            '_vectors' => ['manual' => [0.8, 0.4, -0.5]],
+        ],
+        [
+            'title' => 'Captain Marvel',
+            'release_year' => 2019,
+            'id' => '299537',
+            '_vectors' => ['manual' => [0.6, 0.8, -0.2]],
+        ],
+        [
+            'title' => 'Escape Room',
+            'release_year' => 2019,
+            'id' => '522681',
+            '_vectors' => ['manual' => [0.1, 0.6, 0.8]],
+        ],
+        [
+            'title' => 'How to Train Your Dragon: The Hidden World',
+            'release_year' => 2019,
+            'id' => '166428',
+            '_vectors' => ['manual' => [0.7, 0.7, -0.4]],
+        ],
+        [
+            'title' => 'All Quiet on the Western Front',
+            'release_year' => 1930,
+            'id' => '143',
+            '_vectors' => ['manual' => [-0.5, 0.3, 0.85]],
+        ],
+    ];
+
     protected const DOCUMENTS = [
         ['id' => 123, 'title' => 'Pride and Prejudice', 'comment' => 'A great book', 'genre' => 'romance'],
         ['id' => 456, 'title' => 'Le Petit Prince', 'comment' => 'A french book', 'genre' => 'adventure'],
