@@ -238,7 +238,7 @@ class SearchQuery
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
-            'rankingScoreThreshold' => $this->rankingScoreThreshold ?? null,
+            'rankingScoreThreshold' => $this->rankingScoreThreshold,
         ], function ($item) { return null !== $item; });
     }
 }

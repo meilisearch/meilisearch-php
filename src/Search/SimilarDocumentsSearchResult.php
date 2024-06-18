@@ -21,13 +21,12 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
     private int $offset;
     private int $limit;
     private int $processingTimeMs;
-
     private string $id;
 
     public function __construct(array $body)
     {
         $this->id = $body['id'];
-        $this->hits = $body['hits'] ?? [];
+        $this->hits = $body['hits'];
         $this->hitsCount = \count($body['hits']);
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->offset = $body['offset'];
@@ -36,37 +35,15 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Return a new {@see SearchResult} instance.
-     *
-     * The $options parameter is an array, and the following keys are accepted:
-     * - transformHits (callable)
-     *
-     * The method does NOT trigger a new search.
+     * @return array<string, mixed>|null
      */
-    public function applyOptions($options): self
+    public function getHit(int $key): ?array
     {
-        if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
-            $this->transformHits($options['transformHits']);
-        }
-
-        return $this;
-    }
-
-    public function transformHits(callable $callback): self
-    {
-        $this->hits = $callback($this->hits);
-        $this->hitsCount = \count($this->hits);
-
-        return $this;
-    }
-
-    public function getHit(int $key, $default = null)
-    {
-        return $this->hits[$key] ?? $default;
+        return $this->hits[$key];
     }
 
     /**
-     * @return array<int, array>
+     * @return array<int, array<string, mixed>>
      */
     public function getHits(): array
     {
@@ -103,9 +80,14 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
         return $this->hitsCount;
     }
 
+    /**
+     * Converts the SimilarDocumentsSearchResult to an array representation.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
-        $arr = [
+        return [
             'id' => $this->id,
             'hits' => $this->hits,
             'hitsCount' => $this->hitsCount,
@@ -114,13 +96,6 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
             'limit' => $this->limit,
             'estimatedTotalHits' => $this->estimatedTotalHits,
         ];
-
-        return $arr;
-    }
-
-    public function toJSON(): string
-    {
-        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }
 
     public function getIterator(): \ArrayIterator

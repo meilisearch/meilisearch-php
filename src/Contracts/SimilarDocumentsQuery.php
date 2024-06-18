@@ -6,7 +6,10 @@ namespace Meilisearch\Contracts;
 
 class SimilarDocumentsQuery
 {
-    private int|string $id;
+    /**
+     * @var int|string
+     */
+    private $id;
     private ?int $offset = null;
     private ?int $limit = null;
     private ?string $embedder = null;
@@ -15,13 +18,17 @@ class SimilarDocumentsQuery
     private ?bool $showRankingScoreDetails = null;
     private ?array $filter = null;
 
-    public function setId(string|int $id): SimilarDocumentsQuery
+    /**
+     * @param int|string $id
+     */
+    public function __construct($id)
     {
         $this->id = $id;
-
-        return $this;
     }
 
+    /**
+     * @param non-negative-int $offset
+     */
     public function setOffset(?int $offset): SimilarDocumentsQuery
     {
         $this->offset = $offset;
@@ -29,6 +36,9 @@ class SimilarDocumentsQuery
         return $this;
     }
 
+    /**
+     * @param positive-int $limit
+     */
     public function setLimit(?int $limit): SimilarDocumentsQuery
     {
         $this->limit = $limit;
@@ -36,6 +46,9 @@ class SimilarDocumentsQuery
         return $this;
     }
 
+    /**
+     * @param array<int, array<int, string>|string> $filter an array of arrays representing filter conditions
+     */
     public function setFilter(array $filter): SimilarDocumentsQuery
     {
         $this->filter = $filter;
@@ -43,6 +56,9 @@ class SimilarDocumentsQuery
         return $this;
     }
 
+    /**
+     * @param non-empty-string $embedder
+     */
     public function setEmbedder(string $embedder): SimilarDocumentsQuery
     {
         $this->embedder = $embedder;
@@ -50,6 +66,9 @@ class SimilarDocumentsQuery
         return $this;
     }
 
+    /**
+     * @param list<non-empty-string> $attributesToRetrieve an array of attribute names to retrieve
+     */
     public function setAttributesToRetrieve(array $attributesToRetrieve): SimilarDocumentsQuery
     {
         $this->attributesToRetrieve = $attributesToRetrieve;
@@ -57,6 +76,9 @@ class SimilarDocumentsQuery
         return $this;
     }
 
+    /**
+     * @param bool $showRankingScore boolean value to show ranking score
+     */
     public function setShowRankingScore(?bool $showRankingScore): SimilarDocumentsQuery
     {
         $this->showRankingScore = $showRankingScore;
@@ -64,6 +86,9 @@ class SimilarDocumentsQuery
         return $this;
     }
 
+    /**
+     * @param bool $showRankingScoreDetails boolean value to show ranking score details
+     */
     public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): SimilarDocumentsQuery
     {
         $this->showRankingScoreDetails = $showRankingScoreDetails;
@@ -71,6 +96,9 @@ class SimilarDocumentsQuery
         return $this;
     }
 
+    /**
+     * @return array{id: int|string, offset: non-negative-int, limit: positive-int, filter: array<int, array<int, string>|string>, embedder: non-empty-string, attributesToRetrieve: list<non-empty-string>, showRankingScore: bool, showRankingScoreDetails: bool} SimilarDocumentsQuery converted to an array with non null fields
+     */
     public function toArray(): array
     {
         return array_filter([
@@ -82,6 +110,8 @@ class SimilarDocumentsQuery
             'attributesToRetrieve' => $this->attributesToRetrieve,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
-        ], function ($item) { return null !== $item; });
+        ], function ($item) {
+            return null !== $item;
+        });
     }
 }
