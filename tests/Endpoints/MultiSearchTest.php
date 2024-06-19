@@ -18,6 +18,7 @@ final class MultiSearchTest extends TestCase
         parent::setUp();
         $this->booksIndex = $this->createEmptyIndex($this->safeIndexName('books'));
         $this->booksIndex->updateSortableAttributes(['author']);
+        $this->booksIndex->updateFilterableAttributes(['genre']);
         $promise = $this->booksIndex->updateDocuments(self::DOCUMENTS);
         $this->booksIndex->waitForTask($promise['taskUid']);
 
@@ -64,7 +65,7 @@ final class MultiSearchTest extends TestCase
         self::assertArrayHasKey('estimatedTotalHits', $response['results'][0]);
         self::assertCount(2, $response['results'][0]['hits']);
 
-        self::assertArrayHasKey('indexUid', $response['results'][0]);
+        self::assertArrayHasKey('indexUid', $response['results'][1]);
         self::assertArrayHasKey('hits', $response['results'][1]);
         self::assertArrayHasKey('query', $response['results'][1]);
         self::assertArrayHasKey('page', $response['results'][1]);
@@ -89,5 +90,39 @@ final class MultiSearchTest extends TestCase
         self::assertSame(['comment'], $result['attributesToSearchOn']);
         self::assertTrue($result['showRankingScore']);
         self::assertTrue($result['showRankingScoreDetails']);
+    }
+
+    public function testMultiSearchWithDistinctAttribute(): void
+    {
+        $response = $this->client->multiSearch([
+            (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
+                ->setQuery('princ')
+                ->setSort(['author:desc']),
+            (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
+                ->setDistinct('genre'),
+        ]);
+
+        self::assertCount(2, $response['results']);
+
+        self::assertArrayHasKey('indexUid', $response['results'][0]);
+        self::assertArrayHasKey('hits', $response['results'][0]);
+        self::assertArrayHasKey('query', $response['results'][0]);
+        self::assertArrayHasKey('limit', $response['results'][0]);
+        self::assertArrayHasKey('offset', $response['results'][0]);
+        self::assertArrayHasKey('estimatedTotalHits', $response['results'][0]);
+        self::assertCount(2, $response['results'][0]['hits']);
+
+        self::assertArrayHasKey('indexUid', $response['results'][1]);
+        self::assertArrayHasKey('hits', $response['results'][1]);
+        self::assertArrayHasKey('query', $response['results'][1]);
+        self::assertCount(4, $response['results'][1]['hits']);
+
+        $genresSeen = [];
+
+        foreach ($response['results'][1]['hits'] as $_ => $hit) {
+            $genre = $hit['genre'];
+            self::assertFalse(isset($genresSeen[$genre]));
+            $genresSeen[$genre] = true;
+        }
     }
 }

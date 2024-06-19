@@ -854,4 +854,26 @@ final class SearchTest extends TestCase
 
         self::assertSame(['info.reviewNb' => ['min' => 50.0, 'max' => 1000.0]], $response->getFacetStats());
     }
+
+    public function testSearchWithDistinctAttribute(): void
+    {
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
+        $this->index->updateFilterableAttributes(['genre']);
+
+        $promise = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->waitForTask($promise['taskUid']);
+
+        $response = $this->index->search(null, [
+            'distinct' => 'genre',
+        ])->toArray();
+
+        $genresSeen = [];
+        self::assertArrayHasKey('title', $response['hits'][0]);
+
+        foreach ($response['hits'] as $_ => $hit) {
+            $genre = $hit['genre'];
+            self::assertFalse(isset($genresSeen[$genre]));
+            $genresSeen[$genre] = true;
+        }
+    }
 }
