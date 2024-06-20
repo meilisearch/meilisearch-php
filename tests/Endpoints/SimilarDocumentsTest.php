@@ -39,7 +39,6 @@ final class SimilarDocumentsTest extends TestCase
 
         $similarQuery = new SimilarDocumentsQuery($documentId);
         $response = $this->index->searchSimilarDocuments($similarQuery->setRetrieveVectors(true));
-
         self::assertGreaterThanOrEqual(4, $response->getHitsCount());
         self::assertArrayHasKey('_vectors', $response->getHit(0));
         self::assertArrayHasKey('id', $response->getHit(0));
