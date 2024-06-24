@@ -11,8 +11,8 @@ use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Exceptions\JsonEncodingException;
-use Psr\Http\Message\ResponseInterface;
 use Meilisearch\Http\Client;
+use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase

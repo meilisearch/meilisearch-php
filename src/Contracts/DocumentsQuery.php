@@ -95,7 +95,7 @@ class DocumentsQuery
             'limit' => $this->limit ?? null,
             'filter' => $this->filter ?? null,
             'fields' => $this->fields(),
-            'retrieveVectors' => ($this->retrieveVectors !== null ? ($this->retrieveVectors === true ? 'true' : 'false') : null),
+            'retrieveVectors' => (null !== $this->retrieveVectors ? (true === $this->retrieveVectors ? 'true' : 'false') : null),
         ], function ($item) { return null !== $item; });
     }
 }
