@@ -108,7 +108,7 @@ class SimilarDocumentsQuery
     }
 
     /**
-     * @return array{id: int|string, offset: non-negative-int, limit: positive-int, filter: array<int, array<int, string>|string>, embedder: non-empty-string, attributesToRetrieve: list<non-empty-string>, showRankingScore: bool, showRankingScoreDetails: bool} SimilarDocumentsQuery converted to an array with non null fields
+     * @return array{id: int|string, offset: non-negative-int, limit: positive-int, filter: array<int, array<int, string>|string>, embedder: non-empty-string, attributesToRetrieve: list<non-empty-string>, showRankingScore: bool, showRankingScoreDetails: bool, retrieveVectors: bool} SimilarDocumentsQuery converted to an array with non null fields
      */
     public function toArray(): array
     {
