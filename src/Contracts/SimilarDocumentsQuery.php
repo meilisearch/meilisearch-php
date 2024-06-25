@@ -16,6 +16,7 @@ class SimilarDocumentsQuery
     private ?array $attributesToRetrieve = null;
     private ?bool $showRankingScore = null;
     private ?bool $showRankingScoreDetails = null;
+    private ?bool $retrieveVectors = null;
     private ?array $filter = null;
 
     /**
@@ -97,7 +98,17 @@ class SimilarDocumentsQuery
     }
 
     /**
-     * @return array{id: int|string, offset: non-negative-int, limit: positive-int, filter: array<int, array<int, string>|string>, embedder: non-empty-string, attributesToRetrieve: list<non-empty-string>, showRankingScore: bool, showRankingScoreDetails: bool} SimilarDocumentsQuery converted to an array with non null fields
+     * @param bool|null $retrieveVectors boolean value to show _vector details
+     */
+    public function setRetrieveVectors(?bool $retrieveVectors): SimilarDocumentsQuery
+    {
+        $this->retrieveVectors = $retrieveVectors;
+
+        return $this;
+    }
+
+    /**
+     * @return array{id: int|string, offset: non-negative-int, limit: positive-int, filter: array<int, array<int, string>|string>, embedder: non-empty-string, attributesToRetrieve: list<non-empty-string>, showRankingScore: bool, showRankingScoreDetails: bool, retrieveVectors: bool} SimilarDocumentsQuery converted to an array with non null fields
      */
     public function toArray(): array
     {
@@ -110,6 +121,7 @@ class SimilarDocumentsQuery
             'attributesToRetrieve' => $this->attributesToRetrieve,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
+            'retrieveVectors' => $this->retrieveVectors,
         ], function ($item) {
             return null !== $item;
         });

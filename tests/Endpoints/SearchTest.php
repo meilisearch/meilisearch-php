@@ -694,14 +694,22 @@ final class SearchTest extends TestCase
         $http->patch('/experimental-features', ['vectorStore' => true]);
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateEmbedders(['default' => ['source' => 'userProvided', 'dimensions' => 1]]);
+        $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
+        $promise = $index->updateDocuments(self::VECTOR_MOVIES);
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
-        $response = $index->search('', ['vector' => [1], 'hybrid' => ['semanticRatio' => 1.0]]);
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0]]);
 
-        self::assertSame(0, $response->getSemanticHitCount());
-        self::assertEmpty($response->getHits());
+        self::assertSame(5, $response->getSemanticHitCount());
+        self::assertArrayNotHasKey('_vectors', $response->getHit(0));
+
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0], 'retrieveVectors' => true]);
+
+        self::assertSame(5, $response->getSemanticHitCount());
+        self::assertArrayHasKey('_vectors', $response->getHit(0));
     }
 
     public function testShowRankingScoreDetails(): void
