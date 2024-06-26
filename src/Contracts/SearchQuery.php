@@ -30,6 +30,7 @@ class SearchQuery
     private ?bool $showRankingScore = null;
     private ?bool $showRankingScoreDetails = null;
     private ?float $rankingScoreThreshold = null;
+    private ?string $distinct = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -138,6 +139,16 @@ class SearchQuery
         return $this;
     }
 
+    /**
+     * @param non-empty-string|null $distinct
+     */
+    public function setDistinct(?string $distinct): SearchQuery
+    {
+        $this->distinct = $distinct;
+
+        return $this;
+    }
+
     public function setSort(array $sort): SearchQuery
     {
         $this->sort = $sort;
@@ -239,6 +250,7 @@ class SearchQuery
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
+            'distinct' => $this->distinct,
         ], function ($item) { return null !== $item; });
     }
 }
