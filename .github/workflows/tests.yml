@@ -78,6 +78,13 @@ jobs:
       matrix:
         php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
         http-client: ['Guzzle 7', 'Guzzle 7 Adapter', 'Symfony HttpClient', 'PHP-HTTP CurlClient', 'Buzz']
+        exclude:
+          - php-version: '7.4'
+            http-client: 'Symfony HttpClient'
+          - php-version: '8.0'
+            http-client: 'Symfony HttpClient'
+          - php-version: '8.1'
+            http-client: 'Symfony HttpClient'
 
     name: integration-tests (PHP ${{ matrix.php-version }}) (${{ matrix.http-client }})
     steps:
