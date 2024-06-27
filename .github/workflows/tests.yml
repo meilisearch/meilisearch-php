@@ -125,13 +125,6 @@ jobs:
       - name: Install dependencies
         uses: ramsey/composer-install@v3
 
-#      - name: Run test suite - kriswallsmith/buzz
-#        run: |
-#          composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
-#          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
-#          sh scripts/tests.sh --coverage-clover coverage-kriswallsmith-buzz.xml
-#          composer remove --dev kriswallsmith/buzz nyholm/psr7
-
       - name: Run test suite
         run: sh scripts/tests.sh --coverage-clover coverage-${{ matrix.php-version }}-${{ matrix.http-client }}.xml
 
@@ -144,7 +137,7 @@ jobs:
   test_php_7_guzzle_6:
     # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)
     # Will still run for each push to bump-meilisearch-v*
-    if: github.event_name != 'pull_request' || !startsWith(github.base_ref, 'bump-meilisearch-v')
+    #if: github.event_name != 'pull_request' || !startsWith(github.base_ref, 'bump-meilisearch-v')
     runs-on: ubuntu-latest
     services:
       meilisearch:
@@ -169,17 +162,22 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies
+      - name: Switch to Guzzle 6
         run: |
-          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
-          composer update --prefer-dist --no-progress
-          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
-          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
+          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/guzzle6-adapter": "^2.0.2",/' composer.json
 
+#      - name: Install dependencies
+#        run: |
+#          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
+#          composer update --prefer-dist --no-progress
+#          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
+#          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
+#          composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
       - name: Run test suite - php-http/guzzle6-adapter
-        run: |
-          composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
-          sh scripts/tests.sh
+        run: sh scripts/tests.sh
 
   upload-coverage:
     name: Upload coverage to Codecov
