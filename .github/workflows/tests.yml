@@ -137,7 +137,7 @@ jobs:
   test_php_7_guzzle_6:
     # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)
     # Will still run for each push to bump-meilisearch-v*
-    #if: github.event_name != 'pull_request' || !startsWith(github.base_ref, 'bump-meilisearch-v')
+    if: github.event_name != 'pull_request' || !startsWith(github.base_ref, 'bump-meilisearch-v')
     runs-on: ubuntu-latest
     services:
       meilisearch:
@@ -166,16 +166,9 @@ jobs:
         run: |
           sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/guzzle6-adapter": "^2.0.2",/' composer.json
 
-#      - name: Install dependencies
-#        run: |
-#          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
-#          composer update --prefer-dist --no-progress
-#          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
-#          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
-
       - name: Install dependencies
         uses: ramsey/composer-install@v3
-#          composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
+
       - name: Run test suite - php-http/guzzle6-adapter
         run: sh scripts/tests.sh
 
