@@ -77,7 +77,7 @@ jobs:
     strategy:
       matrix:
         php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
-        http-client: ['Guzzle-7', 'Guzzle-7-Adapter', 'Symfony-HttpClient', 'PHP-HTTP-CurlClient', 'Buzz']
+        http-client: ['Guzzle-7', 'Guzzle-7-Adapter', 'Symfony-HttpClient', 'PHP-HTTP-CurlClient', 'Kriswallsmith-Buzz']
         exclude:
           - php-version: '7.4'
             http-client: 'Symfony-HttpClient'
@@ -116,35 +116,14 @@ jobs:
           sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/curl-client": "^2.3.2",/' composer.json
           sed -i 's/"http-interop\/http-factory-guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"nyholm\/psr7": "^1.8.1",/' composer.json
 
-#      - name: Switch to Buzz
-#        if: matrix.http-client == 'Buzz'
-#        run: |
+      - name: Switch to Kriswallsmith Buzz
+        if: matrix.http-client == 'Kriswallsmith-Buzz'
+        run: |
+          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"kriswallsmith\/buzz": "^1.2.1",/' composer.json
+          sed -i 's/"http-interop\/http-factory-guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"nyholm\/psr7": "^1.8.1",/' composer.json
 
       - name: Install dependencies
         uses: ramsey/composer-install@v3
-
-#      - name: Run test suite - default HTTP client (Guzzle 7)
-#        run: |
-#          sh scripts/tests.sh --coverage-clover coverage-guzzle7.xml
-#          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
-
-#      - name: Run test suite - php-http/guzzle7-adapter
-#        run: |
-#          composer require --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
-#          sh scripts/tests.sh --coverage-clover coverage-guzzle7-adapter.xml
-#          composer remove --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
-
-#      - name: Run test suite - symfony/http-client
-#        run: |
-#          composer require --dev symfony/http-client nyholm/psr7
-#          sh scripts/tests.sh --coverage-clover coverage-symfony-http-client.xml
-#          composer remove --dev symfony/http-client nyholm/psr7
-
-#      - name: Run test suite - php-http/curl-client
-#        run: |
-#          composer require --dev php-http/curl-client nyholm/psr7
-#          sh scripts/tests.sh --coverage-clover coverage-nyholm-psr7.xml
-#          composer remove --dev php-http/curl-client nyholm/psr7
 
 #      - name: Run test suite - kriswallsmith/buzz
 #        run: |
@@ -175,9 +154,11 @@ jobs:
         env:
           MEILI_MASTER_KEY: masterKey
           MEILI_NO_ANALYTICS: true
+
     name: integration-tests (PHP 7.4 & Guzzle 6)
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
