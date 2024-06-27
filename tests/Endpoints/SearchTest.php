@@ -865,15 +865,10 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search(null, [
             'distinct' => 'genre',
+            'filter' => ['genre = fantasy'],
         ])->toArray();
 
-        $genresSeen = [];
         self::assertArrayHasKey('title', $response['hits'][0]);
-
-        foreach ($response['hits'] as $_ => $hit) {
-            $genre = $hit['genre'];
-            self::assertFalse(isset($genresSeen[$genre]));
-            $genresSeen[$genre] = true;
-        }
+        self::assertCount(1, $response['hits']);
     }
 }
