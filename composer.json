@@ -53,10 +53,10 @@
     },
     "scripts": {
         "lint": [
-            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no --dry-run --diff"
+            "./vendor/bin/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no --dry-run --diff"
         ],
         "lint:fix": [
-            "./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
+            "./vendor/bin/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
         ],
         "phpstan": "./vendor/bin/phpstan",
         "test": ["sh scripts/tests.sh"]
