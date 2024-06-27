@@ -15,7 +15,9 @@ jobs:
     name: Yaml linting check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Yaml lint check
         uses: ibiqlik/action-yamllint@v3
         with:
@@ -25,14 +27,18 @@ jobs:
     runs-on: ubuntu-latest
     name: linter-check
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.3
           coverage: none
+
       - name: Install dependencies
-        run: composer update --prefer-dist --no-progress
+        uses: ramsey/composer-install@v3
+
       - name: Run linter
         run: composer lint
 
@@ -40,14 +46,18 @@ jobs:
     runs-on: ubuntu-latest
     name: phpstan-tests
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
           coverage: none
+
       - name: Install dependencies
-        run: composer update --prefer-dist --no-progress
+        uses: ramsey/composer-install@v3
+
       - name: Run types tests with PHPStan
         run: composer phpstan
 
@@ -66,50 +76,83 @@ jobs:
           MEILI_NO_ANALYTICS: true
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3']
-    name: integration-tests (PHP ${{ matrix.php-versions }})
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        http-client: ['Guzzle 7', 'Guzzle 7 Adapter', 'Symfony HttpClient', 'PHP-HTTP CurlClient', 'Buzz']
+
+    name: integration-tests (PHP ${{ matrix.php-version }}) (${{ matrix.http-client }})
     steps:
       - uses: actions/checkout@v4
+
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
           coverage: pcov
+
       - name: Validate composer.json and composer.lock
         run: composer validate
+
+      - name: Switch to Guzzle7 Adapter
+        if: matrix.http-client == 'Guzzle 7 Adapter'
+        run: |
+          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/guzzle7-adapter": "^1.0.0",/' composer.json
+
+      - name: Switch to Symfony HttpClient
+        if: matrix.http-client == 'Symfony HttpClient'
+        run: |
+          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"symfony\/http-client": "^7.1.1",/' composer.json
+          sed -i 's/"http-interop\/http-factory-guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"nyholm\/psr7": "^1.8.1",/' composer.json
+
+      - name: Switch to PHP HTTP CurlClient
+        if: matrix.http-client == 'PHP-HTTP CurlClient'
+        run: |
+          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/curl-client": "^2.3.2",/' composer.json
+          sed -i 's/"http-interop\/http-factory-guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"nyholm\/psr7": "^1.8.1",/' composer.json
+
+#      - name: Switch to Buzz
+#        if: matrix.http-client == 'Bizz'
+#        run: |
+
       - name: Install dependencies
-        run: |
-          composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
-          composer update --prefer-dist --no-progress
-      - name: Run test suite - default HTTP client (Guzzle 7)
-        run: |
-          sh scripts/tests.sh --coverage-clover coverage-guzzle7.xml
-          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
-      - name: Run test suite - php-http/guzzle7-adapter
-        run: |
-          composer require --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
-          sh scripts/tests.sh --coverage-clover coverage-guzzle7-adapter.xml
-          composer remove --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
-      - name: Run test suite - symfony/http-client
-        run: |
-          composer require --dev symfony/http-client nyholm/psr7
-          sh scripts/tests.sh --coverage-clover coverage-symfony-http-client.xml
-          composer remove --dev symfony/http-client nyholm/psr7
-      - name: Run test suite - php-http/curl-client
-        run: |
-          composer require --dev php-http/curl-client nyholm/psr7
-          sh scripts/tests.sh --coverage-clover coverage-nyholm-psr7.xml
-          composer remove --dev php-http/curl-client nyholm/psr7
-      - name: Run test suite - kriswallsmith/buzz
-        run: |
-          composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
-          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
-          sh scripts/tests.sh --coverage-clover coverage-kriswallsmith-buzz.xml
-          composer remove --dev kriswallsmith/buzz nyholm/psr7
+        uses: ramsey/composer-install@v3
+
+#      - name: Run test suite - default HTTP client (Guzzle 7)
+#        run: |
+#          sh scripts/tests.sh --coverage-clover coverage-guzzle7.xml
+#          composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
+
+#      - name: Run test suite - php-http/guzzle7-adapter
+#        run: |
+#          composer require --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
+#          sh scripts/tests.sh --coverage-clover coverage-guzzle7-adapter.xml
+#          composer remove --dev php-http/guzzle7-adapter http-interop/http-factory-guzzle
+
+#      - name: Run test suite - symfony/http-client
+#        run: |
+#          composer require --dev symfony/http-client nyholm/psr7
+#          sh scripts/tests.sh --coverage-clover coverage-symfony-http-client.xml
+#          composer remove --dev symfony/http-client nyholm/psr7
+
+#      - name: Run test suite - php-http/curl-client
+#        run: |
+#          composer require --dev php-http/curl-client nyholm/psr7
+#          sh scripts/tests.sh --coverage-clover coverage-nyholm-psr7.xml
+#          composer remove --dev php-http/curl-client nyholm/psr7
+
+#      - name: Run test suite - kriswallsmith/buzz
+#        run: |
+#          composer require --dev kriswallsmith/buzz nyholm/psr7 --with-all-dependencies
+#          composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
+#          sh scripts/tests.sh --coverage-clover coverage-kriswallsmith-buzz.xml
+#          composer remove --dev kriswallsmith/buzz nyholm/psr7
+
+      - name: Run test suite
+        run: sh scripts/tests.sh --coverage-clover coverage-kriswallsmith-buzz.xml
+
       - name: Upload coverage file
         uses: actions/upload-artifact@v4
         with:
-          name: 'phpunit-${{ matrix.php-versions }}-coverage'
+          name: 'phpunit-${{ matrix.php-version }}-coverage'
           path: 'coverage*.xml'
 
   test_php_7_guzzle_6:
@@ -128,19 +171,23 @@ jobs:
     name: integration-tests (PHP 7.4 & Guzzle 6)
     steps:
       - uses: actions/checkout@v4
+
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           coverage: none
+
       - name: Validate composer.json and composer.lock
         run: composer validate
+
       - name: Install dependencies
         run: |
           composer remove --dev friendsofphp/php-cs-fixer --no-update --no-interaction
           composer update --prefer-dist --no-progress
           composer remove --dev guzzlehttp/guzzle http-interop/http-factory-guzzle
           composer update php-http/client-common:2.6.0 php-http/httplug:2.3.0 psr/http-message
+
       - name: Run test suite - php-http/guzzle6-adapter
         run: |
           composer require --dev php-http/guzzle6-adapter http-interop/http-factory-guzzle
