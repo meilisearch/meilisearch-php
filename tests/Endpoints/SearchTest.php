@@ -694,14 +694,22 @@ final class SearchTest extends TestCase
         $http->patch('/experimental-features', ['vectorStore' => true]);
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateEmbedders(['default' => ['source' => 'userProvided', 'dimensions' => 1]]);
+        $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
+        $promise = $index->updateDocuments(self::VECTOR_MOVIES);
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
-        $response = $index->search('', ['vector' => [1], 'hybrid' => ['semanticRatio' => 1.0]]);
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0]]);
 
-        self::assertSame(0, $response->getSemanticHitCount());
-        self::assertEmpty($response->getHits());
+        self::assertSame(5, $response->getSemanticHitCount());
+        self::assertArrayNotHasKey('_vectors', $response->getHit(0));
+
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0], 'retrieveVectors' => true]);
+
+        self::assertSame(5, $response->getSemanticHitCount());
+        self::assertArrayHasKey('_vectors', $response->getHit(0));
     }
 
     public function testShowRankingScoreDetails(): void
@@ -761,6 +769,18 @@ final class SearchTest extends TestCase
         $response = $this->index->search('the', ['showRankingScore' => true]);
 
         self::assertArrayHasKey('_rankingScore', $response->getHits()[0]);
+    }
+
+    public function testSearchWithRankingScoreThreshold(): void
+    {
+        $response = $this->index->search('the', ['showRankingScore' => true, 'rankingScoreThreshold' => 0.9]);
+
+        self::assertArrayHasKey('_rankingScore', $response->getHits()[0]);
+        self::assertSame(3, $response->getHitsCount());
+
+        $response = $this->index->search('the', ['showRankingScore' => true, 'rankingScoreThreshold' => 0.99]);
+
+        self::assertSame(0, $response->getHitsCount());
     }
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void
@@ -841,5 +861,22 @@ final class SearchTest extends TestCase
         );
 
         self::assertSame(['info.reviewNb' => ['min' => 50.0, 'max' => 1000.0]], $response->getFacetStats());
+    }
+
+    public function testSearchWithDistinctAttribute(): void
+    {
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
+        $this->index->updateFilterableAttributes(['genre']);
+
+        $promise = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->waitForTask($promise['taskUid']);
+
+        $response = $this->index->search(null, [
+            'distinct' => 'genre',
+            'filter' => ['genre = fantasy'],
+        ])->toArray();
+
+        self::assertArrayHasKey('title', $response['hits'][0]);
+        self::assertCount(1, $response['hits']);
     }
 }
