@@ -11,6 +11,7 @@ use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Exceptions\JsonEncodingException;
+use Meilisearch\Http\Client;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
@@ -622,6 +623,28 @@ final class DocumentsTest extends TestCase
             implode(',', $fields),
             $queryFields
         );
+    }
+
+    public function testGetDocumentsWithVector(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['vectorStore' => true]);
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+
+        $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
+        $promise = $index->updateDocuments(self::VECTOR_MOVIES);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocuments(new DocumentsQuery());
+        self::assertArrayNotHasKey('_vectors', $response->getResults()[0]);
+        $query = (new DocumentsQuery())->setRetrieveVectors(true);
+        $response = $index->getDocuments($query);
+        self::assertArrayHasKey('_vectors', $response->getResults()[0]);
+
+        self::assertCount(5, $response);
     }
 
     public function testGetDocumentsMessageHintException(): void

@@ -10,6 +10,7 @@ use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
+use Meilisearch\Contracts\SimilarDocumentsQuery;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Endpoints\Delegates\HandlesDocuments;
@@ -18,6 +19,7 @@ use Meilisearch\Endpoints\Delegates\HandlesTasks;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Search\FacetSearchResult;
 use Meilisearch\Search\SearchResult;
+use Meilisearch\Search\SimilarDocumentsSearchResult;
 
 class Indexes extends Endpoint
 {
@@ -211,6 +213,13 @@ class Indexes extends Endpoint
         }
 
         return $result;
+    }
+
+    public function searchSimilarDocuments(SimilarDocumentsQuery $parameters): SimilarDocumentsSearchResult
+    {
+        $result = $this->http->post(self::PATH.'/'.$this->uid.'/similar', $parameters->toArray());
+
+        return new SimilarDocumentsSearchResult($result);
     }
 
     // Facet Search

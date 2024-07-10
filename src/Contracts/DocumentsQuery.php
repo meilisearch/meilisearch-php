@@ -10,6 +10,7 @@ class DocumentsQuery
     private int $limit;
     private array $fields;
     private array $filter;
+    private ?bool $retrieveVectors = null;
 
     public function setOffset(int $offset): DocumentsQuery
     {
@@ -42,6 +43,16 @@ class DocumentsQuery
     public function setFilter(array $filter): DocumentsQuery
     {
         $this->filter = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @param bool|null $retrieveVectors boolean value to show _vector details
+     */
+    public function setRetrieveVectors(?bool $retrieveVectors): DocumentsQuery
+    {
+        $this->retrieveVectors = $retrieveVectors;
 
         return $this;
     }
@@ -84,6 +95,7 @@ class DocumentsQuery
             'limit' => $this->limit ?? null,
             'filter' => $this->filter ?? null,
             'fields' => $this->fields(),
-        ], function ($item) { return null != $item || is_numeric($item); });
+            'retrieveVectors' => (null !== $this->retrieveVectors ? ($this->retrieveVectors ? 'true' : 'false') : null),
+        ], function ($item) { return null !== $item; });
     }
 }
