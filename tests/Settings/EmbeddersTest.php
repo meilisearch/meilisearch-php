@@ -78,7 +78,7 @@ final class EmbeddersTest extends TestCase
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($promise['taskUid'], 10000);
 
         $embedders = $index->getEmbedders();
 
