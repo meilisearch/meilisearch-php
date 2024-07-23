@@ -176,7 +176,7 @@ class Client implements Http
             return null;
         }
 
-        if (!\in_array('application/json', $response->getHeader('content-type'), true)) {
+        if (!$this->isJSONResponse($response->getHeader('content-type'))) {
             throw new InvalidResponseBodyException($response, $response->getBody()->getContents());
         }
 
@@ -187,5 +187,21 @@ class Client implements Http
         }
 
         return $this->json->unserialize($response->getBody()->getContents());
+    }
+
+    /**
+     * Checks if any of the header values indicate a JSON response.
+     *
+     * @param array $headerValues the array of header values to check
+     *
+     * @return bool true if any header value contains 'application/json', otherwise false
+     */
+    private function isJSONResponse(array $headerValues)
+    {
+        $filteredHeaders = array_filter($headerValues, function ($headerValue) {
+            return preg_match('/\bapplication\/json\b/', $headerValue);
+        });
+
+        return \count($filteredHeaders) > 0;
     }
 }
