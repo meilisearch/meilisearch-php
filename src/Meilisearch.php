@@ -10,6 +10,6 @@ class Meilisearch
 
     public static function qualifiedVersion()
     {
-        return sprintf('Meilisearch PHP (v%s)', self::VERSION);
+        return \sprintf('Meilisearch PHP (v%s)', self::VERSION);
     }
 }

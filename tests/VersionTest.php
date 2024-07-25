@@ -10,7 +10,7 @@ class VersionTest extends TestCase
 {
     public function testQualifiedVersion(): void
     {
-        $qualifiedVersion = sprintf('Meilisearch PHP (v%s)', Meilisearch::VERSION);
+        $qualifiedVersion = \sprintf('Meilisearch PHP (v%s)', Meilisearch::VERSION);
 
         self::assertSame(Meilisearch::qualifiedVersion(), $qualifiedVersion);
     }
