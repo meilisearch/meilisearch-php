@@ -198,8 +198,8 @@ class Client implements Http
      */
     private function isJSONResponse(array $headerValues)
     {
-        $filteredHeaders = array_filter($headerValues, function ($headerValue) {
-            return preg_match('/\bapplication\/json\b/', $headerValue);
+        $filteredHeaders = array_filter($headerValues, function (string $headerValue) {
+            return strpos($headerValue, 'application/json') !== false;
         });
 
         return \count($filteredHeaders) > 0;
