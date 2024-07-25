@@ -206,6 +206,14 @@ class ClientTest extends TestCase
         $client->get('/');
     }
 
+    public function testClientHasCustomJSONContentType(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}', 'application/json; charset=utf-8');
+        $client = new Client('http://localhost:7070', null, $httpClient);
+
+        $client->get('/');
+    }
+
     public function testClientHasDefaultUserAgent(): void
     {
         $httpClient = $this->createHttpClientMock(200, '{}');

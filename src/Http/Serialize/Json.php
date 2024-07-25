@@ -17,7 +17,7 @@ class Json implements SerializerInterface
         try {
             $encoded = json_encode($data, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new JsonEncodingException(sprintf(self::JSON_ENCODE_ERROR_MESSAGE, $e->getMessage()), $e->getCode(), $e);
+            throw new JsonEncodingException(\sprintf(self::JSON_ENCODE_ERROR_MESSAGE, $e->getMessage()), $e->getCode(), $e);
         }
 
         return $encoded;
@@ -28,7 +28,7 @@ class Json implements SerializerInterface
         try {
             $decoded = json_decode($string, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new JsonDecodingException(sprintf(self::JSON_DECODE_ERROR_MESSAGE, $e->getMessage()), $e->getCode(), $e);
+            throw new JsonDecodingException(\sprintf(self::JSON_DECODE_ERROR_MESSAGE, $e->getMessage()), $e->getCode(), $e);
         }
 
         return $decoded;

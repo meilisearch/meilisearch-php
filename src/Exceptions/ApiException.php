@@ -90,6 +90,6 @@ class ApiException extends \Exception implements ExceptionInterface
 
     public static function rethrowWithHint(\Exception $e, string $methodName)
     {
-        return new \Exception(sprintf(self::HINT_MESSAGE, $methodName), 0, $e);
+        return new \Exception(\sprintf(self::HINT_MESSAGE, $methodName), 0, $e);
     }
 }
