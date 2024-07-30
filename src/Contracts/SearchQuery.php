@@ -10,6 +10,7 @@ class SearchQuery
 
     private string $q;
     private array $filter;
+    private array $locales;
     private array $attributesToRetrieve;
     private array $attributesToCrop;
     private ?int $cropLength;
@@ -42,6 +43,13 @@ class SearchQuery
     public function setFilter(array $filter): SearchQuery
     {
         $this->filter = $filter;
+
+        return $this;
+    }
+
+    public function setLocales(array $locales): SearchQuery
+    {
+        $this->locales = $locales;
 
         return $this;
     }
@@ -230,6 +238,7 @@ class SearchQuery
             'indexUid' => $this->indexUid ?? null,
             'q' => $this->q ?? null,
             'filter' => $this->filter ?? null,
+            'locales' => $this->locales ?? null,
             'attributesToRetrieve' => $this->attributesToRetrieve ?? null,
             'attributesToCrop' => $this->attributesToCrop ?? null,
             'cropLength' => $this->cropLength ?? null,

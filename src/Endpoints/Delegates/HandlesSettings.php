@@ -102,6 +102,29 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
     }
 
+    // Settings - Localized attributes
+
+    /**
+     * @return array{ locales: list<non-empty-string>, attributesPattern: string }
+     */
+    public function getLocalizedAttributes(): ?array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/localized-attributes');
+    }
+
+    /**
+     * @param array{ locales: list<non-empty-string>, attributesPattern: string } $localizedAttributes
+     */
+    public function updateLocalizedAttributes(array $localizedAttributes): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/localized-attributes', $localizedAttributes);
+    }
+
+    public function resetLocalizedAttributes(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/localized-attributes');
+    }
+
     // Settings - Faceting
 
     /**
