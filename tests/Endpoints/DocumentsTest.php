@@ -289,14 +289,14 @@ final class DocumentsTest extends TestCase
         $documentPromise = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($documentPromise['taskUid']);
 
-        $function = "
+        $function = '
             if doc.id % context.modulo == 0 {
-                doc.title = `kefir would read \${doc.title}`;
+                doc.title = `kefir would read ${doc.title}`;
             };
-            doc.remove(\"comment\");
-            doc.remove(\"genre\");
-        ";
-        $documentPromise = $index->updateDocumentsByFunction($function, ["context" => ["modulo" => 3]]);
+            doc.remove("comment");
+            doc.remove("genre");
+        ';
+        $documentPromise = $index->updateDocumentsByFunction($function, ['context' => ['modulo' => 3]]);
         $index->waitForTask($documentPromise['taskUid']);
 
         $documents = $index->getDocuments()->getResults();

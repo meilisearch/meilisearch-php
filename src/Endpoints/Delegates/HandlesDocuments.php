@@ -151,7 +151,7 @@ trait HandlesDocuments
      */
     public function updateDocumentsByFunction(string $function, ?array $options)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', ['function' => $function, ... $options]);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', ['function' => $function, ...$options]);
     }
 
     public function deleteAllDocuments(): array
