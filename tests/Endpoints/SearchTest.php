@@ -883,7 +883,8 @@ final class SearchTest extends TestCase
     public function testSearchWithLocales(): void
     {
         $this->index = $this->createEmptyIndex($this->safeIndexName());
-        $promise = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->updateDocuments(self::DOCUMENTS);
+        $promise = $this->index->updateLocalizedAttributes([['attributePatterns' => ['title', 'comment'], 'locales' => ['fra', 'eng']]]);
         $this->index->waitForTask($promise['taskUid']);
 
         $response = $this->index->search('french', [
