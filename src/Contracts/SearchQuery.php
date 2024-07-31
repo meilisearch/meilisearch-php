@@ -18,8 +18,8 @@ class FederationOptions
     public function toArray(): array
     {
         return array_filter([
-            'weight' => $this->weight ?? null,
-        ], function ($item) { return null !== $item; });
+            'weight' => $this->weight,
+        ], static function ($item) { return null !== $item; });
     }
 }
 
