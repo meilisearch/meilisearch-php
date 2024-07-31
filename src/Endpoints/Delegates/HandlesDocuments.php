@@ -147,7 +147,7 @@ trait HandlesDocuments
      * More info about experimental features in general: https://www.meilisearch.com/docs/reference/api/experimental-features
      *
      * @param non-empty-string $function
-     * @param array{filter: non-empty-string|list<non-empty-string>, context: array<non-empty-string, mixed>}|null $options
+     * @param array{filter: non-empty-string|list<non-empty-string>|null, context: array<non-empty-string, mixed>}|null $options
      */
     public function updateDocumentsByFunction(string $function, ?array $options)
     {
