@@ -282,7 +282,7 @@ class SearchQuery
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
-            'federationOptions' => $this->federationOptions ? $this->federationOptions->toArray() : null,
+            'federationOptions' => $this->federationOptions !== null ? $this->federationOptions->toArray() : null,
         ], function ($item) { return null !== $item; });
     }
 }
