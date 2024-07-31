@@ -281,6 +281,59 @@ final class DocumentsTest extends TestCase
         self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
+    public function testUpdateDocumentsByFunction(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['editDocumentsByFunction' => true]);
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $documentPromise = $index->addDocuments(self::DOCUMENTS);
+        $index->waitForTask($documentPromise['taskUid']);
+
+        $function = "
+            if doc.id % context.modulo == 0 {
+                doc.title = `kefir would read \${doc.title}`;
+            };
+            doc.remove(\"comment\");
+            doc.remove(\"genre\");
+        ";
+        $documentPromise = $index->updateDocumentsByFunction($function, ["context" => ["modulo" => 3]]);
+        $index->waitForTask($documentPromise['taskUid']);
+
+        $documents = $index->getDocuments()->getResults();
+
+        $replacements = [
+            [
+                'id' => 123,
+                'title' => 'kefir would read Pride and Prejudice',
+            ],
+            [
+                'id' => 456,
+                'title' => 'kefir would read Le Petit Prince',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Le Rouge et le Noir',
+            ],
+            [
+                'id' => 1,
+                'title' => 'Alice In Wonderland',
+            ],
+            [
+                'id' => 1344,
+                'title' => 'kefir would read The Hobbit',
+            ],
+            [
+                'id' => 4,
+                'title' => 'Harry Potter and the Half-Blood Prince',
+            ],
+            [
+                'id' => 42,
+                'title' => 'kefir would read The Hitchhiker\'s Guide to the Galaxy',
+            ],
+        ];
+        self::assertSame($replacements, $documents);
+    }
+
     public function testAddDocumentsCsvInBatches(): void
     {
         $index = $this->client->index('documentCsv');
