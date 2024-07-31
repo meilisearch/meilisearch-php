@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Contracts\FederationOptions;
+use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Indexes;
 use Tests\TestCase;
 
@@ -85,9 +85,9 @@ final class MultiSearchTest extends TestCase
             (new SearchQuery())->setIndexUid($this->songsIndex->getUid())
                 ->setQuery('be')
                 ->setFilter(['duration-float > 3'])
-                # By setting the weight to 0.9 this query should appear second
+                // By setting the weight to 0.9 this query should appear second
                 ->setFederationOptions((new FederationOptions())->setWeight(0.9)),
-            ],
+        ],
             ['federation' => ['limit' => 2]]
         );
 
@@ -115,7 +115,6 @@ final class MultiSearchTest extends TestCase
         self::assertArrayHasKey('weightedRankingScore', $response['hits'][1]['_federation']);
         self::assertStringStartsWith('songs', $response['hits'][1]['_federation']['indexUid']);
         self::assertSame(1, $response['hits'][1]['_federation']['queriesPosition']);
-
     }
 
     public function testSupportedQueryParams(): void

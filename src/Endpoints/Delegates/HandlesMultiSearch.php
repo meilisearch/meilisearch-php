@@ -12,7 +12,6 @@ trait HandlesMultiSearch
 
     /**
      * @param list<\Meilisearch\Contracts\SearchQuery> $queries
-     * @param array $multiSearchParams
      */
     public function multiSearch(array $queries = [], array $multiSearchParams = [])
     {
@@ -23,6 +22,7 @@ trait HandlesMultiSearch
         }
 
         $payload = array_merge(['queries' => $body], $multiSearchParams);
+
         return $this->http->post('/multi-search', $payload);
     }
 }
