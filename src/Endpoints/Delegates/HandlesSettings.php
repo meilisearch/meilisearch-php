@@ -105,7 +105,7 @@ trait HandlesSettings
     // Settings - Localized attributes
 
     /**
-     * @return array{ locales: list<non-empty-string>, attributesPattern: string }
+     * @return array{locales: list<non-empty-string>, attributePatterns: string}
      */
     public function getLocalizedAttributes(): ?array
     {
@@ -113,7 +113,7 @@ trait HandlesSettings
     }
 
     /**
-     * @param array{ locales: list<non-empty-string>, attributesPattern: string } $localizedAttributes
+     * @param array{locales: list<non-empty-string>, attributePatterns: string} $localizedAttributes
      */
     public function updateLocalizedAttributes(array $localizedAttributes): array
     {

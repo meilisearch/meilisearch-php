@@ -47,6 +47,9 @@ class SearchQuery
         return $this;
     }
 
+    /**
+     * @param list<non-empty-string> $locales
+     */
     public function setLocales(array $locales): SearchQuery
     {
         $this->locales = $locales;
