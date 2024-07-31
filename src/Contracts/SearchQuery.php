@@ -4,6 +4,25 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+class FederationOptions
+{
+    private ?float $weight = null;
+
+    public function setWeight(float $weight): FederationOptions
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        return array_filter([
+            'weight' => $this->weight ?? null,
+        ], function ($item) { return null !== $item; });
+    }
+}
+
 class SearchQuery
 {
     private string $indexUid;
@@ -31,6 +50,7 @@ class SearchQuery
     private ?bool $showRankingScoreDetails = null;
     private ?float $rankingScoreThreshold = null;
     private ?string $distinct = null;
+    private ?FederationOptions $federationOptions = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -199,6 +219,17 @@ class SearchQuery
     }
 
     /**
+     * This option is only available while doing a federated search.
+     * If used in another context an error will be returned by Meilisearch.
+     */
+    public function setFederationOptions(FederationOptions $federationOptions): SearchQuery
+    {
+        $this->federationOptions = $federationOptions;
+
+        return $this;
+    }
+
+    /**
      * This is an EXPERIMENTAL feature, which may break without a major version.
      * It's available from Meilisearch v1.3.
      * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
@@ -251,6 +282,7 @@ class SearchQuery
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
+            'federationOptions' => $this->federationOptions ? $this->federationOptions->toArray() : null,
         ], function ($item) { return null !== $item; });
     }
 }
