@@ -22,6 +22,10 @@ trait HandlesMultiSearch
             $body[] = $query->toArray();
         }
 
-        return $this->http->post('/multi-search', ['queries' => $body, 'federation' => $federation->toArray()]);
+        $payload = ['queries' => $body];
+        if ($federation !== null) {
+            $payload['federation'] = $federation->toArray();
+        }
+        return $this->http->post('/multi-search', $payload);
     }
 }
