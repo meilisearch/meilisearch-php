@@ -879,4 +879,18 @@ final class SearchTest extends TestCase
         self::assertArrayHasKey('title', $response['hits'][0]);
         self::assertCount(1, $response['hits']);
     }
+
+    public function testSearchWithLocales(): void
+    {
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
+        $this->index->updateDocuments(self::DOCUMENTS);
+        $promise = $this->index->updateLocalizedAttributes([['attributePatterns' => ['title', 'comment'], 'locales' => ['fra', 'eng']]]);
+        $this->index->waitForTask($promise['taskUid']);
+
+        $response = $this->index->search('french', [
+            'locales' => ['fra', 'eng'],
+        ])->toArray();
+
+        self::assertCount(2, $response['hits']);
+    }
 }
