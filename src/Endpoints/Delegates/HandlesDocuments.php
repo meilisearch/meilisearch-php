@@ -139,6 +139,21 @@ trait HandlesDocuments
         return $promises;
     }
 
+    /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     * It's available after Meilisearch v1.10.
+     *
+     * More info about the feature: https://github.com/orgs/meilisearch/discussions/762
+     * More info about experimental features in general: https://www.meilisearch.com/docs/reference/api/experimental-features
+     *
+     * @param non-empty-string                                                                                       $function
+     * @param array{filter?: non-empty-string|list<non-empty-string>|null, context?: array<non-empty-string, mixed>} $options
+     */
+    public function updateDocumentsByFunction(string $function, array $options = [])
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', array_merge(['function' => $function], $options));
+    }
+
     public function deleteAllDocuments(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/documents');
