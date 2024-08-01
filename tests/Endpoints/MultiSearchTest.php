@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\FederationOptions;
+use Meilisearch\Contracts\MultiSearchFederation;
 use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Indexes;
 use Tests\TestCase;
@@ -88,7 +89,7 @@ final class MultiSearchTest extends TestCase
                 // By setting the weight to 0.9 this query should appear second
                 ->setFederationOptions((new FederationOptions())->setWeight(0.9)),
         ],
-            ['federation' => ['limit' => 2]]
+            (new MultiSearchFederation())->setLimit(2)
         );
 
         self::assertArrayHasKey('hits', $response);
