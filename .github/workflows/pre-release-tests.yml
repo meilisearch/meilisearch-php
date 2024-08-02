@@ -31,14 +31,22 @@ jobs:
     services:
       meilisearch:
         image: getmeili/meilisearch:${{ needs.meilisearch-version.outputs.version }}
-        env:
-          MEILI_MASTER_KEY: 'masterKey'
-          MEILI_NO_ANALYTICS: 'true'
         ports:
           - '7700:7700'
+        env:
+          MEILI_MASTER_KEY: masterKey
+          MEILI_NO_ANALYTICS: true
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        http-client: ['Guzzle-7', 'Guzzle-7-Adapter', 'Symfony-HttpClient', 'PHP-HTTP-CurlClient', 'Kriswallsmith-Buzz']
+        exclude:
+          - php-version: '7.4'
+            http-client: 'Symfony-HttpClient'
+          - php-version: '8.0'
+            http-client: 'Symfony-HttpClient'
+          - php-version: '8.1'
+            http-client: 'Symfony-HttpClient'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
