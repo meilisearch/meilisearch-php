@@ -38,7 +38,7 @@ final class EmbeddersTest extends TestCase
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($promise['taskUid'], 10000);
 
         $embedders = $index->getEmbedders();
         $embedderConfig['apiKey'] = '<yoXXXXX...';
@@ -58,7 +58,7 @@ final class EmbeddersTest extends TestCase
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($promise['taskUid'], 10000);
 
         $embedders = $index->getEmbedders();
 
@@ -95,11 +95,11 @@ final class EmbeddersTest extends TestCase
 
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($promise['taskUid'], 10000);
 
         $promise = $index->resetEmbedders();
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($promise['taskUid'], 10000);
 
         self::assertEmpty($index->getEmbedders());
     }
