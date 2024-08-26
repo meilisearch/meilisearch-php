@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use Meilisearch\Contracts\FederationOptions;
+use Meilisearch\Contracts\MultiSearchFederation;
 use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Indexes;
 use Tests\TestCase;
@@ -73,6 +75,47 @@ final class MultiSearchTest extends TestCase
         self::assertArrayHasKey('totalHits', $response['results'][1]);
         self::assertArrayHasKey('totalPages', $response['results'][1]);
         self::assertCount(1, $response['results'][1]['hits']);
+    }
+
+    public function testFederation(): void
+    {
+        $response = $this->client->multiSearch([
+            (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
+                ->setQuery('princ')
+                ->setSort(['author:desc']),
+            (new SearchQuery())->setIndexUid($this->songsIndex->getUid())
+                ->setQuery('be')
+                ->setFilter(['duration-float > 3'])
+                // By setting the weight to 0.9 this query should appear second
+                ->setFederationOptions((new FederationOptions())->setWeight(0.9)),
+        ],
+            (new MultiSearchFederation())->setLimit(2)
+        );
+
+        self::assertArrayHasKey('hits', $response);
+        self::assertArrayHasKey('processingTimeMs', $response);
+        self::assertArrayHasKey('limit', $response);
+        self::assertArrayHasKey('offset', $response);
+        self::assertArrayHasKey('estimatedTotalHits', $response);
+        self::assertCount(2, $response['hits']);
+        self::assertSame(2, $response['limit']);
+        self::assertSame(0, $response['offset']);
+
+        self::assertArrayHasKey('id', $response['hits'][0]);
+        self::assertArrayHasKey('_federation', $response['hits'][0]);
+        self::assertArrayHasKey('indexUid', $response['hits'][0]['_federation']);
+        self::assertArrayHasKey('queriesPosition', $response['hits'][0]['_federation']);
+        self::assertArrayHasKey('weightedRankingScore', $response['hits'][0]['_federation']);
+        self::assertStringStartsWith('books', $response['hits'][0]['_federation']['indexUid']);
+        self::assertSame(0, $response['hits'][0]['_federation']['queriesPosition']);
+
+        self::assertArrayHasKey('id', $response['hits'][1]);
+        self::assertArrayHasKey('_federation', $response['hits'][1]);
+        self::assertArrayHasKey('indexUid', $response['hits'][1]['_federation']);
+        self::assertArrayHasKey('queriesPosition', $response['hits'][1]['_federation']);
+        self::assertArrayHasKey('weightedRankingScore', $response['hits'][1]['_federation']);
+        self::assertStringStartsWith('songs', $response['hits'][1]['_federation']['indexUid']);
+        self::assertSame(1, $response['hits'][1]['_federation']['queriesPosition']);
     }
 
     public function testSupportedQueryParams(): void

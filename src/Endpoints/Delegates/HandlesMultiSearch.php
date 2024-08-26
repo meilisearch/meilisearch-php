@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\Http;
+use Meilisearch\Contracts\MultiSearchFederation;
+use Meilisearch\Contracts\SearchQuery;
 
 trait HandlesMultiSearch
 {
     protected Http $http;
 
     /**
-     * @param list<\Meilisearch\Contracts\SearchQuery> $queries
+     * @param list<SearchQuery> $queries
      */
-    public function multiSearch(array $queries = [])
+    public function multiSearch(array $queries = [], ?MultiSearchFederation $federation = null)
     {
         $body = [];
 
@@ -21,6 +23,11 @@ trait HandlesMultiSearch
             $body[] = $query->toArray();
         }
 
-        return $this->http->post('/multi-search', ['queries' => $body]);
+        $payload = ['queries' => $body];
+        if (null !== $federation) {
+            $payload['federation'] = $federation->toArray();
+        }
+
+        return $this->http->post('/multi-search', $payload);
     }
 }

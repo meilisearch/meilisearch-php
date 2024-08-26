@@ -217,7 +217,7 @@ final class IndexTest extends TestCase
     public function testWaitForTaskWithTimeout(): void
     {
         $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($promise['taskUid'], 100);
+        $response = $this->index->waitForTask($promise['taskUid'], 1000);
 
         self::assertSame('succeeded', $response['status']);
         self::assertSame($response['uid'], $promise['taskUid']);

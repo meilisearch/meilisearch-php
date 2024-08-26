@@ -10,6 +10,7 @@ class SearchQuery
 
     private string $q;
     private array $filter;
+    private array $locales;
     private array $attributesToRetrieve;
     private array $attributesToCrop;
     private ?int $cropLength;
@@ -31,6 +32,7 @@ class SearchQuery
     private ?bool $showRankingScoreDetails = null;
     private ?float $rankingScoreThreshold = null;
     private ?string $distinct = null;
+    private ?FederationOptions $federationOptions = null;
 
     public function setQuery(string $q): SearchQuery
     {
@@ -42,6 +44,16 @@ class SearchQuery
     public function setFilter(array $filter): SearchQuery
     {
         $this->filter = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @param list<non-empty-string> $locales
+     */
+    public function setLocales(array $locales): SearchQuery
+    {
+        $this->locales = $locales;
 
         return $this;
     }
@@ -199,6 +211,17 @@ class SearchQuery
     }
 
     /**
+     * This option is only available while doing a federated search.
+     * If used in another context an error will be returned by Meilisearch.
+     */
+    public function setFederationOptions(FederationOptions $federationOptions): SearchQuery
+    {
+        $this->federationOptions = $federationOptions;
+
+        return $this;
+    }
+
+    /**
      * This is an EXPERIMENTAL feature, which may break without a major version.
      * It's available from Meilisearch v1.3.
      * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
@@ -230,6 +253,7 @@ class SearchQuery
             'indexUid' => $this->indexUid ?? null,
             'q' => $this->q ?? null,
             'filter' => $this->filter ?? null,
+            'locales' => $this->locales ?? null,
             'attributesToRetrieve' => $this->attributesToRetrieve ?? null,
             'attributesToCrop' => $this->attributesToCrop ?? null,
             'cropLength' => $this->cropLength ?? null,
@@ -251,6 +275,7 @@ class SearchQuery
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
+            'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,
         ], function ($item) { return null !== $item; });
     }
 }
