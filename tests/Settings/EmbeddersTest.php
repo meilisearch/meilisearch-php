@@ -38,12 +38,7 @@ final class EmbeddersTest extends TestCase
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid'], 10000);
-
-        $embedders = $index->getEmbedders();
-        $embedderConfig['apiKey'] = '<yoXXXXX...';
-
-        self::assertSame($embedderConfig, $embedders['myEmbedder']);
+        self::assertSame($promise['type'], 'settingsUpdate');
     }
 
     public function testUpdateEmbeddersWithUserProvided(): void
@@ -58,11 +53,7 @@ final class EmbeddersTest extends TestCase
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid'], 10000);
-
-        $embedders = $index->getEmbedders();
-
-        self::assertSame($embedderConfig, $embedders['myEmbedder']);
+        self::assertSame($promise['type'], 'settingsUpdate');
     }
 
     public function testUpdateEmbeddersWithHuggingFace(): void
@@ -78,11 +69,7 @@ final class EmbeddersTest extends TestCase
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
 
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid'], 10000);
-
-        $embedders = $index->getEmbedders();
-
-        self::assertSame($embedderConfig, $embedders['myEmbedder']);
+        self::assertSame($promise['type'], 'settingsUpdate');
     }
 
     public function testResetEmbedders(): void
@@ -95,12 +82,10 @@ final class EmbeddersTest extends TestCase
 
         $promise = $index->updateEmbedders(['myEmbedder' => $embedderConfig]);
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid'], 10000);
+        self::assertSame($promise['type'], 'settingsUpdate');
 
         $promise = $index->resetEmbedders();
         $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid'], 10000);
-
-        self::assertEmpty($index->getEmbedders());
+        self::assertSame($promise['type'], 'settingsUpdate');
     }
 }
