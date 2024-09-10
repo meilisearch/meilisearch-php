@@ -27,7 +27,7 @@ class SearchQuery
     private ?int $hitsPerPage;
     private ?int $page;
     private ?array $vector;
-    private ?HybridSearchOptions $hybrid;
+    private ?HybridSearchOptions $hybrid = null;
     private ?array $attributesToSearchOn = null;
     private ?bool $showRankingScore = null;
     private ?bool $showRankingScoreDetails = null;
