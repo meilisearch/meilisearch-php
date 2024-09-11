@@ -153,7 +153,7 @@ abstract class TestCase extends BaseTestCase
     {
         $stream = $this->createMock(StreamInterface::class);
         $stream->expects(self::once())
-            ->method('getContents')
+            ->method('__toString')
             ->willReturn($content);
 
         $response = $this->createMock(ResponseInterface::class);
