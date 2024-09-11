@@ -242,10 +242,9 @@ class SearchQuery
      * This is an EXPERIMENTAL feature, which may break without a major version.
      *
      * Set hybrid search options
-     * [
-     * 'semanticRatio'=> 0.8,
-     * 'embedder' => 'manual',
-     * ];
+     * (new HybridSearchOptions())
+     *     ->setSemanticRatio(0.8)
+     *     ->setEmbedder('manual');
      */
     public function setHybrid(HybridSearchOptions $hybridOptions): SearchQuery
     {

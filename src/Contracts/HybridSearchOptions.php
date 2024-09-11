@@ -16,6 +16,9 @@ class HybridSearchOptions
         return $this;
     }
 
+    /**
+     * @param non-empty-string
+     */
     public function setEmbedder(string $embedder): HybridSearchOptions
     {
         $this->embedder = $embedder;
