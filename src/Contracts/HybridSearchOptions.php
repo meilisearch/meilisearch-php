@@ -7,6 +7,10 @@ namespace Meilisearch\Contracts;
 class HybridSearchOptions
 {
     private ?float $semanticRatio = null;
+
+    /**
+     * @var non-empty-string|null
+     */
     private ?string $embedder = null;
 
     public function setSemanticRatio(float $ratio): HybridSearchOptions
@@ -26,6 +30,12 @@ class HybridSearchOptions
         return $this;
     }
 
+    /**
+     * @return array{
+     *     semanticRatio?: float,
+     *     embedder?: non-empty-string
+     * }
+     */
     public function toArray(): array
     {
         return array_filter([
