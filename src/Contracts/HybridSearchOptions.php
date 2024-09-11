@@ -21,7 +21,7 @@ class HybridSearchOptions
     }
 
     /**
-     * @param non-empty-string
+     * @param non-empty-string $embedder
      */
     public function setEmbedder(string $embedder): HybridSearchOptions
     {
