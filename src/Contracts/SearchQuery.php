@@ -27,6 +27,7 @@ class SearchQuery
     private ?int $hitsPerPage;
     private ?int $page;
     private ?array $vector;
+    private ?HybridSearchOptions $hybrid = null;
     private ?array $attributesToSearchOn = null;
     private ?bool $showRankingScore = null;
     private ?bool $showRankingScoreDetails = null;
@@ -238,6 +239,21 @@ class SearchQuery
     }
 
     /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     *
+     * Set hybrid search options
+     * (new HybridSearchOptions())
+     *     ->setSemanticRatio(0.8)
+     *     ->setEmbedder('manual');
+     */
+    public function setHybrid(HybridSearchOptions $hybridOptions): SearchQuery
+    {
+        $this->hybrid = $hybridOptions;
+
+        return $this;
+    }
+
+    /**
      * @param list<non-empty-string> $attributesToSearchOn
      */
     public function setAttributesToSearchOn(array $attributesToSearchOn): SearchQuery
@@ -270,6 +286,7 @@ class SearchQuery
             'hitsPerPage' => $this->hitsPerPage ?? null,
             'page' => $this->page ?? null,
             'vector' => $this->vector ?? null,
+            'hybrid' => null !== $this->hybrid ? $this->hybrid->toArray() : null,
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
