@@ -322,7 +322,7 @@ class ClientTest extends TestCase
     {
         $stream = $this->createMock(StreamInterface::class);
         $stream->expects(self::once())
-            ->method('getContents')
+            ->method('__toString')
             ->willReturn($content);
 
         $response = $this->createMock(ResponseInterface::class);
