@@ -10,14 +10,42 @@ class SimilarDocumentsQuery
      * @var int|string
      */
     private $id;
+
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $offset = null;
+
+    /**
+     * @var positive-int|null
+     */
     private ?int $limit = null;
+
+    /**
+     * @var non-empty-string|null
+     */
     private ?string $embedder = null;
+
+    /**
+     * @var list<non-empty-string>|null
+     */
     private ?array $attributesToRetrieve = null;
+
     private ?bool $showRankingScore = null;
+
     private ?bool $showRankingScoreDetails = null;
+
     private ?bool $retrieveVectors = null;
+
+    /**
+     * @var array<int, array<int, string>|string>|null
+     */
     private ?array $filter = null;
+
+    /**
+     * @var int|float|null
+     */
+    private $rankingScoreThreshold;
 
     /**
      * @param int|string $id
@@ -28,7 +56,7 @@ class SimilarDocumentsQuery
     }
 
     /**
-     * @param non-negative-int $offset
+     * @param non-negative-int|null $offset
      */
     public function setOffset(?int $offset): SimilarDocumentsQuery
     {
@@ -38,7 +66,7 @@ class SimilarDocumentsQuery
     }
 
     /**
-     * @param positive-int $limit
+     * @param positive-int|null $limit
      */
     public function setLimit(?int $limit): SimilarDocumentsQuery
     {
@@ -108,7 +136,28 @@ class SimilarDocumentsQuery
     }
 
     /**
-     * @return array{id: int|string, offset: non-negative-int, limit: positive-int, filter: array<int, array<int, string>|string>, embedder: non-empty-string, attributesToRetrieve: list<non-empty-string>, showRankingScore: bool, showRankingScoreDetails: bool, retrieveVectors: bool} SimilarDocumentsQuery converted to an array with non null fields
+     * @param int|float|null $rankingScoreThreshold
+     */
+    public function setRankingScoreThreshold($rankingScoreThreshold): SimilarDocumentsQuery
+    {
+        $this->rankingScoreThreshold = $rankingScoreThreshold;
+
+        return $this;
+    }
+
+    /**
+     * @return array{
+     *     id: int|string,
+     *     offset?: non-negative-int,
+     *     limit?: positive-int,
+     *     filter?: array<int, array<int, string>|string>,
+     *     embedder?: non-empty-string,
+     *     attributesToRetrieve?: list<non-empty-string>,
+     *     showRankingScore?: bool,
+     *     showRankingScoreDetails?: bool,
+     *     retrieveVectors?: bool,
+     *     rankingScoreThreshold?: int|float
+     * }
      */
     public function toArray(): array
     {
@@ -122,7 +171,8 @@ class SimilarDocumentsQuery
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
             'retrieveVectors' => $this->retrieveVectors,
-        ], function ($item) {
+            'rankingScoreThreshold' => $this->rankingScoreThreshold,
+        ], static function ($item) {
             return null !== $item;
         });
     }
