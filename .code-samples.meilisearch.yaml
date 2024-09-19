@@ -748,12 +748,10 @@ multi_search_federated_1: |-
   $client->multiSearch([
       (new SearchQuery())
         ->setIndexUid('movies'))
-        ->setQuery('batman')
-        ->setLimit(5),
+        ->setQuery('batman'),
       (new SearchQuery())
         ->setIndexUid('comics')
-        ->setQuery('batman')
-        ->setLimit(5),
+        ->setQuery('batman'),
     ],
     (new MultiSearchFederation())
   );
