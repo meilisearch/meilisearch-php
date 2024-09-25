@@ -6,27 +6,58 @@ namespace Meilisearch\Contracts;
 
 class DocumentsQuery
 {
-    private int $offset;
-    private int $limit;
-    private array $fields;
-    private array $filter;
+    /**
+     * @var non-negative-int|null
+     */
+    private ?int $offset = null;
+
+    /**
+     * @var non-negative-int|null
+     */
+    private ?int $limit = null;
+
+    /**
+     * @var non-empty-list<string>|null
+     */
+    private ?array $fields = null;
+
+    /**
+     * @var list<non-empty-string|list<non-empty-string>>|null
+     */
+    private ?array $filter = null;
+
     private ?bool $retrieveVectors = null;
 
-    public function setOffset(int $offset): DocumentsQuery
+    /**
+     * @param non-negative-int $offset
+     *
+     * @return $this
+     */
+    public function setOffset(int $offset): self
     {
         $this->offset = $offset;
 
         return $this;
     }
 
-    public function setLimit(int $limit): DocumentsQuery
+    /**
+     * @param non-negative-int $limit
+     *
+     * @return $this
+     */
+    public function setLimit(int $limit): self
     {
         $this->limit = $limit;
 
         return $this;
     }
 
-    public function setFields(array $fields): DocumentsQuery
+    /**
+     * @param non-empty-list<string> $fields
+     *
+     * @return $this
+     */
+    public function setFields(array $fields): self
     {
         $this->fields = $fields;
 
@@ -38,9 +69,9 @@ class DocumentsQuery
      *
      * @param list<non-empty-string|list<non-empty-string>> $filter a filter expression written as an array of strings
      *
-     * @return DocumentsQuery the updated DocumentsQuery instance
+     * @return $this
      */
-    public function setFilter(array $filter): DocumentsQuery
+    public function setFilter(array $filter): self
     {
         $this->filter = $filter;
 
@@ -49,8 +80,10 @@ class DocumentsQuery
 
     /**
      * @param bool|null $retrieveVectors boolean value to show _vector details
+     *
+     * @return $this
      */
-    public function setRetrieveVectors(?bool $retrieveVectors): DocumentsQuery
+    public function setRetrieveVectors(?bool $retrieveVectors): self
     {
         $this->retrieveVectors = $retrieveVectors;
 
@@ -64,7 +97,27 @@ class DocumentsQuery
      */
     public function hasFilter(): bool
     {
-        return isset($this->filter);
+        return null !== $this->filter;
+    }
+
+    /**
+     * @return array{
+     *     offset?: non-negative-int,
+     *     limit?: non-negative-int,
+     *     fields?: non-empty-list<string>|non-empty-string,
+     *     filter?: list<non-empty-string|list<non-empty-string>>,
+     *     retrieveVectors?: 'true'|'false'
+     * }
+     */
+    public function toArray(): array
+    {
+        return array_filter([
+            'offset' => $this->offset,
+            'limit' => $this->limit,
+            'fields' => $this->getFields(),
+            'filter' => $this->filter,
+            'retrieveVectors' => (null !== $this->retrieveVectors ? ($this->retrieveVectors ? 'true' : 'false') : null),
+        ], static function ($item) { return null !== $item; });
     }
 
     /**
@@ -75,27 +128,16 @@ class DocumentsQuery
      *
      * @return array|string|null
      */
-    private function fields()
+    private function getFields()
     {
-        if (!isset($this->fields)) {
+        if (null === $this->fields) {
             return null;
         }
 
-        if ($this->hasFilter()) {
+        if (null !== $this->filter) {
             return $this->fields;
-        } else {
-            return implode(',', $this->fields);
         }
-    }
 
-    public function toArray(): array
-    {
-        return array_filter([
-            'offset' => $this->offset ?? null,
-            'limit' => $this->limit ?? null,
-            'filter' => $this->filter ?? null,
-            'fields' => $this->fields(),
-            'retrieveVectors' => (null !== $this->retrieveVectors ? ($this->retrieveVectors ? 'true' : 'false') : null),
-        ], function ($item) { return null !== $item; });
+        return implode(',', $this->fields);
     }
 }

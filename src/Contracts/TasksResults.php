@@ -7,19 +7,22 @@ namespace Meilisearch\Contracts;
 class TasksResults extends Data
 {
     /**
-     * @var int<0, max>
+     * @var non-negative-int
      */
     private int $next;
+
     /**
-     * @var int<0, max>
+     * @var non-negative-int
      */
     private int $limit;
+
     /**
-     * @var int<0, max>
+     * @var non-negative-int
      */
     private int $from;
+
     /**
-     * @var int<0, max>
+     * @var non-negative-int
      */
     private int $total;
 
@@ -41,21 +44,33 @@ class TasksResults extends Data
         return $this->data;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getNext(): int
     {
         return $this->next;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getLimit(): int
     {
         return $this->limit;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getFrom(): int
     {
         return $this->from;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getTotal(): int
     {
         return $this->total;

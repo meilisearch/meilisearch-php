@@ -61,6 +61,7 @@ trait HandlesDocuments
     public function addDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
         $promises = [];
+
         foreach (self::batch($documents, $batchSize) as $batch) {
             $promises[] = $this->addDocuments($batch, $primaryKey);
         }
@@ -82,6 +83,7 @@ trait HandlesDocuments
     public function addDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
         $promises = [];
+
         foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
             $promises[] = $this->addDocumentsNdjson($batch, $primaryKey);
         }
@@ -112,6 +114,7 @@ trait HandlesDocuments
     public function updateDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
         $promises = [];
+
         foreach (self::batch($documents, $batchSize) as $batch) {
             $promises[] = $this->updateDocuments($batch, $primaryKey);
         }
@@ -122,6 +125,7 @@ trait HandlesDocuments
     public function updateDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null)
     {
         $promises = [];
+
         foreach (self::batchCsvString($documents, $batchSize) as $batch) {
             $promises[] = $this->updateDocumentsCsv($batch, $primaryKey, $delimiter);
         }
@@ -132,6 +136,7 @@ trait HandlesDocuments
     public function updateDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
     {
         $promises = [];
+
         foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
             $promises[] = $this->updateDocumentsNdjson($batch, $primaryKey);
         }
@@ -194,10 +199,10 @@ trait HandlesDocuments
 
     private static function batchCsvString(string $documents, int $batchSize): \Generator
     {
-        $documents = preg_split("/\r\n|\n|\r/", trim($documents));
-        $csvHeader = $documents[0];
-        array_shift($documents);
-        $batches = array_chunk($documents, $batchSize);
+        $parsedDocuments = preg_split("/\r\n|\n|\r/", trim($documents));
+        $csvHeader = $parsedDocuments[0];
+        array_shift($parsedDocuments);
+        $batches = array_chunk($parsedDocuments, $batchSize);
 
         /** @var array<string> $batch */
         foreach ($batches as $batch) {
@@ -210,8 +215,8 @@ trait HandlesDocuments
 
     private static function batchNdjsonString(string $documents, int $batchSize): \Generator
     {
-        $documents = preg_split("/\r\n|\n|\r/", trim($documents));
-        $batches = array_chunk($documents, $batchSize);
+        $parsedDocuments = preg_split("/\r\n|\n|\r/", trim($documents));
+        $batches = array_chunk($parsedDocuments, $batchSize);
 
         /** @var array<string> $batch */
         foreach ($batches as $batch) {
@@ -224,6 +229,7 @@ trait HandlesDocuments
     private static function batch(array $documents, int $batchSize): \Generator
     {
         $batches = array_chunk($documents, $batchSize);
+
         foreach ($batches as $batch) {
             yield $batch;
         }

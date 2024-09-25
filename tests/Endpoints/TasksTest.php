@@ -73,7 +73,7 @@ final class TasksTest extends TestCase
     {
         $response = $this->client->getTasks((new TasksQuery())->setLimit(0));
 
-        self::assertEmpty($response->getResults());
+        self::assertSame([], $response->getResults());
     }
 
     public function testGetOneTaskIndex(): void

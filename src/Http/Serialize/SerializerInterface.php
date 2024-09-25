@@ -12,7 +12,7 @@ interface SerializerInterface
     /**
      * Serialize data into string.
      *
-     * @param string|int|float|bool|array|null $data
+     * @param string|int|float|bool|array<mixed>|null $data
      *
      * @return string|bool
      *
@@ -23,7 +23,7 @@ interface SerializerInterface
     /**
      * Unserialize the given string.
      *
-     * @return string|int|float|bool|array|null
+     * @return string|int|float|bool|array<mixed>|null
      *
      * @throws JsonDecodingException
      */

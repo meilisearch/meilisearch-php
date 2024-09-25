@@ -26,17 +26,15 @@ class Tasks extends Endpoint
     public function cancelTasks(?CancelTasksQuery $options): array
     {
         $options = $options ?? new CancelTasksQuery();
-        $response = $this->http->post('/tasks/cancel', null, $options->toArray());
 
-        return $response;
+        return $this->http->post('/tasks/cancel', null, $options->toArray());
     }
 
     public function deleteTasks(?DeleteTasksQuery $options): array
     {
         $options = $options ?? new DeleteTasksQuery();
-        $response = $this->http->delete(self::PATH, $options->toArray());
 
-        return $response;
+        return $this->http->delete(self::PATH, $options->toArray());
     }
 
     /**
@@ -44,15 +42,19 @@ class Tasks extends Endpoint
      */
     public function waitTask($taskUid, int $timeoutInMs, int $intervalInMs): array
     {
-        $timeout_temp = 0;
-        while ($timeoutInMs > $timeout_temp) {
+        $timeoutTemp = 0;
+
+        while ($timeoutInMs > $timeoutTemp) {
             $res = $this->get($taskUid);
-            if ('enqueued' != $res['status'] && 'processing' != $res['status']) {
+
+            if ('enqueued' !== $res['status'] && 'processing' !== $res['status']) {
                 return $res;
             }
-            $timeout_temp += $intervalInMs;
+
+            $timeoutTemp += $intervalInMs;
             usleep(1000 * $intervalInMs);
         }
+
         throw new TimeOutException();
     }
 
@@ -62,6 +64,7 @@ class Tasks extends Endpoint
     public function waitTasks(array $taskUids, int $timeoutInMs, int $intervalInMs): array
     {
         $tasks = [];
+
         foreach ($taskUids as $taskUid) {
             $tasks[] = $this->waitTask($taskUid, $timeoutInMs, $intervalInMs);
         }

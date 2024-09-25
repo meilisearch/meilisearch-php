@@ -10,25 +10,44 @@ class TasksQuery
 {
     use TasksQueryTrait;
 
-    private int $from;
-    private int $limit;
-    private array $canceledBy;
+    private ?int $from = null;
 
-    public function setFrom(int $from): TasksQuery
+    /**
+     * @var non-negative-int|null
+     */
+    private ?int $limit = null;
+
+    /**
+     * @var non-empty-list<int>|null
+     */
+    private ?array $canceledBy = null;
+
+    /**
+     * @return $this
+     */
+    public function setFrom(int $from): self
     {
         $this->from = $from;
 
         return $this;
     }
 
-    public function setCanceledBy(array $canceledBy): TasksQuery
+    /**
+     * @param non-empty-list<int> $canceledBy
+     *
+     * @return $this
+     */
+    public function setCanceledBy(array $canceledBy): self
     {
         $this->canceledBy = $canceledBy;
 
         return $this;
     }
 
-    public function setLimit(int $limit): TasksQuery
+    /**
+     * @return $this
+     */
+    public function setLimit(int $limit): self
     {
         $this->limit = $limit;
 
@@ -41,11 +60,11 @@ class TasksQuery
             array_merge(
                 $this->baseArray(),
                 [
-                    'from' => $this->from ?? null,
-                    'limit' => $this->limit ?? null,
-                    'canceledBy' => $this->formatArray($this->canceledBy ?? null),
+                    'from' => $this->from,
+                    'limit' => $this->limit,
+                    'canceledBy' => $this->formatArray($this->canceledBy),
                 ]
-            ), function ($item) { return null != $item || is_numeric($item); }
+            ), static function ($item) { return null !== $item; }
         );
     }
 }

@@ -13,7 +13,10 @@ class HybridSearchOptions
      */
     private ?string $embedder = null;
 
-    public function setSemanticRatio(float $ratio): HybridSearchOptions
+    /**
+     * @return $this
+     */
+    public function setSemanticRatio(float $ratio): self
     {
         $this->semanticRatio = $ratio;
 
@@ -22,8 +25,10 @@ class HybridSearchOptions
 
     /**
      * @param non-empty-string $embedder
+     *
+     * @return $this
      */
-    public function setEmbedder(string $embedder): HybridSearchOptions
+    public function setEmbedder(string $embedder): self
     {
         $this->embedder = $embedder;
 
