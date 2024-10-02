@@ -6,55 +6,118 @@ namespace Meilisearch\Contracts;
 
 class FacetSearchQuery
 {
-    private ?string $q = null;
-    private ?string $matchingStrategy = null;
-    private ?array $filter = null;
-    private ?string $facetQuery = null;
+    /**
+     * @var non-empty-string|null
+     */
     private ?string $facetName = null;
 
-    public function setQuery(string $q): FacetSearchQuery
-    {
-        $this->q = $q;
+    /**
+     * @var non-empty-string|null
+     */
+    private ?string $facetQuery = null;
 
-        return $this;
-    }
+    private ?string $q = null;
 
-    public function setMatchingStrategy(string $matchingStrategy): FacetSearchQuery
-    {
-        $this->matchingStrategy = $matchingStrategy;
+    /**
+     * @var list<non-empty-string|list<non-empty-string>>|null
+     */
+    private ?array $filter = null;
 
-        return $this;
-    }
+    /**
+     * @var 'last'|'all'|'frequency'|null
+     */
+    private ?string $matchingStrategy = null;
 
-    public function setFilter(array $filter): FacetSearchQuery
-    {
-        $this->filter = $filter;
+    /**
+     * @var non-empty-list<non-empty-string>|null
+     */
+    private ?array $attributesToSearchOn = null;
 
-        return $this;
-    }
-
-    public function setFacetQuery(string $facetQuery): FacetSearchQuery
-    {
-        $this->facetQuery = $facetQuery;
-
-        return $this;
-    }
-
-    public function setFacetName(string $facetName): FacetSearchQuery
+    /**
+     * @return $this
+     */
+    public function setFacetName(string $facetName): self
     {
         $this->facetName = $facetName;
 
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    public function setFacetQuery(string $facetQuery): self
+    {
+        $this->facetQuery = $facetQuery;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setQuery(string $q): self
+    {
+        $this->q = $q;
+
+        return $this;
+    }
+
+    /**
+     * @param list<non-empty-string|list<non-empty-string>> $filter
+     *
+     * @return $this
+     */
+    public function setFilter(array $filter): self
+    {
+        $this->filter = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @param 'last'|'all'|'frequency' $matchingStrategy
+     *
+     * @return $this
+     */
+    public function setMatchingStrategy(string $matchingStrategy): self
+    {
+        $this->matchingStrategy = $matchingStrategy;
+
+        return $this;
+    }
+
+    /**
+     * @param non-empty-list<non-empty-string> $attributesToSearchOn
+     *
+     * @return $this
+     */
+    public function setAttributesToSearchOn(array $attributesToSearchOn): self
+    {
+        $this->attributesToSearchOn = $attributesToSearchOn;
+
+        return $this;
+    }
+
+    /**
+     * @return array{
+     *     facetName?: non-empty-string,
+     *     facetQuery?: non-empty-string,
+     *     q?: string,
+     *     filter?: list<non-empty-string|list<non-empty-string>>,
+     *     matchingStrategy?: 'last'|'all'|'frequency'|null,
+     *     attributesToSearchOn?: non-empty-list<non-empty-string>
+     * }
+     */
     public function toArray(): array
     {
         return array_filter([
-            'q' => $this->q,
-            'matchingStrategy' => $this->matchingStrategy,
-            'filter' => $this->filter,
-            'facetQuery' => $this->facetQuery,
             'facetName' => $this->facetName,
-        ], function ($item) { return null !== $item; });
+            'facetQuery' => $this->facetQuery,
+            'q' => $this->q,
+            'filter' => $this->filter,
+            'matchingStrategy' => $this->matchingStrategy,
+            'attributesToSearchOn' => $this->attributesToSearchOn,
+        ], static function ($item) { return null !== $item; });
     }
 }

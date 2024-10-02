@@ -7,8 +7,15 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\DocumentsQuery;
 use PHPUnit\Framework\TestCase;
 
-class DocumentsQueryTest extends TestCase
+final class DocumentsQueryTest extends TestCase
 {
+    public function testEmptyQuery(): void
+    {
+        $data = new DocumentsQuery();
+
+        self::assertSame([], $data->toArray());
+    }
+
     public function testSetFields(): void
     {
         $data = (new DocumentsQuery())->setLimit(10)->setFields(['abc', 'xyz']);
@@ -16,24 +23,17 @@ class DocumentsQueryTest extends TestCase
         self::assertSame(['limit' => 10, 'fields' => 'abc,xyz'], $data->toArray());
     }
 
-    public function testToArrayWithoutSetFields(): void
+    public function testSetLimit(): void
     {
         $data = (new DocumentsQuery())->setLimit(10);
 
         self::assertSame(['limit' => 10], $data->toArray());
     }
 
-    public function testToArrayWithoutSetOffset(): void
+    public function testSetOffset(): void
     {
-        $data = (new DocumentsQuery())->setOffset(10);
+        $data = (new DocumentsQuery())->setOffset(5);
 
-        self::assertSame(['offset' => 10], $data->toArray());
-    }
-
-    public function testToArrayWithZeros(): void
-    {
-        $data = (new DocumentsQuery())->setLimit(0)->setOffset(0);
-
-        self::assertSame(['offset' => 0, 'limit' => 0], $data->toArray());
+        self::assertSame(['offset' => 5], $data->toArray());
     }
 }

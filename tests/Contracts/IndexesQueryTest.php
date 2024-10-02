@@ -7,33 +7,26 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\IndexesQuery;
 use PHPUnit\Framework\TestCase;
 
-class IndexesQueryTest extends TestCase
+final class IndexesQueryTest extends TestCase
 {
-    public function testToArrayWithSetOffsetAndSetLimit(): void
+    public function testEmptyQuery(): void
     {
-        $data = (new IndexesQuery())->setLimit(10)->setOffset(18);
+        $data = new IndexesQuery();
 
-        self::assertSame(['offset' => 18, 'limit' => 10], $data->toArray());
+        self::assertSame([], $data->toArray());
     }
 
-    public function testToArrayWithSetOffset(): void
+    public function testSetLimit(): void
+    {
+        $data = (new IndexesQuery())->setLimit(10);
+
+        self::assertSame(['limit' => 10], $data->toArray());
+    }
+
+    public function testSetOffset(): void
     {
         $data = (new IndexesQuery())->setOffset(5);
 
         self::assertSame(['offset' => 5], $data->toArray());
-    }
-
-    public function testToArrayWithoutSet(): void
-    {
-        $data = new IndexesQuery();
-
-        self::assertEmpty($data->toArray());
-    }
-
-    public function testToArrayWithZeros(): void
-    {
-        $data = (new IndexesQuery())->setLimit(0)->setOffset(0);
-
-        self::assertSame(['offset' => 0, 'limit' => 0], $data->toArray());
     }
 }

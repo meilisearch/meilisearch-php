@@ -31,10 +31,10 @@ class Indexes extends Endpoint
 
     private ?string $uid;
     private ?string $primaryKey;
-    private ?\DateTime $createdAt;
-    private ?\DateTime $updatedAt;
+    private ?\DateTimeInterface $createdAt;
+    private ?\DateTimeInterface $updatedAt;
 
-    public function __construct(Http $http, $uid = null, $primaryKey = null, $createdAt = null, $updatedAt = null)
+    public function __construct(Http $http, ?string $uid = null, ?string $primaryKey = null, ?\DateTimeInterface $createdAt = null, ?\DateTimeInterface $updatedAt = null)
     {
         $this->uid = $uid;
         $this->primaryKey = $primaryKey;
@@ -114,12 +114,12 @@ class Indexes extends Endpoint
         return $this->uid;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
@@ -259,20 +259,20 @@ class Indexes extends Endpoint
     /**
      * @throws \Exception
      */
-    public static function parseDate(?string $dateTime): ?\DateTime
+    public static function parseDate(?string $dateTime): ?\DateTimeInterface
     {
         if (null === $dateTime) {
             return null;
         }
 
         try {
-            return new \DateTime($dateTime);
+            return new \DateTimeImmutable($dateTime);
         } catch (\Exception $e) {
             // Trim 9th+ digit from fractional seconds. Meilisearch server can send 9 digits; PHP supports up to 8
             $trimPattern = '/(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,8})(?:\d{1,})?(Z|[\+-]\d{2}:\d{2})$/';
             $trimmedDate = preg_replace($trimPattern, '$1$2', $dateTime);
 
-            return new \DateTime($trimmedDate);
+            return new \DateTimeImmutable($trimmedDate);
         }
     }
 }

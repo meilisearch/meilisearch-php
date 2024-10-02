@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints;
 
-use DateTime;
 use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Exceptions\InvalidArgumentException;
 use Meilisearch\Http\Serialize\Json;
@@ -27,7 +26,7 @@ class TenantToken extends Endpoint
         if ((!\is_array($searchRules) || [] === $searchRules) && !\is_object($searchRules)) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
-        if (isset($options['expiresAt']) && new \DateTime() > $options['expiresAt']) {
+        if (isset($options['expiresAt']) && new \DateTimeImmutable() > $options['expiresAt']) {
             throw InvalidArgumentException::dateIsExpired($options['expiresAt']);
         }
     }

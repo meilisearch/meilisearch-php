@@ -7,8 +7,15 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\TasksQuery;
 use PHPUnit\Framework\TestCase;
 
-class TasksQueryTest extends TestCase
+final class TasksQueryTest extends TestCase
 {
+    public function testEmptyQuery(): void
+    {
+        $data = new TasksQuery();
+
+        self::assertSame([], $data->toArray());
+    }
+
     public function testSetTypes(): void
     {
         $data = (new TasksQuery())->setTypes(['abc', 'xyz']);
@@ -16,32 +23,90 @@ class TasksQueryTest extends TestCase
         self::assertSame(['types' => 'abc,xyz'], $data->toArray());
     }
 
-    public function testSetAnyDateFilter(): void
+    public function testSetStatuses(): void
     {
-        $date = new \DateTime();
+        $data = (new TasksQuery())->setStatuses(['failed', 'canceled']);
+
+        self::assertSame(['statuses' => 'failed,canceled'], $data->toArray());
+    }
+
+    public function testSetIndexUids(): void
+    {
+        $data = (new TasksQuery())->setIndexUids(['uid1', 'uid2']);
+
+        self::assertSame(['indexUids' => 'uid1,uid2'], $data->toArray());
+    }
+
+    public function testSetUids(): void
+    {
+        $data = (new TasksQuery())->setUids(['uid1', 'uid2']);
+
+        self::assertSame(['uids' => 'uid1,uid2'], $data->toArray());
+    }
+
+    public function testSetBeforeEnqueuedAt(): void
+    {
+        $date = new \DateTimeImmutable();
         $data = (new TasksQuery())->setBeforeEnqueuedAt($date);
 
-        self::assertSame(['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)], $data->toArray());
+        self::assertSame(['beforeEnqueuedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
     }
 
-    public function testToArrayWithSetLimit(): void
+    public function testSetAfterEnqueuedAt(): void
     {
-        $data = (new TasksQuery())->setLimit(10);
+        $date = new \DateTimeImmutable();
+        $data = (new TasksQuery())->setAfterEnqueuedAt($date);
 
-        self::assertSame(['limit' => 10], $data->toArray());
+        self::assertSame(['afterEnqueuedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
     }
 
-    public function testToArrayWithSetLimitWithZero(): void
+    public function testSetBeforeStartedAt(): void
     {
-        $data = (new TasksQuery())->setLimit(0);
+        $date = new \DateTimeImmutable();
+        $data = (new TasksQuery())->setBeforeStartedAt($date);
 
-        self::assertSame(['limit' => 0], $data->toArray());
+        self::assertSame(['beforeStartedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
     }
 
-    public function testToArrayWithDifferentSets(): void
+    public function testSetAfterStartedAt(): void
     {
-        $data = (new TasksQuery())->setFrom(10)->setLimit(9)->setCanceledBy([1, 4])->setStatuses(['enqueued']);
+        $date = new \DateTimeImmutable();
+        $data = (new TasksQuery())->setAfterStartedAt($date);
 
-        self::assertSame(['statuses' => 'enqueued', 'from' => 10, 'limit' => 9, 'canceledBy' => '1,4'], $data->toArray());
+        self::assertSame(['afterStartedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    public function testSetBeforeFinishedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new TasksQuery())->setBeforeFinishedAt($date);
+
+        self::assertSame(['beforeFinishedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    public function testSetAfterFinishedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new TasksQuery())->setAfterFinishedAt($date);
+
+        self::assertSame(['afterFinishedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    /**
+     * @testWith [0]
+     *           [10]
+     */
+    public function testSetLimit(int $limit): void
+    {
+        $data = (new TasksQuery())->setLimit($limit);
+
+        self::assertSame(['limit' => $limit], $data->toArray());
+    }
+
+    public function testSetFrom(): void
+    {
+        $data = (new TasksQuery())->setFrom(1);
+
+        self::assertSame(['from' => 1], $data->toArray());
     }
 }
