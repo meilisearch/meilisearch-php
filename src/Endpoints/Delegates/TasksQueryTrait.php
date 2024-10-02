@@ -10,28 +10,37 @@ trait TasksQueryTrait
     private array $statuses;
     private array $indexUids;
     private array $uids;
-    private \DateTime $beforeEnqueuedAt;
-    private \DateTime $afterEnqueuedAt;
-    private \DateTime $beforeStartedAt;
-    private \DateTime $afterStartedAt;
-    private \DateTime $beforeFinishedAt;
-    private \DateTime $afterFinishedAt;
+    private \DateTimeInterface $beforeEnqueuedAt;
+    private \DateTimeInterface $afterEnqueuedAt;
+    private \DateTimeInterface $beforeStartedAt;
+    private \DateTimeInterface $afterStartedAt;
+    private \DateTimeInterface $beforeFinishedAt;
+    private \DateTimeInterface $afterFinishedAt;
 
-    public function setTypes(array $types)
+    /**
+     * @return $this
+     */
+    public function setTypes(array $types): self
     {
         $this->types = $types;
 
         return $this;
     }
 
-    public function setStatuses(array $statuses)
+    /**
+     * @return $this
+     */
+    public function setStatuses(array $statuses): self
     {
         $this->statuses = $statuses;
 
         return $this;
     }
 
-    public function setIndexUids(array $indexUids)
+    /**
+     * @return $this
+     */
+    public function setIndexUids(array $indexUids): self
     {
         $this->indexUids = $indexUids;
 
@@ -43,49 +52,70 @@ trait TasksQueryTrait
         return $this->indexUids ?? [];
     }
 
-    public function setUids(array $uids)
+    /**
+     * @return $this
+     */
+    public function setUids(array $uids): self
     {
         $this->uids = $uids;
 
         return $this;
     }
 
-    public function setBeforeEnqueuedAt(\DateTime $date)
+    /**
+     * @return $this
+     */
+    public function setBeforeEnqueuedAt(\DateTimeInterface $date): self
     {
         $this->beforeEnqueuedAt = $date;
 
         return $this;
     }
 
-    public function setAfterEnqueuedAt(\DateTime $date)
+    /**
+     * @return $this
+     */
+    public function setAfterEnqueuedAt(\DateTimeInterface $date): self
     {
         $this->afterEnqueuedAt = $date;
 
         return $this;
     }
 
-    public function setBeforeStartedAt(\DateTime $date)
+    /**
+     * @return $this
+     */
+    public function setBeforeStartedAt(\DateTimeInterface $date): self
     {
         $this->beforeStartedAt = $date;
 
         return $this;
     }
 
-    public function setAfterStartedAt(\DateTime $date)
+    /**
+     * @return $this
+     */
+    public function setAfterStartedAt(\DateTimeInterface $date): self
     {
         $this->afterStartedAt = $date;
 
         return $this;
     }
 
-    public function setBeforeFinishedAt(\DateTime $date)
+    /**
+     * @return $this
+     */
+    public function setBeforeFinishedAt(\DateTimeInterface $date): self
     {
         $this->beforeFinishedAt = $date;
 
         return $this;
     }
 
-    public function setAfterFinishedAt(\DateTime $date)
+    /**
+     * @return $this
+     */
+    public function setAfterFinishedAt(\DateTimeInterface $date): self
     {
         $this->afterFinishedAt = $date;
 
@@ -96,7 +126,7 @@ trait TasksQueryTrait
     {
         return array_filter(
             $this->baseArray(),
-            function ($item) { return null != $item || is_numeric($item); }
+            static function ($item) { return null !== $item; }
         );
     }
 
@@ -116,13 +146,13 @@ trait TasksQueryTrait
         ];
     }
 
-    private function formatDate(?\DateTime $date)
+    private function formatDate(?\DateTimeInterface $date): ?string
     {
-        return isset($date) ? $date->format(\DateTime::RFC3339) : null;
+        return null !== $date ? $date->format(\DateTimeInterface::RFC3339) : null;
     }
 
-    private function formatArray(?array $arr)
+    private function formatArray(?array $array): ?string
     {
-        return isset($arr) ? implode(',', $arr) : null;
+        return null !== $array ? implode(',', $array) : null;
     }
 }

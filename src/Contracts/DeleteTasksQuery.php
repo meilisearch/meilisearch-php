@@ -10,9 +10,17 @@ class DeleteTasksQuery
 {
     use TasksQueryTrait;
 
-    private array $canceledBy;
+    /**
+     * @var non-empty-list<int>|null
+     */
+    private ?array $canceledBy = null;
 
-    public function setCanceledBy(array $canceledBy)
+    /**
+     * @param non-empty-list<int> $canceledBy
+     *
+     * @return $this
+     */
+    public function setCanceledBy(array $canceledBy): self
     {
         $this->canceledBy = $canceledBy;
 
@@ -24,8 +32,8 @@ class DeleteTasksQuery
         return array_filter(
             array_merge(
                 $this->baseArray(),
-                ['canceledBy' => $this->formatArray($this->canceledBy ?? null)]
-            ), function ($item) { return null != $item || is_numeric($item); }
+                ['canceledBy' => $this->formatArray($this->canceledBy)]
+            ), static function ($item) { return null !== $item; }
         );
     }
 }

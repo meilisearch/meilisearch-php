@@ -196,9 +196,9 @@ class Client implements Http
      *
      * @return bool true if any header value contains 'application/json', otherwise false
      */
-    private function isJSONResponse(array $headerValues)
+    private function isJSONResponse(array $headerValues): bool
     {
-        $filteredHeaders = array_filter($headerValues, function (string $headerValue) {
+        $filteredHeaders = array_filter($headerValues, static function (string $headerValue) {
             return false !== strpos($headerValue, 'application/json');
         });
 

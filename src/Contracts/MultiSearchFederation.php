@@ -6,23 +6,46 @@ namespace Meilisearch\Contracts;
 
 class MultiSearchFederation
 {
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $limit = null;
+
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $offset = null;
 
-    public function setLimit(int $limit): MultiSearchFederation
+    /**
+     * @param non-negative-int $limit
+     *
+     * @return $this
+     */
+    public function setLimit(int $limit): self
     {
         $this->limit = $limit;
 
         return $this;
     }
 
-    public function setOffset(int $offset): MultiSearchFederation
+    /**
+     * @param non-negative-int $offset
+     *
+     * @return $this
+     */
+    public function setOffset(int $offset): self
     {
         $this->offset = $offset;
 
         return $this;
     }
 
+    /**
+     * @return array{
+     *     limit?: non-negative-int,
+     *     offset?: non-negative-int
+     * }
+     */
     public function toArray(): array
     {
         return array_filter([

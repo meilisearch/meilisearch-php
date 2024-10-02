@@ -7,8 +7,15 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\DeleteTasksQuery;
 use PHPUnit\Framework\TestCase;
 
-class DeleteTasksQueryTest extends TestCase
+final class DeleteTasksQueryTest extends TestCase
 {
+    public function testEmptyQuery(): void
+    {
+        $data = new DeleteTasksQuery();
+
+        self::assertSame([], $data->toArray());
+    }
+
     public function testSetTypes(): void
     {
         $data = (new DeleteTasksQuery())->setTypes(['abc', 'xyz']);
@@ -16,18 +23,72 @@ class DeleteTasksQueryTest extends TestCase
         self::assertSame(['types' => 'abc,xyz'], $data->toArray());
     }
 
-    public function testSetAnyDateFilter(): void
+    public function testSetStatuses(): void
     {
-        $date = new \DateTime();
-        $data = (new DeleteTasksQuery())->setCanceledBy([null])->setBeforeEnqueuedAt($date);
+        $data = (new DeleteTasksQuery())->setStatuses(['failed', 'canceled']);
 
-        self::assertSame(['beforeEnqueuedAt' => $date->format(\DateTime::RFC3339)], $data->toArray());
+        self::assertSame(['statuses' => 'failed,canceled'], $data->toArray());
     }
 
-    public function testToArrayWithDifferentSets(): void
+    public function testSetIndexUids(): void
     {
-        $data = (new DeleteTasksQuery())->setCanceledBy([1, 2])->setStatuses(['enqueued']);
+        $data = (new DeleteTasksQuery())->setIndexUids(['uid1', 'uid2']);
 
-        self::assertSame(['statuses' => 'enqueued', 'canceledBy' => '1,2'], $data->toArray());
+        self::assertSame(['indexUids' => 'uid1,uid2'], $data->toArray());
+    }
+
+    public function testSetUids(): void
+    {
+        $data = (new DeleteTasksQuery())->setUids(['uid1', 'uid2']);
+
+        self::assertSame(['uids' => 'uid1,uid2'], $data->toArray());
+    }
+
+    public function testSetBeforeEnqueuedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new DeleteTasksQuery())->setBeforeEnqueuedAt($date);
+
+        self::assertSame(['beforeEnqueuedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    public function testSetAfterEnqueuedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new DeleteTasksQuery())->setAfterEnqueuedAt($date);
+
+        self::assertSame(['afterEnqueuedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    public function testSetBeforeStartedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new DeleteTasksQuery())->setBeforeStartedAt($date);
+
+        self::assertSame(['beforeStartedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    public function testSetAfterStartedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new DeleteTasksQuery())->setAfterStartedAt($date);
+
+        self::assertSame(['afterStartedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    public function testSetBeforeFinishedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new DeleteTasksQuery())->setBeforeFinishedAt($date);
+
+        self::assertSame(['beforeFinishedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
+    }
+
+    public function testSetAfterFinishedAt(): void
+    {
+        $date = new \DateTimeImmutable();
+        $data = (new DeleteTasksQuery())->setAfterFinishedAt($date);
+
+        self::assertSame(['afterFinishedAt' => $date->format(\DateTimeInterface::RFC3339)], $data->toArray());
     }
 }

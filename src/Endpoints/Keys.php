@@ -22,11 +22,11 @@ class Keys extends Endpoint
     private ?string $description;
     private ?array $actions;
     private ?array $indexes;
-    private ?\DateTime $expiresAt;
-    private ?\DateTime $createdAt;
-    private ?\DateTime $updatedAt;
+    private ?\DateTimeInterface $expiresAt;
+    private ?\DateTimeInterface $createdAt;
+    private ?\DateTimeInterface $updatedAt;
 
-    public function __construct(Http $http, $uid = null, $name = null, $key = null, $description = null, $actions = null, $indexes = null, $expiresAt = null, $createdAt = null, $updatedAt = null)
+    public function __construct(Http $http, ?string $uid = null, ?string $name = null, ?string $key = null, ?string $description = null, ?array $actions = null, ?array $indexes = null, ?\DateTimeInterface $expiresAt = null, ?\DateTimeInterface $createdAt = null, ?\DateTimeInterface $updatedAt = null)
     {
         $this->uid = $uid;
         $this->name = $name;
@@ -89,17 +89,17 @@ class Keys extends Endpoint
         return $this;
     }
 
-    protected function createDate($attribute): ?\DateTime
+    protected function createDate($attribute): ?\DateTimeInterface
     {
         if (!\is_string($attribute)) {
             return null;
         }
 
         if (false === strpos($attribute, '.')) {
-            $date = date_create_from_format(\DateTime::ATOM, $attribute);
+            $date = \DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $attribute);
         } else {
             $attribute = preg_replace('/(\.\d{6})\d+/', '$1', $attribute, 1);
-            $date = date_create_from_format('Y-m-d\TH:i:s.uP', $attribute);
+            $date = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.uP', $attribute);
         }
 
         return false === $date ? null : $date;
@@ -135,17 +135,17 @@ class Keys extends Endpoint
         return $this->indexes;
     }
 
-    public function getExpiresAt(): ?\DateTime
+    public function getExpiresAt(): ?\DateTimeInterface
     {
         return $this->expiresAt;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
@@ -180,7 +180,7 @@ class Keys extends Endpoint
 
     public function create(array $options = []): self
     {
-        if (isset($options['expiresAt']) && $options['expiresAt'] instanceof \DateTime) {
+        if (isset($options['expiresAt']) && $options['expiresAt'] instanceof \DateTimeInterface) {
             $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
         }
         $response = $this->http->post(self::PATH, $options);

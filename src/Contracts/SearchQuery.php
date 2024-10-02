@@ -6,43 +6,127 @@ namespace Meilisearch\Contracts;
 
 class SearchQuery
 {
-    private string $indexUid;
+    /**
+     * @var non-empty-string|null
+     */
+    private ?string $indexUid = null;
 
-    private string $q;
-    private array $filter;
-    private array $locales;
-    private array $attributesToRetrieve;
-    private array $attributesToCrop;
-    private ?int $cropLength;
-    private array $attributesToHighlight;
-    private string $cropMarker;
-    private string $highlightPreTag;
-    private string $highlightPostTag;
-    private array $facets;
-    private ?bool $showMatchesPosition;
-    private array $sort;
-    private string $matchingStrategy;
-    private ?int $offset;
-    private ?int $limit;
-    private ?int $hitsPerPage;
-    private ?int $page;
-    private ?array $vector;
+    private ?string $q = null;
+
+    /**
+     * @var list<non-empty-string|list<non-empty-string>>|null
+     */
+    private ?array $filter = null;
+
+    /**
+     * @var list<non-empty-string>|null
+     */
+    private ?array $locales = null;
+
+    /**
+     * @var list<non-empty-string>|null
+     */
+    private ?array $attributesToRetrieve = null;
+
+    /**
+     * @var list<non-empty-string>|null
+     */
+    private ?array $attributesToCrop = null;
+
+    /**
+     * @var positive-int|null
+     */
+    private ?int $cropLength = null;
+
+    /**
+     * @var list<non-empty-string>|null
+     */
+    private ?array $attributesToHighlight = null;
+
+    private ?string $cropMarker = null;
+
+    private ?string $highlightPreTag = null;
+
+    private ?string $highlightPostTag = null;
+
+    /**
+     * @var list<non-empty-string>|null
+     */
+    private ?array $facets = null;
+
+    private ?bool $showMatchesPosition = null;
+
+    /**
+     * @var list<non-empty-string>|null
+     */
+    private ?array $sort = null;
+
+    /**
+     * @var 'last'|'all'|'frequency'|null
+     */
+    private ?string $matchingStrategy = null;
+
+    /**
+     * @var non-negative-int|null
+     */
+    private ?int $offset = null;
+
+    /**
+     * @var non-negative-int|null
+     */
+    private ?int $limit = null;
+
+    /**
+     * @var non-negative-int|null
+     */
+    private ?int $hitsPerPage = null;
+
+    /**
+     * @var non-negative-int|null
+     */
+    private ?int $page = null;
+
+    /**
+     * @var non-empty-list<float|non-empty-list<float>>|null
+     */
+    private ?array $vector = null;
+
     private ?HybridSearchOptions $hybrid = null;
+
+    /**
+     * @var non-empty-list<non-empty-string>|null
+     */
     private ?array $attributesToSearchOn = null;
+
     private ?bool $showRankingScore = null;
+
     private ?bool $showRankingScoreDetails = null;
+
     private ?float $rankingScoreThreshold = null;
+
+    /**
+     * @var non-empty-string|null
+     */
     private ?string $distinct = null;
+
     private ?FederationOptions $federationOptions = null;
 
-    public function setQuery(string $q): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setQuery(string $q): self
     {
         $this->q = $q;
 
         return $this;
     }
 
-    public function setFilter(array $filter): SearchQuery
+    /**
+     * @param list<non-empty-string|list<non-empty-string>> $filter
+     *
+     * @return $this
+     */
+    public function setFilter(array $filter): self
     {
         $this->filter = $filter;
 
@@ -51,78 +135,116 @@ class SearchQuery
 
     /**
      * @param list<non-empty-string> $locales
+     *
+     * @return $this
      */
-    public function setLocales(array $locales): SearchQuery
+    public function setLocales(array $locales): self
     {
         $this->locales = $locales;
 
         return $this;
     }
 
-    public function setAttributesToRetrieve(array $attributesToRetrieve): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setAttributesToRetrieve(array $attributesToRetrieve): self
     {
         $this->attributesToRetrieve = $attributesToRetrieve;
 
         return $this;
     }
 
-    public function setAttributesToCrop(array $attributesToCrop): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setAttributesToCrop(array $attributesToCrop): self
     {
         $this->attributesToCrop = $attributesToCrop;
 
         return $this;
     }
 
-    public function setCropLength(?int $cropLength): SearchQuery
+    /**
+     * @param positive-int|null $cropLength
+     *
+     * @return $this
+     */
+    public function setCropLength(?int $cropLength): self
     {
         $this->cropLength = $cropLength;
 
         return $this;
     }
 
-    public function setAttributesToHighlight(array $attributesToHighlight): SearchQuery
+    /**
+     * @param list<non-empty-string> $attributesToHighlight
+     *
+     * @return $this
+     */
+    public function setAttributesToHighlight(array $attributesToHighlight): self
     {
         $this->attributesToHighlight = $attributesToHighlight;
 
         return $this;
     }
 
-    public function setCropMarker(string $cropMarker): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setCropMarker(string $cropMarker): self
     {
         $this->cropMarker = $cropMarker;
 
         return $this;
     }
 
-    public function setHighlightPreTag(string $highlightPreTag): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setHighlightPreTag(string $highlightPreTag): self
     {
         $this->highlightPreTag = $highlightPreTag;
 
         return $this;
     }
 
-    public function setHighlightPostTag(string $highlightPostTag): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setHighlightPostTag(string $highlightPostTag): self
     {
         $this->highlightPostTag = $highlightPostTag;
 
         return $this;
     }
 
-    public function setFacets(array $facets): SearchQuery
+    /**
+     * @param list<non-empty-string> $facets
+     *
+     * @return $this
+     */
+    public function setFacets(array $facets): self
     {
         $this->facets = $facets;
 
         return $this;
     }
 
-    public function setShowMatchesPosition(?bool $showMatchesPosition): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setShowMatchesPosition(?bool $showMatchesPosition): self
     {
         $this->showMatchesPosition = $showMatchesPosition;
 
         return $this;
     }
 
-    public function setShowRankingScore(?bool $showRankingScore): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setShowRankingScore(?bool $showRankingScore): self
     {
         $this->showRankingScore = $showRankingScore;
 
@@ -137,15 +259,20 @@ class SearchQuery
      * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
      *
      * @param bool $showRankingScoreDetails whether the feature is enabled or not
+     *
+     * @return $this
      */
-    public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): SearchQuery
+    public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): self
     {
         $this->showRankingScoreDetails = $showRankingScoreDetails;
 
         return $this;
     }
 
-    public function setRankingScoreThreshold(?float $rankingScoreThreshold): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setRankingScoreThreshold(?float $rankingScoreThreshold): self
     {
         $this->rankingScoreThreshold = $rankingScoreThreshold;
 
@@ -154,57 +281,88 @@ class SearchQuery
 
     /**
      * @param non-empty-string|null $distinct
+     *
+     * @return $this
      */
-    public function setDistinct(?string $distinct): SearchQuery
+    public function setDistinct(?string $distinct): self
     {
         $this->distinct = $distinct;
 
         return $this;
     }
 
-    public function setSort(array $sort): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setSort(array $sort): self
     {
         $this->sort = $sort;
 
         return $this;
     }
 
-    public function setMatchingStrategy(string $matchingStrategy): SearchQuery
+    /**
+     * @param 'last'|'all'|'frequency' $matchingStrategy
+     *
+     * @return $this
+     */
+    public function setMatchingStrategy(string $matchingStrategy): self
     {
         $this->matchingStrategy = $matchingStrategy;
 
         return $this;
     }
 
-    public function setOffset(?int $offset): SearchQuery
+    /**
+     * @param non-negative-int|null $offset
+     *
+     * @return $this
+     */
+    public function setOffset(?int $offset): self
     {
         $this->offset = $offset;
 
         return $this;
     }
 
-    public function setLimit(?int $limit): SearchQuery
+    /**
+     * @param non-negative-int|null $limit
+     *
+     * @return $this
+     */
+    public function setLimit(?int $limit): self
     {
         $this->limit = $limit;
 
         return $this;
     }
 
-    public function setHitsPerPage(?int $hitsPerPage): SearchQuery
+    /**
+     * @param non-negative-int|null $hitsPerPage
+     *
+     * @return $this
+     */
+    public function setHitsPerPage(?int $hitsPerPage): self
     {
         $this->hitsPerPage = $hitsPerPage;
 
         return $this;
     }
 
-    public function setPage(?int $page): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setPage(?int $page): self
     {
         $this->page = $page;
 
         return $this;
     }
 
-    public function setIndexUid(string $uid): SearchQuery
+    /**
+     * @return $this
+     */
+    public function setIndexUid(string $uid): self
     {
         $this->indexUid = $uid;
 
@@ -214,8 +372,10 @@ class SearchQuery
     /**
      * This option is only available while doing a federated search.
      * If used in another context an error will be returned by Meilisearch.
+     *
+     * @return $this
      */
-    public function setFederationOptions(FederationOptions $federationOptions): SearchQuery
+    public function setFederationOptions(FederationOptions $federationOptions): self
     {
         $this->federationOptions = $federationOptions;
 
@@ -229,9 +389,11 @@ class SearchQuery
      *
      * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
      *
-     * @param list<float|list<float>> $vector a multi-level array floats
+     * @param non-empty-list<float|non-empty-list<float>> $vector a multi-level array floats
+     *
+     * @return $this
      */
-    public function setVector(array $vector): SearchQuery
+    public function setVector(array $vector): self
     {
         $this->vector = $vector;
 
@@ -245,8 +407,10 @@ class SearchQuery
      * (new HybridSearchOptions())
      *     ->setSemanticRatio(0.8)
      *     ->setEmbedder('manual');
+     *
+     * @return $this
      */
-    public function setHybrid(HybridSearchOptions $hybridOptions): SearchQuery
+    public function setHybrid(HybridSearchOptions $hybridOptions): self
     {
         $this->hybrid = $hybridOptions;
 
@@ -254,38 +418,71 @@ class SearchQuery
     }
 
     /**
-     * @param list<non-empty-string> $attributesToSearchOn
+     * @param non-empty-list<non-empty-string> $attributesToSearchOn
+     *
+     * @return $this
      */
-    public function setAttributesToSearchOn(array $attributesToSearchOn): SearchQuery
+    public function setAttributesToSearchOn(array $attributesToSearchOn): self
     {
         $this->attributesToSearchOn = $attributesToSearchOn;
 
         return $this;
     }
 
+    /**
+     * @return array{
+     *     indexUid?: non-empty-string,
+     *     q?: string,
+     *     filter?: list<non-empty-string|list<non-empty-string>>,
+     *     locales?: list<non-empty-string>,
+     *     attributesToRetrieve?: list<non-empty-string>,
+     *     attributesToCrop?: list<non-empty-string>,
+     *     cropLength?: positive-int,
+     *     attributesToHighlight?: list<non-empty-string>,
+     *     cropMarker?: string,
+     *     highlightPreTag?: string,
+     *     highlightPostTag?: string,
+     *     facets?: list<non-empty-string>,
+     *     showMatchesPosition?: bool,
+     *     sort?: list<non-empty-string>,
+     *     matchingStrategy?: 'last'|'all'|'frequency',
+     *     offset?: non-negative-int,
+     *     limit?: non-negative-int,
+     *     hitsPerPage?: non-negative-int,
+     *     page?: non-negative-int,
+     *     vector?: non-empty-list<float|non-empty-list<float>>,
+     *     hybrid?: array<mixed>,
+     *     attributesToSearchOn?: non-empty-list<non-empty-string>,
+     *     showRankingScore?: bool,
+     *     showRankingScoreDetails?: bool,
+     *     rankingScoreThreshold?: float,
+     *     distinct?: non-empty-string,
+     *     federationOptions?: array<mixed>
+     * }
+     */
     public function toArray(): array
     {
         return array_filter([
-            'indexUid' => $this->indexUid ?? null,
-            'q' => $this->q ?? null,
-            'filter' => $this->filter ?? null,
-            'locales' => $this->locales ?? null,
-            'attributesToRetrieve' => $this->attributesToRetrieve ?? null,
-            'attributesToCrop' => $this->attributesToCrop ?? null,
-            'cropLength' => $this->cropLength ?? null,
-            'attributesToHighlight' => $this->attributesToHighlight ?? null,
-            'cropMarker' => $this->cropMarker ?? null,
-            'highlightPreTag' => $this->highlightPreTag ?? null,
-            'highlightPostTag' => $this->highlightPostTag ?? null,
-            'facets' => $this->facets ?? null,
-            'showMatchesPosition' => $this->showMatchesPosition ?? null,
-            'sort' => $this->sort ?? null,
-            'matchingStrategy' => $this->matchingStrategy ?? null,
-            'offset' => $this->offset ?? null,
-            'limit' => $this->limit ?? null,
-            'hitsPerPage' => $this->hitsPerPage ?? null,
-            'page' => $this->page ?? null,
-            'vector' => $this->vector ?? null,
+            'indexUid' => $this->indexUid,
+            'q' => $this->q,
+            'filter' => $this->filter,
+            'locales' => $this->locales,
+            'attributesToRetrieve' => $this->attributesToRetrieve,
+            'attributesToCrop' => $this->attributesToCrop,
+            'cropLength' => $this->cropLength,
+            'attributesToHighlight' => $this->attributesToHighlight,
+            'cropMarker' => $this->cropMarker,
+            'highlightPreTag' => $this->highlightPreTag,
+            'highlightPostTag' => $this->highlightPostTag,
+            'facets' => $this->facets,
+            'showMatchesPosition' => $this->showMatchesPosition,
+            'sort' => $this->sort,
+            'matchingStrategy' => $this->matchingStrategy,
+            'offset' => $this->offset,
+            'limit' => $this->limit,
+            'hitsPerPage' => $this->hitsPerPage,
+            'page' => $this->page,
+            'vector' => $this->vector,
             'hybrid' => null !== $this->hybrid ? $this->hybrid->toArray() : null,
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
@@ -293,6 +490,6 @@ class SearchQuery
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
             'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,
-        ], function ($item) { return null !== $item; });
+        ], static function ($item) { return null !== $item; });
     }
 }

@@ -57,8 +57,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param non-negative-int|null $offset
+     *
+     * @return $this
      */
-    public function setOffset(?int $offset): SimilarDocumentsQuery
+    public function setOffset(?int $offset): self
     {
         $this->offset = $offset;
 
@@ -67,8 +69,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param positive-int|null $limit
+     *
+     * @return $this
      */
-    public function setLimit(?int $limit): SimilarDocumentsQuery
+    public function setLimit(?int $limit): self
     {
         $this->limit = $limit;
 
@@ -77,8 +81,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param array<int, array<int, string>|string> $filter an array of arrays representing filter conditions
+     *
+     * @return $this
      */
-    public function setFilter(array $filter): SimilarDocumentsQuery
+    public function setFilter(array $filter): self
     {
         $this->filter = $filter;
 
@@ -87,8 +93,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param non-empty-string $embedder
+     *
+     * @return $this
      */
-    public function setEmbedder(string $embedder): SimilarDocumentsQuery
+    public function setEmbedder(string $embedder): self
     {
         $this->embedder = $embedder;
 
@@ -97,8 +105,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param list<non-empty-string> $attributesToRetrieve an array of attribute names to retrieve
+     *
+     * @return $this
      */
-    public function setAttributesToRetrieve(array $attributesToRetrieve): SimilarDocumentsQuery
+    public function setAttributesToRetrieve(array $attributesToRetrieve): self
     {
         $this->attributesToRetrieve = $attributesToRetrieve;
 
@@ -107,8 +117,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param bool|null $showRankingScore boolean value to show ranking score
+     *
+     * @return $this
      */
-    public function setShowRankingScore(?bool $showRankingScore): SimilarDocumentsQuery
+    public function setShowRankingScore(?bool $showRankingScore): self
     {
         $this->showRankingScore = $showRankingScore;
 
@@ -117,8 +129,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param bool|null $showRankingScoreDetails boolean value to show ranking score details
+     *
+     * @return $this
      */
-    public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): SimilarDocumentsQuery
+    public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): self
     {
         $this->showRankingScoreDetails = $showRankingScoreDetails;
 
@@ -127,8 +141,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param bool|null $retrieveVectors boolean value to show _vector details
+     *
+     * @return $this
      */
-    public function setRetrieveVectors(?bool $retrieveVectors): SimilarDocumentsQuery
+    public function setRetrieveVectors(?bool $retrieveVectors): self
     {
         $this->retrieveVectors = $retrieveVectors;
 
@@ -137,8 +153,10 @@ class SimilarDocumentsQuery
 
     /**
      * @param int|float|null $rankingScoreThreshold
+     *
+     * @return $this
      */
-    public function setRankingScoreThreshold($rankingScoreThreshold): SimilarDocumentsQuery
+    public function setRankingScoreThreshold($rankingScoreThreshold): self
     {
         $this->rankingScoreThreshold = $rankingScoreThreshold;
 
@@ -172,8 +190,6 @@ class SimilarDocumentsQuery
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
             'retrieveVectors' => $this->retrieveVectors,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
-        ], static function ($item) {
-            return null !== $item;
-        });
+        ], static function ($item) {return null !== $item; });
     }
 }
