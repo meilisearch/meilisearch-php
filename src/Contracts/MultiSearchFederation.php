@@ -17,6 +17,13 @@ class MultiSearchFederation
     private ?int $offset = null;
 
     /**
+     * @var array<non-empty-string, list<non-empty-string>>|null
+     */
+    private ?array $facetsByIndex = null;
+
+    private ?array $mergeFacets = null;
+
+    /**
      * @param non-negative-int $limit
      *
      * @return $this
@@ -41,9 +48,33 @@ class MultiSearchFederation
     }
 
     /**
+     * @param array<non-empty-string, list<non-empty-string>> $facetsByIndex
+     *
+     * @return $this
+     */
+    public function setFacetsByIndex(array $facetsByIndex): self
+    {
+        $this->facetsByIndex = $facetsByIndex;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setMergeFacets(array $mergeFacets): self
+    {
+        $this->mergeFacets = $mergeFacets;
+
+        return $this;
+    }
+
+    /**
      * @return array{
      *     limit?: non-negative-int,
-     *     offset?: non-negative-int
+     *     offset?: non-negative-int,
+     *     facetsByIndex?: array<non-empty-string, list<non-empty-string>>,
+     *     mergeFacets?: array,
      * }
      */
     public function toArray(): array
@@ -51,6 +82,8 @@ class MultiSearchFederation
         return array_filter([
             'limit' => $this->limit,
             'offset' => $this->offset,
+            'facetsByIndex' => $this->facetsByIndex,
+            'mergeFacets' => $this->mergeFacets,
         ], static function ($item) { return null !== $item; });
     }
 }
