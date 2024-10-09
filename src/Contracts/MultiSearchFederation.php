@@ -21,6 +21,9 @@ class MultiSearchFederation
      */
     private ?array $facetsByIndex = null;
 
+    /**
+     * @var array{maxValuesPerFacet: positive-int}|null
+     */
     private ?array $mergeFacets = null;
 
     /**
@@ -60,6 +63,8 @@ class MultiSearchFederation
     }
 
     /**
+     * @param array{maxValuesPerFacet: positive-int} $mergeFacets
+     *
      * @return $this
      */
     public function setMergeFacets(array $mergeFacets): self
@@ -74,7 +79,7 @@ class MultiSearchFederation
      *     limit?: non-negative-int,
      *     offset?: non-negative-int,
      *     facetsByIndex?: array<non-empty-string, list<non-empty-string>>,
-     *     mergeFacets?: array,
+     *     mergeFacets?: array{maxValuesPerFacet: positive-int},
      * }
      */
     public function toArray(): array
