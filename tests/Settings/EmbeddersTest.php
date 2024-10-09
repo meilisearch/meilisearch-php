@@ -12,7 +12,7 @@ final class EmbeddersTest extends TestCase
 {
     private Indexes $index;
 
-    public const DEFAULT_EMBEDDER = null;
+    private const DEFAULT_EMBEDDER = null;
 
     protected function setUp(): void
     {
