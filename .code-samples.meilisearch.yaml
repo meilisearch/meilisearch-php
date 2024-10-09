@@ -742,7 +742,7 @@ distinct_attribute_guide_distinct_parameter_1: |-
 search_parameter_guide_matching_strategy_3: |-
   $client->index('movies')->search('white shirt', ['matchingStrategy' => 'frequency']);
 get_similar_post_1: |-
-  $similarQuery = new SimilarDocumentsQuery('TARGET_DOCUMENT_ID');
+  $similarQuery = new SimilarDocumentsQuery('TARGET_DOCUMENT_ID', 'default');
   $client->index('INDEX_NAME')->searchSimilarDocuments($similarQuery);
 multi_search_federated_1: |-
   $client->multiSearch([
