@@ -722,7 +722,14 @@ search_parameter_reference_retrieve_vectors_1: |-
   $client->index('INDEX_NAME')->search('kitchen utensils', [
     'retrieveVectors' => true,
     'hybrid' => [
-      'embedder': 'default'
+      'embedder': 'EMBEDDER_NAME'
+    ]
+  ]);
+search_parameter_guide_hybrid_1: |-
+  $client->index('INDEX_NAME')->search('kitchen utensils', [
+    'hybrid' => [
+      'semanticRatio' => 0.9,
+      'embedder' => 'EMBEDDER_NAME'
     ]
   ]);
 search_parameter_reference_ranking_score_threshold_1: |-
@@ -756,7 +763,7 @@ multi_search_federated_1: |-
     (new MultiSearchFederation())
   );
 search_parameter_reference_locales_1: |-
-  $client->index('INDEX_NAME')->search('進撃の巨人', [
+  $client->index('INDEX_NAME')->search('QUERY TEXT IN JAPANESE', [
     'locales' => ['jpn']
   ]);
 get_localized_attribute_settings_1: |-
