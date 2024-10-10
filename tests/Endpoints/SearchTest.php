@@ -701,12 +701,12 @@ final class SearchTest extends TestCase
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
-        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0]]);
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0, 'embedder' => 'manual']]);
 
         self::assertSame(5, $response->getSemanticHitCount());
         self::assertArrayNotHasKey('_vectors', $response->getHit(0));
 
-        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0], 'retrieveVectors' => true]);
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0, 'embedder' => 'manual'], 'retrieveVectors' => true]);
 
         self::assertSame(5, $response->getSemanticHitCount());
         self::assertArrayHasKey('_vectors', $response->getHit(0));

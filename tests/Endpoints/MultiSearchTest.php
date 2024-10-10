@@ -89,7 +89,7 @@ final class MultiSearchTest extends TestCase
                 // By setting the weight to 0.9 this query should appear second
                 ->setFederationOptions((new FederationOptions())->setWeight(0.9)),
         ],
-            (new MultiSearchFederation())->setLimit(2)
+            (new MultiSearchFederation())->setLimit(2)->setFacetsByIndex([$this->booksIndex->getUid() => ['genre'], $this->songsIndex->getUid() => ['duration-float']])->setMergeFacets(['maxValuesPerFacet' => 10])
         );
 
         self::assertArrayHasKey('hits', $response);
@@ -97,6 +97,7 @@ final class MultiSearchTest extends TestCase
         self::assertArrayHasKey('limit', $response);
         self::assertArrayHasKey('offset', $response);
         self::assertArrayHasKey('estimatedTotalHits', $response);
+        self::assertArrayHasKey('facetDistribution', $response);
         self::assertCount(2, $response['hits']);
         self::assertSame(2, $response['limit']);
         self::assertSame(0, $response['offset']);
