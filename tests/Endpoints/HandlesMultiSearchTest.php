@@ -21,15 +21,15 @@ final class HandlesMultiSearchTest extends TestCase
         $this->secondIndex = $this->createEmptyIndex($this->safeIndexName());
     }
 
-    public function test_passing_empty_multi_search_federation_does_not_cause_exception(): void
+    public function testPassingEmptyMultiSearchFederationDoesNotCauseException(): void
     {
         $this->expectNotToPerformAssertions();
 
         $this->client->multiSearch([
             (new SearchQuery())->setIndexUid($this->firstIndex->getUid()),
-            (new SearchQuery())->setIndexUid($this->secondIndex->getUid())
+            (new SearchQuery())->setIndexUid($this->secondIndex->getUid()),
         ],
-            (new MultiSearchFederation())
+            new MultiSearchFederation()
         );
     }
 }
