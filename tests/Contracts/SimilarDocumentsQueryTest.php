@@ -10,54 +10,48 @@ use PHPUnit\Framework\TestCase;
 final class SimilarDocumentsQueryTest extends TestCase
 {
     /**
-     * @param int|string $id
+     * @param int|string       $id
+     * @param non-empty-string $embedder
      *
-     * @testWith [123]
-     *           ["test"]
+     * @testWith [123, "default"]
+     *           ["test", "manual"]
      */
-    public function testConstruct($id): void
+    public function testConstruct($id, string $embedder): void
     {
-        $data = new SimilarDocumentsQuery($id);
+        $data = new SimilarDocumentsQuery($id, $embedder);
 
-        self::assertSame(['id' => $id], $data->toArray());
+        self::assertSame(['id' => $id, 'embedder' => $embedder], $data->toArray());
     }
 
     public function testSetOffset(): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setOffset(66);
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setOffset(66);
 
-        self::assertSame(['id' => 'test', 'offset' => 66], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'offset' => 66], $data->toArray());
     }
 
     public function testSetLimit(): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setLimit(50);
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setLimit(50);
 
-        self::assertSame(['id' => 'test', 'limit' => 50], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'limit' => 50], $data->toArray());
     }
 
     public function testSetFilter(): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setFilter([
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setFilter([
             ['genres = horror', 'genres = mystery'],
             "director = 'Jordan Peele'",
         ]);
 
-        self::assertSame(['id' => 'test', 'filter' => [['genres = horror', 'genres = mystery'], "director = 'Jordan Peele'"]], $data->toArray());
-    }
-
-    public function testSetEmbedder(): void
-    {
-        $data = (new SimilarDocumentsQuery('test'))->setEmbedder('default');
-
-        self::assertSame(['id' => 'test', 'embedder' => 'default'], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'filter' => [['genres = horror', 'genres = mystery'], "director = 'Jordan Peele'"]], $data->toArray());
     }
 
     public function testSetAttributesToRetrieve(): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setAttributesToRetrieve(['name', 'price']);
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setAttributesToRetrieve(['name', 'price']);
 
-        self::assertSame(['id' => 'test', 'attributesToRetrieve' => ['name', 'price']], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'attributesToRetrieve' => ['name', 'price']], $data->toArray());
     }
 
     /**
@@ -66,9 +60,9 @@ final class SimilarDocumentsQueryTest extends TestCase
      */
     public function testSetShowRankingScore(bool $showRankingScore): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setShowRankingScore($showRankingScore);
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setShowRankingScore($showRankingScore);
 
-        self::assertSame(['id' => 'test', 'showRankingScore' => $showRankingScore], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'showRankingScore' => $showRankingScore], $data->toArray());
     }
 
     /**
@@ -77,9 +71,9 @@ final class SimilarDocumentsQueryTest extends TestCase
      */
     public function testSetShowRankingScoreDetails(bool $showRankingScoreDetails): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setShowRankingScoreDetails($showRankingScoreDetails);
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setShowRankingScoreDetails($showRankingScoreDetails);
 
-        self::assertSame(['id' => 'test', 'showRankingScoreDetails' => $showRankingScoreDetails], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'showRankingScoreDetails' => $showRankingScoreDetails], $data->toArray());
     }
 
     /**
@@ -88,9 +82,9 @@ final class SimilarDocumentsQueryTest extends TestCase
      */
     public function testSetRetrieveVectors(bool $retrieveVectors): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setRetrieveVectors($retrieveVectors);
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setRetrieveVectors($retrieveVectors);
 
-        self::assertSame(['id' => 'test', 'retrieveVectors' => $retrieveVectors], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'retrieveVectors' => $retrieveVectors], $data->toArray());
     }
 
     /**
@@ -101,8 +95,8 @@ final class SimilarDocumentsQueryTest extends TestCase
      */
     public function testSetRankingScoreThreshold($rankingScoreThreshold): void
     {
-        $data = (new SimilarDocumentsQuery('test'))->setRankingScoreThreshold($rankingScoreThreshold);
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setRankingScoreThreshold($rankingScoreThreshold);
 
-        self::assertSame(['id' => 'test', 'rankingScoreThreshold' => $rankingScoreThreshold], $data->toArray());
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'rankingScoreThreshold' => $rankingScoreThreshold], $data->toArray());
     }
 }
