@@ -38,7 +38,7 @@ jobs:
           MEILI_NO_ANALYTICS: true
     strategy:
       matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
         http-client: ['Guzzle-7', 'Guzzle-7-Adapter', 'Symfony-HttpClient', 'PHP-HTTP-CurlClient', 'Kriswallsmith-Buzz']
         exclude:
           - php-version: '7.4'
