@@ -126,6 +126,20 @@ final class TasksTest extends TestCase
         self::assertGreaterThan(0, $response->getTotal());
     }
 
+    public function getAllTasksByBatchFilter(): void
+    {
+        [$promise, $response] = $this->seedIndex();
+
+        self::assertIsArray($promise);
+        $task = $this->client->getTask($promise['taskUid']);
+
+        $response = $this->client->getTasks((new TasksQuery())
+                ->setBatchUid($task['uid'])
+        );
+
+        self::assertIsArray($response->getResults());
+    }
+
     public function testCancelTasksWithFilter(): void
     {
         $date = new \DateTime('yesterday');
@@ -135,7 +149,7 @@ final class TasksTest extends TestCase
         self::assertSame('taskCancelation', $promise['type']);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertSame('?'.$query, $response['details']['originalFilter']);
+        self::assertSame('?' . $query, $response['details']['originalFilter']);
         self::assertSame('taskCancelation', $response['type']);
         self::assertSame('succeeded', $response['status']);
     }
