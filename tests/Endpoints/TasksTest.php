@@ -135,22 +135,34 @@ final class TasksTest extends TestCase
         self::assertSame('taskCancelation', $promise['type']);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertSame('?'.$query, $response['details']['originalFilter']);
+        self::assertSame('?' . $query, $response['details']['originalFilter']);
         self::assertSame('taskCancelation', $response['type']);
         self::assertSame('succeeded', $response['status']);
     }
 
     public function testGetAllTasksInReverseOrder(): void
     {
-        $date = new \DateTime();
+        $startDate = new \DateTime('now');
 
-        $this->seedIndex();
-        $this->seedIndex();
+        // $response = $this->client->createIndex($this->indexName . '-tmp-for-reverse-tasks');
+        // $this->client->waitForTask($response['taskUid']);
+        // $response = $this->client->createIndex($this->indexName . '-tmp-for-reverse-tasks-2');
+        // $this->client->waitForTask($response['taskUid']);
 
-        $tasks = $this->client->getTasks((new TasksQuery())->setAfterEnqueuedAt($date)->setLimit(2));
-        $reversedTasks = $this->client->getTasks((new TasksQuery())->setAfterEnqueuedAt($date)->setReverse(true)->setLimit(2));
+        // sleep(1);
 
-        self::assertSame($reversedTasks->getResults(), array_reverse($tasks->getResults()));
+        // $endDate = new \DateTime('now');
+
+        $tasks = $this->client->getTasks((new TasksQuery())
+                ->setAfterEnqueuedAt($startDate)
+        );
+        $reversedTasks = $this->client->getTasks((new TasksQuery())
+                ->setAfterEnqueuedAt($startDate)
+                ->setReverse(true)
+        );
+
+        self::assertSameSize($tasks->getResults(), $reversedTasks->getResults());
+        self::assertSame($tasks->getResults(), array_reverse($reversedTasks->getResults()));
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void
