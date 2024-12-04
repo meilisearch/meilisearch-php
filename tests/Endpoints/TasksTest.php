@@ -142,16 +142,7 @@ final class TasksTest extends TestCase
 
     public function testGetAllTasksInReverseOrder(): void
     {
-        $startDate = new \DateTime('now');
-
-        // $response = $this->client->createIndex($this->indexName . '-tmp-for-reverse-tasks');
-        // $this->client->waitForTask($response['taskUid']);
-        // $response = $this->client->createIndex($this->indexName . '-tmp-for-reverse-tasks-2');
-        // $this->client->waitForTask($response['taskUid']);
-
-        // sleep(1);
-
-        // $endDate = new \DateTime('now');
+        $startDate = new \DateTimeImmutable('now');
 
         $tasks = $this->client->getTasks((new TasksQuery())
                 ->setAfterEnqueuedAt($startDate)
