@@ -23,6 +23,11 @@ class TasksQuery
     private ?array $canceledBy = null;
 
     /**
+     * @var bool|null
+     */
+    private ?bool $reverse = null;
+
+    /**
      * @return $this
      */
     public function setFrom(int $from): self
@@ -54,6 +59,16 @@ class TasksQuery
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    public function setReverse(bool $reverse): self
+    {
+        $this->reverse = $reverse;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         return array_filter(
@@ -63,6 +78,7 @@ class TasksQuery
                     'from' => $this->from,
                     'limit' => $this->limit,
                     'canceledBy' => $this->formatArray($this->canceledBy),
+                    'reverse' => $this->reverse,
                 ]
             ), static function ($item) { return null !== $item; }
         );
