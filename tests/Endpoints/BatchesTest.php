@@ -57,4 +57,20 @@ final class BatchesTest extends TestCase
     );
     self::assertEquals($batches->getResults(), array_reverse($reversedBatches->getResults()));
   }
+
+  public function testGetOneBatch(): void
+  {
+    $batches = $this->client->getBatches();
+    $response = $this->client->getBatch($batches->getResults()[0]['uid']);
+
+    self::assertEquals($batches->getResults()[0]['uid'], $response['uid']);
+    self::assertArrayHasKey('details', $response);
+    self::assertArrayHasKey('totalNbTasks', $response['stats']);
+    self::assertArrayHasKey('status', $response['stats']);
+    self::assertArrayHasKey('types', $response['stats']);
+    self::assertArrayHasKey('indexUids', $response['stats']);
+    self::assertArrayHasKey('duration', $response);
+    self::assertArrayHasKey('startedAt', $response);
+    self::assertArrayHasKey('finishedAt', $response);
+  }
 }
