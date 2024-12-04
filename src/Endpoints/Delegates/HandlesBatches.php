@@ -10,19 +10,19 @@ use Meilisearch\Endpoints\Batches;
 
 trait HandlesBatches
 {
-  protected Batches $batches;
+    protected Batches $batches;
 
-  public function getBatch($uid): array
-  {
-    return $this->batches->get($uid);
-  }
+    public function getBatch($uid): array
+    {
+        return $this->batches->get($uid);
+    }
 
-  public function getBatches(?BatchesQuery $options = null): BatchesResults
-  {
-    $query = isset($options) ? $options->toArray() : [];
+    public function getBatches(?BatchesQuery $options = null): BatchesResults
+    {
+        $query = isset($options) ? $options->toArray() : [];
 
-    $response = $this->batches->all($query);
+        $response = $this->batches->all($query);
 
-    return new BatchesResults($response);
-  }
+        return new BatchesResults($response);
+    }
 }

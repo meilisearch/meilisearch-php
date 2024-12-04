@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Meilisearch;
 
+use Meilisearch\Endpoints\Batches;
+use Meilisearch\Endpoints\Delegates\HandlesBatches;
 use Meilisearch\Endpoints\Delegates\HandlesDumps;
 use Meilisearch\Endpoints\Delegates\HandlesIndex;
 use Meilisearch\Endpoints\Delegates\HandlesKeys;
@@ -11,7 +13,6 @@ use Meilisearch\Endpoints\Delegates\HandlesMultiSearch;
 use Meilisearch\Endpoints\Delegates\HandlesSnapshots;
 use Meilisearch\Endpoints\Delegates\HandlesSystem;
 use Meilisearch\Endpoints\Delegates\HandlesTasks;
-use Meilisearch\Endpoints\Delegates\HandlesBatches;
 use Meilisearch\Endpoints\Dumps;
 use Meilisearch\Endpoints\Health;
 use Meilisearch\Endpoints\Indexes;
@@ -19,7 +20,6 @@ use Meilisearch\Endpoints\Keys;
 use Meilisearch\Endpoints\Snapshots;
 use Meilisearch\Endpoints\Stats;
 use Meilisearch\Endpoints\Tasks;
-use Meilisearch\Endpoints\Batches;
 use Meilisearch\Endpoints\TenantToken;
 use Meilisearch\Endpoints\Version;
 use Meilisearch\Http\Client as MeilisearchClientAdapter;
