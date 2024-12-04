@@ -22,10 +22,6 @@ class TasksQuery
      */
     private ?array $canceledBy = null;
 
-
-    /**
-     * @var int|null
-     */
     private ?int $batchUid = null;
 
     /**

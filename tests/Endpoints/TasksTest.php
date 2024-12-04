@@ -147,7 +147,7 @@ final class TasksTest extends TestCase
         self::assertSame('taskCancelation', $promise['type']);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertSame('?' . $query, $response['details']['originalFilter']);
+        self::assertSame('?'.$query, $response['details']['originalFilter']);
         self::assertSame('taskCancelation', $response['type']);
         self::assertSame('succeeded', $response['status']);
     }
