@@ -76,6 +76,18 @@ final class TasksTest extends TestCase
         self::assertSame([], $response->getResults());
     }
 
+    public function getAllTasksClientWithBatchFilter(): void
+    {
+        [$promise, $response] = $this->seedIndex();
+        $task = $this->client->getTask($promise['taskUid']);
+
+        $response = $this->client->getTasks((new TasksQuery())
+                ->setBatchUid($task['uid'])
+        );
+
+        self::assertIsArray($response->getResults());
+    }
+
     public function testGetOneTaskIndex(): void
     {
         [$promise, $response] = $this->seedIndex();
@@ -124,20 +136,6 @@ final class TasksTest extends TestCase
 
         self::assertSame($firstIndex, $newFirstIndex);
         self::assertGreaterThan(0, $response->getTotal());
-    }
-
-    public function getAllTasksByBatchFilter(): void
-    {
-        [$promise, $response] = $this->seedIndex();
-
-        self::assertIsArray($promise);
-        $task = $this->client->getTask($promise['taskUid']);
-
-        $response = $this->client->getTasks((new TasksQuery())
-                ->setBatchUid($task['uid'])
-        );
-
-        self::assertIsArray($response->getResults());
     }
 
     public function testCancelTasksWithFilter(): void
