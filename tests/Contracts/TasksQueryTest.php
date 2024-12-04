@@ -114,6 +114,6 @@ final class TasksQueryTest extends TestCase
     {
         $data = (new TasksQuery())->setReverse(true);
 
-        self::assertSame(['reverse' => true], $data->toArray());
+        self::assertSame(['reverse' => json_encode(true)], $data->toArray());
     }
 }

@@ -78,7 +78,7 @@ class TasksQuery
                     'from' => $this->from,
                     'limit' => $this->limit,
                     'canceledBy' => $this->formatArray($this->canceledBy),
-                    'reverse' => $this->reverse,
+                    'reverse' => $this->reverse !== null ? json_encode($this->reverse) : null,
                 ]
             ), static function ($item) { return null !== $item; }
         );
