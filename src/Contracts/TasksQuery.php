@@ -22,9 +22,6 @@ class TasksQuery
      */
     private ?array $canceledBy = null;
 
-    /**
-     * @var bool|null
-     */
     private ?bool $reverse = null;
 
     /**
@@ -78,7 +75,7 @@ class TasksQuery
                     'from' => $this->from,
                     'limit' => $this->limit,
                     'canceledBy' => $this->formatArray($this->canceledBy),
-                    'reverse' => $this->reverse !== null ? json_encode($this->reverse) : null,
+                    'reverse' => null !== $this->reverse ? json_encode($this->reverse) : null,
                 ]
             ), static function ($item) { return null !== $item; }
         );
