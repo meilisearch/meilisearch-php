@@ -22,7 +22,7 @@ final class BatchesTest extends TestCase
     public function testGetAllBatches(): void
     {
         $response = $this->client->getBatches();
-        self::assertIsArray($response->getResults());
+        self::assertGreaterThan(0, $response->getTotal());
     }
 
     public function testGetAllBatchesWithIndexUidFilters(): void
@@ -37,7 +37,7 @@ final class BatchesTest extends TestCase
     {
         $tasks = $this->client->getTasks(new TasksQuery())->getResults();
         $response = $this->client->getBatches((new BatchesQuery())->setUids([$tasks[0]['uid']]));
-        self::assertNotNull($response->getResults());
+        self::assertGreaterThan(0, $response->getTotal());
     }
 
     public function testGetAllBatchesInReverseOrder(): void
@@ -45,11 +45,11 @@ final class BatchesTest extends TestCase
         $startDate = new \DateTimeImmutable('now');
 
         $batches = $this->client->getBatches((new BatchesQuery())
-            ->setAfterEnqueuedAt($startDate)
+                ->setAfterEnqueuedAt($startDate)
         );
         $reversedBatches = $this->client->getBatches((new BatchesQuery())
-            ->setAfterEnqueuedAt($startDate)
-            ->setReverse(true)
+                ->setAfterEnqueuedAt($startDate)
+                ->setReverse(true)
         );
         self::assertSame($batches->getResults(), array_reverse($reversedBatches->getResults()));
     }

@@ -17,11 +17,6 @@ class BatchesQuery
      */
     private ?int $limit = null;
 
-    /**
-     * @var non-empty-list<int>|null
-     */
-    private ?array $canceledBy = null;
-
     private ?bool $reverse = null;
 
     /**
@@ -30,18 +25,6 @@ class BatchesQuery
     public function setFrom(int $from): self
     {
         $this->from = $from;
-
-        return $this;
-    }
-
-    /**
-     * @param non-empty-list<int> $canceledBy
-     *
-     * @return $this
-     */
-    public function setCanceledBy(array $canceledBy): self
-    {
-        $this->canceledBy = $canceledBy;
 
         return $this;
     }

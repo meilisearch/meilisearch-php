@@ -85,7 +85,7 @@ final class TasksTest extends TestCase
                 ->setBatchUid($task['uid'])
         );
 
-        self::assertIsArray($response->getResults());
+        self::assertGreaterThan(0, $response->getTotal());
     }
 
     public function testGetOneTaskIndex(): void
