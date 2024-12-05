@@ -58,7 +58,6 @@ class SearchResult implements \Countable, \IteratorAggregate
             $this->offset = $body['offset'];
             $this->limit = $body['limit'];
             $this->estimatedTotalHits = $body['estimatedTotalHits'];
-            $this->hitsCount = \count($body['hits']);
         } else {
             $this->numberedPagination = true;
 
@@ -66,11 +65,11 @@ class SearchResult implements \Countable, \IteratorAggregate
             $this->page = $body['page'];
             $this->totalPages = $body['totalPages'];
             $this->totalHits = $body['totalHits'];
-            $this->hitsCount = $body['totalHits'];
         }
 
         $this->semanticHitCount = $body['semanticHitCount'] ?? 0;
         $this->hits = $body['hits'] ?? [];
+        $this->hitsCount = \count($body['hits']);
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->query = $body['query'];
         $this->facetDistribution = $body['facetDistribution'] ?? [];
