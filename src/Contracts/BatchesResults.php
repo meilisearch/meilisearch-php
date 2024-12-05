@@ -28,7 +28,7 @@ class BatchesResults extends Data
 
     public function __construct(array $params)
     {
-        parent::__construct($params['results'] ?? []);
+        parent::__construct($params['results']);
 
         $this->from = $params['from'] ?? 0;
         $this->limit = $params['limit'] ?? 0;
