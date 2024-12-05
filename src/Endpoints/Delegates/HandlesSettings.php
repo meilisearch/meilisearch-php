@@ -424,16 +424,27 @@ trait HandlesSettings
 
     // Settings - Facet Search
 
+    /**
+     * @return bool
+     * @since Meilisearch v1.12.0
+     */
     public function getFacetSearch(): bool
     {
         return $this->http->get(self::PATH . '/' . $this->uid . '/settings/facet-search');
     }
 
+    /**
+     * @param bool $facetSearch
+     * @since Meilisearch v1.12.0
+     */
     public function updateFacetSearch(bool $facetSearch): array
     {
         return $this->http->put(self::PATH . '/' . $this->uid . '/settings/facet-search', $facetSearch);
     }
 
+    /**
+     * @since Meilisearch v1.12.0
+     */
     public function resetFacetSearch(): array
     {
         return $this->http->delete(self::PATH . '/' . $this->uid . '/settings/facet-search');
@@ -443,6 +454,7 @@ trait HandlesSettings
 
     /**
      * @return 'indexingTime'|'disabled'
+     * @since Meilisearch v1.12.0
      */
     public function getPrefixSearch(): string
     {
@@ -451,12 +463,16 @@ trait HandlesSettings
 
     /**
      * @param 'indexingTime'|'disabled' $prefixSearch
+     * @since Meilisearch v1.12.0
      */
     public function updatePrefixSearch(string $prefixSearch): array
     {
         return $this->http->put(self::PATH . '/' . $this->uid . '/settings/prefix-search', $prefixSearch);
     }
 
+    /**
+     * @since Meilisearch v1.12.0
+     */
     public function resetPrefixSearch(): array
     {
         return $this->http->delete(self::PATH . '/' . $this->uid . '/settings/prefix-search');
