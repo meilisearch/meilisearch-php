@@ -140,6 +140,22 @@ final class TasksTest extends TestCase
         self::assertSame('succeeded', $response['status']);
     }
 
+    public function testGetAllTasksInReverseOrder(): void
+    {
+        $startDate = new \DateTimeImmutable('now');
+
+        $tasks = $this->client->getTasks((new TasksQuery())
+                ->setAfterEnqueuedAt($startDate)
+        );
+        $reversedTasks = $this->client->getTasks((new TasksQuery())
+                ->setAfterEnqueuedAt($startDate)
+                ->setReverse(true)
+        );
+
+        self::assertSameSize($tasks->getResults(), $reversedTasks->getResults());
+        self::assertSame($tasks->getResults(), array_reverse($reversedTasks->getResults()));
+    }
+
     public function testExceptionIfNoTaskIdWhenGetting(): void
     {
         $this->expectException(ApiException::class);
