@@ -8,42 +8,42 @@ use Tests\TestCase;
 
 final class PrefixSearchTest extends TestCase
 {
-  public function testGetDefaultPrefixSearch(): void
-  {
-    $index = $this->createEmptyIndex($this->safeIndexName());
+    public function testGetDefaultPrefixSearch(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
-    $prefixSearch = $index->getPrefixSearch();
+        $prefixSearch = $index->getPrefixSearch();
 
-    self::assertSame('indexingTime', $prefixSearch);
-  }
+        self::assertSame('indexingTime', $prefixSearch);
+    }
 
-  public function testUpdatePrefixSearch(): void
-  {
-    $index = $this->createEmptyIndex($this->safeIndexName());
+    public function testUpdatePrefixSearch(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
-    $promise = $index->updatePrefixSearch('disabled');
+        $promise = $index->updatePrefixSearch('disabled');
 
-    $this->assertIsValidPromise($promise);
-    $index->waitForTask($promise['taskUid']);
+        $this->assertIsValidPromise($promise);
+        $index->waitForTask($promise['taskUid']);
 
-    $prefixSearch = $index->getPrefixSearch();
-    self::assertSame('disabled', $prefixSearch);
-  }
+        $prefixSearch = $index->getPrefixSearch();
+        self::assertSame('disabled', $prefixSearch);
+    }
 
-  public function testResetPrefixSearch(): void
-  {
-    $index = $this->createEmptyIndex($this->safeIndexName());
+    public function testResetPrefixSearch(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
 
-    $promise = $index->updatePrefixSearch('disabled');
-    $index->waitForTask($promise['taskUid']);
+        $promise = $index->updatePrefixSearch('disabled');
+        $index->waitForTask($promise['taskUid']);
 
-    $promise = $index->resetPrefixSearch();
+        $promise = $index->resetPrefixSearch();
 
-    $this->assertIsValidPromise($promise);
+        $this->assertIsValidPromise($promise);
 
-    $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($promise['taskUid']);
 
-    $prefixSearch = $index->getPrefixSearch();
-    self::assertSame('indexingTime', $prefixSearch);
-  }
+        $prefixSearch = $index->getPrefixSearch();
+        self::assertSame('indexingTime', $prefixSearch);
+    }
 }
