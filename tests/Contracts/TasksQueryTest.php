@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Contracts;
 
+// TODO: refactor to make sure these tests clean up after themselves
+
 use Meilisearch\Contracts\TasksQuery;
 use PHPUnit\Framework\TestCase;
 
