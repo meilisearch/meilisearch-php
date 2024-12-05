@@ -19,7 +19,7 @@ trait HandlesBatches
 
     public function getBatches(?BatchesQuery $options = null): BatchesResults
     {
-        $query = isset($options) ? $options->toArray() : [];
+        $query = null !== $options ? $options->toArray() : [];
 
         $response = $this->batches->all($query);
 
