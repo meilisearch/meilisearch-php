@@ -438,4 +438,27 @@ trait HandlesSettings
     {
         return $this->http->delete(self::PATH . '/' . $this->uid . '/settings/facet-search');
     }
+
+    // Settings - Prefix Search
+
+    /**
+     * @return 'indexingTime'|'disabled'
+     */
+    public function getPrefixSearch(): string
+    {
+        return $this->http->get(self::PATH . '/' . $this->uid . '/settings/prefix-search');
+    }
+
+    /**
+     * @param 'indexingTime'|'disabled' $prefixSearch
+     */
+    public function updatePrefixSearch(string $prefixSearch): array
+    {
+        return $this->http->put(self::PATH . '/' . $this->uid . '/settings/prefix-search', $prefixSearch);
+    }
+
+    public function resetPrefixSearch(): array
+    {
+        return $this->http->delete(self::PATH . '/' . $this->uid . '/settings/prefix-search');
+    }
 }
