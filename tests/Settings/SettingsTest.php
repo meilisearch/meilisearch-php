@@ -109,7 +109,7 @@ final class SettingsTest extends TestCase
         self::assertIsArray($settings['sortableAttributes']);
         self::assertEmpty($settings['sortableAttributes']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
-        self::assertSame(false, $settings['facetSearch']);
+        self::assertFalse($settings['facetSearch']);
         self::assertSame('disabled', $settings['prefixSearch']);
     }
 
