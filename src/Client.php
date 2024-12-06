@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Meilisearch;
 
+use Meilisearch\Endpoints\Batches;
+use Meilisearch\Endpoints\Delegates\HandlesBatches;
 use Meilisearch\Endpoints\Delegates\HandlesDumps;
 use Meilisearch\Endpoints\Delegates\HandlesIndex;
 use Meilisearch\Endpoints\Delegates\HandlesKeys;
@@ -34,6 +36,7 @@ class Client
     use HandlesSnapshots;
     use HandlesSystem;
     use HandlesMultiSearch;
+    use HandlesBatches;
 
     /**
      * @param array<int, string> $clientAgents
@@ -52,6 +55,7 @@ class Client
         $this->version = new Version($this->http);
         $this->stats = new Stats($this->http);
         $this->tasks = new Tasks($this->http);
+        $this->batches = new Batches($this->http);
         $this->keys = new Keys($this->http);
         $this->dumps = new Dumps($this->http);
         $this->snapshots = new Snapshots($this->http);
