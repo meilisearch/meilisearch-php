@@ -76,6 +76,18 @@ final class TasksTest extends TestCase
         self::assertSame([], $response->getResults());
     }
 
+    public function getAllTasksClientWithBatchFilter(): void
+    {
+        [$promise, $response] = $this->seedIndex();
+        $task = $this->client->getTask($promise['taskUid']);
+
+        $response = $this->client->getTasks((new TasksQuery())
+                ->setBatchUid($task['uid'])
+        );
+
+        self::assertGreaterThan(0, $response->getTotal());
+    }
+
     public function testGetOneTaskIndex(): void
     {
         [$promise, $response] = $this->seedIndex();
@@ -138,6 +150,22 @@ final class TasksTest extends TestCase
         self::assertSame('?'.$query, $response['details']['originalFilter']);
         self::assertSame('taskCancelation', $response['type']);
         self::assertSame('succeeded', $response['status']);
+    }
+
+    public function testGetAllTasksInReverseOrder(): void
+    {
+        $startDate = new \DateTimeImmutable('now');
+
+        $tasks = $this->client->getTasks((new TasksQuery())
+                ->setAfterEnqueuedAt($startDate)
+        );
+        $reversedTasks = $this->client->getTasks((new TasksQuery())
+                ->setAfterEnqueuedAt($startDate)
+                ->setReverse(true)
+        );
+
+        self::assertSameSize($tasks->getResults(), $reversedTasks->getResults());
+        self::assertSame($tasks->getResults(), array_reverse($reversedTasks->getResults()));
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void

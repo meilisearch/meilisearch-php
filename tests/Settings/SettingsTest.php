@@ -29,6 +29,8 @@ final class SettingsTest extends TestCase
 
     public const DEFAULT_SEARCHABLE_ATTRIBUTES = ['*'];
     public const DEFAULT_DISPLAYED_ATTRIBUTES = ['*'];
+    public const DEFAULT_FACET_SEARCH = true;
+    public const DEFAULT_PREFIX_SEARCH = 'indexingTime';
 
     public function testGetDefaultSettings(): void
     {
@@ -58,7 +60,8 @@ final class SettingsTest extends TestCase
         self::assertEmpty($settingA['sortableAttributes']);
         self::assertIsIterable($settingA['typoTolerance']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingA['typoTolerance']));
-
+        self::assertSame(self::DEFAULT_FACET_SEARCH, $settingA['facetSearch']);
+        self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settingA['prefixSearch']);
         self::assertSame(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
         self::assertNull($settingB['distinctAttribute']);
         self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingB['searchableAttributes']);
@@ -73,6 +76,8 @@ final class SettingsTest extends TestCase
         self::assertEmpty($settingB['sortableAttributes']);
         self::assertIsIterable($settingB['typoTolerance']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settingB['typoTolerance']));
+        self::assertSame(self::DEFAULT_FACET_SEARCH, $settingB['facetSearch']);
+        self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settingB['prefixSearch']);
     }
 
     public function testUpdateSettings(): void
@@ -82,6 +87,8 @@ final class SettingsTest extends TestCase
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
+            'facetSearch' => false,
+            'prefixSearch' => 'disabled',
         ]);
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
@@ -102,6 +109,8 @@ final class SettingsTest extends TestCase
         self::assertIsArray($settings['sortableAttributes']);
         self::assertEmpty($settings['sortableAttributes']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
+        self::assertFalse($settings['facetSearch']);
+        self::assertSame('disabled', $settings['prefixSearch']);
     }
 
     public function testUpdateSettingsWithoutOverwritingThem(): void
@@ -184,6 +193,8 @@ final class SettingsTest extends TestCase
         self::assertIsArray($settings['sortableAttributes']);
         self::assertEmpty($settings['sortableAttributes']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, iterator_to_array($settings['typoTolerance']));
+        self::assertSame(self::DEFAULT_FACET_SEARCH, $settings['facetSearch']);
+        self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settings['prefixSearch']);
     }
 
     // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.
