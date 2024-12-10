@@ -7,7 +7,7 @@ namespace Tests\Endpoints;
 use Meilisearch\Endpoints\Indexes;
 use Tests\TestCase;
 
-final class SearchTestNestedFields extends TestCase
+final class SearchNestedFieldsTest extends TestCase
 {
     private Indexes $index;
 
@@ -16,7 +16,7 @@ final class SearchTestNestedFields extends TestCase
         parent::setUp();
         $this->index = $this->createEmptyIndex($this->safeIndexName('nestedIndex'));
         $promise = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
-        $this->index->waitForTask($promise['uid']);
+        $this->index->waitForTask($promise['taskUid']);
     }
 
     public function testBasicSearchOnNestedFields(): void
@@ -48,7 +48,7 @@ final class SearchTestNestedFields extends TestCase
 
         self::assertArrayHasKey('hits', $response);
         self::assertSame(6, $response['estimatedTotalHits']);
-        self::assertSame(4, $response['hits'][0]['id']);
+        self::assertSame(1, $response['hits'][0]['id']);
     }
 
     public function testSearchOnNestedFieldWithOptions(): void
@@ -62,13 +62,13 @@ final class SearchTestNestedFields extends TestCase
         ]);
 
         self::assertCount(1, $response['hits']);
-        self::assertSame(4, $response['hits'][0]['id']);
+        self::assertSame(1, $response['hits'][0]['id']);
     }
 
     public function testSearchOnNestedFieldWithSearchableAtributes(): void
     {
         $response = $this->index->updateSearchableAttributes(['title', 'info.comment']);
-        $this->index->waitForTask($response['uid']);
+        $this->index->waitForTask($response['taskUid']);
 
         $response = $this->index->search('An awesome');
 
@@ -87,7 +87,7 @@ final class SearchTestNestedFields extends TestCase
     public function testSearchOnNestedFieldWithSortableAtributes(): void
     {
         $response = $this->index->updateSortableAttributes(['info.reviewNb']);
-        $this->index->waitForTask($response['uid']);
+        $this->index->waitForTask($response['taskUid']);
 
         $response = $this->index->search('An awesome');
 
@@ -111,7 +111,7 @@ final class SearchTestNestedFields extends TestCase
             'searchableAttributes' => ['title', 'info.comment'],
             'sortableAttributes' => ['info.reviewNb'],
         ]);
-        $this->index->waitForTask($response['uid']);
+        $this->index->waitForTask($response['taskUid']);
 
         $response = $this->index->search('An awesome');
 
