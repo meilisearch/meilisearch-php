@@ -47,9 +47,9 @@ class Client implements Http
         $this->http = $httpClient ?? Psr18ClientDiscovery::find();
         $this->requestFactory = $reqFactory ?? Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
-        $this->headers = array_filter([
+        $this->headers = [
             'User-Agent' => implode(';', array_merge($clientAgents, [Meilisearch::qualifiedVersion()])),
-        ]);
+        ];
         if (null !== $apiKey && '' !== $apiKey) {
             $this->headers['Authorization'] = \sprintf('Bearer %s', $apiKey);
         }
