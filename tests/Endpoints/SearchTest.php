@@ -26,8 +26,16 @@ final class SearchTest extends TestCase
         $response = $this->index->search('prince');
 
         $this->assertEstimatedPagination($response->toArray());
-        self::assertSame(2, $response->getEstimatedTotalHits());
         self::assertCount(2, $response->getHits());
+
+        self::assertSame(2, $response->getEstimatedTotalHits());
+        self::assertSame(0, $response->getOffset());
+        self::assertSame(20, $response->getLimit());
+
+        self::assertNull($response->getHitsPerPage());
+        self::assertNull($response->getPage());
+        self::assertNull($response->getTotalPages());
+        self::assertNull($response->getTotalHits());
 
         $response = $this->index->search('prince', [], [
             'raw' => true,
@@ -43,6 +51,15 @@ final class SearchTest extends TestCase
 
         $this->assertFinitePagination($response->toArray());
         self::assertCount(2, $response->getHits());
+
+        self::assertSame(2, $response->getHitsPerPage());
+        self::assertSame(1, $response->getPage());
+        self::assertSame(1, $response->getTotalPages());
+        self::assertSame(2, $response->getTotalHits());
+
+        self::assertNull($response->getEstimatedTotalHits());
+        self::assertNull($response->getOffset());
+        self::assertNull($response->getLimit());
 
         $response = $this->index->search('prince', ['hitsPerPage' => 2], [
             'raw' => true,
