@@ -156,17 +156,27 @@ final class TasksTest extends TestCase
     {
         $startDate = new \DateTimeImmutable('now');
         [$promise] = $this->seedIndex();
-        $this->client->waitForTask($promise['taskUid']);
         [$promise2] = $this->seedIndex();
+        sleep(1);
+        $endDate = new \DateTimeImmutable('now');
+
+        $this->client->waitForTask($promise['taskUid']);
         $this->client->waitForTask($promise2['taskUid']);
 
         $tasks = $this->client->getTasks((new TasksQuery())
                 ->setAfterEnqueuedAt($startDate)
+                ->setBeforeEnqueuedAt($endDate)
         );
         $reversedTasks = $this->client->getTasks((new TasksQuery())
                 ->setAfterEnqueuedAt($startDate)
+                ->setBeforeEnqueuedAt($endDate)
                 ->setReverse(true)
         );
+
+        print_r($startDate);
+        print_r($endDate);
+        print_r($tasks->getResults());
+        print_r($reversedTasks->getResults());
 
         self::assertSameSize($tasks->getResults(), $reversedTasks->getResults());
         self::assertSame($tasks->getResults(), array_reverse($reversedTasks->getResults()));
