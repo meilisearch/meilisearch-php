@@ -155,6 +155,10 @@ final class TasksTest extends TestCase
     public function testGetAllTasksInReverseOrder(): void
     {
         $startDate = new \DateTimeImmutable('now');
+        [$promise] = $this->seedIndex();
+        $this->client->waitForTask($promise['taskUid']);
+        [$promise2] = $this->seedIndex();
+        $this->client->waitForTask($promise2['taskUid']);
 
         $tasks = $this->client->getTasks((new TasksQuery())
                 ->setAfterEnqueuedAt($startDate)
