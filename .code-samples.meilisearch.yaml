@@ -288,7 +288,8 @@ update_displayed_attributes_1: |-
   ]);
 reset_displayed_attributes_1: |-
   $client->index('movies')->resetDisplayedAttributes();
-get_typo_tolerance_1: $client->index('books')->getTypoTolerance();
+get_typo_tolerance_1: |-
+  $client->index('books')->getTypoTolerance();
 update_typo_tolerance_1: |-
   $client->index('books')->updateTypoTolerance([
     'minWordSizeForTypos' => [
