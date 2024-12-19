@@ -68,5 +68,6 @@ final class BatchesTest extends TestCase
         self::assertArrayHasKey('duration', $response);
         self::assertArrayHasKey('startedAt', $response);
         self::assertArrayHasKey('finishedAt', $response);
+        self::assertArrayHasKey('progress', $response);
     }
 }
