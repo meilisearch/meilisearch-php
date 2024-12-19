@@ -6,7 +6,7 @@ namespace Meilisearch\Contracts;
 
 use Meilisearch\Endpoints\Delegates\TasksQueryTrait;
 
-class TasksQuery
+class BatchesQuery
 {
     use TasksQueryTrait;
 
@@ -17,13 +17,6 @@ class TasksQuery
      */
     private ?int $limit = null;
 
-    /**
-     * @var non-empty-list<int>|null
-     */
-    private ?array $canceledBy = null;
-
-    private ?int $batchUid = null;
-
     private ?bool $reverse = null;
 
     /**
@@ -32,18 +25,6 @@ class TasksQuery
     public function setFrom(int $from): self
     {
         $this->from = $from;
-
-        return $this;
-    }
-
-    /**
-     * @param non-empty-list<int> $canceledBy
-     *
-     * @return $this
-     */
-    public function setCanceledBy(array $canceledBy): self
-    {
-        $this->canceledBy = $canceledBy;
 
         return $this;
     }
@@ -61,13 +42,6 @@ class TasksQuery
     /**
      * @return $this
      */
-    public function setBatchUid(int $batchUid): self
-    {
-        $this->batchUid = $batchUid;
-
-        return $this;
-    }
-
     public function setReverse(bool $reverse): self
     {
         $this->reverse = $reverse;
@@ -83,8 +57,6 @@ class TasksQuery
                 [
                     'from' => $this->from,
                     'limit' => $this->limit,
-                    'canceledBy' => $this->formatArray($this->canceledBy),
-                    'batchUid' => $this->batchUid,
                     'reverse' => (null !== $this->reverse ? ($this->reverse ? 'true' : 'false') : null),
                 ]
             ),
