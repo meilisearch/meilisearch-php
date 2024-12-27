@@ -154,14 +154,14 @@ final class TasksTest extends TestCase
 
     public function testGetAllTasksInReverseOrder(): void
     {
-        $sampleTasks = $this->client->getTasks((new TasksQuery()));
-        $sampleTasksUids = array_map(fn($task) => $task['uid'], $sampleTasks->getResults());
+        $sampleTasks = $this->client->getTasks(new TasksQuery());
+        $sampleTasksUids = array_map(fn ($task) => $task['uid'], $sampleTasks->getResults());
 
         $expectedTasks = $this->client->getTasks((new TasksQuery())->setUids($sampleTasksUids));
-        $expectedTasksUids = array_map(fn($task) => $task['uid'], $expectedTasks->getResults());
+        $expectedTasksUids = array_map(fn ($task) => $task['uid'], $expectedTasks->getResults());
 
         $reversedTasks = $this->client->getTasks((new TasksQuery())->setUids($sampleTasksUids)->setReverse(true));
-        $reversedTasksUids = array_map(fn($task) => $task['uid'], $reversedTasks->getResults());
+        $reversedTasksUids = array_map(fn ($task) => $task['uid'], $reversedTasks->getResults());
 
         self::assertSame(array_reverse($expectedTasksUids), $reversedTasksUids);
     }
