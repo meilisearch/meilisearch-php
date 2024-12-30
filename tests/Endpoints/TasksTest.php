@@ -154,18 +154,16 @@ final class TasksTest extends TestCase
 
     public function testGetAllTasksInReverseOrder(): void
     {
-        $startDate = new \DateTimeImmutable('now');
+        $sampleTasks = $this->client->getTasks(new TasksQuery());
+        $sampleTasksUids = array_map(fn ($task) => $task['uid'], $sampleTasks->getResults());
 
-        $tasks = $this->client->getTasks((new TasksQuery())
-                ->setAfterEnqueuedAt($startDate)
-        );
-        $reversedTasks = $this->client->getTasks((new TasksQuery())
-                ->setAfterEnqueuedAt($startDate)
-                ->setReverse(true)
-        );
+        $expectedTasks = $this->client->getTasks((new TasksQuery())->setUids($sampleTasksUids));
+        $expectedTasksUids = array_map(fn ($task) => $task['uid'], $expectedTasks->getResults());
 
-        self::assertSameSize($tasks->getResults(), $reversedTasks->getResults());
-        self::assertSame($tasks->getResults(), array_reverse($reversedTasks->getResults()));
+        $reversedTasks = $this->client->getTasks((new TasksQuery())->setUids($sampleTasksUids)->setReverse(true));
+        $reversedTasksUids = array_map(fn ($task) => $task['uid'], $reversedTasks->getResults());
+
+        self::assertSame(array_reverse($expectedTasksUids), $reversedTasksUids);
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void
