@@ -17,8 +17,6 @@ final class EmbeddersTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['vectorStore' => true]);
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
