@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Settings;
 
 use Meilisearch\Endpoints\Indexes;
-use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class EmbeddersTest extends TestCase
