@@ -680,8 +680,6 @@ final class DocumentsTest extends TestCase
 
     public function testGetDocumentsWithVector(): void
     {
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['vectorStore' => true]);
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
 
         $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);

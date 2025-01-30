@@ -196,24 +196,4 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settings['facetSearch']);
         self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settings['prefixSearch']);
     }
-
-    // Here the test to prevent https://github.com/meilisearch/meilisearch-php/issues/204.
-    // Rollback this comment after meilisearch v1.6.0 final release.
-    // Related to: https://github.com/meilisearch/meilisearch/issues/4323
-    //
-    // public function testGetThenUpdateSettings(): void
-    // {
-    //     $http = new \Meilisearch\Http\Client($this->host, getenv('MEILISEARCH_API_KEY'));
-    //     $http->patch('/experimental-features', ['vectorStore' => false]);
-    //     $index = $this->createEmptyIndex($this->safeIndexName());
-
-    //     $resetPromise = $index->resetSettings();
-    //     $this->assertIsValidPromise($resetPromise);
-    //     $index->waitForTask($resetPromise['taskUid']);
-
-    //     $settings = $index->getSettings();
-    //     $promise = $index->updateSettings($settings);
-    //     $this->assertIsValidPromise($promise);
-    //     $index->waitForTask($promise['taskUid']);
-    // }
 }
