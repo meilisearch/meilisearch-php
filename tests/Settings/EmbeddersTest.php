@@ -11,7 +11,7 @@ final class EmbeddersTest extends TestCase
 {
     private Indexes $index;
 
-    private const DEFAULT_EMBEDDER = null;
+    private const DEFAULT_EMBEDDER = [];
 
     protected function setUp(): void
     {
