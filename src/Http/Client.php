@@ -41,7 +41,8 @@ class Client implements Http
         ?ClientInterface $httpClient = null,
         ?RequestFactoryInterface $reqFactory = null,
         array $clientAgents = [],
-        ?StreamFactoryInterface $streamFactory = null
+        ?StreamFactoryInterface $streamFactory = null,
+        $headers = []
     ) {
         $this->baseUrl = $url;
         $this->http = $httpClient ?? Psr18ClientDiscovery::find();
@@ -53,6 +54,7 @@ class Client implements Http
         if (null !== $apiKey && '' !== $apiKey) {
             $this->headers['Authorization'] = \sprintf('Bearer %s', $apiKey);
         }
+        $this->headers = array_merge($this->headers, $headers);
         $this->json = new Json();
     }
 
