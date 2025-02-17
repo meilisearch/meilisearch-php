@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Tests\Settings;
 
 use Meilisearch\Endpoints\Indexes;
-use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class EmbeddersTest extends TestCase
 {
     private Indexes $index;
 
-    private const DEFAULT_EMBEDDER = null;
+    private const DEFAULT_EMBEDDER = [];
 
     protected function setUp(): void
     {
         parent::setUp();
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['vectorStore' => true]);
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
