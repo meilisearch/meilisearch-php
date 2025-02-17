@@ -47,9 +47,10 @@ class Client
         ?ClientInterface $httpClient = null,
         ?RequestFactoryInterface $requestFactory = null,
         array $clientAgents = [],
-        ?StreamFactoryInterface $streamFactory = null
+        ?StreamFactoryInterface $streamFactory = null,
+        $headers = []
     ) {
-        $this->http = new MeilisearchClientAdapter($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory);
+        $this->http = new MeilisearchClientAdapter($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory, $headers);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);
