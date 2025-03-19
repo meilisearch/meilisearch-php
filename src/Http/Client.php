@@ -57,7 +57,7 @@ class Client implements Http
     }
 
     public function json(Json|Ndjson|null $json = null) {
-        if ($json instanceof Json|Ndjson) {
+        if ($json instanceof Json OR $json instanceof Ndjson) {
             return $this->json = $json;
         } else {
             return $this->json ??= new Json;
