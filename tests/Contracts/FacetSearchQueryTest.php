@@ -71,5 +71,4 @@ final class FacetSearchQueryTest extends TestCase
 
         self::assertSame(['exhaustiveFacetsCount' => true], $data->toArray());
     }
-
 }

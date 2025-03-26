@@ -33,9 +33,6 @@ class FacetSearchQuery
      */
     private ?array $attributesToSearchOn = null;
 
-    /**
-     * @var bool|null
-     */
     private ?bool $exhaustiveFacetsCount = null;
 
     /**

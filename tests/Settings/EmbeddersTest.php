@@ -58,15 +58,15 @@ final class EmbeddersTest extends TestCase
         $embedder = [
             'source' => 'huggingFace',
             'model' => 'sentence-transformers/all-MiniLM-L6-v2',
-            'pooling' => 'useModel'
+            'pooling' => 'useModel',
         ];
 
         $promise = $this->index->updateEmbedders([
             'embedder_name' => [
                 'source' => 'huggingFace',
                 'model' => 'sentence-transformers/all-MiniLM-L6-v2',
-                'pooling' => 'useModel'
-            ]
+                'pooling' => 'useModel',
+            ],
         ]);
 
         $this->assertIsValidPromise($promise);
@@ -74,9 +74,9 @@ final class EmbeddersTest extends TestCase
 
         $embedders = $this->index->getEmbedders();
 
-        self::assertEquals($embedder['source'], $embedders['embedder_name']['source']);
-        self::assertEquals($embedder['model'], $embedders['embedder_name']['model']);
-        self::assertEquals($embedder['pooling'], $embedders['embedder_name']['pooling']);
+        self::assertSame($embedder['source'], $embedders['embedder_name']['source']);
+        self::assertSame($embedder['model'], $embedders['embedder_name']['model']);
+        self::assertSame($embedder['pooling'], $embedders['embedder_name']['pooling']);
     }
 
     public function testCompositeEmbedder(): void
@@ -93,17 +93,16 @@ final class EmbeddersTest extends TestCase
             'indexingEmbedder' => [
                 'source' => 'huggingFace',
                 'model' => 'sentence-transformers/all-MiniLM-L6-v2',
-            ]
+            ],
         ];
 
         $promise = $this->index->updateEmbedders([
-            'embedder_name' => $embedder
+            'embedder_name' => $embedder,
         ]);
 
         $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
         $embedders = $this->index->getEmbedders();
-
     }
 }

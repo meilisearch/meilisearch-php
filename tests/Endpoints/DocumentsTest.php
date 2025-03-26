@@ -210,7 +210,7 @@ final class DocumentsTest extends TestCase
 
         $returnedIds = array_map(fn ($doc) => $doc['id'], $response->getResults());
         foreach ($documentIds as $id) {
-            self::assertTrue(in_array($id, $returnedIds, true));
+            self::assertTrue(\in_array($id, $returnedIds, true));
         }
     }
 

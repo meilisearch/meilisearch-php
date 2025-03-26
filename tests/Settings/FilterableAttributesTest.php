@@ -61,10 +61,10 @@ final class FilterableAttributesTest extends TestCase
                     'facetSearch' => true,
                     'filter' => [
                         'equality' => true,
-                        'comparison' => false
-                    ]
-                ]
-            ]
+                        'comparison' => false,
+                    ],
+                ],
+            ],
         ];
 
         $promise = $index->updateFilterableAttributes($filterableAttributes);
@@ -72,17 +72,17 @@ final class FilterableAttributesTest extends TestCase
 
         $index->waitForTask($promise['taskUid']);
         $filterableAttributes = $index->getFilterableAttributes();
-        self::assertEquals([
+        self::assertSame([
             [
                 'attributePatterns' => ['title'],
                 'features' => [
                     'facetSearch' => true,
                     'filter' => [
                         'equality' => true,
-                        'comparison' => false
-                    ]
-                ]
-            ]
+                        'comparison' => false,
+                    ],
+                ],
+            ],
         ], $filterableAttributes);
     }
 
@@ -93,7 +93,7 @@ final class FilterableAttributesTest extends TestCase
         $filterableAttributes = [
             [
                 'attributePatterns' => ['_geo'],
-            ]
+            ],
         ];
 
         $promise = $index->updateFilterableAttributes($filterableAttributes);
@@ -101,6 +101,6 @@ final class FilterableAttributesTest extends TestCase
 
         $index->waitForTask($promise['taskUid']);
         $filterableAttributes = $index->getFilterableAttributes();
-        self::assertEquals($filterableAttributes, $filterableAttributes);
+        self::assertSame($filterableAttributes, $filterableAttributes);
     }
 }

@@ -26,9 +26,6 @@ class DocumentsQuery
      */
     private ?array $filter = null;
 
-    /**
-     * @var bool|null
-     */
     private ?bool $retrieveVectors = null;
 
     /**
@@ -104,6 +101,7 @@ class DocumentsQuery
     public function setIds($ids): self
     {
         $this->ids = $ids;
+
         return $this;
     }
 
@@ -135,7 +133,7 @@ class DocumentsQuery
             'fields' => $this->getFields(),
             'filter' => $this->filter,
             'retrieveVectors' => (null !== $this->retrieveVectors ? ($this->retrieveVectors ? 'true' : 'false') : null),
-            'ids' => is_array($this->ids) ? implode(',', $this->ids) : $this->ids,
+            'ids' => \is_array($this->ids) ? implode(',', $this->ids) : $this->ids,
         ], static function ($item) { return null !== $item; });
     }
 
