@@ -230,7 +230,12 @@ trait HandlesSettings
     }
 
     /**
-     * @param list<non-empty-string>|list<array{attributePatterns: list<non-empty-string>, features: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}}>  $filterableAttributes
+     * @param list<non-empty-string>|list<array{
+     *   attributePatterns: list<non-empty-string>,
+     *   features?: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}
+     * }> $filterableAttributes
+     *
+     * Note: When attributePatterns contains '_geo', the features field is ignored
      */
     public function updateFilterableAttributes(array $filterableAttributes): array
     {

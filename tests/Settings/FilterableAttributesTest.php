@@ -85,4 +85,22 @@ final class FilterableAttributesTest extends TestCase
             ]
         ], $filterableAttributes);
     }
+
+    public function testUpdateGeoWithGranularFilterableAttributes(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $filterableAttributes = [
+            [
+                'attributePatterns' => ['_geo'],
+            ]
+        ];
+
+        $promise = $index->updateFilterableAttributes($filterableAttributes);
+        $this->assertIsValidPromise($promise);
+
+        $index->waitForTask($promise['taskUid']);
+        $filterableAttributes = $index->getFilterableAttributes();
+        self::assertEquals($filterableAttributes, $filterableAttributes);
+    }
 }
