@@ -7,6 +7,8 @@ namespace Tests\Settings;
 use Meilisearch\Endpoints\Indexes;
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertEquals;
+
 final class EmbeddersTest extends TestCase
 {
     private Indexes $index;
@@ -50,5 +52,31 @@ final class EmbeddersTest extends TestCase
         $embedders = $this->index->getEmbedders();
 
         self::assertSame(self::DEFAULT_EMBEDDER, $embedders);
+    }
+
+    public function testHuggingFacePooling(): void
+    {
+        $embedder = [
+                'source' => 'huggingFace',
+                'model' => 'sentence-transformers/all-MiniLM-L6-v2',
+                'pooling' => 'useModel'
+        ];
+
+        $promise = $this->index->updateEmbedders([
+            'hf' => [
+                'source' => 'huggingFace',
+                'model' => 'sentence-transformers/all-MiniLM-L6-v2',
+                'pooling' => 'useModel'
+            ]
+        ]);
+
+        $this->assertIsValidPromise($promise);
+        $this->index->waitForTask($promise['taskUid']);
+
+        $embedders = $this->index->getEmbedders();
+
+        self::assertEquals($embedder['source'], $embedders['hf']['source']);
+        self::assertEquals($embedder['model'], $embedders['hf']['model']);
+        self::assertEquals($embedder['pooling'], $embedders['hf']['pooling']);
     }
 }
