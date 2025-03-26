@@ -64,4 +64,12 @@ final class FacetSearchQueryTest extends TestCase
 
         self::assertSame(['attributesToSearchOn' => ['overview']], $data->toArray());
     }
+
+    public function testSetExhaustiveFacetsCount(): void
+    {
+        $data = (new FacetSearchQuery())->setExhaustiveFacetsCount(true);
+
+        self::assertSame(['exhaustiveFacetsCount' => true], $data->toArray());
+    }
+
 }
