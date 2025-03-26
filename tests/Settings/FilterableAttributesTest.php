@@ -101,6 +101,17 @@ final class FilterableAttributesTest extends TestCase
 
         $index->waitForTask($promise['taskUid']);
         $filterableAttributes = $index->getFilterableAttributes();
-        self::assertSame($expectedAttributes, $filterableAttributes);
+        self::assertSame([
+            [
+                'attributePatterns' => ['_geo'],
+                'features' => [
+                    'facetSearch' => false,
+                    'filter' => [
+                        'equality' => true,
+                        'comparison' => false,
+                    ],
+                ],
+            ],
+        ], $filterableAttributes);
     }
 }
