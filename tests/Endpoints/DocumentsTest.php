@@ -206,7 +206,7 @@ final class DocumentsTest extends TestCase
         $response = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($response['taskUid']);
         $documentIds = [1, 2];
-        $response = $index->getDocuments(new DocumentsQuery()->setIds($documentIds));
+        $response = $index->getDocuments((new DocumentsQuery())->setIds($documentIds));
 
         $returnedIds = array_map(fn ($doc) => $doc['id'], $response->getResults());
         foreach ($documentIds as $id) {
