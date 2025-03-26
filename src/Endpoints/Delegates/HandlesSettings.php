@@ -230,7 +230,7 @@ trait HandlesSettings
     }
 
     /**
-     * @param list<non-empty-string> $filterableAttributes
+     * @param list<non-empty-string>|list<array{attributePatterns: list<non-empty-string>, features: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}}>  $filterableAttributes
      */
     public function updateFilterableAttributes(array $filterableAttributes): array
     {

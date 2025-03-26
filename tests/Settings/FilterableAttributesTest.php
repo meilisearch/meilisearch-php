@@ -49,4 +49,40 @@ final class FilterableAttributesTest extends TestCase
         $filterableAttributes = $index->getFilterableAttributes();
         self::assertEmpty($filterableAttributes);
     }
+
+    public function testUpdateGranularFilterableAttributes(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $filterableAttributes = [
+            [
+                'attributePatterns' => ['title'],
+                'features' => [
+                    'facetSearch' => true,
+                    'filter' => [
+                        'equality' => true,
+                        'comparison' => false
+                    ]
+                ]
+            ]
+        ];
+
+        $promise = $index->updateFilterableAttributes($filterableAttributes);
+        $this->assertIsValidPromise($promise);
+
+        $index->waitForTask($promise['taskUid']);
+        $filterableAttributes = $index->getFilterableAttributes();
+        self::assertEquals([
+            [
+                'attributePatterns' => ['title'],
+                'features' => [
+                    'facetSearch' => true,
+                    'filter' => [
+                        'equality' => true,
+                        'comparison' => false
+                    ]
+                ]
+            ]
+        ], $filterableAttributes);
+    }
 }
