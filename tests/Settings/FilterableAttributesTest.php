@@ -90,17 +90,17 @@ final class FilterableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $filterableAttributes = [
+        $expectedAttributes = [
             [
                 'attributePatterns' => ['_geo'],
             ],
         ];
 
-        $promise = $index->updateFilterableAttributes($filterableAttributes);
+        $promise = $index->updateFilterableAttributes($expectedAttributes);
         $this->assertIsValidPromise($promise);
 
         $index->waitForTask($promise['taskUid']);
         $filterableAttributes = $index->getFilterableAttributes();
-        self::assertSame($filterableAttributes, $filterableAttributes);
+        self::assertSame($expectedAttributes, $filterableAttributes);
     }
 }

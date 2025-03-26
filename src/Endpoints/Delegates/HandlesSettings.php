@@ -222,7 +222,7 @@ trait HandlesSettings
     // Settings - Filterable Attributes
 
     /**
-     * @return list<non-empty-string>
+     * @return list<non-empty-string>|list<array{attributePatterns: list<non-empty-string>, features?: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}}>
      */
     public function getFilterableAttributes(): array
     {
