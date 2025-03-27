@@ -37,34 +37,28 @@ final class DocumentsQueryTest extends TestCase
         self::assertSame(['offset' => 5], $data->toArray());
     }
 
-    public function testSetIdsWithStringArray(): void
+    /**
+     * @dataProvider idsProvider
+     */
+    public function testSetIds(array $input, ?string $expected): void
     {
-        $data = (new DocumentsQuery())->setIds(['1', '2', '3']);
+        $data = (new DocumentsQuery())->setIds($input);
+        $result = $data->toArray();
 
-        self::assertSame('1,2,3', $data->toArray()['ids']);
+        if (null === $expected) {
+            self::assertArrayNotHasKey('ids', $result);
+        } else {
+            self::assertSame($expected, $result['ids']);
+        }
     }
 
-    public function testSetIdsWithIntegerArray(): void
+    public static function idsProvider(): array
     {
-        $data = (new DocumentsQuery())->setIds([1, 2, 3]);
-
-        self::assertSame('1,2,3', $data->toArray()['ids']);
-    }
-
-    public function testSetIdsWithMixedArray(): void
-    {
-        $data = (new DocumentsQuery())->setIds(['1', 2, '3']);
-
-        self::assertSame(
-            implode(',', ['1', '2', '3']),
-            $data->toArray()['ids']
-        );
-    }
-
-    public function testSetIdsWithEmptyArray(): void
-    {
-        $data = (new DocumentsQuery())->setIds([]);
-
-        self::assertArrayNotHasKey('ids', $data->toArray());
+        return [
+            'string array' => [['1', '2', '3'], '1,2,3'],
+            'integer array' => [[1, 2, 3], '1,2,3'],
+            'mixed array' => [['1', 2, '3'], '1,2,3'],
+            'empty array' => [[], null],
+        ];
     }
 }
