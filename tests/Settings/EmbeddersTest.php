@@ -101,8 +101,5 @@ final class EmbeddersTest extends TestCase
         ]);
 
         $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
-
-        $embedders = $this->index->getEmbedders();
     }
 }
