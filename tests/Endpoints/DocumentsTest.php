@@ -200,6 +200,20 @@ final class DocumentsTest extends TestCase
         self::assertSame($stringDocumentId, $response['id']);
     }
 
+    public function testGetMultipleDocumentsByIds(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $response = $index->addDocuments(self::DOCUMENTS);
+        $index->waitForTask($response['taskUid']);
+        $documentIds = [1, 2];
+        $response = $index->getDocuments((new DocumentsQuery())->setIds($documentIds));
+
+        $returnedIds = array_column($response->getResults(), 'id');
+        foreach ($documentIds as $id) {
+            self::assertContains($id, $returnedIds);
+        }
+    }
+
     public function testReplaceDocuments(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
