@@ -208,7 +208,7 @@ final class DocumentsTest extends TestCase
         $documentIds = [1, 2];
         $response = $index->getDocuments((new DocumentsQuery())->setIds($documentIds));
 
-        $returnedIds = array_map(fn ($doc) => $doc['id'], $response->getResults());
+        $returnedIds = array_column($response->getResults(), 'id');
         foreach ($documentIds as $id) {
             self::assertTrue(\in_array($id, $returnedIds, true));
         }
