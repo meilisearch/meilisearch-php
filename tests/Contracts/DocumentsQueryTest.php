@@ -41,7 +41,7 @@ final class DocumentsQueryTest extends TestCase
     {
         $data = (new DocumentsQuery())->setIds(['1', '2', '3']);
 
-        self::assertEquals(
+        self::assertSame(
             implode(',', ['1', '2', '3']),
             $data->toArray()['ids']
         );
@@ -51,7 +51,7 @@ final class DocumentsQueryTest extends TestCase
     {
         $data = (new DocumentsQuery())->setIds([1, 2, 3]);
 
-        self::assertEquals(
+        self::assertSame(
             implode(',', [1, 2, 3]),
             $data->toArray()['ids']
         );
@@ -61,7 +61,7 @@ final class DocumentsQueryTest extends TestCase
     {
         $data = (new DocumentsQuery())->setIds(['1', 2, '3']);
 
-        self::assertEquals(
+        self::assertSame(
             implode(',', ['1', '2', '3']),
             $data->toArray()['ids']
         );
