@@ -210,7 +210,7 @@ final class DocumentsTest extends TestCase
 
         $returnedIds = array_column($response->getResults(), 'id');
         foreach ($documentIds as $id) {
-            self::assertTrue(\in_array($id, $returnedIds, true));
+            self::assertContains($id, $returnedIds);
         }
     }
 
