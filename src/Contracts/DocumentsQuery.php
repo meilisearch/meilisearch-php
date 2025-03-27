@@ -135,7 +135,7 @@ class DocumentsQuery
             'fields' => $this->getFields(),
             'filter' => $this->filter,
             'retrieveVectors' => (null !== $this->retrieveVectors ? ($this->retrieveVectors ? 'true' : 'false') : null),
-            'ids' => \is_array($this->ids) && count($this->ids) > 0 ? implode(',', $this->ids) : null,
+            'ids' => ($this->ids ?? []) !== [] ? implode(',', $this->ids) : null,
         ], static function ($item) { return null !== $item; });
     }
 
