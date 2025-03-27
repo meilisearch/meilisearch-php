@@ -41,10 +41,7 @@ final class DocumentsQueryTest extends TestCase
     {
         $data = (new DocumentsQuery())->setIds(['1', '2', '3']);
 
-        self::assertSame(
-            implode(',', ['1', '2', '3']),
-            $data->toArray()['ids']
-        );
+        self::assertSame('1,2,3', $data->toArray()['ids']);
     }
 
     public function testSetIdsWithIntegerArray(): void
