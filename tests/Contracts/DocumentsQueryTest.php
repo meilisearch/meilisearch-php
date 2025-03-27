@@ -36,4 +36,41 @@ final class DocumentsQueryTest extends TestCase
 
         self::assertSame(['offset' => 5], $data->toArray());
     }
+
+    public function testSetIdsWithStringArray(): void
+    {
+        $data = (new DocumentsQuery())->setIds(['1', '2', '3']);
+
+        self::assertEquals(
+            implode(',', ['1', '2', '3']),
+            $data->toArray()['ids']
+        );
+    }
+
+    public function testSetIdsWithIntegerArray(): void
+    {
+        $data = (new DocumentsQuery())->setIds([1, 2, 3]);
+
+        self::assertEquals(
+            implode(',', [1, 2, 3]),
+            $data->toArray()['ids']
+        );
+    }
+
+    public function testSetIdsWithMixedArray(): void
+    {
+        $data = (new DocumentsQuery())->setIds(['1', 2, '3']);
+
+        self::assertEquals(
+            implode(',', ['1', '2', '3']),
+            $data->toArray()['ids']
+        );
+    }
+
+    public function testSetIdsWithEmptyArray(): void
+    {
+        $data = (new DocumentsQuery())->setIds([]);
+
+        self::assertEquals('', $data->toArray()['ids']);
+    }
 }

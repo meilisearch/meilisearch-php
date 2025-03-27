@@ -96,9 +96,11 @@ class DocumentsQuery
     }
 
     /**
-     * @param array|string $ids Array of document IDs or comma-separated string of IDs
+     * @param list<non-empty-string|int> $ids Array of document IDs
+     *
+     * @return $this
      */
-    public function setIds($ids): self
+    public function setIds(array $ids): self
     {
         $this->ids = $ids;
 
