@@ -71,6 +71,6 @@ final class DocumentsQueryTest extends TestCase
     {
         $data = (new DocumentsQuery())->setIds([]);
 
-        self::assertEquals('', $data->toArray()['ids']);
+        self::assertArrayNotHasKey('ids', $data->toArray());
     }
 }
