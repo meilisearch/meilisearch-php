@@ -262,8 +262,17 @@ get_filterable_attributes_1: |-
   $client->index('movies')->getFilterableAttributes();
 update_filterable_attributes_1: |-
   $client->index('movies')->updateFilterableAttributes([
-    'genres',
-    'director'
+    'author',
+    [
+        'attributePatterns' => ['genres'],
+        'features' => [
+            'facetSearch' => true,
+            'filter' => [
+                'equality' => true,
+                'comparison' => false,
+            ],
+        ],
+    ],
   ]);
 reset_filterable_attributes_1: |-
   $client->index('movies')->resetFilterableAttributes();

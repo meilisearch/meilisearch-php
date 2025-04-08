@@ -55,6 +55,7 @@ final class FilterableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
 
         $expectedAttributes = [
+            'author',
             [
                 'attributePatterns' => ['title'],
                 'features' => [
