@@ -148,7 +148,7 @@ trait TasksQueryTrait
 
     private function formatDate(?\DateTimeInterface $date): ?string
     {
-        return null !== $date ? $date->format(\DateTimeInterface::RFC3339) : null;
+        return $date?->format(\DateTimeInterface::RFC3339);
     }
 
     private function formatArray(?array $array): ?string

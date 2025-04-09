@@ -10,7 +10,7 @@ class Batches extends Endpoint
 {
     protected const PATH = '/batches';
 
-    public function get($batchUid): array
+    public function get(int $batchUid): array
     {
         return $this->http->get(self::PATH.'/'.$batchUid);
     }

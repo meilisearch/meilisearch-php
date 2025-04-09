@@ -6,7 +6,7 @@ namespace Meilisearch\Exceptions;
 
 class CommunicationException extends \Exception implements ExceptionInterface
 {
-    public function __toString()
+    public function __toString(): string
     {
         return 'Meilisearch CommunicationException: '.$this->getMessage();
     }
