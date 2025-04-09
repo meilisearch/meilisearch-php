@@ -13,7 +13,7 @@ class Tasks extends Endpoint
 {
     protected const PATH = '/tasks';
 
-    public function get($taskUid): array
+    public function get(int $taskUid): array
     {
         return $this->http->get(self::PATH.'/'.$taskUid);
     }
@@ -40,7 +40,7 @@ class Tasks extends Endpoint
     /**
      * @throws TimeOutException
      */
-    public function waitTask($taskUid, int $timeoutInMs, int $intervalInMs): array
+    public function waitTask(int $taskUid, int $timeoutInMs, int $intervalInMs): array
     {
         $timeoutTemp = 0;
 
@@ -59,6 +59,8 @@ class Tasks extends Endpoint
     }
 
     /**
+     * @param array<int> $taskUids
+     *
      * @throws TimeOutException
      */
     public function waitTasks(array $taskUids, int $timeoutInMs, int $intervalInMs): array
