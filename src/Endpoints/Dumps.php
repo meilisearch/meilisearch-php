@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\Endpoint;
+use MeiliSearch\Contracts\Task;
 
 class Dumps extends Endpoint
 {
     protected const PATH = '/dumps';
 
-    public function create(): array
+    public function create(): Task
     {
-        return $this->http->post(self::PATH);
+        return Task::fromArray($this->http->post(self::PATH));
     }
 }
