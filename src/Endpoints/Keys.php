@@ -95,7 +95,7 @@ class Keys extends Endpoint
             return null;
         }
 
-        if (false === strpos($attribute, '.')) {
+        if (!str_contains($attribute, '.')) {
             $date = \DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $attribute);
         } else {
             $attribute = preg_replace('/(\.\d{6})\d+/', '$1', $attribute, 1);
