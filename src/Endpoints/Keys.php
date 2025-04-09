@@ -150,7 +150,10 @@ class Keys extends Endpoint
         return $this->updatedAt;
     }
 
-    public function get($keyOrUid): self
+    /**
+     * @param non-empty-string $keyOrUid
+     */
+    public function get(string $keyOrUid): self
     {
         $response = $this->http->get(self::PATH.'/'.$keyOrUid);
 
@@ -188,6 +191,9 @@ class Keys extends Endpoint
         return $this->fill($response);
     }
 
+    /**
+     * @param non-empty-string $keyOrUid
+     */
     public function update(string $keyOrUid, array $options = []): self
     {
         $data = array_intersect_key($options, array_flip(['description', 'name']));
@@ -196,6 +202,9 @@ class Keys extends Endpoint
         return $this->fill($response);
     }
 
+    /**
+     * @param non-empty-string $keyOrUid
+     */
     public function delete(string $keyOrUid): array
     {
         return $this->http->delete(self::PATH.'/'.$keyOrUid) ?? [];

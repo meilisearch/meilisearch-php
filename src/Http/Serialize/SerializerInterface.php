@@ -12,20 +12,14 @@ interface SerializerInterface
     /**
      * Serialize data into string.
      *
-     * @param string|int|float|bool|array<mixed>|null $data
-     *
-     * @return string|bool
-     *
      * @throws JsonEncodingException
      */
-    public function serialize($data);
+    public function serialize(mixed $data): string|bool;
 
     /**
      * Unserialize the given string.
      *
-     * @return string|int|float|bool|array<mixed>|null
-     *
      * @throws JsonDecodingException
      */
-    public function unserialize(string $string);
+    public function unserialize(mixed $string): mixed;
 }

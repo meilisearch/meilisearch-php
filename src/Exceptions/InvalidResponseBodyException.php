@@ -8,8 +8,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class InvalidResponseBodyException extends \Exception implements ExceptionInterface
 {
-    public $httpStatus = 0;
-    public $httpBody;
+    public int $httpStatus = 0;
+    public mixed $httpBody;
     public $message;
 
     public function __construct(ResponseInterface $response, $httpBody, $previous = null)
@@ -21,7 +21,7 @@ class InvalidResponseBodyException extends \Exception implements ExceptionInterf
         parent::__construct($this->message, $this->httpStatus, $previous);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $base = 'Meilisearch InvalidResponseBodyException: Http Status: '.$this->httpStatus;
 
