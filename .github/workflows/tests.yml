@@ -79,13 +79,9 @@ jobs:
           MEILI_NO_ANALYTICS: true
     strategy:
       matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        php-version: ['8.1', '8.2', '8.3', '8.4']
         http-client: ['Guzzle-7', 'Guzzle-7-Adapter', 'Symfony-HttpClient', 'PHP-HTTP-CurlClient', 'Kriswallsmith-Buzz']
         exclude:
-          - php-version: '7.4'
-            http-client: 'Symfony-HttpClient'
-          - php-version: '8.0'
-            http-client: 'Symfony-HttpClient'
           - php-version: '8.1'
             http-client: 'Symfony-HttpClient'
 
@@ -149,30 +145,6 @@ jobs:
         env:
           MEILI_MASTER_KEY: masterKey
           MEILI_NO_ANALYTICS: true
-
-    name: integration-tests (PHP 7.4 & Guzzle 6)
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          coverage: none
-
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-
-      - name: Switch to Guzzle 6
-        run: |
-          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/guzzle6-adapter": "^2.0.2",/' composer.json
-
-      - name: Install dependencies
-        uses: ramsey/composer-install@v3
-
-      - name: Run test suite - php-http/guzzle6-adapter
-        run: sh scripts/tests.sh
 
   upload-coverage:
     name: Upload coverage to Codecov
