@@ -7,9 +7,9 @@ namespace Meilisearch\Contracts;
 class SimilarDocumentsQuery
 {
     /**
-     * @var int|string
+     * @var int|non-empty-string
      */
-    private $id;
+    private int|string $id;
 
     /**
      * @var non-empty-string
@@ -42,16 +42,13 @@ class SimilarDocumentsQuery
      */
     private ?array $filter = null;
 
-    /**
-     * @var int|float|null
-     */
-    private $rankingScoreThreshold;
+    private int|float|null $rankingScoreThreshold = null;
 
     /**
-     * @param int|string       $id
-     * @param non-empty-string $embedder
+     * @param int|non-empty-string $id
+     * @param non-empty-string     $embedder
      */
-    public function __construct($id, string $embedder)
+    public function __construct(int|string $id, string $embedder)
     {
         $this->id = $id;
         $this->embedder = $embedder;
@@ -142,11 +139,9 @@ class SimilarDocumentsQuery
     }
 
     /**
-     * @param int|float|null $rankingScoreThreshold
-     *
      * @return $this
      */
-    public function setRankingScoreThreshold($rankingScoreThreshold): self
+    public function setRankingScoreThreshold(int|float|null $rankingScoreThreshold): self
     {
         $this->rankingScoreThreshold = $rankingScoreThreshold;
 
@@ -155,7 +150,7 @@ class SimilarDocumentsQuery
 
     /**
      * @return array{
-     *     id: int|string,
+     *     id: int|non-empty-string,
      *     embedder: non-empty-string,
      *     offset?: non-negative-int,
      *     limit?: positive-int,

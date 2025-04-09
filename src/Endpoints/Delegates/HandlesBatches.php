@@ -12,7 +12,7 @@ trait HandlesBatches
 {
     protected Batches $batches;
 
-    public function getBatch($uid): array
+    public function getBatch(int $uid): array
     {
         return $this->batches->get($uid);
     }

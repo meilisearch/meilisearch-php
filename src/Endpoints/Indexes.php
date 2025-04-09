@@ -136,7 +136,7 @@ class Indexes extends Endpoint
         return $this->fill($response);
     }
 
-    public function update($body): array
+    public function update(array $body): array
     {
         return $this->http->patch(self::PATH.'/'.$this->uid, $body);
     }
@@ -156,7 +156,7 @@ class Indexes extends Endpoint
 
     // Tasks
 
-    public function getTask($uid): array
+    public function getTask(int $uid): array
     {
         return $this->http->get('/tasks/'.$uid);
     }
@@ -179,11 +179,9 @@ class Indexes extends Endpoint
     // Search
 
     /**
-     * @return SearchResult|array
-     *
      * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int} ? array : SearchResult)
      */
-    public function search(?string $query, array $searchParams = [], array $options = [])
+    public function search(?string $query, array $searchParams = [], array $options = []): SearchResult|array
     {
         $result = $this->rawSearch($query, $searchParams);
 
