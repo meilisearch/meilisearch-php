@@ -18,12 +18,12 @@ class TenantToken extends Endpoint
     /**
      * @param array{apiKey?: ?string, expiresAt?: ?\DateTimeInterface} $options
      */
-    private function validateTenantTokenArguments($searchRules, array $options = []): void
+    private function validateTenantTokenArguments(array|object $searchRules, array $options = []): void
     {
         if (!isset($options['apiKey']) || ('' === $options['apiKey'] || \strlen($options['apiKey']) <= 8)) {
             throw InvalidArgumentException::emptyArgument('api key');
         }
-        if ((!\is_array($searchRules) || [] === $searchRules) && !\is_object($searchRules)) {
+        if ([] === $searchRules) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
         if (isset($options['expiresAt']) && new \DateTimeImmutable() > $options['expiresAt']) {
@@ -40,7 +40,7 @@ class TenantToken extends Endpoint
      *
      * @param array{apiKey?: ?string, expiresAt?: ?\DateTimeInterface} $options
      */
-    public function generateTenantToken(string $uid, $searchRules, array $options = []): string
+    public function generateTenantToken(string $uid, array|object $searchRules, array $options = []): string
     {
         if (!isset($options['apiKey']) || '' === $options['apiKey']) {
             $options['apiKey'] = $this->apiKey;
