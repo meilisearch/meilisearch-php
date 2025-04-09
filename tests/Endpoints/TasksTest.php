@@ -26,7 +26,6 @@ final class TasksTest extends TestCase
     {
         [$promise, $response] = $this->seedIndex();
 
-        self::assertIsArray($response);
         self::assertArrayHasKey('status', $response);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);
@@ -41,9 +40,8 @@ final class TasksTest extends TestCase
 
     public function testGetOneTaskClient(): void
     {
-        [$promise, $response] = $this->seedIndex();
+        [$promise] = $this->seedIndex();
 
-        self::assertIsArray($promise);
         $response = $this->client->getTask($promise['taskUid']);
         self::assertArrayHasKey('status', $response);
         self::assertSame($response['uid'], $promise['taskUid']);
@@ -78,7 +76,7 @@ final class TasksTest extends TestCase
 
     public function getAllTasksClientWithBatchFilter(): void
     {
-        [$promise, $response] = $this->seedIndex();
+        [$promise] = $this->seedIndex();
         $task = $this->client->getTask($promise['taskUid']);
 
         $response = $this->client->getTasks((new TasksQuery())
@@ -90,9 +88,8 @@ final class TasksTest extends TestCase
 
     public function testGetOneTaskIndex(): void
     {
-        [$promise, $response] = $this->seedIndex();
+        [$promise] = $this->seedIndex();
 
-        self::assertIsArray($promise);
         $response = $this->index->getTask($promise['taskUid']);
         self::assertArrayHasKey('status', $response);
         self::assertSame($response['uid'], $promise['taskUid']);
@@ -169,6 +166,8 @@ final class TasksTest extends TestCase
     public function testExceptionIfNoTaskIdWhenGetting(): void
     {
         $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Task `99999999` not found.');
+
         $this->index->getTask(99999999);
     }
 

@@ -27,7 +27,6 @@ final class ProximityPrecisionTest extends TestCase
     public function testUpdateProximityPrecision(): void
     {
         $promise = $this->index->updateProximityPrecision('byAttribute');
-        $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
         self::assertSame('byAttribute', $this->index->getProximityPrecision());
@@ -36,12 +35,9 @@ final class ProximityPrecisionTest extends TestCase
     public function testResetProximityPrecision(): void
     {
         $promise = $this->index->updateProximityPrecision('byAttribute');
-        $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
         $promise = $this->index->resetProximityPrecision();
-
-        $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
         self::assertSame('byWord', $this->index->getProximityPrecision());

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
+use MeiliSearch\Contracts\Task;
 use Meilisearch\Endpoints\Health;
 use Meilisearch\Endpoints\Stats;
 use Meilisearch\Endpoints\TenantToken;
@@ -47,7 +48,7 @@ trait HandlesSystem
         return $this->tenantToken->generateTenantToken($apiKeyUid, $searchRules, $options);
     }
 
-    public function swapIndexes(array $indexes): array
+    public function swapIndexes(array $indexes): Task
     {
         $options = array_map(static fn ($data) => ['indexes' => $data], $indexes);
 

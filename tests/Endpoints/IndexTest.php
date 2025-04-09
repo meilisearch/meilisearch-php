@@ -189,8 +189,6 @@ final class IndexTest extends TestCase
 
         $response = $this->index->waitForTask($promise['taskUid']);
 
-        /* @phpstan-ignore-next-line */
-        self::assertIsArray($response);
         self::assertSame('succeeded', $response['status']);
         self::assertSame($response['uid'], $promise['taskUid']);
         self::assertArrayHasKey('type', $response);

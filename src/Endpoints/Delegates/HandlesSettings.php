@@ -7,6 +7,7 @@ namespace Meilisearch\Endpoints\Delegates;
 use Meilisearch\Contracts\Index\Faceting;
 use Meilisearch\Contracts\Index\Synonyms;
 use Meilisearch\Contracts\Index\TypoTolerance;
+use MeiliSearch\Contracts\Task;
 
 trait HandlesSettings
 {
@@ -23,14 +24,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $rankingRules
      */
-    public function updateRankingRules(array $rankingRules): array
+    public function updateRankingRules(array $rankingRules): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/ranking-rules', $rankingRules);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/ranking-rules', $rankingRules));
     }
 
-    public function resetRankingRules(): array
+    public function resetRankingRules(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/ranking-rules');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/ranking-rules'));
     }
 
     // Settings - Distinct attribute
@@ -46,14 +47,14 @@ trait HandlesSettings
     /**
      * @param non-empty-string $distinctAttribute
      */
-    public function updateDistinctAttribute(string $distinctAttribute): array
+    public function updateDistinctAttribute(string $distinctAttribute): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/distinct-attribute', $distinctAttribute);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/distinct-attribute', $distinctAttribute));
     }
 
-    public function resetDistinctAttribute(): array
+    public function resetDistinctAttribute(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/distinct-attribute');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/distinct-attribute'));
     }
 
     // Settings - Searchable attributes
@@ -69,14 +70,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $searchableAttributes
      */
-    public function updateSearchableAttributes(array $searchableAttributes): array
+    public function updateSearchableAttributes(array $searchableAttributes): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchableAttributes);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/searchable-attributes', $searchableAttributes));
     }
 
-    public function resetSearchableAttributes(): array
+    public function resetSearchableAttributes(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/searchable-attributes');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/searchable-attributes'));
     }
 
     // Settings - Displayed attributes
@@ -92,14 +93,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $displayedAttributes
      */
-    public function updateDisplayedAttributes(array $displayedAttributes): array
+    public function updateDisplayedAttributes(array $displayedAttributes): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayedAttributes);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/displayed-attributes', $displayedAttributes));
     }
 
-    public function resetDisplayedAttributes(): array
+    public function resetDisplayedAttributes(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/displayed-attributes');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/displayed-attributes'));
     }
 
     // Settings - Localized attributes
@@ -115,14 +116,14 @@ trait HandlesSettings
     /**
      * @param list<array{attributePatterns: list<string>, locales: list<non-empty-string>}> $localizedAttributes
      */
-    public function updateLocalizedAttributes(array $localizedAttributes): array
+    public function updateLocalizedAttributes(array $localizedAttributes): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/localized-attributes', $localizedAttributes);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/localized-attributes', $localizedAttributes));
     }
 
-    public function resetLocalizedAttributes(): array
+    public function resetLocalizedAttributes(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/localized-attributes');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/localized-attributes'));
     }
 
     // Settings - Faceting
@@ -139,14 +140,14 @@ trait HandlesSettings
     /**
      * @param array{maxValuesPerFacet?: int, sortFacetValuesBy?: array<non-empty-string, 'count'|'alpha'>} $faceting
      */
-    public function updateFaceting(array $faceting): array
+    public function updateFaceting(array $faceting): Task
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $faceting);
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $faceting));
     }
 
-    public function resetFaceting(): array
+    public function resetFaceting(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/faceting');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/faceting'));
     }
 
     // Settings - Pagination
@@ -162,14 +163,14 @@ trait HandlesSettings
     /**
      * @param array{maxTotalHits: positive-int} $pagination
      */
-    public function updatePagination(array $pagination): array
+    public function updatePagination(array $pagination): Task
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/pagination', $pagination);
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/pagination', $pagination));
     }
 
-    public function resetPagination(): array
+    public function resetPagination(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/pagination');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/pagination'));
     }
 
     // Settings - Stop-words
@@ -185,14 +186,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $stopWords
      */
-    public function updateStopWords(array $stopWords): array
+    public function updateStopWords(array $stopWords): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/stop-words', $stopWords);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/stop-words', $stopWords));
     }
 
-    public function resetStopWords(): array
+    public function resetStopWords(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/stop-words');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/stop-words'));
     }
 
     // Settings - Synonyms
@@ -209,14 +210,14 @@ trait HandlesSettings
     /**
      * @param array<non-empty-string, list<non-empty-string>> $synonyms
      */
-    public function updateSynonyms(array $synonyms): array
+    public function updateSynonyms(array $synonyms): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/synonyms', new Synonyms($synonyms));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/synonyms', new Synonyms($synonyms)));
     }
 
-    public function resetSynonyms(): array
+    public function resetSynonyms(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/synonyms');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/synonyms'));
     }
 
     // Settings - Filterable Attributes
@@ -243,14 +244,14 @@ trait HandlesSettings
      *
      * Note: When attributePatterns contains '_geo', the features field is ignored
      */
-    public function updateFilterableAttributes(array $filterableAttributes): array
+    public function updateFilterableAttributes(array $filterableAttributes): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $filterableAttributes);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/filterable-attributes', $filterableAttributes));
     }
 
-    public function resetFilterableAttributes(): array
+    public function resetFilterableAttributes(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/filterable-attributes');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/filterable-attributes'));
     }
 
     // Settings - Sortable Attributes
@@ -266,14 +267,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $sortableAttributes
      */
-    public function updateSortableAttributes(array $sortableAttributes): array
+    public function updateSortableAttributes(array $sortableAttributes): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/sortable-attributes', $sortableAttributes);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/sortable-attributes', $sortableAttributes));
     }
 
-    public function resetSortableAttributes(): array
+    public function resetSortableAttributes(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/sortable-attributes');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/sortable-attributes'));
     }
 
     // Settings - Typo Tolerance
@@ -302,14 +303,14 @@ trait HandlesSettings
      *     disableOnNumbers: bool
      * } $typoTolerance
      */
-    public function updateTypoTolerance(array $typoTolerance): array
+    public function updateTypoTolerance(array $typoTolerance): Task
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/typo-tolerance', new TypoTolerance($typoTolerance));
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/typo-tolerance', new TypoTolerance($typoTolerance)));
     }
 
-    public function resetTypoTolerance(): array
+    public function resetTypoTolerance(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/typo-tolerance');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/typo-tolerance'));
     }
 
     // Settings - Word dictionary
@@ -325,14 +326,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $wordDictionary
      */
-    public function updateDictionary(array $wordDictionary): array
+    public function updateDictionary(array $wordDictionary): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/dictionary', $wordDictionary);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/dictionary', $wordDictionary));
     }
 
-    public function resetDictionary(): array
+    public function resetDictionary(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/dictionary');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/dictionary'));
     }
 
     // Settings - Separator tokens
@@ -345,14 +346,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $separatorTokens
      */
-    public function updateSeparatorTokens(array $separatorTokens): array
+    public function updateSeparatorTokens(array $separatorTokens): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/separator-tokens', $separatorTokens);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/separator-tokens', $separatorTokens));
     }
 
-    public function resetSeparatorTokens(): array
+    public function resetSeparatorTokens(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/separator-tokens');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/separator-tokens'));
     }
 
     // Settings - Non-Separator tokens
@@ -368,14 +369,14 @@ trait HandlesSettings
     /**
      * @param list<non-empty-string> $nonSeparatorTokens
      */
-    public function updateNonSeparatorTokens(array $nonSeparatorTokens): array
+    public function updateNonSeparatorTokens(array $nonSeparatorTokens): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens', $nonSeparatorTokens);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens', $nonSeparatorTokens));
     }
 
-    public function resetNonSeparatorTokens(): array
+    public function resetNonSeparatorTokens(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/non-separator-tokens'));
     }
 
     // Settings - proximityPrecision
@@ -391,14 +392,14 @@ trait HandlesSettings
     /**
      * @param 'byWord'|'byAttribute' $type
      */
-    public function updateProximityPrecision(string $type): array
+    public function updateProximityPrecision(string $type): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/proximity-precision', $type);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/proximity-precision', $type));
     }
 
-    public function resetProximityPrecision(): array
+    public function resetProximityPrecision(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/proximity-precision');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/proximity-precision'));
     }
 
     // Settings - searchCutoffMs
@@ -408,14 +409,14 @@ trait HandlesSettings
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms');
     }
 
-    public function updateSearchCutoffMs(int $value): array
+    public function updateSearchCutoffMs(int $value): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms', $value);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms', $value));
     }
 
-    public function resetSearchCutoffMs(): array
+    public function resetSearchCutoffMs(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms'));
     }
 
     // Settings - Embedders
@@ -431,17 +432,17 @@ trait HandlesSettings
     /**
      * @since Meilisearch v1.13.0
      */
-    public function updateEmbedders(array $embedders): array
+    public function updateEmbedders(array $embedders): Task
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/embedders', $embedders);
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/embedders', $embedders));
     }
 
     /**
      * @since Meilisearch v1.13.0
      */
-    public function resetEmbedders(): array
+    public function resetEmbedders(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/embedders');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/embedders'));
     }
 
     // Settings - Facet Search
@@ -457,17 +458,17 @@ trait HandlesSettings
     /**
      * @since Meilisearch v1.12.0
      */
-    public function updateFacetSearch(bool $facetSearch): array
+    public function updateFacetSearch(bool $facetSearch): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/facet-search', $facetSearch);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/facet-search', $facetSearch));
     }
 
     /**
      * @since Meilisearch v1.12.0
      */
-    public function resetFacetSearch(): array
+    public function resetFacetSearch(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/facet-search');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/facet-search'));
     }
 
     // Settings - Prefix Search
@@ -487,17 +488,17 @@ trait HandlesSettings
      *
      * @since Meilisearch v1.12.0
      */
-    public function updatePrefixSearch(string $prefixSearch): array
+    public function updatePrefixSearch(string $prefixSearch): Task
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/prefix-search', $prefixSearch);
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/prefix-search', $prefixSearch));
     }
 
     /**
      * @since Meilisearch v1.12.0
      */
-    public function resetPrefixSearch(): array
+    public function resetPrefixSearch(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/prefix-search');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/prefix-search'));
     }
 
     // Settings - Chat
@@ -583,8 +584,8 @@ trait HandlesSettings
      *     }
      * } $chatSettings
      */
-    public function updateChat(array $chatSettings): array
+    public function updateChat(array $chatSettings): Task
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', $chatSettings);
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', $chatSettings));
     }
 }

@@ -51,7 +51,6 @@ final class TypoToleranceTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
-        $this->assertIsValidPromise($promise);
         self::assertSame($newTypoTolerance, $typoTolerance);
     }
 
@@ -61,7 +60,6 @@ final class TypoToleranceTest extends TestCase
         $this->index->waitForTask($promise['taskUid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
-        $this->assertIsValidPromise($promise);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $typoTolerance);
     }
 }
