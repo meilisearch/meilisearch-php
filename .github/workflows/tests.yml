@@ -132,20 +132,6 @@ jobs:
           name: 'phpunit-${{ matrix.php-version }}-${{ matrix.http-client }}-coverage'
           path: 'coverage*.xml'
 
-  test_php_7_guzzle_6:
-    # Will not run if the event is a PR to bump-meilisearch-v* (so a pre-release PR)
-    # Will still run for each push to bump-meilisearch-v*
-    if: github.event_name != 'pull_request' || !startsWith(github.base_ref, 'bump-meilisearch-v')
-    runs-on: ubuntu-latest
-    services:
-      meilisearch:
-        image: getmeili/meilisearch:latest
-        ports:
-          - 7700:7700
-        env:
-          MEILI_MASTER_KEY: masterKey
-          MEILI_NO_ANALYTICS: true
-
   upload-coverage:
     name: Upload coverage to Codecov
     runs-on: ubuntu-latest

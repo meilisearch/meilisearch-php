@@ -7,15 +7,16 @@ namespace Meilisearch\Endpoints;
 use Meilisearch\Contracts\CancelTasksQuery;
 use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\Endpoint;
+use MeiliSearch\Contracts\Task;
 use Meilisearch\Exceptions\TimeOutException;
 
 class Tasks extends Endpoint
 {
     protected const PATH = '/tasks';
 
-    public function get(int $taskUid): array
+    public function get(int $taskUid): Task
     {
-        return $this->http->get(self::PATH.'/'.$taskUid);
+        return Task::fromArray($this->http->get(self::PATH.'/'.$taskUid));
     }
 
     public function all(array $query = []): array
@@ -23,32 +24,32 @@ class Tasks extends Endpoint
         return $this->http->get(self::PATH.'/', $query);
     }
 
-    public function cancelTasks(?CancelTasksQuery $options): array
+    public function cancelTasks(?CancelTasksQuery $options): Task
     {
         $options = $options ?? new CancelTasksQuery();
 
-        return $this->http->post('/tasks/cancel', null, $options->toArray());
+        return Task::fromArray($this->http->post('/tasks/cancel', null, $options->toArray()));
     }
 
-    public function deleteTasks(?DeleteTasksQuery $options): array
+    public function deleteTasks(?DeleteTasksQuery $options): Task
     {
         $options = $options ?? new DeleteTasksQuery();
 
-        return $this->http->delete(self::PATH, $options->toArray());
+        return Task::fromArray($this->http->delete(self::PATH, $options->toArray()));
     }
 
     /**
      * @throws TimeOutException
      */
-    public function waitTask(int $taskUid, int $timeoutInMs, int $intervalInMs): array
+    public function waitTask(int $taskUid, int $timeoutInMs, int $intervalInMs): Task
     {
         $timeoutTemp = 0;
 
         while ($timeoutInMs > $timeoutTemp) {
-            $res = $this->get($taskUid);
+            $task = $this->get($taskUid);
 
-            if ('enqueued' !== $res['status'] && 'processing' !== $res['status']) {
-                return $res;
+            if ($task->isFinished()) {
+                return $task;
             }
 
             $timeoutTemp += $intervalInMs;

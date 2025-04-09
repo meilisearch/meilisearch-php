@@ -9,7 +9,13 @@ final class Task implements \ArrayAccess
     /**
      * @param non-negative-int      $taskUid
      * @param non-empty-string|null $indexUid
-     * @param array<mixed>          $data     Raw data
+     * @param array{
+     *     message: non-empty-string,
+     *     code: non-empty-string,
+     *     type: non-empty-string,
+     *     link: non-empty-string
+     * }|null                       $error
+     * @param array<mixed> $data Raw data
      */
     public function __construct(
         private readonly int $taskUid,
@@ -89,6 +95,14 @@ final class Task implements \ArrayAccess
         return $this->details;
     }
 
+    /**
+     * @return array{
+     *      message: non-empty-string,
+     *      code: non-empty-string,
+     *      type: non-empty-string,
+     *      link: non-empty-string
+     *  }|null
+     */
     public function getError(): ?array
     {
         return $this->error;
