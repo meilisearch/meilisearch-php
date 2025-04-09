@@ -27,7 +27,6 @@ final class LocalizedAttributesTest extends TestCase
 
         $promise = $index->updateLocalizedAttributes($newAttributes);
 
-        $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
         $localizedAttributes = $index->getLocalizedAttributes();
@@ -44,9 +43,6 @@ final class LocalizedAttributesTest extends TestCase
         $index->waitForTask($promise['taskUid']);
 
         $promise = $index->resetLocalizedAttributes();
-
-        $this->assertIsValidPromise($promise);
-
         $index->waitForTask($promise['taskUid']);
 
         $localizedAttributes = $index->getLocalizedAttributes();

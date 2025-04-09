@@ -6,6 +6,7 @@ namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\CancelTasksQuery;
 use Meilisearch\Contracts\DeleteTasksQuery;
+use MeiliSearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Endpoints\Tasks;
@@ -15,7 +16,7 @@ trait HandlesTasks
 {
     protected Tasks $tasks;
 
-    public function getTask(int $uid): array
+    public function getTask(int $uid): Task
     {
         return $this->tasks->get($uid);
     }
@@ -29,12 +30,12 @@ trait HandlesTasks
         return new TasksResults($response);
     }
 
-    public function deleteTasks(?DeleteTasksQuery $options = null): array
+    public function deleteTasks(?DeleteTasksQuery $options = null): Task
     {
         return $this->tasks->deleteTasks($options);
     }
 
-    public function cancelTasks(?CancelTasksQuery $options = null): array
+    public function cancelTasks(?CancelTasksQuery $options = null): Task
     {
         return $this->tasks->cancelTasks($options);
     }
@@ -42,7 +43,7 @@ trait HandlesTasks
     /**
      * @throws TimeOutException
      */
-    public function waitForTask(int $uid, int $timeoutInMs = 5000, int $intervalInMs = 50): array
+    public function waitForTask(int $uid, int $timeoutInMs = 5000, int $intervalInMs = 50): Task
     {
         return $this->tasks->waitTask($uid, $timeoutInMs, $intervalInMs);
     }

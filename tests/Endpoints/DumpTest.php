@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use MeiliSearch\Contracts\TaskType;
 use Tests\TestCase;
 
 final class DumpTest extends TestCase
 {
     public function testCreateDump(): void
     {
-        $expectedKeys = ['taskUid', 'indexUid', 'status', 'type', 'enqueuedAt'];
-
         $task = $this->client->createDump();
 
-        self::assertSame($expectedKeys, array_keys($task));
+        self::assertSame(TaskType::DumpCreation, $task->getType());
     }
 }
