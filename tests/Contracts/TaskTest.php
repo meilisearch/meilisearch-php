@@ -8,6 +8,7 @@ use MeiliSearch\Contracts\Task;
 use MeiliSearch\Contracts\TaskStatus;
 use MeiliSearch\Contracts\TaskType;
 use PHPUnit\Framework\TestCase;
+use Tests\MockTask;
 
 final class TaskTest extends TestCase
 {
@@ -87,5 +88,25 @@ final class TaskTest extends TestCase
         self::assertNull($task->getBatchUid());
         self::assertNull($task->getDetails());
         self::assertNull($task->getError());
+    }
+
+    public function testArraySetThrows(): void
+    {
+        $task = MockTask::create(TaskType::IndexCreation);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Setting data on "MeiliSearch\Contracts\Task::type" is not supported.');
+
+        $task['type'] = TaskType::IndexDeletion;
+    }
+
+    public function testArrayUnsetThrows(): void
+    {
+        $task = MockTask::create(TaskType::IndexCreation);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Unsetting data on "MeiliSearch\Contracts\Task::type" is not supported.');
+
+        unset($task['type']);
     }
 }
