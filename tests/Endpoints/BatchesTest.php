@@ -65,6 +65,7 @@ final class BatchesTest extends TestCase
         self::assertArrayHasKey('status', $response['stats']);
         self::assertArrayHasKey('types', $response['stats']);
         self::assertArrayHasKey('indexUids', $response['stats']);
+        self::assertArrayHasKey('progressTrace', $response['stats']);
         self::assertArrayHasKey('duration', $response);
         self::assertArrayHasKey('startedAt', $response);
         self::assertArrayHasKey('finishedAt', $response);
