@@ -433,16 +433,17 @@ landing_getting_started_1: |-
     ['id' => 5, 'title' => 'Moana'],
     ['id' => 6, 'title' => 'Philadelphia'],
   ]);
-getting_started_add_documents_md: |-
-  Using `meilisearch-php` with the Guzzle HTTP client:
+getting_started_add_documents: |-
+  /**
+   * Using `meilisearch-php` with the Guzzle HTTP client, in bash:
+   *   composer require meilisearch/meilisearch-php \
+   *     guzzlehttp/guzzle \
+   *     http-interop/http-factory-guzzle:^1.0
+   */
 
-  ```bash
-  composer require meilisearch/meilisearch-php \
-      guzzlehttp/guzzle \
-      http-interop/http-factory-guzzle:^1.0
-  ```
-
-  ```php
+  /**
+   * In your PHP file:
+   */
   <?php
 
   require_once __DIR__ . '/vendor/autoload.php';
@@ -455,17 +456,14 @@ getting_started_add_documents_md: |-
   $movies = json_decode($movies_json);
 
   $client->index('movies')->addDocuments($movies);
-  ```
 
-  [About this SDK](https://github.com/meilisearch/meilisearch-php/)
+  /**
+   * More about this SDK: https://github.com/meilisearch/meilisearch-php
+   */
 getting_started_check_task_status: |-
   $client->getTask(0);
-getting_started_search_md: |-
-  ```php
+getting_started_search: |-
   $client->index('movies')->search('botman');
-  ```
-
-  [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 getting_started_add_meteorites: |-
   $client = new Client('http://localhost:7700');
 
