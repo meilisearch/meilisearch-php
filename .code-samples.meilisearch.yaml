@@ -435,7 +435,7 @@ landing_getting_started_1: |-
   ]);
 getting_started_add_documents: |-
   /**
-   * Using `meilisearch-php` with the Guzzle HTTP client, in bash:
+   * Using `meilisearch-php` with the Guzzle HTTP client, in the command line:
    *   composer require meilisearch/meilisearch-php \
    *     guzzlehttp/guzzle \
    *     http-interop/http-factory-guzzle:^1.0
