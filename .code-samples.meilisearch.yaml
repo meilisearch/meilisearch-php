@@ -457,9 +457,6 @@ getting_started_add_documents: |-
 
   $client->index('movies')->addDocuments($movies);
 
-  /**
-   * More about this SDK: https://github.com/meilisearch/meilisearch-php
-   */
 getting_started_check_task_status: |-
   $client->getTask(0);
 getting_started_search: |-
