@@ -32,6 +32,7 @@ class FederationOptions
     /**
      * @return array{
      *     weight?: float,
+     *     remote?: string,
      * }
      */
     public function toArray(): array
