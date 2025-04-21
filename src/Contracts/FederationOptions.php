@@ -8,6 +8,7 @@ class FederationOptions
 {
     private ?float $weight = null;
     private ?string $remote = null;
+
     /**
      * @return $this
      */
@@ -27,6 +28,7 @@ class FederationOptions
 
         return $this;
     }
+
     /**
      * @return array{
      *     weight?: float,

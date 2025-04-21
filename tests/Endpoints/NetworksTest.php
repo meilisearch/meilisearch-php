@@ -20,25 +20,25 @@ final class NetworksTest extends TestCase
     public function testUpdateNetworks(): void
     {
         $networks = [
-          "self" => "ms-00",
-          "remotes" => [
-            "ms-00" => [
-              "url" => "http://INSTANCE_URL",
-              "searchApiKey" => "INSTANCE_API_KEY"
+            'self' => 'ms-00',
+            'remotes' => [
+                'ms-00' => [
+                    'url' => 'http://INSTANCE_URL',
+                    'searchApiKey' => 'INSTANCE_API_KEY',
+                ],
+                'ms-01' => [
+                    'url' => 'http://ANOTHER_INSTANCE_URL',
+                    'searchApiKey' => 'ANOTHER_INSTANCE_API_KEY',
+                ],
             ],
-            "ms-01" => [
-              "url" => "http://ANOTHER_INSTANCE_URL",
-              "searchApiKey" => "ANOTHER_INSTANCE_API_KEY"
-            ]
-          ]
         ];
 
         $response = $this->client->updateNetwork($networks);
-        self::assertEquals($networks['self'], $response->getSelf());
-        self::assertEquals($networks['remotes'], $response->getRemotes());
+        self::assertSame($networks['self'], $response->getSelf());
+        self::assertSame($networks['remotes'], $response->getRemotes());
 
         $response = $this->client->getNetwork();
-        self::assertEquals($networks['self'], $response->getSelf());
-        self::assertEquals($networks['remotes'], $response->getRemotes());
+        self::assertSame($networks['self'], $response->getSelf());
+        self::assertSame($networks['remotes'], $response->getRemotes());
     }
 }

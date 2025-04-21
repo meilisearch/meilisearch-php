@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
-use Meilisearch\Endpoints\Network;
 use Meilisearch\Contracts\NetworkResults;
+use Meilisearch\Endpoints\Network;
 
 trait HandlesNetwork
 {
