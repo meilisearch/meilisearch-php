@@ -7,7 +7,7 @@ namespace Meilisearch\Contracts;
 class FederationOptions
 {
     private ?float $weight = null;
-
+    private ?string $remote = null;
     /**
      * @return $this
      */
@@ -19,6 +19,15 @@ class FederationOptions
     }
 
     /**
+     * @return $this
+     */
+    public function setRemote(string $remote): self
+    {
+        $this->remote = $remote;
+
+        return $this;
+    }
+    /**
      * @return array{
      *     weight?: float,
      * }
@@ -27,6 +36,7 @@ class FederationOptions
     {
         return array_filter([
             'weight' => $this->weight,
+            'remote' => $this->remote,
         ], static function ($item) { return null !== $item; });
     }
 }
