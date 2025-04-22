@@ -20,6 +20,7 @@ class FederationOptions
     }
 
     /**
+     * @param non-empty-string $remote
      * @return $this
      */
     public function setRemote(string $remote): self

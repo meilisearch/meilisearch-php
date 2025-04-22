@@ -9,8 +9,14 @@ use Meilisearch\Endpoints\Network;
 
 trait HandlesNetwork
 {
+    /**
+     * @var Network
+     */
     protected Network $network;
 
+    /**
+     * @return NetworkResults
+     */
     public function getNetwork(): NetworkResults
     {
         $response = $this->network->get();
@@ -18,6 +24,14 @@ trait HandlesNetwork
         return new NetworkResults($response);
     }
 
+    /**
+     * @param array{
+     *     self?: string,
+     *     remotes?: array<string, array{url: string, searchApiKey: string}>
+     * } $network
+     *
+     * @return NetworkResults
+     */
     public function updateNetwork(array $network): NetworkResults
     {
         $response = $this->network->update($network);
