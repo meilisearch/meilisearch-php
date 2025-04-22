@@ -7,6 +7,9 @@ namespace Meilisearch\Contracts;
 class FederationOptions
 {
     private ?float $weight = null;
+    /**
+     * @var non-empty-string|null
+     */
     private ?string $remote = null;
 
     /**
