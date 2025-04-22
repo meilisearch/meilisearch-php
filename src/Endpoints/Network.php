@@ -12,8 +12,8 @@ class Network extends Endpoint
 
     /**
      * @return array{
-     *     self: string,
-     *     remotes: array<string, array{url: string, searchApiKey: string}>
+     *     self: non-empty-string,
+     *     remotes: array<non-empty-string, array{url: non-empty-string, searchApiKey: string}>
      * }
      */
     public function get(): array
@@ -23,13 +23,13 @@ class Network extends Endpoint
 
     /**
      * @param array{
-     *     self?: string,
-     *     remotes?: array<string, array{url: string, searchApiKey: string}>
+     *     self?: non-empty-string,
+     *     remotes?: array<non-empty-string, array{url: non-empty-string, searchApiKey: string}>
      * } $body
      *
      * @return array{
-     *     self: string,
-     *     remotes: array<string, array{url: string, searchApiKey: string}>
+     *     self: non-empty-string,
+     *     remotes: array<non-empty-string, array{url: non-empty-string, searchApiKey: string}>
      * }
      */
     public function update(array $body): array

@@ -7,12 +7,12 @@ namespace Meilisearch\Contracts;
 class NetworkResults extends Data
 {
     /**
-     * @var string the identifier for the local node
+     * @var non-empty-string the identifier for the local node
      */
     private string $self;
 
     /**
-     * @var array<string, array{url: string, searchApiKey: string}> a mapping of remote node IDs to their connection details
+     * @var array<non-empty-string, array{url: non-empty-string, searchApiKey: string}> a mapping of remote node IDs to their connection details
      */
     private array $remotes;
 
@@ -31,7 +31,7 @@ class NetworkResults extends Data
     }
 
     /**
-     * @return string the identifier for the local node
+     * @return non-empty-string the identifier for the local node
      */
     public function getSelf(): string
     {
@@ -39,7 +39,7 @@ class NetworkResults extends Data
     }
 
     /**
-     * @return array<string, array{url: string, searchApiKey: string}>
+     * @return array<non-empty-string, array{url: non-empty-string, searchApiKey: string}>
      */
     public function getRemotes(): array
     {
