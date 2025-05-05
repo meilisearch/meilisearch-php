@@ -11,6 +11,7 @@ use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
 use Meilisearch\Contracts\SimilarDocumentsQuery;
+use MeiliSearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Endpoints\Delegates\HandlesDocuments;
@@ -72,11 +73,11 @@ class Indexes extends Endpoint
     /**
      * @throws \Exception|ApiException
      */
-    public function create(string $uid, array $options = []): array
+    public function create(string $uid, array $options = []): Task
     {
         $options['uid'] = $uid;
 
-        return $this->http->post(self::PATH, $options);
+        return Task::fromArray($this->http->post(self::PATH, $options));
     }
 
     public function all(?IndexesQuery $options = null): IndexesResults
@@ -136,27 +137,27 @@ class Indexes extends Endpoint
         return $this->fill($response);
     }
 
-    public function update($body): array
+    public function update(array $body): Task
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid, $body);
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid, $body));
     }
 
-    public function delete(): array
+    public function delete(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid) ?? [];
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid) ?? []);
     }
 
     /**
      * @param array<array{indexes: mixed}> $indexes
      */
-    public function swapIndexes(array $indexes): array
+    public function swapIndexes(array $indexes): Task
     {
-        return $this->http->post('/swap-indexes', $indexes);
+        return Task::fromArray($this->http->post('/swap-indexes', $indexes));
     }
 
     // Tasks
 
-    public function getTask($uid): array
+    public function getTask(int $uid): array
     {
         return $this->http->get('/tasks/'.$uid);
     }
@@ -179,11 +180,9 @@ class Indexes extends Endpoint
     // Search
 
     /**
-     * @return SearchResult|array
-     *
      * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int} ? array : SearchResult)
      */
-    public function search(?string $query, array $searchParams = [], array $options = [])
+    public function search(?string $query, array $searchParams = [], array $options = []): SearchResult|array
     {
         $result = $this->rawSearch($query, $searchParams);
 
@@ -246,14 +245,14 @@ class Indexes extends Endpoint
             ->getIterator()->getArrayCopy();
     }
 
-    public function updateSettings($settings): array
+    public function updateSettings($settings): Task
     {
-        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings);
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings));
     }
 
-    public function resetSettings(): array
+    public function resetSettings(): Task
     {
-        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings');
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings'));
     }
 
     /**

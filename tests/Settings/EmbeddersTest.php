@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Settings;
 
+use MeiliSearch\Contracts\TaskStatus;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
@@ -32,25 +33,18 @@ final class EmbeddersTest extends TestCase
         $newEmbedders = ['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]];
 
         $promise = $this->index->updateEmbedders($newEmbedders);
-
-        $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
-        $embedders = $this->index->getEmbedders();
-
-        self::assertSame($newEmbedders, $embedders);
+        self::assertSame($newEmbedders, $this->index->getEmbedders());
     }
 
     public function testResetEmbedders(): void
     {
         $promise = $this->index->resetEmbedders();
 
-        $this->assertIsValidPromise($promise);
-
         $this->index->waitForTask($promise['taskUid']);
-        $embedders = $this->index->getEmbedders();
 
-        self::assertSame(self::DEFAULT_EMBEDDER, $embedders);
+        self::assertSame(self::DEFAULT_EMBEDDER, $this->index->getEmbedders());
     }
 
     public function testHuggingFacePooling(): void
@@ -69,7 +63,6 @@ final class EmbeddersTest extends TestCase
             ],
         ]);
 
-        $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
         $embedders = $this->index->getEmbedders();
@@ -100,6 +93,6 @@ final class EmbeddersTest extends TestCase
             'embedder_name' => $embedder,
         ]);
 
-        $this->assertIsValidPromise($promise);
+        self::assertSame(TaskStatus::Enqueued, $promise->getStatus());
     }
 }

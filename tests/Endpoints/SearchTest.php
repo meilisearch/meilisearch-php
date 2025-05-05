@@ -710,10 +710,9 @@ final class SearchTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
 
         $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
-        $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
+
         $promise = $index->updateDocuments(self::VECTOR_MOVIES);
-        $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
         $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0, 'embedder' => 'manual']]);
