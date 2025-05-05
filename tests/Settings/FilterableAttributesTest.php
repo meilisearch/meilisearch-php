@@ -61,11 +61,9 @@ final class FilterableAttributesTest extends TestCase
         ];
 
         $promise = $index->updateFilterableAttributes($expectedAttributes);
-        $this->assertIsValidPromise($promise);
-
         $index->waitForTask($promise['taskUid']);
-        $filterableAttributes = $index->getFilterableAttributes();
-        self::assertSame($expectedAttributes, $filterableAttributes);
+
+        self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
 
     public function testUpdateGeoWithGranularFilterableAttributes(): void
@@ -77,10 +75,9 @@ final class FilterableAttributesTest extends TestCase
                 'attributePatterns' => ['_geo'],
             ],
         ]);
-        $this->assertIsValidPromise($promise);
 
         $index->waitForTask($promise['taskUid']);
-        $filterableAttributes = $index->getFilterableAttributes();
+
         self::assertSame([
             [
                 'attributePatterns' => ['_geo'],
@@ -92,6 +89,6 @@ final class FilterableAttributesTest extends TestCase
                     ],
                 ],
             ],
-        ], $filterableAttributes);
+        ], $index->getFilterableAttributes());
     }
 }

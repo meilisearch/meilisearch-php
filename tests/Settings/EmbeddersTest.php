@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Settings;
 
+use MeiliSearch\Contracts\TaskStatus;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
@@ -62,7 +63,6 @@ final class EmbeddersTest extends TestCase
             ],
         ]);
 
-        $this->assertIsValidPromise($promise);
         $this->index->waitForTask($promise['taskUid']);
 
         $embedders = $this->index->getEmbedders();
@@ -93,6 +93,6 @@ final class EmbeddersTest extends TestCase
             'embedder_name' => $embedder,
         ]);
 
-        $this->assertIsValidPromise($promise);
+        self::assertSame(TaskStatus::Enqueued, $promise->getStatus());
     }
 }
