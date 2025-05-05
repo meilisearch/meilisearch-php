@@ -97,11 +97,6 @@ abstract class TestCase extends BaseTestCase
         $this->client->waitForTasks($tasks);
     }
 
-    public function assertIsValidPromise(array $promise): void
-    {
-        self::assertArrayHasKey('taskUid', $promise);
-    }
-
     public function assertFinitePagination(array $response): void
     {
         $currentKeys = array_keys($response);
