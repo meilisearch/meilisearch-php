@@ -374,11 +374,11 @@ final class DocumentsTest extends TestCase
                       case 1:
                           self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
 
-                          return MockTask::create(TaskType::DocumentEdition);
+                          return MockTask::create(TaskType::DocumentAdditionOrUpdate);
                       case 2:
                           self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
 
-                          return MockTask::create(TaskType::DocumentEdition);
+                          return MockTask::create(TaskType::DocumentAdditionOrUpdate);
                       default:
                           self::fail();
                   }
@@ -857,11 +857,11 @@ final class DocumentsTest extends TestCase
                       case 1:
                           self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
 
-                          return MockTask::create(TaskType::DocumentEdition);
+                          return MockTask::create(TaskType::DocumentAdditionOrUpdate);
                       case 2:
                           self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
 
-                          return MockTask::create(TaskType::DocumentEdition);
+                          return MockTask::create(TaskType::DocumentAdditionOrUpdate);
                       default:
                           self::fail();
                   }
