@@ -12,6 +12,7 @@ enum TaskType: string
     case IndexSwap = 'indexSwap';
     case DocumentAdditionOrUpdate = 'documentAdditionOrUpdate';
     case DocumentDeletion = 'documentDeletion';
+    case DocumentEdition = 'documentEdition';
     case SettingsUpdate = 'settingsUpdate';
     case DumpCreation = 'dumpCreation';
     case TaskCancelation = 'taskCancelation';
