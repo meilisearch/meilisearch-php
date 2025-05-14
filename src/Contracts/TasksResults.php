@@ -28,7 +28,7 @@ class TasksResults extends Data
 
     public function __construct(array $params)
     {
-        parent::__construct($params['results'] ?? []);
+        parent::__construct(isset($params['results']) ? array_map(static fn (array $data) => Task::fromArray($data), $params['results']) : []);
 
         $this->from = $params['from'] ?? 0;
         $this->limit = $params['limit'] ?? 0;
@@ -37,7 +37,7 @@ class TasksResults extends Data
     }
 
     /**
-     * @return array<int, array>
+     * @return array<int, Task>
      */
     public function getResults(): array
     {
