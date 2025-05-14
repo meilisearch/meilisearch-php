@@ -11,7 +11,7 @@ use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
 use Meilisearch\Contracts\SimilarDocumentsQuery;
-use MeiliSearch\Contracts\Task;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Endpoints\Delegates\HandlesDocuments;

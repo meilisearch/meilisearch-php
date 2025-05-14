@@ -2,20 +2,26 @@
 
 declare(strict_types=1);
 
-namespace MeiliSearch\Contracts;
+namespace Meilisearch\Contracts;
+
+use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
+use Meilisearch\Contracts\TaskDetails\DocumentDeletionDetails;
+use Meilisearch\Contracts\TaskDetails\DocumentEditionDetails;
+use Meilisearch\Contracts\TaskDetails\DumpCreationDetails;
+use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
+use Meilisearch\Contracts\TaskDetails\IndexDeletionDetails;
+use Meilisearch\Contracts\TaskDetails\IndexSwapDetails;
+use Meilisearch\Contracts\TaskDetails\IndexUpdateDetails;
+use Meilisearch\Contracts\TaskDetails\SettingsUpdateDetails;
+use Meilisearch\Contracts\TaskDetails\TaskCancelationDetails;
+use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 
 final class Task implements \ArrayAccess
 {
     /**
      * @param non-negative-int      $taskUid
      * @param non-empty-string|null $indexUid
-     * @param array{
-     *     message: non-empty-string,
-     *     code: non-empty-string,
-     *     type: non-empty-string,
-     *     link: non-empty-string
-     * }|null                       $error
-     * @param array<mixed> $data Raw data
+     * @param array<mixed>          $data     Raw data
      */
     public function __construct(
         private readonly int $taskUid,
@@ -28,8 +34,8 @@ final class Task implements \ArrayAccess
         private readonly ?string $duration = null,
         private readonly ?int $canceledBy = null,
         private readonly ?int $batchUid = null,
-        private readonly ?array $details = null,
-        private readonly ?array $error = null,
+        private readonly ?TaskDetails $details = null,
+        private readonly ?TaskError $error = null,
         private readonly array $data = [],
     ) {
     }
@@ -90,20 +96,12 @@ final class Task implements \ArrayAccess
         return $this->batchUid;
     }
 
-    public function getDetails(): ?array
+    public function getDetails(): ?TaskDetails
     {
         return $this->details;
     }
 
-    /**
-     * @return array{
-     *      message: non-empty-string,
-     *      code: non-empty-string,
-     *      type: non-empty-string,
-     *      link: non-empty-string
-     *  }|null
-     */
-    public function getError(): ?array
+    public function getError(): ?TaskError
     {
         return $this->error;
     }
@@ -158,8 +156,8 @@ final class Task implements \ArrayAccess
      *     duration?: non-empty-string,
      *     canceledBy?: int,
      *     batchUid?: int,
-     *     details?: array<mixed>,
-     *     error?: array<mixed>,
+     *     details?: array<mixed>|null,
+     *     error?: array<mixed>|null,
      *     data: array<mixed>
      * } $data
      */
@@ -169,15 +167,28 @@ final class Task implements \ArrayAccess
             $data['taskUid'] ?? $data['uid'],
             $data['indexUid'],
             TaskStatus::from($data['status']),
-            TaskType::from($data['type']),
+            $type = TaskType::from($data['type']),
             new \DateTimeImmutable($data['enqueuedAt']),
             isset($data['startedAt']) ? new \DateTimeImmutable($data['startedAt']) : null,
             isset($data['finishedAt']) ? new \DateTimeImmutable($data['finishedAt']) : null,
             $data['duration'] ?? null,
             $data['canceledBy'] ?? null,
             $data['batchUid'] ?? null,
-            $data['details'] ?? null,
-            $data['error'] ?? null,
+            match ($type) {
+                TaskType::IndexCreation => null !== $data['details'] ? IndexCreationDetails::fromArray($data['details']) : null,
+                TaskType::IndexUpdate => null !== $data['details'] ? IndexUpdateDetails::fromArray($data['details']) : null,
+                TaskType::IndexDeletion => null !== $data['details'] ? IndexDeletionDetails::fromArray($data['details']) : null,
+                TaskType::IndexSwap => null !== $data['details'] ? IndexSwapDetails::fromArray($data['details']) : null,
+                TaskType::DocumentAdditionOrUpdate => null !== $data['details'] ? DocumentAdditionOrUpdateDetails::fromArray($data['details']) : null,
+                TaskType::DocumentDeletion => null !== $data['details'] ? DocumentDeletionDetails::fromArray($data['details']) : null,
+                TaskType::DocumentEdition => null !== $data['details'] ? DocumentEditionDetails::fromArray($data['details']) : null,
+                TaskType::SettingsUpdate => null !== $data['details'] ? SettingsUpdateDetails::fromArray($data['details']) : null,
+                TaskType::DumpCreation => null !== $data['details'] ? DumpCreationDetails::fromArray($data['details']) : null,
+                TaskType::TaskCancelation => null !== $data['details'] ? TaskCancelationDetails::fromArray($data['details']) : null,
+                TaskType::TaskDeletion => null !== $data['details'] ? TaskDeletionDetails::fromArray($data['details']) : null,
+                TaskType::SnapshotCreation => null,
+            },
+            null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
             $data,
         );
     }
