@@ -34,7 +34,7 @@ final class DocumentEditionDetails implements TaskDetails
         return new self(
             $data['context'],
             $data['deletedDocuments'],
-            $data['deletedDocuments'],
+            $data['editedDocuments'],
             $data['function'],
             $data['originalFilter'],
         );

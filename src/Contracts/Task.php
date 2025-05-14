@@ -147,7 +147,7 @@ final class Task implements \ArrayAccess
      * @param array{
      *     taskUid?: int,
      *     uid?: int,
-     *     indexUid: non-empty-string,
+     *     indexUid?: non-empty-string,
      *     status: non-empty-string,
      *     type: non-empty-string,
      *     enqueuedAt: non-empty-string,
@@ -165,7 +165,7 @@ final class Task implements \ArrayAccess
     {
         return new self(
             $data['taskUid'] ?? $data['uid'],
-            $data['indexUid'],
+            $data['indexUid'] ?? null,
             TaskStatus::from($data['status']),
             $type = TaskType::from($data['type']),
             new \DateTimeImmutable($data['enqueuedAt']),
@@ -186,6 +186,8 @@ final class Task implements \ArrayAccess
                 TaskType::DumpCreation => null !== $data['details'] ? DumpCreationDetails::fromArray($data['details']) : null,
                 TaskType::TaskCancelation => null !== $data['details'] ? TaskCancelationDetails::fromArray($data['details']) : null,
                 TaskType::TaskDeletion => null !== $data['details'] ? TaskDeletionDetails::fromArray($data['details']) : null,
+                // It’s intentional that SnapshotCreation tasks don’t have a details object
+                // (no SnapshotCreationDetails exists and tests don’t exercise any details)
                 TaskType::SnapshotCreation => null,
             },
             null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
