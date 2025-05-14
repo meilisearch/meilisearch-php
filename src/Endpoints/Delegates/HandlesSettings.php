@@ -402,11 +402,17 @@ trait HandlesSettings
 
     // Settings - searchCutoffMs
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getSearchCutoffMs(): ?int
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms');
     }
 
+    /**
+     * @param non-negative-int $value
+     */
     public function updateSearchCutoffMs(int $value): Task
     {
         return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms', $value));
