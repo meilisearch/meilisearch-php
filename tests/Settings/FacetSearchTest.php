@@ -21,8 +21,8 @@ final class FacetSearchTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFacetSearch(false);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFacetSearch(false);
+        $index->waitForTask($task['taskUid']);
 
         self::assertFalse($index->getFacetSearch());
     }
@@ -31,11 +31,11 @@ final class FacetSearchTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFacetSearch(false);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFacetSearch(false);
+        $index->waitForTask($task['taskUid']);
 
-        $promise = $index->resetFacetSearch();
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->resetFacetSearch();
+        $index->waitForTask($task['taskUid']);
 
         self::assertTrue($index->getFacetSearch());
     }

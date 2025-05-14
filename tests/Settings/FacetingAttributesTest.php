@@ -25,8 +25,8 @@ final class FacetingAttributesTest extends TestCase
         $newAttributes = ['sortFacetValuesBy' => ['*' => 'count']];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFaceting($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFaceting($newAttributes);
+        $index->waitForTask($task['taskUid']);
 
         self::assertSame([
             'maxValuesPerFacet' => 100,
@@ -39,11 +39,11 @@ final class FacetingAttributesTest extends TestCase
         $newAttributes = ['sortFacetValuesBy' => ['*' => 'count']];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFaceting($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFaceting($newAttributes);
+        $index->waitForTask($task['taskUid']);
 
-        $promise = $index->resetFaceting();
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->resetFaceting();
+        $index->waitForTask($task['taskUid']);
 
         self::assertSame([
             'maxValuesPerFacet' => 100,

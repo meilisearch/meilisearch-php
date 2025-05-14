@@ -84,14 +84,14 @@ final class SettingsTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateSettings([
+        $task = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
             'facetSearch' => false,
             'prefixSearch' => 'disabled',
         ]);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($task['taskUid']);
 
         $settings = $index->getSettings();
 
@@ -127,18 +127,18 @@ final class SettingsTest extends TestCase
 
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateSettings([
+        $task = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
             'typoTolerance' => $new_typo_tolerance,
         ]);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($task['taskUid']);
 
-        $promise = $index->updateSettings([
+        $task = $index->updateSettings([
             'searchableAttributes' => ['title'],
         ]);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($task['taskUid']);
 
         $settings = $index->getSettings();
 
@@ -161,15 +161,15 @@ final class SettingsTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateSettings([
+        $task = $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($task['taskUid']);
 
-        $promise = $index->resetSettings();
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->resetSettings();
+        $index->waitForTask($task['taskUid']);
 
         $settings = $index->getSettings();
 

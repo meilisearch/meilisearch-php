@@ -21,8 +21,8 @@ final class PrefixSearchTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updatePrefixSearch('disabled');
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updatePrefixSearch('disabled');
+        $index->waitForTask($task['taskUid']);
 
         self::assertSame('disabled', $index->getPrefixSearch());
     }
@@ -31,11 +31,11 @@ final class PrefixSearchTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updatePrefixSearch('disabled');
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updatePrefixSearch('disabled');
+        $index->waitForTask($task['taskUid']);
 
-        $promise = $index->resetPrefixSearch();
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->resetPrefixSearch();
+        $index->waitForTask($task['taskUid']);
 
         self::assertSame('indexingTime', $index->getPrefixSearch());
     }

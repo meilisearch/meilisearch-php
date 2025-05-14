@@ -166,12 +166,12 @@ final class IndexTest extends TestCase
 
     public function testGetTasks(): void
     {
-        $promise = $this->client->createIndex('new-index', ['primaryKey' => 'objectID']);
-        $this->index->waitForTask($promise['taskUid']);
-        $promise = $this->client->createIndex('other-index', ['primaryKey' => 'objectID']);
-        $this->index->waitForTask($promise['taskUid']);
-        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->client->createIndex('new-index', ['primaryKey' => 'objectID']);
+        $this->index->waitForTask($task['taskUid']);
+        $task = $this->client->createIndex('other-index', ['primaryKey' => 'objectID']);
+        $this->index->waitForTask($task['taskUid']);
+        $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $this->index->waitForTask($task['taskUid']);
 
         $tasks = $this->index->getTasks((new TasksQuery())->setIndexUids(['other-index']));
 
@@ -184,12 +184,12 @@ final class IndexTest extends TestCase
 
     public function testWaitForTaskDefault(): void
     {
-        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
 
-        $response = $this->index->waitForTask($promise['taskUid']);
+        $response = $this->index->waitForTask($task['taskUid']);
 
         self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertSame($response['uid'], $task['taskUid']);
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
@@ -199,11 +199,11 @@ final class IndexTest extends TestCase
 
     public function testWaitForTaskWithTimeoutAndInterval(): void
     {
-        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($promise['taskUid'], 100, 20);
+        $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $response = $this->index->waitForTask($task['taskUid'], 100, 20);
 
         self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertSame($response['uid'], $task['taskUid']);
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
@@ -214,11 +214,11 @@ final class IndexTest extends TestCase
 
     public function testWaitForTaskWithTimeout(): void
     {
-        $promise = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($promise['taskUid'], 1000);
+        $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $response = $this->index->waitForTask($task['taskUid'], 1000);
 
         self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertSame($response['uid'], $task['taskUid']);
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
@@ -256,16 +256,16 @@ final class IndexTest extends TestCase
 
     public function testSwapIndexes(): void
     {
-        $promise = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
-        $response = $this->client->waitForTask($promise['taskUid']);
+        $task = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
+        $response = $this->client->waitForTask($task['taskUid']);
 
         self::assertSame([['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]], $response['details']['swaps']);
     }
 
     public function testDeleteTasks(): void
     {
-        $promise = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
-        $response = $this->client->waitForTask($promise['taskUid']);
+        $task = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
+        $response = $this->client->waitForTask($task['taskUid']);
 
         self::assertSame('?uids=1%2C2', $response['details']['originalFilter']);
         self::assertIsNumeric($response['details']['matchedTasks']);
