@@ -12,8 +12,6 @@ final class FilterableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $attributes = $index->getFilterableAttributes();
-
         self::assertEmpty($index->getFilterableAttributes());
     }
 
