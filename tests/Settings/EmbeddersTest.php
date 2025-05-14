@@ -33,7 +33,7 @@ final class EmbeddersTest extends TestCase
         $newEmbedders = ['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]];
 
         $task = $this->index->updateEmbedders($newEmbedders);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame($newEmbedders, $this->index->getEmbedders());
     }
@@ -42,7 +42,7 @@ final class EmbeddersTest extends TestCase
     {
         $task = $this->index->resetEmbedders();
 
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame(self::DEFAULT_EMBEDDER, $this->index->getEmbedders());
     }
@@ -63,7 +63,7 @@ final class EmbeddersTest extends TestCase
             ],
         ]);
 
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $embedders = $this->index->getEmbedders();
 

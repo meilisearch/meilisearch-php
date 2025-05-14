@@ -26,7 +26,7 @@ final class FacetingAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
 
         $task = $index->updateFaceting($newAttributes);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertSame([
             'maxValuesPerFacet' => 100,
@@ -40,10 +40,10 @@ final class FacetingAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
 
         $task = $index->updateFaceting($newAttributes);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $task = $index->resetFaceting();
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertSame([
             'maxValuesPerFacet' => 100,
