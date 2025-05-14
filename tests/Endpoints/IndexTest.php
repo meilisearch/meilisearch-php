@@ -230,9 +230,11 @@ final class IndexTest extends TestCase
 
     public function testExceptionWhenTaskTimeOut(): void
     {
-        $res = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+
         $this->expectException(TimeOutException::class);
-        $this->index->waitForTask($res['taskUid'], 0, 20);
+
+        $this->index->waitForTask($task->getTaskUid(), 0, 20);
     }
 
     public function testDeleteIndexes(): void

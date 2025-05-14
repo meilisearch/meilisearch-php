@@ -131,8 +131,9 @@ final class SearchTest extends TestCase
     public function testExceptionIfNoIndexWhenSearching(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movie-1'));
-        $res = $index->delete();
-        $index->waitForTask($res['taskUid']);
+
+        $task = $index->delete();
+        $index->waitForTask($task->getTaskUid());
 
         $this->expectException(ApiException::class);
 
