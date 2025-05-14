@@ -73,7 +73,7 @@ final class TenantTokenTest extends TestCase
         $taskFromFilter = $this->client->index('tenantToken')->updateFilterableAttributes([
             'id',
         ]);
-        $this->client->waitForTask($taskFromFilter['taskUid']);
+        $this->client->waitForTask($taskFromFilter->getTaskUid());
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), (object) ['tenantToken' => (object) ['filter' => 'id > 10']]);
         $tokenClient = new Client($this->host, $token);
