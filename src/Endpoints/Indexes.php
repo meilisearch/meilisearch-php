@@ -157,9 +157,9 @@ class Indexes extends Endpoint
 
     // Tasks
 
-    public function getTask(int $uid): array
+    public function getTask(int $uid): Task
     {
-        return $this->http->get('/tasks/'.$uid);
+        return Task::fromArray($this->http->get('/tasks/'.$uid));
     }
 
     public function getTasks(?TasksQuery $options = null): TasksResults
