@@ -133,10 +133,10 @@ abstract class TestCase extends BaseTestCase
 
     public function createEmptyIndex($indexName, $options = []): Indexes
     {
-        $response = $this->client->createIndex($indexName, $options);
-        $this->client->waitForTask($response['taskUid']);
+        $task = $this->client->createIndex($indexName, $options);
+        $this->client->waitForTask($task->getTaskUid());
 
-        return $this->client->getIndex($response['indexUid']);
+        return $this->client->getIndex($task->getIndexUid());
     }
 
     public function safeIndexName(string $indexName = 'index'): string
