@@ -30,21 +30,21 @@ final class PaginationTest extends TestCase
 
     public function testUpdatePagination(): void
     {
-        $promise = $this->index->updatePagination(['maxTotalHits' => 100]);
+        $task = $this->index->updatePagination(['maxTotalHits' => 100]);
 
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->waitForTask($task['taskUid']);
 
         self::assertSame(['maxTotalHits' => 100], $this->index->getPagination());
     }
 
     public function testResetPagination(): void
     {
-        $promise = $this->index->updatePagination(['maxTotalHits' => 100]);
+        $task = $this->index->updatePagination(['maxTotalHits' => 100]);
 
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->waitForTask($task['taskUid']);
 
-        $promise = $this->index->resetPagination();
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->resetPagination();
+        $this->index->waitForTask($task['taskUid']);
 
         self::assertSame(self::DEFAULT_PAGINATION, $this->index->getPagination());
     }

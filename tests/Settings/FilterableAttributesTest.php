@@ -20,8 +20,8 @@ final class FilterableAttributesTest extends TestCase
         $expectedAttributes = ['title'];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFilterableAttributes($expectedAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFilterableAttributes($expectedAttributes);
+        $index->waitForTask($task['taskUid']);
 
         self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
@@ -31,11 +31,11 @@ final class FilterableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
-        $promise = $index->updateFilterableAttributes($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFilterableAttributes($newAttributes);
+        $index->waitForTask($task['taskUid']);
 
-        $promise = $index->resetFilterableAttributes();
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->resetFilterableAttributes();
+        $index->waitForTask($task['taskUid']);
 
         self::assertEmpty($index->getFilterableAttributes());
     }
@@ -58,8 +58,8 @@ final class FilterableAttributesTest extends TestCase
             ],
         ];
 
-        $promise = $index->updateFilterableAttributes($expectedAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFilterableAttributes($expectedAttributes);
+        $index->waitForTask($task['taskUid']);
 
         self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
@@ -68,13 +68,13 @@ final class FilterableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFilterableAttributes([
+        $task = $index->updateFilterableAttributes([
             [
                 'attributePatterns' => ['_geo'],
             ],
         ]);
 
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($task['taskUid']);
 
         self::assertSame([
             [

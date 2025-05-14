@@ -42,8 +42,8 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithSearchRulesOnly(): void
     {
-        $promise = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
-        $this->client->waitForTask($promise['taskUid']);
+        $task = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
+        $this->client->waitForTask($task['taskUid']);
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), ['*']);
         $tokenClient = new Client($this->host, $token);
@@ -55,8 +55,8 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithSearchRulesAsObject(): void
     {
-        $promise = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
-        $this->client->waitForTask($promise['taskUid']);
+        $task = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
+        $this->client->waitForTask($task['taskUid']);
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), (object) ['*' => (object) []]);
         $tokenClient = new Client($this->host, $token);
@@ -68,12 +68,12 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithFilter(): void
     {
-        $promise = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
-        $this->client->waitForTask($promise['taskUid']);
-        $promiseFromFilter = $this->client->index('tenantToken')->updateFilterableAttributes([
+        $task = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
+        $this->client->waitForTask($task['taskUid']);
+        $taskFromFilter = $this->client->index('tenantToken')->updateFilterableAttributes([
             'id',
         ]);
-        $this->client->waitForTask($promiseFromFilter['taskUid']);
+        $this->client->waitForTask($taskFromFilter['taskUid']);
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), (object) ['tenantToken' => (object) ['filter' => 'id > 10']]);
         $tokenClient = new Client($this->host, $token);

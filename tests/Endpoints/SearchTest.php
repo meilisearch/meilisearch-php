@@ -17,8 +17,8 @@ final class SearchTest extends TestCase
     {
         parent::setUp();
         $this->index = $this->createEmptyIndex($this->safeIndexName());
-        $promise = $this->index->updateDocuments(self::DOCUMENTS);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->waitForTask($task['taskUid']);
     }
 
     public function testBasicSearch(): void
@@ -709,11 +709,11 @@ final class SearchTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
+        $index->waitForTask($task['taskUid']);
 
-        $promise = $index->updateDocuments(self::VECTOR_MOVIES);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateDocuments(self::VECTOR_MOVIES);
+        $index->waitForTask($task['taskUid']);
 
         $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0, 'embedder' => 'manual']]);
 
@@ -866,8 +866,8 @@ final class SearchTest extends TestCase
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $this->index->updateFilterableAttributes(['info.reviewNb']);
 
-        $promise = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
+        $this->index->waitForTask($task['taskUid']);
 
         $response = $this->index->search(
             null,
@@ -882,8 +882,8 @@ final class SearchTest extends TestCase
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $this->index->updateFilterableAttributes(['genre']);
 
-        $promise = $this->index->updateDocuments(self::DOCUMENTS);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->waitForTask($task['taskUid']);
 
         $response = $this->index->search(null, [
             'distinct' => 'genre',
@@ -912,8 +912,8 @@ final class SearchTest extends TestCase
     {
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $this->index->updateDocuments(self::DOCUMENTS);
-        $promise = $this->index->updateLocalizedAttributes([['attributePatterns' => ['title', 'comment'], 'locales' => ['fra', 'eng']]]);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateLocalizedAttributes([['attributePatterns' => ['title', 'comment'], 'locales' => ['fra', 'eng']]]);
+        $this->index->waitForTask($task['taskUid']);
 
         $response = $this->index->search('french', [
             'locales' => ['fra', 'eng'],
