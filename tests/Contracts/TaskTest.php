@@ -59,6 +59,7 @@ final class TaskTest extends TestCase
             'link' => 'https://docs.meilisearch.com/errors#index_not_found',
         ], $task->getError());
 
+        // Ensure the class supports array access retrocompatibility
         self::assertSame(1, $task['taskUid']);
         self::assertSame('documents', $task['indexUid']);
         self::assertSame('failed', $task['status']);
