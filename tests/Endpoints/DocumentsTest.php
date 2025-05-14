@@ -840,8 +840,8 @@ final class DocumentsTest extends TestCase
 
         $tasks = $index->updateDocumentsCsvInBatches($replacement, 1);
         self::assertCount(2, $tasks);
-        foreach ($tasks as $task) {
-            $index->waitForTask($task->getTaskUid());
+        foreach ($tasks as $enqueuedTask) {
+            $index->waitForTask($enqueuedTask->getTaskUid());
         }
 
         $response = $index->getDocument(888221515);
@@ -903,8 +903,8 @@ final class DocumentsTest extends TestCase
 
         $tasks = $index->updateDocumentsNdjsonInBatches($replacement, 1);
         self::assertCount(2, $tasks);
-        foreach ($tasks as $task) {
-            $index->waitForTask($task->getTaskUid());
+        foreach ($tasks as $enqueuedTask) {
+            $index->waitForTask($enqueuedTask->getTaskUid());
         }
 
         $response = $index->getDocument(412559401);
