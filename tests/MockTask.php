@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use MeiliSearch\Contracts\Task;
-use MeiliSearch\Contracts\TaskStatus;
-use MeiliSearch\Contracts\TaskType;
+use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TaskStatus;
+use Meilisearch\Contracts\TaskType;
 
 final class MockTask
 {

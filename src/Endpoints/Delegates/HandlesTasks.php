@@ -6,7 +6,7 @@ namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\CancelTasksQuery;
 use Meilisearch\Contracts\DeleteTasksQuery;
-use MeiliSearch\Contracts\Task;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Endpoints\Tasks;

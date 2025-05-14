@@ -7,7 +7,7 @@ namespace Meilisearch\Endpoints\Delegates;
 use Meilisearch\Contracts\Index\Faceting;
 use Meilisearch\Contracts\Index\Synonyms;
 use Meilisearch\Contracts\Index\TypoTolerance;
-use MeiliSearch\Contracts\Task;
+use Meilisearch\Contracts\Task;
 
 trait HandlesSettings
 {

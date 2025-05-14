@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
-use MeiliSearch\Contracts\Task;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Endpoints\Health;
 use Meilisearch\Endpoints\Stats;
 use Meilisearch\Endpoints\TenantToken;

@@ -7,7 +7,7 @@ namespace Meilisearch\Endpoints;
 use Meilisearch\Contracts\CancelTasksQuery;
 use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\Endpoint;
-use MeiliSearch\Contracts\Task;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Exceptions\TimeOutException;
 
 class Tasks extends Endpoint

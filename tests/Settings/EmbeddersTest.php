@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Settings;
 
-use MeiliSearch\Contracts\TaskStatus;
+use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Http\Client;
 use Tests\TestCase;

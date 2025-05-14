@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use MeiliSearch\Contracts\TaskType;
+use Meilisearch\Contracts\TaskType;
 use Tests\TestCase;
 
 final class SnapshotsTest extends TestCase

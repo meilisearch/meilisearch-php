@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Contracts;
 
-use MeiliSearch\Contracts\Task;
-use MeiliSearch\Contracts\TaskStatus;
-use MeiliSearch\Contracts\TaskType;
+use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
+use Meilisearch\Contracts\TaskError;
+use Meilisearch\Contracts\TaskStatus;
+use Meilisearch\Contracts\TaskType;
 use PHPUnit\Framework\TestCase;
 use Tests\MockTask;
 
@@ -25,13 +27,13 @@ final class TaskTest extends TestCase
             duration: 'PT0.184408715S',
             canceledBy: 123,
             batchUid: 666,
-            details: ['some' => 'detail'],
-            error: [
-                'message' => 'Index `documents` not found.',
-                'code' => 'index_not_found',
-                'type' => 'invalid_request',
-                'link' => 'https://docs.meilisearch.com/errors#index_not_found',
-            ],
+            details: new IndexCreationDetails('custom_id'),
+            error: new TaskError(
+                'Index `documents` not found.',
+                'index_not_found',
+                'invalid_request',
+                'https://docs.meilisearch.com/errors#index_not_found',
+            ),
             data: [
                 'taskUid' => 1,
                 'indexUid' => 'documents',
@@ -51,13 +53,13 @@ final class TaskTest extends TestCase
         self::assertSame('PT0.184408715S', $task->getDuration());
         self::assertSame(123, $task->getCanceledBy());
         self::assertSame(666, $task->getBatchUid());
-        self::assertSame(['some' => 'detail'], $task->getDetails());
-        self::assertSame([
-            'message' => 'Index `documents` not found.',
-            'code' => 'index_not_found',
-            'type' => 'invalid_request',
-            'link' => 'https://docs.meilisearch.com/errors#index_not_found',
-        ], $task->getError());
+        self::assertEquals(new IndexCreationDetails('custom_id'), $task->getDetails());
+        self::assertEquals(new TaskError(
+            'Index `documents` not found.',
+            'index_not_found',
+            'invalid_request',
+            'https://docs.meilisearch.com/errors#index_not_found',
+        ), $task->getError());
 
         // Ensure the class supports array access retrocompatibility
         self::assertSame(1, $task['taskUid']);
@@ -96,7 +98,7 @@ final class TaskTest extends TestCase
         $task = MockTask::create(TaskType::IndexCreation);
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Setting data on "MeiliSearch\Contracts\Task::type" is not supported.');
+        $this->expectExceptionMessage('Setting data on "Meilisearch\Contracts\Task::type" is not supported.');
 
         $task['type'] = TaskType::IndexDeletion;
     }
@@ -106,7 +108,7 @@ final class TaskTest extends TestCase
         $task = MockTask::create(TaskType::IndexCreation);
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Unsetting data on "MeiliSearch\Contracts\Task::type" is not supported.');
+        $this->expectExceptionMessage('Unsetting data on "Meilisearch\Contracts\Task::type" is not supported.');
 
         unset($task['type']);
     }
