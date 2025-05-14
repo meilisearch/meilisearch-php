@@ -13,6 +13,7 @@ use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Exceptions\JsonDecodingException;
 use Meilisearch\Exceptions\JsonEncodingException;
 use Meilisearch\Http\Serialize\Json;
+use Meilisearch\Http\Serialize\Ndjson;
 use Meilisearch\Meilisearch;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -30,7 +31,7 @@ class Client implements Http
     /** @var array<string,string> */
     private array $headers;
     private string $baseUrl;
-    private Json $json;
+    private Json|Ndjson $json;
 
     /**
      * @param array<int, string> $clientAgents
@@ -53,7 +54,14 @@ class Client implements Http
         if (null !== $apiKey && '' !== $apiKey) {
             $this->headers['Authorization'] = \sprintf('Bearer %s', $apiKey);
         }
-        $this->json = new Json();
+    }
+
+    public function json(Json|Ndjson|null $json = null) {
+        if ($json instanceof Json OR $json instanceof Ndjson) {
+            return $this->json = $json;
+        } else {
+            return $this->json ??= new Json;
+        }
     }
 
     /**
@@ -83,9 +91,12 @@ class Client implements Http
     {
         if (!\is_null($contentType)) {
             $this->headers['Content-type'] = $contentType;
+        } elseif (str_ends_with($body, "}\n")) {
+            $this->headers['Content-type'] = 'application/x-ndjson';
+            $body = $this->json(new Ndjson)->serialize($body);
         } else {
             $this->headers['Content-type'] = 'application/json';
-            $body = $this->json->serialize($body);
+            $body = $this->json(new Json)->serialize($body);
         }
         $request = $this->requestFactory->createRequest(
             'POST',
@@ -99,9 +110,12 @@ class Client implements Http
     {
         if (!\is_null($contentType)) {
             $this->headers['Content-type'] = $contentType;
+        } elseif (str_ends_with($body, "}\n")) {
+            $this->headers['Content-type'] = 'application/x-ndjson';
+            $body = $this->json(new Ndjson)->serialize($body);
         } else {
             $this->headers['Content-type'] = 'application/json';
-            $body = $this->json->serialize($body);
+            $body = $this->json(new Json)->serialize($body);
         }
         $request = $this->requestFactory->createRequest(
             'PUT',
@@ -119,11 +133,17 @@ class Client implements Http
      */
     public function patch(string $path, $body = null, array $query = [])
     {
-        $this->headers['Content-type'] = 'application/json';
+        if (str_ends_with($body, "}\n")) {
+            $this->headers['Content-type'] = 'application/x-ndjson';
+            $body = $this->json(new Ndjson)->serialize($body);
+        } else {
+            $this->headers['Content-type'] = 'application/json';
+            $body = $this->json(new Json)->serialize($body);
+        }
         $request = $this->requestFactory->createRequest(
             'PATCH',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream($this->json->serialize($body)));
+        )->withBody($this->streamFactory->createStream($body));
 
         return $this->execute($request);
     }
@@ -181,12 +201,12 @@ class Client implements Http
         }
 
         if ($response->getStatusCode() >= 300) {
-            $body = $this->json->unserialize((string) $response->getBody()) ?? $response->getReasonPhrase();
+            $body = $this->json()->unserialize((string) $response->getBody()) ?? $response->getReasonPhrase();
 
             throw new ApiException($response, $body);
         }
 
-        return $this->json->unserialize((string) $response->getBody());
+        return $this->json()->unserialize((string) $response->getBody());
     }
 
     /**
@@ -194,12 +214,12 @@ class Client implements Http
      *
      * @param array $headerValues the array of header values to check
      *
-     * @return bool true if any header value contains 'application/json', otherwise false
+     * @return bool true if any header value contains 'application/json' or 'application/x-ndjson', otherwise false
      */
     private function isJSONResponse(array $headerValues): bool
     {
         $filteredHeaders = array_filter($headerValues, static function (string $headerValue) {
-            return false !== strpos($headerValue, 'application/json');
+            return str_contains($headerValue, 'application/json') || str_contains($headerValue, 'application/x-ndjson');
         });
 
         return \count($filteredHeaders) > 0;
