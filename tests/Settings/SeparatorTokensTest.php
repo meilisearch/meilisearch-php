@@ -35,7 +35,7 @@ final class SeparatorTokensTest extends TestCase
         ];
 
         $task = $this->index->updateSeparatorTokens($newSeparatorTokens);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame($newSeparatorTokens, $this->index->getSeparatorTokens());
     }
@@ -43,7 +43,7 @@ final class SeparatorTokensTest extends TestCase
     public function testResetSeparatorTokens(): void
     {
         $task = $this->index->resetSeparatorTokens();
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame(self::DEFAULT_SEPARATOR_TOKENS, $this->index->getSeparatorTokens());
     }

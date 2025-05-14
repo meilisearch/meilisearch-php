@@ -29,7 +29,7 @@ final class StopWordsTest extends TestCase
         $newStopWords = ['the'];
         $task = $this->index->updateStopWords($newStopWords);
 
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame($newStopWords, $this->index->getStopWords());
     }
@@ -37,10 +37,10 @@ final class StopWordsTest extends TestCase
     public function testResetStopWords(): void
     {
         $task = $this->index->updateStopWords(['the']);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $task = $this->index->resetStopWords();
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertEmpty($this->index->getStopWords());
     }

@@ -21,7 +21,7 @@ final class FilterableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
 
         $task = $index->updateFilterableAttributes($expectedAttributes);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
@@ -32,10 +32,10 @@ final class FilterableAttributesTest extends TestCase
         $newAttributes = ['title'];
 
         $task = $index->updateFilterableAttributes($newAttributes);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $task = $index->resetFilterableAttributes();
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertEmpty($index->getFilterableAttributes());
     }
@@ -59,7 +59,7 @@ final class FilterableAttributesTest extends TestCase
         ];
 
         $task = $index->updateFilterableAttributes($expectedAttributes);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
@@ -74,7 +74,7 @@ final class FilterableAttributesTest extends TestCase
             ],
         ]);
 
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertSame([
             [

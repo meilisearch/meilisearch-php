@@ -92,10 +92,12 @@ final class ClientTest extends TestCase
     {
         $booksIndex1 = $this->safeIndexName('books-1');
         $booksIndex2 = $this->safeIndexName('books-2');
-        $response = $this->client->createIndex($booksIndex1);
-        $this->client->waitForTask($response['taskUid']);
-        $response = $this->client->createIndex($booksIndex2);
-        $this->client->waitForTask($response['taskUid']);
+
+        $task = $this->client->createIndex($booksIndex1);
+        $this->client->waitForTask($task->getTaskUid());
+
+        $task = $this->client->createIndex($booksIndex2);
+        $this->client->waitForTask($task->getTaskUid());
 
         $indexes = $this->client->getIndexes();
 
@@ -116,9 +118,10 @@ final class ClientTest extends TestCase
         $indexName = $this->safeIndexName('books-1');
         $this->createEmptyIndex($indexName);
 
-        $response = $this->client->updateIndex($indexName, ['primaryKey' => 'id']);
-        $this->client->waitForTask($response['taskUid']);
-        $index = $this->client->getIndex($response['indexUid']);
+        $task = $this->client->updateIndex($indexName, ['primaryKey' => 'id']);
+        $this->client->waitForTask($task->getTaskUid());
+
+        $index = $this->client->getIndex($task->getIndexUid());
 
         self::assertSame('id', $index->getPrimaryKey());
         self::assertSame($indexName, $index->getUid());
@@ -131,8 +134,8 @@ final class ClientTest extends TestCase
         $response = $this->client->getIndexes();
         self::assertCount(1, $response);
 
-        $response = $this->client->deleteIndex('index');
-        $this->client->waitForTask($response['taskUid']);
+        $task = $this->client->deleteIndex('index');
+        $this->client->waitForTask($task->getTaskUid());
 
         $this->expectException(ApiException::class);
         $index = $this->client->getIndex('index');

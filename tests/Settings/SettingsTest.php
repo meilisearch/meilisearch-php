@@ -92,7 +92,7 @@ final class SettingsTest extends TestCase
             'facetSearch' => false,
             'prefixSearch' => 'disabled',
         ]);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $settings = $index->getSettings();
 
@@ -135,12 +135,12 @@ final class SettingsTest extends TestCase
             'stopWords' => ['the'],
             'typoTolerance' => $new_typo_tolerance,
         ]);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $task = $index->updateSettings([
             'searchableAttributes' => ['title'],
         ]);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $settings = $index->getSettings();
 
@@ -168,10 +168,10 @@ final class SettingsTest extends TestCase
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
         ]);
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $task = $index->resetSettings();
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $settings = $index->getSettings();
 

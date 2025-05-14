@@ -35,7 +35,7 @@ final class NonSeparatorTokensTest extends TestCase
         ];
 
         $task = $this->index->updateNonSeparatorTokens($newNonSeparatorTokens);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame($newNonSeparatorTokens, $this->index->getNonSeparatorTokens());
     }
@@ -43,7 +43,7 @@ final class NonSeparatorTokensTest extends TestCase
     public function testResetNonSeparatorTokens(): void
     {
         $task = $this->index->resetNonSeparatorTokens();
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame(self::DEFAULT_NON_SEPARATOR_TOKENS, $this->index->getNonSeparatorTokens());
     }

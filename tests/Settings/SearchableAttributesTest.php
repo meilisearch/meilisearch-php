@@ -29,7 +29,7 @@ final class SearchableAttributesTest extends TestCase
         ];
 
         $task = $indexA->updateSearchableAttributes($searchableAttributes);
-        $indexA->waitForTask($task['taskUid']);
+        $indexA->waitForTask($task->getTaskUid());
 
         self::assertSame($searchableAttributes, $indexA->getSearchableAttributes());
     }
@@ -39,7 +39,7 @@ final class SearchableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
 
         $task = $index->resetSearchableAttributes();
-        $index->waitForTask($task['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertSame(['*'], $index->getSearchableAttributes());
     }

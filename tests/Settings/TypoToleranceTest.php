@@ -48,7 +48,7 @@ final class TypoToleranceTest extends TestCase
             'disableOnNumbers' => true,
         ];
         $task = $this->index->updateTypoTolerance($newTypoTolerance);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
         $typoTolerance = $this->index->getTypoTolerance();
 
         self::assertSame($newTypoTolerance, $typoTolerance);
@@ -57,7 +57,7 @@ final class TypoToleranceTest extends TestCase
     public function testResetTypoTolerance(): void
     {
         $task = $this->index->resetTypoTolerance();
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
         $typoTolerance = $this->index->getTypoTolerance();
 
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $typoTolerance);

@@ -114,9 +114,10 @@ final class IndexTest extends TestCase
     {
         $primaryKey = 'id';
 
-        $response = $this->index->update(['primaryKey' => $primaryKey]);
-        $this->client->waitForTask($response['taskUid']);
-        $index = $this->client->getIndex($response['indexUid']);
+        $task = $this->index->update(['primaryKey' => $primaryKey]);
+        $this->client->waitForTask($task->getTaskUid());
+
+        $index = $this->client->getIndex($task->getIndexUid());
 
         self::assertSame($primaryKey, $index->getPrimaryKey());
         self::assertSame($this->indexName, $index->getUid());
@@ -168,11 +169,11 @@ final class IndexTest extends TestCase
     public function testGetTasks(): void
     {
         $task = $this->client->createIndex('new-index', ['primaryKey' => 'objectID']);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
         $task = $this->client->createIndex('other-index', ['primaryKey' => 'objectID']);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $tasks = $this->index->getTasks((new TasksQuery())->setIndexUids(['other-index']));
 
@@ -187,10 +188,10 @@ final class IndexTest extends TestCase
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
 
-        $response = $this->index->waitForTask($task['taskUid']);
+        $response = $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $task['taskUid']);
+        self::assertSame($response['uid'], $task->getTaskUid());
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
@@ -201,10 +202,10 @@ final class IndexTest extends TestCase
     public function testWaitForTaskWithTimeoutAndInterval(): void
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($task['taskUid'], 100, 20);
+        $response = $this->index->waitForTask($task->getTaskUid(), 100, 20);
 
         self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $task['taskUid']);
+        self::assertSame($response['uid'], $task->getTaskUid());
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
@@ -216,10 +217,10 @@ final class IndexTest extends TestCase
     public function testWaitForTaskWithTimeout(): void
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($task['taskUid'], 1000);
+        $response = $this->index->waitForTask($task->getTaskUid(), 1000);
 
         self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $task['taskUid']);
+        self::assertSame($response['uid'], $task->getTaskUid());
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('duration', $response);
@@ -258,7 +259,7 @@ final class IndexTest extends TestCase
     public function testSwapIndexes(): void
     {
         $task = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
-        $response = $this->client->waitForTask($task['taskUid']);
+        $response = $this->client->waitForTask($task->getTaskUid());
 
         self::assertSame(['indexA', 'indexB'], $response['details']['swaps'][0]['indexes']);
         self::assertSame(['indexC', 'indexD'], $response['details']['swaps'][1]['indexes']);
@@ -269,7 +270,7 @@ final class IndexTest extends TestCase
     public function testDeleteTasks(): void
     {
         $task = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
-        $response = $this->client->waitForTask($task['taskUid']);
+        $response = $this->client->waitForTask($task->getTaskUid());
 
         self::assertSame('?uids=1%2C2', $response['details']['originalFilter']);
         self::assertIsNumeric($response['details']['matchedTasks']);
