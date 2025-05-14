@@ -6,7 +6,7 @@ namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\DocumentsQuery;
 use Meilisearch\Contracts\DocumentsResults;
-use MeiliSearch\Contracts\Task;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 

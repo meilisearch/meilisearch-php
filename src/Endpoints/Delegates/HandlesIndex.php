@@ -6,7 +6,7 @@ namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
-use MeiliSearch\Contracts\Task;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Endpoints\Indexes;
 
 trait HandlesIndex

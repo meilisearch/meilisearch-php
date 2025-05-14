@@ -6,8 +6,8 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DocumentsQuery;
 use Meilisearch\Contracts\Http;
-use MeiliSearch\Contracts\Task;
-use MeiliSearch\Contracts\TaskType;
+use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
