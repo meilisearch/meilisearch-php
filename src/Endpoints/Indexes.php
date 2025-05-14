@@ -144,7 +144,10 @@ class Indexes extends Endpoint
 
     public function delete(): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid) ?? []);
+        $response = $this->http->delete(self::PATH.'/'.$this->uid);
+        assert($response !== null);
+
+        return Task::fromArray($response);
     }
 
     /**
