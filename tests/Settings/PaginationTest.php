@@ -37,7 +37,7 @@ final class PaginationTest extends TestCase
         self::assertSame(['maxTotalHits' => 100], $this->index->getPagination());
     }
 
-    public function testResetRankingRules(): void
+    public function testResetPagination(): void
     {
         $promise = $this->index->updatePagination(['maxTotalHits' => 100]);
 
