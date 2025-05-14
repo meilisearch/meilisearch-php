@@ -32,7 +32,7 @@ final class PaginationTest extends TestCase
     {
         $task = $this->index->updatePagination(['maxTotalHits' => 100]);
 
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame(['maxTotalHits' => 100], $this->index->getPagination());
     }
@@ -41,10 +41,10 @@ final class PaginationTest extends TestCase
     {
         $task = $this->index->updatePagination(['maxTotalHits' => 100]);
 
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $task = $this->index->resetPagination();
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame(self::DEFAULT_PAGINATION, $this->index->getPagination());
     }

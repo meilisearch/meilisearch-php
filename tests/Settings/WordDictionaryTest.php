@@ -32,7 +32,7 @@ final class WordDictionaryTest extends TestCase
         ];
 
         $task = $this->index->updateDictionary($newWordDictionary);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame($newWordDictionary, $this->index->getDictionary());
     }
@@ -40,7 +40,7 @@ final class WordDictionaryTest extends TestCase
     public function testResetWordDictionary(): void
     {
         $task = $this->index->resetDictionary();
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame(self::DEFAULT_WORD_DICTIONARY, $this->index->getDictionary());
     }

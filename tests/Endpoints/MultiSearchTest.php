@@ -22,7 +22,7 @@ final class MultiSearchTest extends TestCase
         $this->booksIndex->updateSortableAttributes(['author']);
         $this->booksIndex->updateFilterableAttributes(['genre']);
         $task = $this->booksIndex->updateDocuments(self::DOCUMENTS);
-        $this->booksIndex->waitForTask($task['taskUid']);
+        $this->booksIndex->waitForTask($task->getTaskUid());
 
         $this->songsIndex = $this->createEmptyIndex($this->safeIndexName('songs'));
         $this->songsIndex->updateFilterableAttributes(['duration-float']);
@@ -31,7 +31,7 @@ final class MultiSearchTest extends TestCase
         fclose($fileCsv);
 
         $task = $this->songsIndex->addDocumentsCsv($documents, null, '|');
-        $this->songsIndex->waitForTask($task['taskUid']);
+        $this->songsIndex->waitForTask($task->getTaskUid());
     }
 
     public function testSearchQueryData(): void

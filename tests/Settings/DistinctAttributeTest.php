@@ -29,7 +29,7 @@ final class DistinctAttributeTest extends TestCase
         $distinctAttribute = 'description';
 
         $task = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame($distinctAttribute, $this->index->getDistinctAttribute());
     }
@@ -39,10 +39,10 @@ final class DistinctAttributeTest extends TestCase
         $distinctAttribute = 'description';
 
         $task = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $task = $this->index->resetDistinctAttribute();
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertNull($this->index->getDistinctAttribute());
     }

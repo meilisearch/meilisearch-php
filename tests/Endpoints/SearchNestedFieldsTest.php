@@ -16,7 +16,7 @@ final class SearchNestedFieldsTest extends TestCase
         parent::setUp();
         $this->index = $this->createEmptyIndex($this->safeIndexName('nestedIndex'));
         $task = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
-        $this->index->waitForTask($task['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
     }
 
     public function testBasicSearchOnNestedFields(): void
@@ -67,8 +67,8 @@ final class SearchNestedFieldsTest extends TestCase
 
     public function testSearchOnNestedFieldWithSearchableAtributes(): void
     {
-        $response = $this->index->updateSearchableAttributes(['title', 'info.comment']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateSearchableAttributes(['title', 'info.comment']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('An awesome');
 
@@ -86,8 +86,8 @@ final class SearchNestedFieldsTest extends TestCase
 
     public function testSearchOnNestedFieldWithSortableAtributes(): void
     {
-        $response = $this->index->updateSortableAttributes(['info.reviewNb']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateSortableAttributes(['info.reviewNb']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('An awesome');
 
@@ -107,11 +107,11 @@ final class SearchNestedFieldsTest extends TestCase
 
     public function testSearchOnNestedFieldWithSortableAtributesAndSearchableAttributes(): void
     {
-        $response = $this->index->updateSettings([
+        $task = $this->index->updateSettings([
             'searchableAttributes' => ['title', 'info.comment'],
             'sortableAttributes' => ['info.reviewNb'],
         ]);
-        $this->index->waitForTask($response['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('An awesome');
 
