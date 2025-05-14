@@ -36,4 +36,29 @@ final class DocumentsQueryTest extends TestCase
 
         self::assertSame(['offset' => 5], $data->toArray());
     }
+
+    /**
+     * @dataProvider idsProvider
+     */
+    public function testSetIds(array $input, ?string $expected): void
+    {
+        $data = (new DocumentsQuery())->setIds($input);
+        $result = $data->toArray();
+
+        if (null === $expected) {
+            self::assertArrayNotHasKey('ids', $result);
+        } else {
+            self::assertSame($expected, $result['ids']);
+        }
+    }
+
+    public static function idsProvider(): array
+    {
+        return [
+            'string array' => [['1', '2', '3'], '1,2,3'],
+            'integer array' => [[1, 2, 3], '1,2,3'],
+            'mixed array' => [['1', 2, '3'], '1,2,3'],
+            'empty array' => [[], null],
+        ];
+    }
 }

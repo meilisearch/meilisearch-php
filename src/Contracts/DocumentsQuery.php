@@ -29,6 +29,11 @@ class DocumentsQuery
     private ?bool $retrieveVectors = null;
 
     /**
+     * @var list<non-empty-string|int>|null
+     */
+    private ?array $ids = null;
+
+    /**
      * @param non-negative-int $offset
      *
      * @return $this
@@ -91,6 +96,18 @@ class DocumentsQuery
     }
 
     /**
+     * @param list<non-empty-string|int> $ids Array of document IDs
+     *
+     * @return $this
+     */
+    public function setIds(array $ids): self
+    {
+        $this->ids = $ids;
+
+        return $this;
+    }
+
+    /**
      * Checks if the $filter attribute has been set.
      *
      * @return bool true when filter contains at least a non-empty array
@@ -106,7 +123,8 @@ class DocumentsQuery
      *     limit?: non-negative-int,
      *     fields?: non-empty-list<string>|non-empty-string,
      *     filter?: list<non-empty-string|list<non-empty-string>>,
-     *     retrieveVectors?: 'true'|'false'
+     *     retrieveVectors?: 'true'|'false',
+     *     ids?: string
      * }
      */
     public function toArray(): array
@@ -117,6 +135,7 @@ class DocumentsQuery
             'fields' => $this->getFields(),
             'filter' => $this->filter,
             'retrieveVectors' => (null !== $this->retrieveVectors ? ($this->retrieveVectors ? 'true' : 'false') : null),
+            'ids' => ($this->ids ?? []) !== [] ? implode(',', $this->ids) : null,
         ], static function ($item) { return null !== $item; });
     }
 
