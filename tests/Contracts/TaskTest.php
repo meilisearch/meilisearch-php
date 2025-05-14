@@ -60,6 +60,13 @@ final class TaskTest extends TestCase
             'invalid_request',
             'https://docs.meilisearch.com/errors#index_not_found',
         ), $task->getError());
+        self::assertSame([
+            'taskUid' => 1,
+            'indexUid' => 'documents',
+            'status' => 'failed',
+            'type' => 'index_creation',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+        ], $task->getData());
 
         // Ensure the class supports array access retrocompatibility
         self::assertSame(1, $task->getTaskUid());
