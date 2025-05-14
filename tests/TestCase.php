@@ -91,7 +91,7 @@ abstract class TestCase extends BaseTestCase
         $tasks = [];
 
         foreach ($indexes as $index) {
-            $tasks[] = $index->delete()['taskUid'];
+            $tasks[] = $index->delete()->getTaskUid();
         }
 
         $this->client->waitForTasks($tasks);
