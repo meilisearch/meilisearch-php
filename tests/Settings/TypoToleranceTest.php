@@ -45,8 +45,8 @@ final class TypoToleranceTest extends TestCase
             'disableOnWords' => [],
             'disableOnAttributes' => ['title'],
         ];
-        $promise = $this->index->updateTypoTolerance($newTypoTolerance);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateTypoTolerance($newTypoTolerance);
+        $this->index->waitForTask($task['taskUid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
         self::assertSame($newTypoTolerance, $typoTolerance);
@@ -54,8 +54,8 @@ final class TypoToleranceTest extends TestCase
 
     public function testResetTypoTolerance(): void
     {
-        $promise = $this->index->resetTypoTolerance();
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->resetTypoTolerance();
+        $this->index->waitForTask($task['taskUid']);
         $typoTolerance = $this->index->getTypoTolerance();
 
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $typoTolerance);
