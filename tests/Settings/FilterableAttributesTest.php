@@ -19,17 +19,17 @@ final class FilterableAttributesTest extends TestCase
 
     public function testUpdateFilterableAttributes(): void
     {
-        $newAttributes = ['title'];
+        $expectedAttributes = ['title'];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFilterableAttributes($newAttributes);
+        $promise = $index->updateFilterableAttributes($expectedAttributes);
 
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
         $filterableAttributes = $index->getFilterableAttributes();
 
-        self::assertSame($newAttributes, $filterableAttributes);
+        self::assertSame($expectedAttributes, $filterableAttributes);
     }
 
     public function testResetFilterableAttributes(): void
@@ -48,5 +48,58 @@ final class FilterableAttributesTest extends TestCase
 
         $filterableAttributes = $index->getFilterableAttributes();
         self::assertEmpty($filterableAttributes);
+    }
+
+    public function testUpdateGranularFilterableAttributes(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $expectedAttributes = [
+            'author',
+            [
+                'attributePatterns' => ['title'],
+                'features' => [
+                    'facetSearch' => true,
+                    'filter' => [
+                        'equality' => true,
+                        'comparison' => false,
+                    ],
+                ],
+            ],
+        ];
+
+        $promise = $index->updateFilterableAttributes($expectedAttributes);
+        $this->assertIsValidPromise($promise);
+
+        $index->waitForTask($promise['taskUid']);
+        $filterableAttributes = $index->getFilterableAttributes();
+        self::assertSame($expectedAttributes, $filterableAttributes);
+    }
+
+    public function testUpdateGeoWithGranularFilterableAttributes(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $promise = $index->updateFilterableAttributes([
+            [
+                'attributePatterns' => ['_geo'],
+            ],
+        ]);
+        $this->assertIsValidPromise($promise);
+
+        $index->waitForTask($promise['taskUid']);
+        $filterableAttributes = $index->getFilterableAttributes();
+        self::assertSame([
+            [
+                'attributePatterns' => ['_geo'],
+                'features' => [
+                    'facetSearch' => false,
+                    'filter' => [
+                        'equality' => true,
+                        'comparison' => false,
+                    ],
+                ],
+            ],
+        ], $filterableAttributes);
     }
 }
