@@ -62,7 +62,7 @@ final class TaskTest extends TestCase
         ), $task->getError());
 
         // Ensure the class supports array access retrocompatibility
-        self::assertSame(1, $task['taskUid']);
+        self::assertSame(1, $task->getTaskUid());
         self::assertSame('documents', $task['indexUid']);
         self::assertSame('failed', $task['status']);
         self::assertSame('index_creation', $task['type']);

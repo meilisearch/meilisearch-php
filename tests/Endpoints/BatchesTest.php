@@ -36,7 +36,7 @@ final class BatchesTest extends TestCase
     public function testGetAllBatchesWithTasksFilters(): void
     {
         $tasks = $this->client->getTasks(new TasksQuery())->getResults();
-        $response = $this->client->getBatches((new BatchesQuery())->setUids([$tasks[0]['uid']]));
+        $response = $this->client->getBatches((new BatchesQuery())->setUids([$tasks[0]->getTaskUid()]));
         self::assertGreaterThan(0, $response->getTotal());
     }
 
