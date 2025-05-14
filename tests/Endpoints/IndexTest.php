@@ -6,6 +6,7 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\TasksQuery;
+use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\TimeOutException;
 use Tests\TestCase;
@@ -245,17 +246,14 @@ final class IndexTest extends TestCase
         $indexName2 = $this->safeIndexName('books-2');
         $index = $this->createEmptyIndex($indexName2);
 
-        $res = $this->index->delete();
-        self::assertSame($indexName1, $res['indexUid']);
-        self::assertArrayHasKey('type', $res);
-        self::assertSame('indexDeletion', $res['type']);
-        self::assertArrayHasKey('enqueuedAt', $res);
+        $task = $this->index->delete();
+        var_dump($task);
+        self::assertSame($indexName1, $task->getIndexUid());
+        self::assertSame(TaskType::IndexDeletion, $task->getType());
 
-        $res = $index->delete();
-        self::assertSame($indexName2, $res['indexUid']);
-        self::assertArrayHasKey('type', $res);
-        self::assertSame('indexDeletion', $res['type']);
-        self::assertArrayHasKey('enqueuedAt', $res);
+        $task = $index->delete();
+        self::assertSame($indexName2, $task->getIndexUid());
+        self::assertSame(TaskType::IndexDeletion, $task->getType());
     }
 
     public function testSwapIndexes(): void
