@@ -24,10 +24,10 @@ final class TasksTest extends TestCase
 
     public function testGetOneTaskFromWaitTask(): void
     {
-        [$promise, $response] = $this->seedIndex();
+        [$task, $response] = $this->seedIndex();
 
         self::assertArrayHasKey('status', $response);
-        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertSame($response['uid'], $task['taskUid']);
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('indexUid', $response);
@@ -40,11 +40,11 @@ final class TasksTest extends TestCase
 
     public function testGetOneTaskClient(): void
     {
-        [$promise] = $this->seedIndex();
+        [$task] = $this->seedIndex();
 
-        $response = $this->client->getTask($promise['taskUid']);
+        $response = $this->client->getTask($task['taskUid']);
         self::assertArrayHasKey('status', $response);
-        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertSame($response['uid'], $task['taskUid']);
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('indexUid', $response);
@@ -76,8 +76,8 @@ final class TasksTest extends TestCase
 
     public function getAllTasksClientWithBatchFilter(): void
     {
-        [$promise] = $this->seedIndex();
-        $task = $this->client->getTask($promise['taskUid']);
+        [$task] = $this->seedIndex();
+        $task = $this->client->getTask($task['taskUid']);
 
         $response = $this->client->getTasks((new TasksQuery())
                 ->setBatchUid($task['uid'])
@@ -88,11 +88,11 @@ final class TasksTest extends TestCase
 
     public function testGetOneTaskIndex(): void
     {
-        [$promise] = $this->seedIndex();
+        [$task] = $this->seedIndex();
 
-        $response = $this->index->getTask($promise['taskUid']);
+        $response = $this->index->getTask($task['taskUid']);
         self::assertArrayHasKey('status', $response);
-        self::assertSame($response['uid'], $promise['taskUid']);
+        self::assertSame($response['uid'], $task['taskUid']);
         self::assertArrayHasKey('type', $response);
         self::assertSame('documentAdditionOrUpdate', $response['type']);
         self::assertArrayHasKey('indexUid', $response);
@@ -139,10 +139,10 @@ final class TasksTest extends TestCase
     {
         $date = new \DateTime('yesterday');
         $query = http_build_query(['afterEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
-        $promise = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date));
+        $task = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date));
 
-        self::assertSame('taskCancelation', $promise['type']);
-        $response = $this->client->waitForTask($promise['taskUid']);
+        self::assertSame('taskCancelation', $task['type']);
+        $response = $this->client->waitForTask($task['taskUid']);
 
         self::assertSame('?'.$query, $response['details']['originalFilter']);
         self::assertSame('taskCancelation', $response['type']);
@@ -173,9 +173,9 @@ final class TasksTest extends TestCase
 
     private function seedIndex(): array
     {
-        $promise = $this->index->updateDocuments(self::DOCUMENTS);
-        $response = $this->client->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::DOCUMENTS);
+        $response = $this->client->waitForTask($task['taskUid']);
 
-        return [$promise, $response];
+        return [$task, $response];
     }
 }

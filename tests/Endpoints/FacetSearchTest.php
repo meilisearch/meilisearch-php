@@ -18,8 +18,8 @@ final class FacetSearchTest extends TestCase
 
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $this->index->updateDocuments(self::DOCUMENTS);
-        $promise = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task['taskUid']);
     }
 
     public function testBasicSearchWithFilters(): void
