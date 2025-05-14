@@ -12,6 +12,9 @@ use Meilisearch\Exceptions\InvalidResponseBodyException;
 
 trait HandlesDocuments
 {
+    /**
+     * @param non-empty-string|int $documentId
+     */
     public function getDocument(string|int $documentId, ?array $fields = null): array
     {
         $query = isset($fields) ? ['fields' => implode(',', $fields)] : [];
