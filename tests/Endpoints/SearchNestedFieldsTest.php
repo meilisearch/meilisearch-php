@@ -15,8 +15,8 @@ final class SearchNestedFieldsTest extends TestCase
     {
         parent::setUp();
         $this->index = $this->createEmptyIndex($this->safeIndexName('nestedIndex'));
-        $promise = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
+        $this->index->waitForTask($task['taskUid']);
     }
 
     public function testBasicSearchOnNestedFields(): void

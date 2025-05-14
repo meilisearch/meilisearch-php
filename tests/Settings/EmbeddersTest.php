@@ -32,17 +32,17 @@ final class EmbeddersTest extends TestCase
     {
         $newEmbedders = ['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]];
 
-        $promise = $this->index->updateEmbedders($newEmbedders);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateEmbedders($newEmbedders);
+        $this->index->waitForTask($task['taskUid']);
 
         self::assertSame($newEmbedders, $this->index->getEmbedders());
     }
 
     public function testResetEmbedders(): void
     {
-        $promise = $this->index->resetEmbedders();
+        $task = $this->index->resetEmbedders();
 
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->waitForTask($task['taskUid']);
 
         self::assertSame(self::DEFAULT_EMBEDDER, $this->index->getEmbedders());
     }
@@ -55,7 +55,7 @@ final class EmbeddersTest extends TestCase
             'pooling' => 'useModel',
         ];
 
-        $promise = $this->index->updateEmbedders([
+        $task = $this->index->updateEmbedders([
             'embedder_name' => [
                 'source' => 'huggingFace',
                 'model' => 'sentence-transformers/all-MiniLM-L6-v2',
@@ -63,7 +63,7 @@ final class EmbeddersTest extends TestCase
             ],
         ]);
 
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->waitForTask($task['taskUid']);
 
         $embedders = $this->index->getEmbedders();
 
@@ -89,10 +89,10 @@ final class EmbeddersTest extends TestCase
             ],
         ];
 
-        $promise = $this->index->updateEmbedders([
+        $task = $this->index->updateEmbedders([
             'embedder_name' => $embedder,
         ]);
 
-        self::assertSame(TaskStatus::Enqueued, $promise->getStatus());
+        self::assertSame(TaskStatus::Enqueued, $task->getStatus());
     }
 }
