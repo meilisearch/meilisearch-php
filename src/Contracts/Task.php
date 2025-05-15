@@ -16,12 +16,11 @@ use Meilisearch\Contracts\TaskDetails\SettingsUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\TaskCancelationDetails;
 use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 
-final class Task implements \ArrayAccess
+final class Task
 {
     /**
      * @param non-negative-int      $taskUid
      * @param non-empty-string|null $indexUid
-     * @param array<mixed>          $data     Raw data
      */
     public function __construct(
         private readonly int $taskUid,
@@ -36,7 +35,6 @@ final class Task implements \ArrayAccess
         private readonly ?int $batchUid = null,
         private readonly ?TaskDetails $details = null,
         private readonly ?TaskError $error = null,
-        private readonly array $data = [],
     ) {
     }
 
@@ -106,38 +104,6 @@ final class Task implements \ArrayAccess
         return $this->error;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    // @todo: deprecate
-    public function offsetExists(mixed $offset): bool
-    {
-        return \array_key_exists($offset, $this->data);
-    }
-
-    // @todo: deprecate
-    public function offsetGet(mixed $offset): mixed
-    {
-        return $this->data[$offset] ?? null;
-    }
-
-    // @todo: deprecate
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        throw new \LogicException(\sprintf('Setting data on "%s::%s" is not supported.', get_debug_type($this), $offset));
-    }
-
-    // @todo: deprecate
-    public function offsetUnset(mixed $offset): void
-    {
-        throw new \LogicException(\sprintf('Unsetting data on "%s::%s" is not supported.', get_debug_type($this), $offset));
-    }
-
     public function isFinished(): bool
     {
         return TaskStatus::Enqueued !== $this->status && TaskStatus::Processing !== $this->status;
@@ -151,47 +117,47 @@ final class Task implements \ArrayAccess
      *     status: non-empty-string,
      *     type: non-empty-string,
      *     enqueuedAt: non-empty-string,
-     *     startedAt?: non-empty-string,
-     *     finishedAt?: non-empty-string,
-     *     duration?: non-empty-string,
+     *     startedAt?: non-empty-string|null,
+     *     finishedAt?: non-empty-string|null,
+     *     duration?: non-empty-string|null,
      *     canceledBy?: int,
      *     batchUid?: int,
      *     details?: array<mixed>|null,
-     *     error?: array<mixed>|null,
-     *     data: array<mixed>
+     *     error?: array<mixed>|null
      * } $data
      */
     public static function fromArray(array $data): Task
     {
+        $details = $data['details'] ?? null;
+
         return new self(
             $data['taskUid'] ?? $data['uid'],
             $data['indexUid'] ?? null,
             TaskStatus::from($data['status']),
             $type = TaskType::from($data['type']),
             new \DateTimeImmutable($data['enqueuedAt']),
-            isset($data['startedAt']) ? new \DateTimeImmutable($data['startedAt']) : null,
-            isset($data['finishedAt']) ? new \DateTimeImmutable($data['finishedAt']) : null,
+            \array_key_exists('startedAt', $data) && null !== $data['startedAt'] ? new \DateTimeImmutable($data['startedAt']) : null,
+            \array_key_exists('finishedAt', $data) && null !== $data['finishedAt'] ? new \DateTimeImmutable($data['finishedAt']) : null,
             $data['duration'] ?? null,
             $data['canceledBy'] ?? null,
             $data['batchUid'] ?? null,
             match ($type) {
-                TaskType::IndexCreation => null !== $data['details'] ? IndexCreationDetails::fromArray($data['details']) : null,
-                TaskType::IndexUpdate => null !== $data['details'] ? IndexUpdateDetails::fromArray($data['details']) : null,
-                TaskType::IndexDeletion => null !== $data['details'] ? IndexDeletionDetails::fromArray($data['details']) : null,
-                TaskType::IndexSwap => null !== $data['details'] ? IndexSwapDetails::fromArray($data['details']) : null,
-                TaskType::DocumentAdditionOrUpdate => null !== $data['details'] ? DocumentAdditionOrUpdateDetails::fromArray($data['details']) : null,
-                TaskType::DocumentDeletion => null !== $data['details'] ? DocumentDeletionDetails::fromArray($data['details']) : null,
-                TaskType::DocumentEdition => null !== $data['details'] ? DocumentEditionDetails::fromArray($data['details']) : null,
-                TaskType::SettingsUpdate => null !== $data['details'] ? SettingsUpdateDetails::fromArray($data['details']) : null,
-                TaskType::DumpCreation => null !== $data['details'] ? DumpCreationDetails::fromArray($data['details']) : null,
-                TaskType::TaskCancelation => null !== $data['details'] ? TaskCancelationDetails::fromArray($data['details']) : null,
-                TaskType::TaskDeletion => null !== $data['details'] ? TaskDeletionDetails::fromArray($data['details']) : null,
+                TaskType::IndexCreation => null !== $details ? IndexCreationDetails::fromArray($details) : null,
+                TaskType::IndexUpdate => null !== $details ? IndexUpdateDetails::fromArray($details) : null,
+                TaskType::IndexDeletion => null !== $details ? IndexDeletionDetails::fromArray($details) : null,
+                TaskType::IndexSwap => null !== $details ? IndexSwapDetails::fromArray($details) : null,
+                TaskType::DocumentAdditionOrUpdate => null !== $details ? DocumentAdditionOrUpdateDetails::fromArray($details) : null,
+                TaskType::DocumentDeletion => null !== $details ? DocumentDeletionDetails::fromArray($details) : null,
+                TaskType::DocumentEdition => null !== $details ? DocumentEditionDetails::fromArray($details) : null,
+                TaskType::SettingsUpdate => null !== $details ? SettingsUpdateDetails::fromArray($details) : null,
+                TaskType::DumpCreation => null !== $details ? DumpCreationDetails::fromArray($details) : null,
+                TaskType::TaskCancelation => null !== $details ? TaskCancelationDetails::fromArray($details) : null,
+                TaskType::TaskDeletion => null !== $details ? TaskDeletionDetails::fromArray($details) : null,
                 // It’s intentional that SnapshotCreation tasks don’t have a details object
                 // (no SnapshotCreationDetails exists and tests don’t exercise any details)
                 TaskType::SnapshotCreation => null,
             },
-            null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
-            $data,
+            \array_key_exists('error', $data) && null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
         );
     }
 }
