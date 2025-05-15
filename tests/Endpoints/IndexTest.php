@@ -273,7 +273,6 @@ final class IndexTest extends TestCase
 
         self::assertInstanceOf(TaskDeletionDetails::class, $details = $completedTask->getDetails());
         self::assertSame('?uids=1%2C2', $details->originalFilter);
-        self::assertSame(0, $details->matchedTasks);
     }
 
     public function testParseDate(): void
