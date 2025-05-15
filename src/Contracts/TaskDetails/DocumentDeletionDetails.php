@@ -16,7 +16,7 @@ use Meilisearch\Contracts\TaskDetails;
 final class DocumentDeletionDetails implements TaskDetails
 {
     /**
-     * @param non-negative-int|null $providedIds      Number of documents queued for deletion.
+     * @param non-negative-int|null $providedIds      number of documents queued for deletion
      * @param string|null           $originalFilter   The filter used to delete documents. Null if it was not specified.
      * @param int|null              $deletedDocuments Number of documents deleted. `null` while the task status is enqueued or processing.
      */
