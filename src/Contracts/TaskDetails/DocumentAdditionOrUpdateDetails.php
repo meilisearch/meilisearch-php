@@ -15,7 +15,7 @@ use Meilisearch\Contracts\TaskDetails;
 final class DocumentAdditionOrUpdateDetails implements TaskDetails
 {
     /**
-     * @param non-negative-int      $receivedDocuments Number of documents received
+     * @param non-negative-int      $receivedDocuments Number of documents received.
      * @param non-negative-int|null $indexedDocuments  Number of documents indexed. `null` while the task status is enqueued or processing.
      */
     public function __construct(

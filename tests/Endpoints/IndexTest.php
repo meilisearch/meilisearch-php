@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DeleteTasksQuery;
+use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TaskDetails\IndexSwapDetails;
+use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TasksQuery;
+use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\TimeOutException;
@@ -177,7 +181,7 @@ final class IndexTest extends TestCase
 
         $tasks = $this->index->getTasks((new TasksQuery())->setIndexUids(['other-index']));
 
-        $allIndexUids = array_map(function ($val) { return $val['indexUid']; }, $tasks->getResults());
+        $allIndexUids = array_map(static fn (Task $t) => $t->getIndexUid(), $tasks->getResults());
         $results = array_unique($allIndexUids);
         $expected = [$this->index->getUid(), 'other-index'];
 
@@ -187,46 +191,40 @@ final class IndexTest extends TestCase
     public function testWaitForTaskDefault(): void
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
+        $completedTask = $this->index->waitForTask($task->getTaskUid());
 
-        $response = $this->index->waitForTask($task->getTaskUid());
-
-        self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $task->getTaskUid());
-        self::assertArrayHasKey('type', $response);
-        self::assertSame('documentAdditionOrUpdate', $response['type']);
-        self::assertArrayHasKey('duration', $response);
-        self::assertArrayHasKey('startedAt', $response);
-        self::assertArrayHasKey('finishedAt', $response);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame($completedTask->getTaskUid(), $task->getTaskUid());
+        self::assertSame(TaskType::DocumentAdditionOrUpdate, $task->getType());
+        self::assertNotNull($completedTask->getDuration());
+        self::assertNotNull($completedTask->getStartedAt());
+        self::assertNotNull($completedTask->getFinishedAt());
     }
 
     public function testWaitForTaskWithTimeoutAndInterval(): void
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($task->getTaskUid(), 100, 20);
+        $completedTask = $this->index->waitForTask($task->getTaskUid(), 100, 20);
 
-        self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $task->getTaskUid());
-        self::assertArrayHasKey('type', $response);
-        self::assertSame('documentAdditionOrUpdate', $response['type']);
-        self::assertArrayHasKey('duration', $response);
-        self::assertArrayHasKey('enqueuedAt', $response);
-        self::assertArrayHasKey('startedAt', $response);
-        self::assertArrayHasKey('finishedAt', $response);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame($completedTask->getTaskUid(), $task->getTaskUid());
+        self::assertSame(TaskType::DocumentAdditionOrUpdate, $task->getType());
+        self::assertNotNull($completedTask->getDuration());
+        self::assertNotNull($completedTask->getStartedAt());
+        self::assertNotNull($completedTask->getFinishedAt());
     }
 
     public function testWaitForTaskWithTimeout(): void
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
-        $response = $this->index->waitForTask($task->getTaskUid(), 1000);
+        $completedTask = $this->index->waitForTask($task->getTaskUid(), 1000);
 
-        self::assertSame('succeeded', $response['status']);
-        self::assertSame($response['uid'], $task->getTaskUid());
-        self::assertArrayHasKey('type', $response);
-        self::assertSame('documentAdditionOrUpdate', $response['type']);
-        self::assertArrayHasKey('duration', $response);
-        self::assertArrayHasKey('enqueuedAt', $response);
-        self::assertArrayHasKey('startedAt', $response);
-        self::assertArrayHasKey('finishedAt', $response);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame($completedTask->getTaskUid(), $task->getTaskUid());
+        self::assertSame(TaskType::DocumentAdditionOrUpdate, $task->getType());
+        self::assertNotNull($completedTask->getDuration());
+        self::assertNotNull($completedTask->getStartedAt());
+        self::assertNotNull($completedTask->getFinishedAt());
     }
 
     public function testExceptionWhenTaskTimeOut(): void
@@ -246,7 +244,6 @@ final class IndexTest extends TestCase
         $index = $this->createEmptyIndex($indexName2);
 
         $task = $this->index->delete();
-        var_dump($task);
         self::assertSame($indexName1, $task->getIndexUid());
         self::assertSame(TaskType::IndexDeletion, $task->getType());
 
@@ -258,18 +255,20 @@ final class IndexTest extends TestCase
     public function testSwapIndexes(): void
     {
         $task = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
-        $response = $this->client->waitForTask($task->getTaskUid());
+        $completedTask = $this->client->waitForTask($task->getTaskUid());
 
-        self::assertSame([['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]], $response['details']['swaps']);
+        self::assertInstanceOf(IndexSwapDetails::class, $details = $completedTask->getDetails());
+        self::assertSame([['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]], $details->swaps);
     }
 
     public function testDeleteTasks(): void
     {
         $task = $this->client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
-        $response = $this->client->waitForTask($task->getTaskUid());
+        $completedTask = $this->client->waitForTask($task->getTaskUid());
 
-        self::assertSame('?uids=1%2C2', $response['details']['originalFilter']);
-        self::assertIsNumeric($response['details']['matchedTasks']);
+        self::assertInstanceOf(TaskDeletionDetails::class, $details = $completedTask->getDetails());
+        self::assertSame('?uids=1%2C2', $details->originalFilter);
+        self::assertSame(0, $details->matchedTasks);
     }
 
     public function testParseDate(): void
