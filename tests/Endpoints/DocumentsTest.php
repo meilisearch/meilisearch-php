@@ -7,6 +7,8 @@ namespace Tests\Endpoints;
 use Meilisearch\Contracts\DocumentsQuery;
 use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
+use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
@@ -74,11 +76,11 @@ final class DocumentsTest extends TestCase
         fclose($fileCsv);
 
         $task = $index->addDocumentsCsv($documentCsv);
+        $completedTask = $index->waitForTask($task->getTaskUid());
 
-        $update = $index->waitForTask($task->getTaskUid());
-
-        self::assertSame('succeeded', $update['status']);
-        self::assertNotSame(0, $update['details']['receivedDocuments']);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $details = $completedTask->getDetails());
+        self::assertNotSame(0, $details->receivedDocuments);
 
         $response = $index->getDocuments();
         self::assertCount(20, $response);
@@ -91,11 +93,11 @@ final class DocumentsTest extends TestCase
         $csv = file_get_contents('./tests/datasets/songs-custom-separator.csv', true);
 
         $task = $index->addDocumentsCsv($csv, null, '|');
+        $completedTask = $index->waitForTask($task->getTaskUid());
 
-        $update = $index->waitForTask($task->getTaskUid());
-
-        self::assertSame('succeeded', $update['status']);
-        self::assertSame(6, $update['details']['receivedDocuments']);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $details = $completedTask->getDetails());
+        self::assertSame(6, $details->receivedDocuments);
 
         $documents = $index->getDocuments()->getResults();
         self::assertSame('Teenage Neon Jungle', $documents[4]['album']);
@@ -111,11 +113,11 @@ final class DocumentsTest extends TestCase
         fclose($fileJson);
 
         $task = $index->addDocumentsJson($documentJson);
+        $completedTask = $index->waitForTask($task->getTaskUid());
 
-        $update = $index->waitForTask($task->getTaskUid());
-
-        self::assertSame('succeeded', $update['status']);
-        self::assertNotSame(0, $update['details']['receivedDocuments']);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $details = $completedTask->getDetails());
+        self::assertNotSame(0, $details->receivedDocuments);
 
         $response = $index->getDocuments();
         self::assertCount(20, $response);
@@ -130,11 +132,11 @@ final class DocumentsTest extends TestCase
         fclose($fileNdJson);
 
         $task = $index->addDocumentsNdjson($documentNdJson);
+        $completedTask = $index->waitForTask($task->getTaskUid());
 
-        $update = $index->waitForTask($task->getTaskUid());
-
-        self::assertSame('succeeded', $update['status']);
-        self::assertNotSame(0, $update['details']['receivedDocuments']);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $details = $completedTask->getDetails());
+        self::assertNotSame(0, $details->receivedDocuments);
 
         $response = $index->getDocuments();
         self::assertCount(20, $response);
@@ -154,8 +156,10 @@ final class DocumentsTest extends TestCase
     public function testGetSingleDocumentWithIntegerDocumentId(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+
         $task = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($task->getTaskUid());
+
         $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
         $response = $index->getDocument($doc['id']);
 
@@ -166,8 +170,10 @@ final class DocumentsTest extends TestCase
     public function testGetSingleDocumentWithFields(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+
         $task = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($task->getTaskUid());
+
         $doc = $this->findDocumentWithId(self::DOCUMENTS, 4);
         $response = $index->getDocument($doc['id'], ['title']);
 
@@ -178,8 +184,10 @@ final class DocumentsTest extends TestCase
     public function testGetSingleDocumentWithStringDocumentId(): void
     {
         $stringDocumentId = 'myUniqueId';
+
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $task = $index->addDocuments([['id' => $stringDocumentId]]);
+
         $index->waitForTask($task->getTaskUid());
         $response = $index->getDocument($stringDocumentId);
 
@@ -189,8 +197,10 @@ final class DocumentsTest extends TestCase
     public function testGetMultipleDocumentsByIds(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+
         $task = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($task->getTaskUid());
+
         $documentIds = [1, 2];
         $response = $index->getDocuments((new DocumentsQuery())->setIds($documentIds));
 
@@ -203,8 +213,10 @@ final class DocumentsTest extends TestCase
     public function testReplaceDocuments(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+
         $task = $index->addDocuments(self::DOCUMENTS);
         $index->waitForTask($task->getTaskUid());
+
         $replacement = [
             'id' => 2,
             'title' => 'The Red And The Black',
@@ -916,7 +928,7 @@ final class DocumentsTest extends TestCase
         self::assertSame('Ailitp', $response['artist']);
     }
 
-    private function findDocumentWithId($documents, $documentId)
+    private function findDocumentWithId($documents, $documentId): ?array
     {
         foreach ($documents as $document) {
             if ($document['id'] === $documentId) {

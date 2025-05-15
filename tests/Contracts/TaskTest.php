@@ -10,7 +10,6 @@ use Meilisearch\Contracts\TaskError;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use PHPUnit\Framework\TestCase;
-use Tests\MockTask;
 
 final class TaskTest extends TestCase
 {
@@ -34,13 +33,6 @@ final class TaskTest extends TestCase
                 'invalid_request',
                 'https://docs.meilisearch.com/errors#index_not_found',
             ),
-            data: [
-                'taskUid' => 1,
-                'indexUid' => 'documents',
-                'status' => 'failed',
-                'type' => 'index_creation',
-                'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
-            ],
         );
 
         self::assertSame(1, $task->getTaskUid());
@@ -60,20 +52,6 @@ final class TaskTest extends TestCase
             'invalid_request',
             'https://docs.meilisearch.com/errors#index_not_found',
         ), $task->getError());
-        self::assertSame([
-            'taskUid' => 1,
-            'indexUid' => 'documents',
-            'status' => 'failed',
-            'type' => 'index_creation',
-            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
-        ], $task->getData());
-
-        // Ensure the class supports array access retrocompatibility
-        self::assertSame(1, $task->getTaskUid());
-        self::assertSame('documents', $task['indexUid']);
-        self::assertSame('failed', $task['status']);
-        self::assertSame('index_creation', $task['type']);
-        self::assertSame('2025-04-09T10:28:12.236789123Z', $task['enqueuedAt']);
     }
 
     public function testCreateEnqueuedTask(): void
@@ -98,25 +76,5 @@ final class TaskTest extends TestCase
         self::assertNull($task->getBatchUid());
         self::assertNull($task->getDetails());
         self::assertNull($task->getError());
-    }
-
-    public function testArraySetThrows(): void
-    {
-        $task = MockTask::create(TaskType::IndexCreation);
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Setting data on "Meilisearch\Contracts\Task::type" is not supported.');
-
-        $task['type'] = TaskType::IndexDeletion;
-    }
-
-    public function testArrayUnsetThrows(): void
-    {
-        $task = MockTask::create(TaskType::IndexCreation);
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Unsetting data on "Meilisearch\Contracts\Task::type" is not supported.');
-
-        unset($task['type']);
     }
 }
