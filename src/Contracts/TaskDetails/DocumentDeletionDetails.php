@@ -8,15 +8,15 @@ use Meilisearch\Contracts\TaskDetails;
 
 /**
  * @implements TaskDetails<array{
- *     providedIds: non-negative-int,
- *     originalFilter: string|null,
- *     deletedDocuments: non-negative-int|null
+ *     providedIds?: non-negative-int,
+ *     originalFilter?: string|null,
+ *     deletedDocuments?: non-negative-int|null
  * }>
  */
 final class DocumentDeletionDetails implements TaskDetails
 {
     /**
-     * @param non-negative-int|null $providedIds      Number of documents queued for deletion
+     * @param non-negative-int|null $providedIds      Number of documents queued for deletion.
      * @param string|null           $originalFilter   The filter used to delete documents. Null if it was not specified.
      * @param int|null              $deletedDocuments Number of documents deleted. `null` while the task status is enqueued or processing.
      */
@@ -30,7 +30,7 @@ final class DocumentDeletionDetails implements TaskDetails
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['providedIds'],
+            $data['providedIds'] ?? null,
             $data['originalFilter'] ?? null,
             $data['deletedDocuments'] ?? null,
         );
