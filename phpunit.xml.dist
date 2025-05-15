@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" bootstrap="vendor/autoload.php" stopOnFailure="false" cacheResult="false" colors="true" cacheDirectory=".phpunit.cache">
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+  bootstrap="vendor/autoload.php"
+  stopOnFailure="false"
+  cacheResult="false"
+  colors="true"
+  cacheDirectory=".phpunit.cache"
+  displayDetailsOnPhpunitDeprecations="true"
+  displayDetailsOnTestsThatTriggerDeprecations="true"
+  displayDetailsOnTestsThatTriggerErrors="true"
+  displayDetailsOnTestsThatTriggerNotices="true"
+  displayDetailsOnTestsThatTriggerWarnings="true"
+>
   <testsuites>
     <testsuite name="Tests">
       <directory suffix="Test.php">./tests</directory>
@@ -9,7 +22,15 @@
     <env name="MEILISEARCH_URL" value="http://localhost:7700"/>
     <env name="MEILISEARCH_API_KEY" value="masterKey"/>
   </php>
-  <source>
+  <source
+    ignoreSuppressionOfDeprecations="true"
+    ignoreSuppressionOfPhpDeprecations="true"
+    ignoreSuppressionOfErrors="true"
+    ignoreSuppressionOfNotices="true"
+    ignoreSuppressionOfPhpNotices="true"
+    ignoreSuppressionOfWarnings="true"
+    ignoreSuppressionOfPhpWarnings="true"
+  >
     <include>
       <directory>src/</directory>
     </include>
