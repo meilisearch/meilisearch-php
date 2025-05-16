@@ -12,9 +12,7 @@ final class SortableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $attributes = $index->getSortableAttributes();
-
-        self::assertEmpty($attributes);
+        self::assertEmpty($index->getSortableAttributes());
     }
 
     public function testUpdateSortableAttributes(): void
@@ -22,14 +20,10 @@ final class SortableAttributesTest extends TestCase
         $newAttributes = ['title'];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateSortableAttributes($newAttributes);
+        $task = $index->updateSortableAttributes($newAttributes);
+        $index->waitForTask($task->getTaskUid());
 
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
-
-        $sortableAttributes = $index->getSortableAttributes();
-
-        self::assertSame($newAttributes, $sortableAttributes);
+        self::assertSame($newAttributes, $index->getSortableAttributes());
     }
 
     public function testResetSortableAttributes(): void
@@ -37,16 +31,12 @@ final class SortableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
-        $promise = $index->updateSortableAttributes($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateSortableAttributes($newAttributes);
+        $index->waitForTask($task->getTaskUid());
 
-        $promise = $index->resetSortableAttributes();
+        $task = $index->resetSortableAttributes();
+        $index->waitForTask($task->getTaskUid());
 
-        $this->assertIsValidPromise($promise);
-
-        $index->waitForTask($promise['taskUid']);
-
-        $sortableAttributes = $index->getSortableAttributes();
-        self::assertEmpty($sortableAttributes);
+        self::assertEmpty($index->getSortableAttributes());
     }
 }

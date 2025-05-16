@@ -17,8 +17,8 @@ final class SearchTest extends TestCase
     {
         parent::setUp();
         $this->index = $this->createEmptyIndex($this->safeIndexName());
-        $promise = $this->index->updateDocuments(self::DOCUMENTS);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->waitForTask($task->getTaskUid());
     }
 
     public function testBasicSearch(): void
@@ -131,8 +131,9 @@ final class SearchTest extends TestCase
     public function testExceptionIfNoIndexWhenSearching(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movie-1'));
-        $res = $index->delete();
-        $index->waitForTask($res['taskUid']);
+
+        $task = $index->delete();
+        $index->waitForTask($task->getTaskUid());
 
         $this->expectException(ApiException::class);
 
@@ -189,8 +190,8 @@ final class SearchTest extends TestCase
 
     public function testSearchWithMatchingStrategyALL(): void
     {
-        $response = $this->index->updateSearchableAttributes(['comment']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateSearchableAttributes(['comment']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('another french book', [
             'matchingStrategy' => 'all',
@@ -201,8 +202,8 @@ final class SearchTest extends TestCase
 
     public function testSearchWithMatchingStrategyLAST(): void
     {
-        $response = $this->index->updateSearchableAttributes(['comment']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateSearchableAttributes(['comment']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('french book', [
             'matchingStrategy' => 'last',
@@ -259,8 +260,8 @@ final class SearchTest extends TestCase
 
     public function testParametersArray(): void
     {
-        $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'limit' => 5,
@@ -303,8 +304,8 @@ final class SearchTest extends TestCase
 
     public function testParametersCanBeAStar(): void
     {
-        $response = $this->index->updateFilterableAttributes(['title']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['title']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'limit' => 5,
@@ -347,8 +348,8 @@ final class SearchTest extends TestCase
 
     public function testSearchWithFilterCanBeInt(): void
     {
-        $response = $this->index->updateFilterableAttributes(['id', 'genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['id', 'genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'filter' => 'id < 12',
@@ -370,8 +371,8 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithFacetDistribution(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'facets' => ['genre'],
@@ -396,8 +397,8 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithFilters(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'filter' => [['genre = fantasy']],
@@ -418,8 +419,8 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithMultipleFilter(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'filter' => ['genre = fantasy', ['genre = fantasy', 'genre = fantasy']],
@@ -440,8 +441,8 @@ final class SearchTest extends TestCase
 
     public function testCustomSearchWithFilterAndAttributesToRetrieve(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'filter' => [['genre = fantasy']],
@@ -470,7 +471,7 @@ final class SearchTest extends TestCase
 
     public function testSearchSortWithString(): void
     {
-        $response = $this->index->updateRankingRules([
+        $task = $this->index->updateRankingRules([
             'words',
             'typo',
             'sort',
@@ -478,9 +479,10 @@ final class SearchTest extends TestCase
             'attribute',
             'exactness',
         ]);
-        $this->index->waitForTask($response['taskUid']);
-        $response = $this->index->updateSortableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
+
+        $task = $this->index->updateSortableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'sort' => ['genre:asc'],
@@ -501,7 +503,7 @@ final class SearchTest extends TestCase
 
     public function testSearchSortWithInt(): void
     {
-        $response = $this->index->updateRankingRules([
+        $task = $this->index->updateRankingRules([
             'words',
             'typo',
             'sort',
@@ -509,9 +511,10 @@ final class SearchTest extends TestCase
             'attribute',
             'exactness',
         ]);
-        $this->index->waitForTask($response['taskUid']);
-        $response = $this->index->updateSortableAttributes(['id']);
-        $this->index->waitForTask($response['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
+
+        $task = $this->index->updateSortableAttributes(['id']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'sort' => ['id:asc'],
@@ -532,7 +535,7 @@ final class SearchTest extends TestCase
 
     public function testSearchSortWithMultipleParameter(): void
     {
-        $response = $this->index->updateRankingRules([
+        $task = $this->index->updateRankingRules([
             'words',
             'typo',
             'sort',
@@ -540,9 +543,10 @@ final class SearchTest extends TestCase
             'attribute',
             'exactness',
         ]);
-        $this->index->waitForTask($response['taskUid']);
-        $response = $this->index->updateSortableAttributes(['id', 'title']);
-        $this->index->waitForTask($response['taskUid']);
+        $this->index->waitForTask($task->getTaskUid());
+
+        $task = $this->index->updateSortableAttributes(['id', 'title']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('prince', [
             'sort' => ['id:asc', 'title:asc'],
@@ -667,8 +671,8 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithFacetsOption(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search(
             'prince',
@@ -685,10 +689,11 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithFacetsOptionAndMultipleFacets(): void
     {
-        $response = $this->index->addDocuments([['id' => 32, 'title' => 'The Witcher', 'genre' => 'adventure', 'adaptation' => 'video game']]);
-        $this->index->waitForTask($response['taskUid']);
-        $response = $this->index->updateFilterableAttributes(['genre', 'adaptation']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->addDocuments([['id' => 32, 'title' => 'The Witcher', 'genre' => 'adventure', 'adaptation' => 'video game']]);
+        $this->index->waitForTask($task->getTaskUid());
+
+        $task = $this->index->updateFilterableAttributes(['genre', 'adaptation']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search(
             'witch',
@@ -709,12 +714,11 @@ final class SearchTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
-        $promise = $index->updateDocuments(self::VECTOR_MOVIES);
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
+        $index->waitForTask($task->getTaskUid());
+
+        $task = $index->updateDocuments(self::VECTOR_MOVIES);
+        $index->waitForTask($task->getTaskUid());
 
         $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0, 'embedder' => 'manual']]);
 
@@ -739,8 +743,8 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToFilter(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $filterAllFacets = function (array $facets): array {
             $filterOneFacet = function (array $facet): array {
@@ -771,8 +775,8 @@ final class SearchTest extends TestCase
 
     public function testSearchWithAttributesToSearchOn(): void
     {
-        $response = $this->index->updateSearchableAttributes(['comment', 'title']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateSearchableAttributes(['comment', 'title']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('the', ['attributesToSearchOn' => ['comment']]);
 
@@ -800,8 +804,8 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToMap(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $facetsToUpperFunc = function (array $facets): array {
             $changeOneFacet = function (array $facet): array {
@@ -833,8 +837,8 @@ final class SearchTest extends TestCase
 
     public function testBasicSearchWithTransformFacetsDritributionOptionToOder(): void
     {
-        $response = $this->index->updateFilterableAttributes(['genre']);
-        $this->index->waitForTask($response['taskUid']);
+        $task = $this->index->updateFilterableAttributes(['genre']);
+        $this->index->waitForTask($task->getTaskUid());
 
         $facetsToUpperFunc = function (array $facets): array {
             $sortOneFacet = function (array $facet): array {
@@ -867,8 +871,8 @@ final class SearchTest extends TestCase
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $this->index->updateFilterableAttributes(['info.reviewNb']);
 
-        $promise = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search(
             null,
@@ -883,8 +887,8 @@ final class SearchTest extends TestCase
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $this->index->updateFilterableAttributes(['genre']);
 
-        $promise = $this->index->updateDocuments(self::DOCUMENTS);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDocuments(self::DOCUMENTS);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search(null, [
             'distinct' => 'genre',
@@ -899,8 +903,8 @@ final class SearchTest extends TestCase
     {
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $this->index->updateDocuments(self::DOCUMENTS);
-        $promise = $this->index->updateLocalizedAttributes([['attributePatterns' => ['title', 'comment'], 'locales' => ['fra', 'eng']]]);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateLocalizedAttributes([['attributePatterns' => ['title', 'comment'], 'locales' => ['fra', 'eng']]]);
+        $this->index->waitForTask($task->getTaskUid());
 
         $response = $this->index->search('french', [
             'locales' => ['fra', 'eng'],

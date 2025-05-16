@@ -8,11 +8,11 @@ interface Http
 {
     public function get(string $path, array $query = []);
 
-    public function post(string $path, $body = null, array $query = [], ?string $contentType = null);
+    public function post(string $path, mixed $body = null, array $query = [], ?string $contentType = null);
 
-    public function put(string $path, $body = null, array $query = [], ?string $contentType = null);
+    public function put(string $path, mixed $body = null, array $query = [], ?string $contentType = null);
 
-    public function patch(string $path, $body = null, array $query = []);
+    public function patch(string $path, mixed $body = null, array $query = []);
 
     public function delete(string $path, array $query = []);
 }

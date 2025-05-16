@@ -20,16 +20,16 @@ final class DistinctAttributeTest extends TestCase
     public function testGetDefaultDistinctAttribute(): void
     {
         $response = $this->index->getDistinctAttribute();
+
         self::assertNull($response);
     }
 
     public function testUpdateDistinctAttribute(): void
     {
         $distinctAttribute = 'description';
-        $promise = $this->index->updateDistinctAttribute($distinctAttribute);
 
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateDistinctAttribute($distinctAttribute);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame($distinctAttribute, $this->index->getDistinctAttribute());
     }
@@ -37,13 +37,13 @@ final class DistinctAttributeTest extends TestCase
     public function testResetDistinctAttribute(): void
     {
         $distinctAttribute = 'description';
-        $promise = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->index->waitForTask($promise['taskUid']);
 
-        $promise = $this->index->resetDistinctAttribute();
+        $task = $this->index->updateDistinctAttribute($distinctAttribute);
+        $this->index->waitForTask($task->getTaskUid());
 
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->resetDistinctAttribute();
+        $this->index->waitForTask($task->getTaskUid());
+
         self::assertNull($this->index->getDistinctAttribute());
     }
 }

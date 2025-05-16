@@ -28,26 +28,19 @@ final class SearchableAttributesTest extends TestCase
             'description',
         ];
 
-        $promise = $indexA->updateSearchableAttributes($searchableAttributes);
+        $task = $indexA->updateSearchableAttributes($searchableAttributes);
+        $indexA->waitForTask($task->getTaskUid());
 
-        $this->assertIsValidPromise($promise);
-
-        $indexA->waitForTask($promise['taskUid']);
-        $updatedAttributes = $indexA->getSearchableAttributes();
-
-        self::assertSame($searchableAttributes, $updatedAttributes);
+        self::assertSame($searchableAttributes, $indexA->getSearchableAttributes());
     }
 
     public function testResetSearchableAttributes(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
-        $promise = $index->resetSearchableAttributes();
 
-        $this->assertIsValidPromise($promise);
+        $task = $index->resetSearchableAttributes();
+        $index->waitForTask($task->getTaskUid());
 
-        $index->waitForTask($promise['taskUid']);
-        $searchableAttributes = $index->getSearchableAttributes();
-
-        self::assertSame(['*'], $searchableAttributes);
+        self::assertSame(['*'], $index->getSearchableAttributes());
     }
 }

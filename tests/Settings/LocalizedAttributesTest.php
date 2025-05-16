@@ -25,10 +25,9 @@ final class LocalizedAttributesTest extends TestCase
         $newAttributes = [['attributePatterns' => ['doggo'], 'locales' => ['fra']]];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateLocalizedAttributes($newAttributes);
+        $task = $index->updateLocalizedAttributes($newAttributes);
 
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $index->waitForTask($task->getTaskUid());
 
         $localizedAttributes = $index->getLocalizedAttributes();
 
@@ -40,14 +39,11 @@ final class LocalizedAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = [['attributePatterns' => ['doggo'], 'locales' => ['fra']]];
 
-        $promise = $index->updateLocalizedAttributes($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateLocalizedAttributes($newAttributes);
+        $index->waitForTask($task->getTaskUid());
 
-        $promise = $index->resetLocalizedAttributes();
-
-        $this->assertIsValidPromise($promise);
-
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->resetLocalizedAttributes();
+        $index->waitForTask($task->getTaskUid());
 
         $localizedAttributes = $index->getLocalizedAttributes();
         self::assertNull($localizedAttributes);

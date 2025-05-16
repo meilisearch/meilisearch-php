@@ -27,42 +27,33 @@ final class SynonymsTest extends TestCase
         $newSynonyms = [
             'hp' => ['harry potter'],
         ];
-        $promise = $this->index->updateSynonyms($newSynonyms);
 
-        $this->assertIsValidPromise($promise);
+        $task = $this->index->updateSynonyms($newSynonyms);
+        $this->index->waitForTask($task->getTaskUid());
 
-        $this->index->waitForTask($promise['taskUid']);
-        $synonyms = $this->index->getSynonyms();
-
-        self::assertSame($newSynonyms, $synonyms);
+        self::assertSame($newSynonyms, $this->index->getSynonyms());
     }
 
     public function testUpdateSynonymsWithEmptyArray(): void
     {
         $newSynonyms = [];
-        $promise = $this->index->updateSynonyms($newSynonyms);
 
-        $this->assertIsValidPromise($promise);
+        $task = $this->index->updateSynonyms($newSynonyms);
+        $this->index->waitForTask($task->getTaskUid());
 
-        $this->index->waitForTask($promise['taskUid']);
-        $synonyms = $this->index->getSynonyms();
-
-        self::assertSame($newSynonyms, $synonyms);
+        self::assertSame($newSynonyms, $this->index->getSynonyms());
     }
 
     public function testResetSynonyms(): void
     {
-        $promise = $this->index->updateSynonyms([
+        $task = $this->index->updateSynonyms([
             'hp' => ['harry potter'],
         ]);
-        $this->index->waitForTask($promise['taskUid']);
-        $promise = $this->index->resetSynonyms();
+        $this->index->waitForTask($task->getTaskUid());
+        $task = $this->index->resetSynonyms();
 
-        $this->assertIsValidPromise($promise);
+        $this->index->waitForTask($task->getTaskUid());
 
-        $this->index->waitForTask($promise['taskUid']);
-        $synonyms = $this->index->getSynonyms();
-
-        self::assertEmpty($synonyms);
+        self::assertEmpty($this->index->getSynonyms());
     }
 }

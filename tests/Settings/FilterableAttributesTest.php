@@ -12,9 +12,7 @@ final class FilterableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $attributes = $index->getFilterableAttributes();
-
-        self::assertEmpty($attributes);
+        self::assertEmpty($index->getFilterableAttributes());
     }
 
     public function testUpdateFilterableAttributes(): void
@@ -22,14 +20,10 @@ final class FilterableAttributesTest extends TestCase
         $expectedAttributes = ['title'];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFilterableAttributes($expectedAttributes);
+        $task = $index->updateFilterableAttributes($expectedAttributes);
+        $index->waitForTask($task->getTaskUid());
 
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
-
-        $filterableAttributes = $index->getFilterableAttributes();
-
-        self::assertSame($expectedAttributes, $filterableAttributes);
+        self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
 
     public function testResetFilterableAttributes(): void
@@ -37,17 +31,13 @@ final class FilterableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
-        $promise = $index->updateFilterableAttributes($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFilterableAttributes($newAttributes);
+        $index->waitForTask($task->getTaskUid());
 
-        $promise = $index->resetFilterableAttributes();
+        $task = $index->resetFilterableAttributes();
+        $index->waitForTask($task->getTaskUid());
 
-        $this->assertIsValidPromise($promise);
-
-        $index->waitForTask($promise['taskUid']);
-
-        $filterableAttributes = $index->getFilterableAttributes();
-        self::assertEmpty($filterableAttributes);
+        self::assertEmpty($index->getFilterableAttributes());
     }
 
     public function testUpdateGranularFilterableAttributes(): void
@@ -68,27 +58,24 @@ final class FilterableAttributesTest extends TestCase
             ],
         ];
 
-        $promise = $index->updateFilterableAttributes($expectedAttributes);
-        $this->assertIsValidPromise($promise);
+        $task = $index->updateFilterableAttributes($expectedAttributes);
+        $index->waitForTask($task->getTaskUid());
 
-        $index->waitForTask($promise['taskUid']);
-        $filterableAttributes = $index->getFilterableAttributes();
-        self::assertSame($expectedAttributes, $filterableAttributes);
+        self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
 
     public function testUpdateGeoWithGranularFilterableAttributes(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFilterableAttributes([
+        $task = $index->updateFilterableAttributes([
             [
                 'attributePatterns' => ['_geo'],
             ],
         ]);
-        $this->assertIsValidPromise($promise);
 
-        $index->waitForTask($promise['taskUid']);
-        $filterableAttributes = $index->getFilterableAttributes();
+        $index->waitForTask($task->getTaskUid());
+
         self::assertSame([
             [
                 'attributePatterns' => ['_geo'],
@@ -100,6 +87,6 @@ final class FilterableAttributesTest extends TestCase
                     ],
                 ],
             ],
-        ], $filterableAttributes);
+        ], $index->getFilterableAttributes());
     }
 }

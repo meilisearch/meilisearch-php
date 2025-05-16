@@ -12,14 +12,12 @@ final class FacetingAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
 
-        $attributes = $index->getFaceting();
-
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => [
                 '*' => 'alpha',
             ],
-        ], $attributes);
+        ], $index->getFaceting());
     }
 
     public function testUpdateFacetingAttributes(): void
@@ -27,15 +25,13 @@ final class FacetingAttributesTest extends TestCase
         $newAttributes = ['sortFacetValuesBy' => ['*' => 'count']];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFaceting($newAttributes);
-        $index->waitForTask($promise['taskUid']);
-
-        $faceting = $index->getFaceting();
+        $task = $index->updateFaceting($newAttributes);
+        $index->waitForTask($task->getTaskUid());
 
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'count'],
-        ], $faceting);
+        ], $index->getFaceting());
     }
 
     public function testResetFaceting(): void
@@ -43,16 +39,15 @@ final class FacetingAttributesTest extends TestCase
         $newAttributes = ['sortFacetValuesBy' => ['*' => 'count']];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFaceting($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->updateFaceting($newAttributes);
+        $index->waitForTask($task->getTaskUid());
 
-        $promise = $index->resetFaceting();
-        $index->waitForTask($promise['taskUid']);
+        $task = $index->resetFaceting();
+        $index->waitForTask($task->getTaskUid());
 
-        $faceting = $index->getFaceting();
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'alpha'],
-        ], $faceting);
+        ], $index->getFaceting());
     }
 }

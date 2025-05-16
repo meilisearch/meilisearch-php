@@ -26,23 +26,19 @@ final class SearchCutoffMsTest extends TestCase
 
     public function testUpdateSearchCutoffMs(): void
     {
-        $promise = $this->index->updateSearchCutoffMs(50);
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateSearchCutoffMs(50);
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertSame(50, $this->index->getSearchCutoffMs());
     }
 
     public function testResetSearchCutoffMs(): void
     {
-        $promise = $this->index->updateSearchCutoffMs(50);
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->updateSearchCutoffMs(50);
+        $this->index->waitForTask($task->getTaskUid());
 
-        $promise = $this->index->resetSearchCutoffMs();
-
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $task = $this->index->resetSearchCutoffMs();
+        $this->index->waitForTask($task->getTaskUid());
 
         self::assertNull($this->index->getSearchCutoffMs());
     }
