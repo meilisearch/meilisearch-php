@@ -21,6 +21,7 @@ final class Task
     /**
      * @param non-negative-int      $taskUid
      * @param non-empty-string|null $indexUid
+     * @param non-empty-string|null $duration
      */
     public function __construct(
         private readonly int $taskUid,
@@ -79,6 +80,9 @@ final class Task
         return $this->finishedAt;
     }
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getDuration(): ?string
     {
         return $this->duration;
