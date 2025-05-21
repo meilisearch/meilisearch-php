@@ -33,6 +33,8 @@ class FacetSearchQuery
      */
     private ?array $attributesToSearchOn = null;
 
+    private ?bool $exhaustiveFacetsCount = null;
+
     /**
      * @return $this
      */
@@ -100,13 +102,24 @@ class FacetSearchQuery
     }
 
     /**
+     * @return $this
+     */
+    public function setExhaustiveFacetsCount(bool $exhaustiveFacetsCount): self
+    {
+        $this->exhaustiveFacetsCount = $exhaustiveFacetsCount;
+
+        return $this;
+    }
+
+    /**
      * @return array{
      *     facetName?: non-empty-string,
      *     facetQuery?: non-empty-string,
      *     q?: string,
      *     filter?: list<non-empty-string|list<non-empty-string>>,
      *     matchingStrategy?: 'last'|'all'|'frequency'|null,
-     *     attributesToSearchOn?: non-empty-list<non-empty-string>
+     *     attributesToSearchOn?: non-empty-list<non-empty-string>,
+     *     exhaustiveFacetsCount?: bool
      * }
      */
     public function toArray(): array
@@ -118,6 +131,7 @@ class FacetSearchQuery
             'filter' => $this->filter,
             'matchingStrategy' => $this->matchingStrategy,
             'attributesToSearchOn' => $this->attributesToSearchOn,
+            'exhaustiveFacetsCount' => $this->exhaustiveFacetsCount,
         ], static function ($item) { return null !== $item; });
     }
 }

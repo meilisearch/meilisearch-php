@@ -262,8 +262,17 @@ get_filterable_attributes_1: |-
   $client->index('movies')->getFilterableAttributes();
 update_filterable_attributes_1: |-
   $client->index('movies')->updateFilterableAttributes([
-    'genres',
-    'director'
+    'author',
+    [
+        'attributePatterns' => ['genres'],
+        'features' => [
+            'facetSearch' => true,
+            'filter' => [
+                'equality' => true,
+                'comparison' => false,
+            ],
+        ],
+    ],
   ]);
 reset_filterable_attributes_1: |-
   $client->index('movies')->resetFilterableAttributes();
@@ -424,16 +433,17 @@ landing_getting_started_1: |-
     ['id' => 5, 'title' => 'Moana'],
     ['id' => 6, 'title' => 'Philadelphia'],
   ]);
-getting_started_add_documents_md: |-
-  Using `meilisearch-php` with the Guzzle HTTP client:
+getting_started_add_documents: |-
+  /**
+   * Using `meilisearch-php` with the Guzzle HTTP client, in the command line:
+   *   composer require meilisearch/meilisearch-php \
+   *     guzzlehttp/guzzle \
+   *     http-interop/http-factory-guzzle:^1.0
+   */
 
-  ```bash
-  composer require meilisearch/meilisearch-php \
-      guzzlehttp/guzzle \
-      http-interop/http-factory-guzzle:^1.0
-  ```
-
-  ```php
+  /**
+   * In your PHP file:
+   */
   <?php
 
   require_once __DIR__ . '/vendor/autoload.php';
@@ -446,17 +456,11 @@ getting_started_add_documents_md: |-
   $movies = json_decode($movies_json);
 
   $client->index('movies')->addDocuments($movies);
-  ```
 
-  [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 getting_started_check_task_status: |-
   $client->getTask(0);
-getting_started_search_md: |-
-  ```php
+getting_started_search: |-
   $client->index('movies')->search('botman');
-  ```
-
-  [About this SDK](https://github.com/meilisearch/meilisearch-php/)
 getting_started_add_meteorites: |-
   $client = new Client('http://localhost:7700');
 
@@ -791,3 +795,12 @@ get_all_batches_1: |-
   $client->getBatches();
 get_batch_1: |-
   $client->getBatch(BATCH_UID);
+update_embedders_1: |-
+  $client->updateEmbedders([
+    'default' => [
+      'source' => 'openAi',
+      'apiKey' => 'OPEN_AI_API_KEY',
+      'model' => 'text-embedding-3-small',
+      'documentTemplate' => 'A document titled '{{doc.title}}' whose description starts with {{doc.overview|truncatewords: 20}}'
+    ]
+  ]);

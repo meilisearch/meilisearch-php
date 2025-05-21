@@ -6,7 +6,7 @@ namespace Meilisearch;
 
 class Meilisearch
 {
-    public const VERSION = '1.12.0';
+    public const VERSION = '1.14.0';
 
     /**
      * @return non-empty-string

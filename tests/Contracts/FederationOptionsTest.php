@@ -22,4 +22,11 @@ final class FederationOptionsTest extends TestCase
 
         self::assertSame(['weight' => 2.369], $data->toArray());
     }
+
+    public function testSetRemote(): void
+    {
+        $data = (new FederationOptions())->setRemote('ms-00');
+
+        self::assertSame(['remote' => 'ms-00'], $data->toArray());
+    }
 }

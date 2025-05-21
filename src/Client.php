@@ -10,6 +10,7 @@ use Meilisearch\Endpoints\Delegates\HandlesDumps;
 use Meilisearch\Endpoints\Delegates\HandlesIndex;
 use Meilisearch\Endpoints\Delegates\HandlesKeys;
 use Meilisearch\Endpoints\Delegates\HandlesMultiSearch;
+use Meilisearch\Endpoints\Delegates\HandlesNetwork;
 use Meilisearch\Endpoints\Delegates\HandlesSnapshots;
 use Meilisearch\Endpoints\Delegates\HandlesSystem;
 use Meilisearch\Endpoints\Delegates\HandlesTasks;
@@ -17,6 +18,7 @@ use Meilisearch\Endpoints\Dumps;
 use Meilisearch\Endpoints\Health;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Endpoints\Keys;
+use Meilisearch\Endpoints\Network;
 use Meilisearch\Endpoints\Snapshots;
 use Meilisearch\Endpoints\Stats;
 use Meilisearch\Endpoints\Tasks;
@@ -37,6 +39,7 @@ class Client
     use HandlesSystem;
     use HandlesMultiSearch;
     use HandlesBatches;
+    use HandlesNetwork;
 
     /**
      * @param array<int, string> $clientAgents
@@ -61,5 +64,6 @@ class Client
         $this->dumps = new Dumps($this->http);
         $this->snapshots = new Snapshots($this->http);
         $this->tenantToken = new TenantToken($this->http, $apiKey);
+        $this->network = new Network($this->http);
     }
 }

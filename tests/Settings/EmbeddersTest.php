@@ -12,13 +12,11 @@ final class EmbeddersTest extends TestCase
 {
     private Indexes $index;
 
-    private const DEFAULT_EMBEDDER = null;
+    private const DEFAULT_EMBEDDER = [];
 
     protected function setUp(): void
     {
         parent::setUp();
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['vectorStore' => true]);
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -53,5 +51,55 @@ final class EmbeddersTest extends TestCase
         $embedders = $this->index->getEmbedders();
 
         self::assertSame(self::DEFAULT_EMBEDDER, $embedders);
+    }
+
+    public function testHuggingFacePooling(): void
+    {
+        $embedder = [
+            'source' => 'huggingFace',
+            'model' => 'sentence-transformers/all-MiniLM-L6-v2',
+            'pooling' => 'useModel',
+        ];
+
+        $promise = $this->index->updateEmbedders([
+            'embedder_name' => [
+                'source' => 'huggingFace',
+                'model' => 'sentence-transformers/all-MiniLM-L6-v2',
+                'pooling' => 'useModel',
+            ],
+        ]);
+
+        $this->assertIsValidPromise($promise);
+        $this->index->waitForTask($promise['taskUid']);
+
+        $embedders = $this->index->getEmbedders();
+
+        self::assertSame($embedder['source'], $embedders['embedder_name']['source']);
+        self::assertSame($embedder['model'], $embedders['embedder_name']['model']);
+        self::assertSame($embedder['pooling'], $embedders['embedder_name']['pooling']);
+    }
+
+    public function testCompositeEmbedder(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['compositeEmbedders' => true]);
+
+        $embedder = [
+            'source' => 'composite',
+            'searchEmbedder' => [
+                'source' => 'huggingFace',
+                'model' => 'sentence-transformers/all-MiniLM-L6-v2',
+            ],
+            'indexingEmbedder' => [
+                'source' => 'huggingFace',
+                'model' => 'sentence-transformers/all-MiniLM-L6-v2',
+            ],
+        ];
+
+        $promise = $this->index->updateEmbedders([
+            'embedder_name' => $embedder,
+        ]);
+
+        $this->assertIsValidPromise($promise);
     }
 }
