@@ -47,6 +47,7 @@ final class IndexTest extends TestCase
                 'minWordSizeForTypos' => ['oneTypo' => 5, 'twoTypos' => 9],
                 'disableOnWords' => [],
                 'disableOnAttributes' => [],
+                'disableOnNumbers' => false,
             ],
             $this->index->getTypoTolerance(),
         );
