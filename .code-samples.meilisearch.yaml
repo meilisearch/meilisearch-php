@@ -417,6 +417,10 @@ typo_tolerance_guide_4: |-
       'twoTypos' => 10
     ]
   ]);
+typo_tolerance_guide_5: |-
+  $client->index('movies')->updateTypoTolerance([
+    'disableOnNumbers' => true
+  ]);
 add_movies_json_1: |-
   $moviesJson = file_get_contents('movies.json');
   $movies = json_decode($moviesJson);
