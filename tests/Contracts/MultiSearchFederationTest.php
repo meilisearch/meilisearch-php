@@ -29,4 +29,18 @@ final class MultiSearchFederationTest extends TestCase
 
         self::assertSame(['offset' => 5], $data->toArray());
     }
+
+    public function testSetFacetsByIndex(): void
+    {
+        $data = (new MultiSearchFederation())->setFacetsByIndex(['books' => ['author', 'genre']]);
+
+        self::assertSame(['facetsByIndex' => ['books' => ['author', 'genre']]], $data->toArray());
+    }
+
+    public function testSetMergeFacets(): void
+    {
+        $data = (new MultiSearchFederation())->setMergeFacets(['maxValuesPerFacet' => 10]);
+
+        self::assertSame(['mergeFacets' => ['maxValuesPerFacet' => 10]], $data->toArray());
+    }
 }

@@ -222,7 +222,13 @@ trait HandlesSettings
     // Settings - Filterable Attributes
 
     /**
-     * @return list<non-empty-string>
+     * @return list<non-empty-string|array{
+     *     attributePatterns: list<non-empty-string>,
+     *     features?: array{
+     *         facetSearch: bool,
+     *         filter: array{equality: bool, comparison: bool}
+     *     }
+     * }>
      */
     public function getFilterableAttributes(): array
     {
@@ -230,7 +236,12 @@ trait HandlesSettings
     }
 
     /**
-     * @param list<non-empty-string> $filterableAttributes
+     * @param list<non-empty-string|array{
+     *   attributePatterns: list<non-empty-string>,
+     *   features?: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}
+     * }> $filterableAttributes
+     *
+     * Note: When attributePatterns contains '_geo', the features field is ignored
      */
     public function updateFilterableAttributes(array $filterableAttributes): array
     {
@@ -420,5 +431,61 @@ trait HandlesSettings
     public function resetEmbedders(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/embedders');
+    }
+
+    // Settings - Facet Search
+
+    /**
+     * @since Meilisearch v1.12.0
+     */
+    public function getFacetSearch(): bool
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/facet-search');
+    }
+
+    /**
+     * @since Meilisearch v1.12.0
+     */
+    public function updateFacetSearch(bool $facetSearch): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/facet-search', $facetSearch);
+    }
+
+    /**
+     * @since Meilisearch v1.12.0
+     */
+    public function resetFacetSearch(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/facet-search');
+    }
+
+    // Settings - Prefix Search
+
+    /**
+     * @return 'indexingTime'|'disabled'
+     *
+     * @since Meilisearch v1.12.0
+     */
+    public function getPrefixSearch(): string
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/prefix-search');
+    }
+
+    /**
+     * @param 'indexingTime'|'disabled' $prefixSearch
+     *
+     * @since Meilisearch v1.12.0
+     */
+    public function updatePrefixSearch(string $prefixSearch): array
+    {
+        return $this->http->put(self::PATH.'/'.$this->uid.'/settings/prefix-search', $prefixSearch);
+    }
+
+    /**
+     * @since Meilisearch v1.12.0
+     */
+    public function resetPrefixSearch(): array
+    {
+        return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/prefix-search');
     }
 }

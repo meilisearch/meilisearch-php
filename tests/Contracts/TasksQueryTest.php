@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Contracts;
 
+// TODO: refactor to make sure these tests clean up after themselves
+
 use Meilisearch\Contracts\TasksQuery;
 use PHPUnit\Framework\TestCase;
 
@@ -108,5 +110,16 @@ final class TasksQueryTest extends TestCase
         $data = (new TasksQuery())->setFrom(1);
 
         self::assertSame(['from' => 1], $data->toArray());
+    }
+
+    /**
+     * @testWith [true, "true"]
+     *           [false, "false"]
+     */
+    public function testSetReverse(bool $reverse, string $expected): void
+    {
+        $data = (new TasksQuery())->setReverse($reverse);
+
+        self::assertSame(['reverse' => $expected], $data->toArray());
     }
 }

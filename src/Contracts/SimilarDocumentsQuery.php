@@ -12,6 +12,11 @@ class SimilarDocumentsQuery
     private $id;
 
     /**
+     * @var non-empty-string
+     */
+    private string $embedder;
+
+    /**
      * @var non-negative-int|null
      */
     private ?int $offset = null;
@@ -20,11 +25,6 @@ class SimilarDocumentsQuery
      * @var positive-int|null
      */
     private ?int $limit = null;
-
-    /**
-     * @var non-empty-string|null
-     */
-    private ?string $embedder = null;
 
     /**
      * @var list<non-empty-string>|null
@@ -48,11 +48,13 @@ class SimilarDocumentsQuery
     private $rankingScoreThreshold;
 
     /**
-     * @param int|string $id
+     * @param int|string       $id
+     * @param non-empty-string $embedder
      */
-    public function __construct($id)
+    public function __construct($id, string $embedder)
     {
         $this->id = $id;
+        $this->embedder = $embedder;
     }
 
     /**
@@ -87,18 +89,6 @@ class SimilarDocumentsQuery
     public function setFilter(array $filter): self
     {
         $this->filter = $filter;
-
-        return $this;
-    }
-
-    /**
-     * @param non-empty-string $embedder
-     *
-     * @return $this
-     */
-    public function setEmbedder(string $embedder): self
-    {
-        $this->embedder = $embedder;
 
         return $this;
     }
@@ -166,10 +156,10 @@ class SimilarDocumentsQuery
     /**
      * @return array{
      *     id: int|string,
+     *     embedder: non-empty-string,
      *     offset?: non-negative-int,
      *     limit?: positive-int,
      *     filter?: array<int, array<int, string>|string>,
-     *     embedder?: non-empty-string,
      *     attributesToRetrieve?: list<non-empty-string>,
      *     showRankingScore?: bool,
      *     showRankingScoreDetails?: bool,
@@ -181,10 +171,10 @@ class SimilarDocumentsQuery
     {
         return array_filter([
             'id' => $this->id,
+            'embedder' => $this->embedder,
             'offset' => $this->offset,
             'limit' => $this->limit,
             'filter' => $this->filter,
-            'embedder' => $this->embedder,
             'attributesToRetrieve' => $this->attributesToRetrieve,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,

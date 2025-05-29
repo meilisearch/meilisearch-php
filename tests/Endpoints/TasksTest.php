@@ -76,6 +76,18 @@ final class TasksTest extends TestCase
         self::assertSame([], $response->getResults());
     }
 
+    public function getAllTasksClientWithBatchFilter(): void
+    {
+        [$promise, $response] = $this->seedIndex();
+        $task = $this->client->getTask($promise['taskUid']);
+
+        $response = $this->client->getTasks((new TasksQuery())
+                ->setBatchUid($task['uid'])
+        );
+
+        self::assertGreaterThan(0, $response->getTotal());
+    }
+
     public function testGetOneTaskIndex(): void
     {
         [$promise, $response] = $this->seedIndex();
@@ -138,6 +150,20 @@ final class TasksTest extends TestCase
         self::assertSame('?'.$query, $response['details']['originalFilter']);
         self::assertSame('taskCancelation', $response['type']);
         self::assertSame('succeeded', $response['status']);
+    }
+
+    public function testGetAllTasksInReverseOrder(): void
+    {
+        $sampleTasks = $this->client->getTasks(new TasksQuery());
+        $sampleTasksUids = array_map(fn ($task) => $task['uid'], $sampleTasks->getResults());
+
+        $expectedTasks = $this->client->getTasks((new TasksQuery())->setUids($sampleTasksUids));
+        $expectedTasksUids = array_map(fn ($task) => $task['uid'], $expectedTasks->getResults());
+
+        $reversedTasks = $this->client->getTasks((new TasksQuery())->setUids($sampleTasksUids)->setReverse(true));
+        $reversedTasksUids = array_map(fn ($task) => $task['uid'], $reversedTasks->getResults());
+
+        self::assertSame(array_reverse($expectedTasksUids), $reversedTasksUids);
     }
 
     public function testExceptionIfNoTaskIdWhenGetting(): void

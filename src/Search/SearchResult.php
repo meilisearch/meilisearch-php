@@ -19,16 +19,16 @@ class SearchResult implements \Countable, \IteratorAggregate
      * and its value will not be modified by the methods in this class.
      * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
      */
-    private ?int $estimatedTotalHits;
-    private ?int $hitsCount;
-    private ?int $offset;
-    private ?int $limit;
-    private ?int $semanticHitCount;
+    private ?int $estimatedTotalHits = null;
+    private int $hitsCount;
+    private ?int $offset = null;
+    private ?int $limit = null;
+    private int $semanticHitCount;
 
-    private ?int $hitsPerPage;
-    private ?int $page;
-    private ?int $totalPages;
-    private ?int $totalHits;
+    private ?int $hitsPerPage = null;
+    private ?int $page = null;
+    private ?int $totalPages = null;
+    private ?int $totalHits = null;
 
     private int $processingTimeMs;
     private bool $numberedPagination;
@@ -58,7 +58,6 @@ class SearchResult implements \Countable, \IteratorAggregate
             $this->offset = $body['offset'];
             $this->limit = $body['limit'];
             $this->estimatedTotalHits = $body['estimatedTotalHits'];
-            $this->hitsCount = \count($body['hits']);
         } else {
             $this->numberedPagination = true;
 
@@ -66,11 +65,11 @@ class SearchResult implements \Countable, \IteratorAggregate
             $this->page = $body['page'];
             $this->totalPages = $body['totalPages'];
             $this->totalHits = $body['totalHits'];
-            $this->hitsCount = $body['totalHits'];
         }
 
         $this->semanticHitCount = $body['semanticHitCount'] ?? 0;
         $this->hits = $body['hits'] ?? [];
+        $this->hitsCount = \count($body['hits']);
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->query = $body['query'];
         $this->facetDistribution = $body['facetDistribution'] ?? [];
@@ -127,12 +126,12 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->hits;
     }
 
-    public function getOffset(): int
+    public function getOffset(): ?int
     {
         return $this->offset;
     }
 
-    public function getLimit(): int
+    public function getLimit(): ?int
     {
         return $this->limit;
     }
@@ -155,7 +154,7 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->hitsCount;
     }
 
-    public function getEstimatedTotalHits(): int
+    public function getEstimatedTotalHits(): ?int
     {
         return $this->estimatedTotalHits;
     }

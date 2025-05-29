@@ -27,12 +27,18 @@ class Client implements Http
     private ClientInterface $http;
     private RequestFactoryInterface $requestFactory;
     private StreamFactoryInterface $streamFactory;
-    /** @var array<string,string> */
+    /**
+     * @var array<string, string|string[]>
+     */
     private array $headers;
+    /**
+     * @var non-empty-string
+     */
     private string $baseUrl;
     private Json $json;
 
     /**
+     * @param non-empty-string   $url
      * @param array<int, string> $clientAgents
      */
     public function __construct(
@@ -47,9 +53,9 @@ class Client implements Http
         $this->http = $httpClient ?? Psr18ClientDiscovery::find();
         $this->requestFactory = $reqFactory ?? Psr17FactoryDiscovery::findRequestFactory();
         $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
-        $this->headers = array_filter([
+        $this->headers = [
             'User-Agent' => implode(';', array_merge($clientAgents, [Meilisearch::qualifiedVersion()])),
-        ]);
+        ];
         if (null !== $apiKey && '' !== $apiKey) {
             $this->headers['Authorization'] = \sprintf('Bearer %s', $apiKey);
         }
@@ -72,7 +78,7 @@ class Client implements Http
     }
 
     /**
-     * @param mixed|null $body
+     * @param non-empty-string|null $contentType
      *
      * @throws ApiException
      * @throws ClientExceptionInterface
@@ -81,10 +87,7 @@ class Client implements Http
      */
     public function post(string $path, $body = null, array $query = [], ?string $contentType = null)
     {
-        if (!\is_null($contentType)) {
-            $this->headers['Content-type'] = $contentType;
-        } else {
-            $this->headers['Content-type'] = 'application/json';
+        if (null === $contentType) {
             $body = $this->json->serialize($body);
         }
         $request = $this->requestFactory->createRequest(
@@ -92,15 +95,20 @@ class Client implements Http
             $this->baseUrl.$path.$this->buildQueryString($query)
         )->withBody($this->streamFactory->createStream($body));
 
-        return $this->execute($request);
+        return $this->execute($request, ['Content-type' => $contentType ?? 'application/json']);
     }
 
+    /**
+     * @param non-empty-string|null $contentType
+     *
+     * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
+     * @throws JsonEncodingException
+     */
     public function put(string $path, $body = null, array $query = [], ?string $contentType = null)
     {
-        if (!\is_null($contentType)) {
-            $this->headers['Content-type'] = $contentType;
-        } else {
-            $this->headers['Content-type'] = 'application/json';
+        if (null === $contentType) {
             $body = $this->json->serialize($body);
         }
         $request = $this->requestFactory->createRequest(
@@ -108,30 +116,19 @@ class Client implements Http
             $this->baseUrl.$path.$this->buildQueryString($query)
         )->withBody($this->streamFactory->createStream($body));
 
-        return $this->execute($request);
+        return $this->execute($request, ['Content-type' => $contentType ?? 'application/json']);
     }
 
-    /**
-     * @param mixed|null $body
-     *
-     * @throws ApiException
-     * @throws JsonEncodingException
-     */
     public function patch(string $path, $body = null, array $query = [])
     {
-        $this->headers['Content-type'] = 'application/json';
         $request = $this->requestFactory->createRequest(
             'PATCH',
             $this->baseUrl.$path.$this->buildQueryString($query)
         )->withBody($this->streamFactory->createStream($this->json->serialize($body)));
 
-        return $this->execute($request);
+        return $this->execute($request, ['Content-type' => 'application/json']);
     }
 
-    /**
-     * @throws ClientExceptionInterface
-     * @throws ApiException
-     */
     public function delete(string $path, array $query = [])
     {
         $request = $this->requestFactory->createRequest(
@@ -143,13 +140,15 @@ class Client implements Http
     }
 
     /**
+     * @param array<string, string|string[]> $headers
+     *
      * @throws ApiException
      * @throws ClientExceptionInterface
      * @throws CommunicationException
      */
-    private function execute(RequestInterface $request)
+    private function execute(RequestInterface $request, array $headers = [])
     {
-        foreach ($this->headers as $header => $value) {
+        foreach (array_merge($this->headers, $headers) as $header => $value) {
             $request = $request->withAddedHeader($header, $value);
         }
 

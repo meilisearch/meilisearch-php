@@ -26,8 +26,16 @@ final class SearchTest extends TestCase
         $response = $this->index->search('prince');
 
         $this->assertEstimatedPagination($response->toArray());
-        self::assertSame(2, $response->getEstimatedTotalHits());
         self::assertCount(2, $response->getHits());
+
+        self::assertSame(2, $response->getEstimatedTotalHits());
+        self::assertSame(0, $response->getOffset());
+        self::assertSame(20, $response->getLimit());
+
+        self::assertNull($response->getHitsPerPage());
+        self::assertNull($response->getPage());
+        self::assertNull($response->getTotalPages());
+        self::assertNull($response->getTotalHits());
 
         $response = $this->index->search('prince', [], [
             'raw' => true,
@@ -43,6 +51,15 @@ final class SearchTest extends TestCase
 
         $this->assertFinitePagination($response->toArray());
         self::assertCount(2, $response->getHits());
+
+        self::assertSame(2, $response->getHitsPerPage());
+        self::assertSame(1, $response->getPage());
+        self::assertSame(1, $response->getTotalPages());
+        self::assertSame(2, $response->getTotalHits());
+
+        self::assertNull($response->getEstimatedTotalHits());
+        self::assertNull($response->getOffset());
+        self::assertNull($response->getLimit());
 
         $response = $this->index->search('prince', ['hitsPerPage' => 2], [
             'raw' => true,
@@ -690,8 +707,6 @@ final class SearchTest extends TestCase
 
     public function testVectorSearch(): void
     {
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['vectorStore' => true]);
         $index = $this->createEmptyIndex($this->safeIndexName());
 
         $promise = $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]]);
@@ -701,12 +716,12 @@ final class SearchTest extends TestCase
         $this->assertIsValidPromise($promise);
         $index->waitForTask($promise['taskUid']);
 
-        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0]]);
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0, 'embedder' => 'manual']]);
 
         self::assertSame(5, $response->getSemanticHitCount());
         self::assertArrayNotHasKey('_vectors', $response->getHit(0));
 
-        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0], 'retrieveVectors' => true]);
+        $response = $index->search('', ['vector' => [-0.5, 0.3, 0.85], 'hybrid' => ['semanticRatio' => 1.0, 'embedder' => 'manual'], 'retrieveVectors' => true]);
 
         self::assertSame(5, $response->getSemanticHitCount());
         self::assertArrayHasKey('_vectors', $response->getHit(0));
@@ -873,11 +888,25 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search(null, [
             'distinct' => 'genre',
-            'filter' => ['genre = fantasy'],
         ])->toArray();
 
-        self::assertArrayHasKey('title', $response['hits'][0]);
-        self::assertCount(1, $response['hits']);
+        // Should have one document per unique genre
+        // From DOCUMENTS: romance, adventure, fantasy, plus one document without genre
+        self::assertCount(4, $response['hits']);
+
+        // Extract genres from the results
+        $genres = [];
+        foreach ($response['hits'] as $hit) {
+            $genre = $hit['genre'] ?? null;
+            self::assertNotContains($genre, $genres, 'Each genre should appear only once in distinct results');
+            $genres[] = $genre;
+        }
+
+        // Verify we have the expected unique genres
+        $expectedGenres = ['romance', 'adventure', 'fantasy', null];
+        foreach ($expectedGenres as $expectedGenre) {
+            self::assertContains($expectedGenre, $genres, "Genre '{$expectedGenre}' should be present in distinct results");
+        }
     }
 
     public function testSearchWithLocales(): void

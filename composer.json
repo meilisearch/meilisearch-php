@@ -44,11 +44,10 @@
         "php-cs-fixer/shim": "^3.59.3",
         "guzzlehttp/guzzle": "^7.8.1",
         "http-interop/http-factory-guzzle": "^1.2.0",
-        "phpstan/phpstan": "^1.11.5",
-        "phpstan/extension-installer": "^1.4.1",
-        "phpstan/phpstan-strict-rules": "^1.6.0",
-        "phpstan/phpstan-phpunit": "^1.4.0",
-        "phpstan/phpstan-deprecation-rules": "^1.2.0"
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0"
     },
     "scripts": {
         "lint": [
@@ -62,7 +61,6 @@
     },
     "config": {
         "allow-plugins": {
-            "phpstan/extension-installer": true,
             "php-http/discovery": true
         }
     }

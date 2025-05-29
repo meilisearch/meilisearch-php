@@ -31,7 +31,6 @@
 ## Table of Contents <!-- omit in TOC -->
 
 - [📖 Documentation](#-documentation)
-- [⚡ Supercharge your Meilisearch experience](#-supercharge-your-meilisearch-experience)
 - [🔧 Installation](#-installation)
 - [🚀 Getting started](#-getting-started)
 - [🤖 Compatibility with Meilisearch](#-compatibility-with-meilisearch)
@@ -44,10 +43,6 @@
 
 
 To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://php-sdk.meilisearch.com). To learn more about Meilisearch in general, refer to our [documentation](https://www.meilisearch.com/docs/learn/getting_started/quick_start) or our [API reference](https://www.meilisearch.com/docs/reference/api/overview).
-
-## ⚡ Supercharge your Meilisearch experience
-
-Say goodbye to server deployment and manual updates with [Meilisearch Cloud](https://www.meilisearch.com/cloud?utm_campaign=oss&utm_source=github&utm_medium=meilisearch-php). Get started with a 14-day free trial! No credit card required.
 
 ## 🔧 Installation
 
@@ -71,19 +66,9 @@ composer require meilisearch/meilisearch-php symfony/http-client nyholm/psr7:^1.
 
 ### Run Meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a Meilisearch instance](https://www.meilisearch.com/docs/learn/getting_started/installation).
+⚡️ **Launch, scale, and streamline in minutes with Meilisearch Cloud**—no maintenance, no commitment, cancel anytime. [Try it free now](https://cloud.meilisearch.com/login?utm_campaign=oss&utm_source=github&utm_medium=meilisearch-php).
 
-For example, using the `curl` command in your [Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
-
-```sh
-#Install Meilisearch
-curl -L https://install.meilisearch.com | sh
-
-# Launch Meilisearch
-./meilisearch --master-key=masterKey
-```
-
-NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
+🪨  Prefer to self-host? [Download and deploy](https://www.meilisearch.com/docs/learn/self_hosted/getting_started_with_self_hosted_meilisearch?utm_campaign=oss&utm_source=github&utm_medium=meilisearch-php) our fast, open-source search engine on your own infrastructure.
 
 ## 🚀 Getting started
 
