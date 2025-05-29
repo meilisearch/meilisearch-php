@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
+use Meilisearch\Client;
 use Meilisearch\Contracts\FederationOptions;
 use Meilisearch\Contracts\MultiSearchFederation;
 use Meilisearch\Contracts\SearchQuery;
@@ -158,5 +163,28 @@ final class MultiSearchTest extends TestCase
         self::assertArrayHasKey('query', $response['results'][1]);
         self::assertCount(1, $response['results'][1]['hits']);
         self::assertSame('fantasy', $response['results'][1]['hits'][0]['genre']);
+    }
+
+    public function testMultiSearchFederationCastingToObject(): void
+    {
+        $historyContainer = [];
+        $handlerStack = HandlerStack::create(new MockHandler([
+            new Response(200, ['content-type' => 'application/json'], json_encode(['results' => []], JSON_THROW_ON_ERROR)),
+        ]));
+        $handlerStack->push(Middleware::history($historyContainer));
+
+        $client = new Client('http://meilisearch', 'apikey', new \GuzzleHttp\Client(['handler' => $handlerStack]));
+        $client->multiSearch([
+            (new SearchQuery())->setIndexUid('first'),
+            (new SearchQuery())->setIndexUid('second'),
+        ],
+            new MultiSearchFederation()
+        );
+
+        self::assertCount(1, $historyContainer);
+
+        $request = $historyContainer[0]['request'];
+
+        self::assertSame('{"queries":[{"indexUid":"first"},{"indexUid":"second"}],"federation":{}}', $request->getBody()->getContents());
     }
 }
