@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 use Meilisearch\Exceptions\ApiException;
-use Meilisearch\Exceptions\JsonDecodingException;
-use Meilisearch\Exceptions\JsonEncodingException;
 
 interface Http
 {

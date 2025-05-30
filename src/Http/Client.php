@@ -10,8 +10,6 @@ use Meilisearch\Contracts\Http;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\CommunicationException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
-use Meilisearch\Exceptions\JsonDecodingException;
-use Meilisearch\Exceptions\JsonEncodingException;
 use Meilisearch\Http\Serialize\Json;
 use Meilisearch\Meilisearch;
 use Psr\Http\Client\ClientExceptionInterface;

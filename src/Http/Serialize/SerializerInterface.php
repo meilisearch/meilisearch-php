@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Meilisearch\Http\Serialize;
 
-use Meilisearch\Exceptions\JsonDecodingException;
-use Meilisearch\Exceptions\JsonEncodingException;
-
 interface SerializerInterface
 {
     /**

@@ -10,9 +10,9 @@ use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
-use Meilisearch\Exceptions\JsonEncodingException;
 use Meilisearch\Http\Client;
 use Psr\Http\Message\ResponseInterface;
+use JsonException;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase
@@ -153,8 +153,8 @@ final class DocumentsTest extends TestCase
 
     public function testCannotAddDocumentWhenJsonEncodingFails(): void
     {
-        $this->expectException(JsonEncodingException::class);
-        $this->expectExceptionMessage('Encoding payload to json failed: "Malformed UTF-8 characters, possibly incorrectly encoded".');
+        $this->expectException(JsonException::class);
+        $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         $documents = ["\xB1\x31"];
 
