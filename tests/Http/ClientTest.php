@@ -16,7 +16,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
-use JsonException;
 
 class ClientTest extends TestCase
 {
@@ -56,7 +55,7 @@ class ClientTest extends TestCase
     {
         $client = new Client('https://localhost');
 
-        $this->expectException(JsonException::class);
+        $this->expectException(\JsonException::class);
         $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         $client->post('/', "{'Bad JSON':\xB1\x31}");
@@ -71,7 +70,7 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(JsonException::class);
+        $this->expectException(\JsonException::class);
         $this->expectExceptionMessage('Syntax error');
 
         $client->post('/', '');
@@ -103,7 +102,7 @@ class ClientTest extends TestCase
     {
         $client = new Client('https://localhost');
 
-        $this->expectException(JsonException::class);
+        $this->expectException(\JsonException::class);
         $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         $client->put('/', "{'Bad JSON':\xB1\x31}");
@@ -118,7 +117,7 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(JsonException::class);
+        $this->expectException(\JsonException::class);
         $this->expectExceptionMessage('Syntax error');
 
         $client->put('/', '');
@@ -150,7 +149,7 @@ class ClientTest extends TestCase
     {
         $client = new Client('https://localhost');
 
-        $this->expectException(JsonException::class);
+        $this->expectException(\JsonException::class);
         $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         $client->patch('/', "{'Bad JSON':\xB1\x31}");
@@ -165,7 +164,7 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(JsonException::class);
+        $this->expectException(\JsonException::class);
         $this->expectExceptionMessage('Syntax error');
 
         $client->put('/', '');
