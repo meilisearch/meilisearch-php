@@ -6,8 +6,6 @@ namespace Tests\Http;
 
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
-use Meilisearch\Exceptions\JsonDecodingException;
-use Meilisearch\Exceptions\JsonEncodingException;
 use Meilisearch\Http\Client;
 use Meilisearch\Meilisearch;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -57,8 +55,8 @@ class ClientTest extends TestCase
     {
         $client = new Client('https://localhost');
 
-        $this->expectException(JsonEncodingException::class);
-        $this->expectExceptionMessage('Encoding payload to json failed: "Malformed UTF-8 characters, possibly incorrectly encoded".');
+        $this->expectException(\JsonException::class);
+        $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         $client->post('/', "{'Bad JSON':\xB1\x31}");
     }
@@ -72,8 +70,8 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(JsonDecodingException::class);
-        $this->expectExceptionMessage('Decoding payload to json failed: "Syntax error"');
+        $this->expectException(\JsonException::class);
+        $this->expectExceptionMessage('Syntax error');
 
         $client->post('/', '');
     }
@@ -104,8 +102,8 @@ class ClientTest extends TestCase
     {
         $client = new Client('https://localhost');
 
-        $this->expectException(JsonEncodingException::class);
-        $this->expectExceptionMessage('Encoding payload to json failed: "Malformed UTF-8 characters, possibly incorrectly encoded".');
+        $this->expectException(\JsonException::class);
+        $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         $client->put('/', "{'Bad JSON':\xB1\x31}");
     }
@@ -119,8 +117,8 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(JsonDecodingException::class);
-        $this->expectExceptionMessage('Decoding payload to json failed: "Syntax error"');
+        $this->expectException(\JsonException::class);
+        $this->expectExceptionMessage('Syntax error');
 
         $client->put('/', '');
     }
@@ -151,8 +149,8 @@ class ClientTest extends TestCase
     {
         $client = new Client('https://localhost');
 
-        $this->expectException(JsonEncodingException::class);
-        $this->expectExceptionMessage('Encoding payload to json failed: "Malformed UTF-8 characters, possibly incorrectly encoded".');
+        $this->expectException(\JsonException::class);
+        $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
 
         $client->patch('/', "{'Bad JSON':\xB1\x31}");
     }
@@ -166,8 +164,8 @@ class ClientTest extends TestCase
 
         $client = new Client('https://localhost', null, $httpClient);
 
-        $this->expectException(JsonDecodingException::class);
-        $this->expectExceptionMessage('Decoding payload to json failed: "Syntax error"');
+        $this->expectException(\JsonException::class);
+        $this->expectExceptionMessage('Syntax error');
 
         $client->put('/', '');
     }

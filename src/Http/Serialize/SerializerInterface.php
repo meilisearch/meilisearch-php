@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Meilisearch\Http\Serialize;
 
-use Meilisearch\Exceptions\JsonDecodingException;
-use Meilisearch\Exceptions\JsonEncodingException;
-
 interface SerializerInterface
 {
     /**
@@ -16,7 +13,7 @@ interface SerializerInterface
      *
      * @return string|bool
      *
-     * @throws JsonEncodingException
+     * @throws \JsonException
      */
     public function serialize($data);
 
@@ -25,7 +22,7 @@ interface SerializerInterface
      *
      * @return string|int|float|bool|array<mixed>|null
      *
-     * @throws JsonDecodingException
+     * @throws \JsonException
      */
     public function unserialize(string $string);
 }
