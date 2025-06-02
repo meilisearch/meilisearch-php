@@ -13,6 +13,6 @@ class Json implements SerializerInterface
 
     public function unserialize(string $string)
     {
-        return json_decode($string, true, 512, JSON_THROW_ON_ERROR);
+        return json_decode($string, true, 512, \JSON_BIGINT_AS_STRING | \JSON_THROW_ON_ERROR);
     }
 }
