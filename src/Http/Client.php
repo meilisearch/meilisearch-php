@@ -260,10 +260,6 @@ class Client implements Http
      */
     private function isJSONResponse(array $headerValues): bool
     {
-        $filteredHeaders = array_filter($headerValues, static function (string $headerValue) {
-            return false !== strpos($headerValue, 'application/json');
-        });
-
-        return \count($filteredHeaders) > 0;
+        return [] !== array_filter($headerValues, static fn (string $v) => str_contains($v, 'application/json'));
     }
 }
