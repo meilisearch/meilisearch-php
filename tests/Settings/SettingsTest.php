@@ -85,14 +85,13 @@ final class SettingsTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updateSettings([
+        $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
             'facetSearch' => false,
             'prefixSearch' => 'disabled',
-        ]);
-        $index->waitForTask($task->getTaskUid());
+        ])->wait();
 
         $settings = $index->getSettings();
 
@@ -129,18 +128,16 @@ final class SettingsTest extends TestCase
 
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updateSettings([
+        $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
             'typoTolerance' => $new_typo_tolerance,
-        ]);
-        $index->waitForTask($task->getTaskUid());
+        ])->wait();
 
-        $task = $index->updateSettings([
+        $index->updateSettings([
             'searchableAttributes' => ['title'],
-        ]);
-        $index->waitForTask($task->getTaskUid());
+        ])->wait();
 
         $settings = $index->getSettings();
 
@@ -163,15 +160,13 @@ final class SettingsTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updateSettings([
+        $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
-        ]);
-        $index->waitForTask($task->getTaskUid());
+        ])->wait();
 
-        $task = $index->resetSettings();
-        $index->waitForTask($task->getTaskUid());
+        $index->resetSettings()->wait();
 
         $settings = $index->getSettings();
 
