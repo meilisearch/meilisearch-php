@@ -22,6 +22,8 @@ use Meilisearch\Search\FacetSearchResult;
 use Meilisearch\Search\SearchResult;
 use Meilisearch\Search\SimilarDocumentsSearchResult;
 
+use function Meilisearch\partial;
+
 class Indexes extends Endpoint
 {
     use HandlesDocuments;
@@ -77,7 +79,7 @@ class Indexes extends Endpoint
     {
         $options['uid'] = $uid;
 
-        return Task::fromArray($this->http->post(self::PATH, $options));
+        return Task::fromArray($this->http->post(self::PATH, $options), partial(\Closure::fromCallable([Tasks::class, 'waitTask']), $this->http));
     }
 
     public function all(?IndexesQuery $options = null): IndexesResults
@@ -139,7 +141,7 @@ class Indexes extends Endpoint
 
     public function update(array $body): Task
     {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid, $body));
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid, $body), partial(Tasks::waitTask(...), $this->http));
     }
 
     public function delete(): Task
@@ -147,7 +149,7 @@ class Indexes extends Endpoint
         $response = $this->http->delete(self::PATH.'/'.$this->uid);
         \assert(null !== $response);
 
-        return Task::fromArray($response);
+        return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
     }
 
     /**
@@ -155,14 +157,14 @@ class Indexes extends Endpoint
      */
     public function swapIndexes(array $indexes): Task
     {
-        return Task::fromArray($this->http->post('/swap-indexes', $indexes));
+        return Task::fromArray($this->http->post('/swap-indexes', $indexes), partial(Tasks::waitTask(...), $this->http));
     }
 
     // Tasks
 
     public function getTask(int $uid): Task
     {
-        return Task::fromArray($this->http->get('/tasks/'.$uid));
+        return Task::fromArray($this->http->get('/tasks/'.$uid), partial(Tasks::waitTask(...), $this->http));
     }
 
     public function getTasks(?TasksQuery $options = null): TasksResults
@@ -250,12 +252,12 @@ class Indexes extends Endpoint
 
     public function updateSettings($settings): Task
     {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings));
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings), partial(Tasks::waitTask(...), $this->http));
     }
 
     public function resetSettings(): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings'));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings'), partial(Tasks::waitTask(...), $this->http));
     }
 
     /**
