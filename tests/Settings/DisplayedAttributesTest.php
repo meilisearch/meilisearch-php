@@ -25,9 +25,7 @@ final class DisplayedAttributesTest extends TestCase
         $newAttributes = ['title'];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updateDisplayedAttributes($newAttributes);
-
-        $index->waitForTask($task->getTaskUid());
+        $index->updateDisplayedAttributes($newAttributes)->wait();
 
         $displayedAttributes = $index->getDisplayedAttributes();
 
@@ -39,12 +37,8 @@ final class DisplayedAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
-        $task = $index->updateDisplayedAttributes($newAttributes);
-        $index->waitForTask($task->getTaskUid());
-
-        $task = $index->resetDisplayedAttributes();
-
-        $index->waitForTask($task->getTaskUid());
+        $index->updateDisplayedAttributes($newAttributes);
+        $index->resetDisplayedAttributes()->wait();
 
         $displayedAttributes = $index->getDisplayedAttributes();
         self::assertSame(['*'], $displayedAttributes);

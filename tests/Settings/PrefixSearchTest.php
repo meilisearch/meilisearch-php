@@ -20,9 +20,7 @@ final class PrefixSearchTest extends TestCase
     public function testUpdatePrefixSearch(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
-
-        $task = $index->updatePrefixSearch('disabled');
-        $index->waitForTask($task->getTaskUid());
+        $index->updatePrefixSearch('disabled')->wait();
 
         self::assertSame('disabled', $index->getPrefixSearch());
     }
@@ -31,11 +29,8 @@ final class PrefixSearchTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updatePrefixSearch('disabled');
-        $index->waitForTask($task->getTaskUid());
-
-        $task = $index->resetPrefixSearch();
-        $index->waitForTask($task->getTaskUid());
+        $index->updatePrefixSearch('disabled')->wait();
+        $index->resetPrefixSearch()->wait();
 
         self::assertSame('indexingTime', $index->getPrefixSearch());
     }

@@ -14,6 +14,7 @@ final class ProximityPrecisionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -26,19 +27,15 @@ final class ProximityPrecisionTest extends TestCase
 
     public function testUpdateProximityPrecision(): void
     {
-        $task = $this->index->updateProximityPrecision('byAttribute');
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateProximityPrecision('byAttribute')->wait();
 
         self::assertSame('byAttribute', $this->index->getProximityPrecision());
     }
 
     public function testResetProximityPrecision(): void
     {
-        $task = $this->index->updateProximityPrecision('byAttribute');
-        $this->index->waitForTask($task->getTaskUid());
-
-        $task = $this->index->resetProximityPrecision();
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateProximityPrecision('byAttribute')->wait();
+        $this->index->resetProximityPrecision()->wait();
 
         self::assertSame('byWord', $this->index->getProximityPrecision());
     }

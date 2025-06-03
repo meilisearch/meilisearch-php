@@ -16,7 +16,8 @@ final class MockTask
         ?string $indexUid = null,
         TaskStatus $status = TaskStatus::Enqueued,
         \DateTimeImmutable $enqueuedAt = new \DateTimeImmutable('2025-04-09T07:09:13.867326401Z'),
+        ?\Closure $await = null,
     ): Task {
-        return new Task($taskUid, $indexUid, $status, $type, $enqueuedAt);
+        return new Task($taskUid, $indexUid, $status, $type, $enqueuedAt, await: $await);
     }
 }

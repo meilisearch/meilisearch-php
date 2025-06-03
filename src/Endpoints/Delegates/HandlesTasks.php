@@ -10,7 +10,6 @@ use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Endpoints\Tasks;
-use Meilisearch\Exceptions\TimeOutException;
 
 trait HandlesTasks
 {
@@ -38,23 +37,5 @@ trait HandlesTasks
     public function cancelTasks(?CancelTasksQuery $options = null): Task
     {
         return $this->tasks->cancelTasks($options);
-    }
-
-    /**
-     * @throws TimeOutException
-     */
-    public function waitForTask(int $uid, int $timeoutInMs = 5000, int $intervalInMs = 50): Task
-    {
-        return $this->tasks->waitTask($uid, $timeoutInMs, $intervalInMs);
-    }
-
-    /**
-     * @param array<int> $uids
-     *
-     * @throws TimeOutException
-     */
-    public function waitForTasks(array $uids, int $timeoutInMs = 5000, int $intervalInMs = 50): array
-    {
-        return $this->tasks->waitTasks($uids, $timeoutInMs, $intervalInMs);
     }
 }

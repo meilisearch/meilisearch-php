@@ -34,16 +34,15 @@ final class SeparatorTokensTest extends TestCase
             '|',
         ];
 
-        $task = $this->index->updateSeparatorTokens($newSeparatorTokens);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateSeparatorTokens($newSeparatorTokens)->wait();
 
         self::assertSame($newSeparatorTokens, $this->index->getSeparatorTokens());
     }
 
     public function testResetSeparatorTokens(): void
     {
-        $task = $this->index->resetSeparatorTokens();
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateSeparatorTokens(['/'])->wait();
+        $this->index->resetSeparatorTokens()->wait();
 
         self::assertSame(self::DEFAULT_SEPARATOR_TOKENS, $this->index->getSeparatorTokens());
     }

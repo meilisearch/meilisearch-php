@@ -28,8 +28,7 @@ final class SynonymsTest extends TestCase
             'hp' => ['harry potter'],
         ];
 
-        $task = $this->index->updateSynonyms($newSynonyms);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateSynonyms($newSynonyms)->wait();
 
         self::assertSame($newSynonyms, $this->index->getSynonyms());
     }
@@ -38,21 +37,15 @@ final class SynonymsTest extends TestCase
     {
         $newSynonyms = [];
 
-        $task = $this->index->updateSynonyms($newSynonyms);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateSynonyms($newSynonyms)->wait();
 
         self::assertSame($newSynonyms, $this->index->getSynonyms());
     }
 
     public function testResetSynonyms(): void
     {
-        $task = $this->index->updateSynonyms([
-            'hp' => ['harry potter'],
-        ]);
-        $this->index->waitForTask($task->getTaskUid());
-        $task = $this->index->resetSynonyms();
-
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateSynonyms(['hp' => ['harry potter']])->wait();
+        $this->index->resetSynonyms()->wait();
 
         self::assertEmpty($this->index->getSynonyms());
     }

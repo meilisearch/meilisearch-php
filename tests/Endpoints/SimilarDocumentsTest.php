@@ -22,8 +22,7 @@ final class SimilarDocumentsTest extends TestCase
 
     public function testBasicSearchWithSimilarDocuments(): void
     {
-        $task = $this->index->updateSettings(['embedders' => ['manual' => ['source' => 'userProvided', 'dimensions' => 3]]]);
-        $this->client->waitForTask($task->getTaskUid());
+        $this->index->updateSettings(['embedders' => ['manual' => ['source' => 'userProvided', 'dimensions' => 3]]])->wait();
 
         $response = $this->index->search('room');
 

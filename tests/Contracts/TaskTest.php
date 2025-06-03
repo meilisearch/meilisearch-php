@@ -9,7 +9,10 @@ use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
 use Meilisearch\Contracts\TaskError;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
+use Meilisearch\Exceptions\LogicException;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
+use Tests\MockTask;
 
 final class TaskTest extends TestCase
 {
@@ -76,5 +79,37 @@ final class TaskTest extends TestCase
         self::assertNull($task->getBatchUid());
         self::assertNull($task->getDetails());
         self::assertNull($task->getError());
+    }
+
+    public function testWait(): void
+    {
+        $await = static function () {
+            return MockTask::create(TaskType::IndexCreation, status: TaskStatus::Succeeded);
+        };
+        $task = MockTask::create(TaskType::IndexCreation, await: $await(...));
+        $completedTask = $task->wait();
+
+        self::assertNotSame($task, $completedTask);
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+    }
+
+    #[TestWith([TaskStatus::Succeeded])]
+    #[TestWith([TaskStatus::Failed])]
+    #[TestWith([TaskStatus::Canceled])]
+    public function testWaitReturnsImmediatelyIfTaskIsAlreadyFinished(TaskStatus $status): void
+    {
+        $task = MockTask::create(TaskType::IndexCreation, status: $status);
+
+        self::assertSame($task, $task->wait());
+    }
+
+    public function testWaitThrowsWithoutFunction(): void
+    {
+        $task = MockTask::create(TaskType::IndexCreation);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Cannot wait for task because wait function is not provided.');
+
+        $task->wait();
     }
 }

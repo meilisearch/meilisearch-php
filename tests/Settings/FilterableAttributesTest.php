@@ -20,8 +20,7 @@ final class FilterableAttributesTest extends TestCase
         $expectedAttributes = ['title'];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updateFilterableAttributes($expectedAttributes);
-        $index->waitForTask($task->getTaskUid());
+        $index->updateFilterableAttributes($expectedAttributes)->wait();
 
         self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
@@ -31,11 +30,8 @@ final class FilterableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
-        $task = $index->updateFilterableAttributes($newAttributes);
-        $index->waitForTask($task->getTaskUid());
-
-        $task = $index->resetFilterableAttributes();
-        $index->waitForTask($task->getTaskUid());
+        $index->updateFilterableAttributes($newAttributes)->wait();
+        $index->resetFilterableAttributes()->wait();
 
         self::assertEmpty($index->getFilterableAttributes());
     }
@@ -58,8 +54,7 @@ final class FilterableAttributesTest extends TestCase
             ],
         ];
 
-        $task = $index->updateFilterableAttributes($expectedAttributes);
-        $index->waitForTask($task->getTaskUid());
+        $index->updateFilterableAttributes($expectedAttributes)->wait();
 
         self::assertSame($expectedAttributes, $index->getFilterableAttributes());
     }
@@ -68,13 +63,11 @@ final class FilterableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updateFilterableAttributes([
+        $index->updateFilterableAttributes([
             [
                 'attributePatterns' => ['_geo'],
             ],
-        ]);
-
-        $index->waitForTask($task->getTaskUid());
+        ])->wait();
 
         self::assertSame([
             [

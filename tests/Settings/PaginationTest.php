@@ -18,6 +18,7 @@ final class PaginationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -30,21 +31,15 @@ final class PaginationTest extends TestCase
 
     public function testUpdatePagination(): void
     {
-        $task = $this->index->updatePagination(['maxTotalHits' => 100]);
-
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updatePagination(['maxTotalHits' => 100])->wait();
 
         self::assertSame(['maxTotalHits' => 100], $this->index->getPagination());
     }
 
     public function testResetPagination(): void
     {
-        $task = $this->index->updatePagination(['maxTotalHits' => 100]);
-
-        $this->index->waitForTask($task->getTaskUid());
-
-        $task = $this->index->resetPagination();
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updatePagination(['maxTotalHits' => 100])->wait();
+        $this->index->resetPagination()->wait();
 
         self::assertSame(self::DEFAULT_PAGINATION, $this->index->getPagination());
     }

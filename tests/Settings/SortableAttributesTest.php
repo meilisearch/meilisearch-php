@@ -20,8 +20,7 @@ final class SortableAttributesTest extends TestCase
         $newAttributes = ['title'];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $task = $index->updateSortableAttributes($newAttributes);
-        $index->waitForTask($task->getTaskUid());
+        $index->updateSortableAttributes($newAttributes)->wait();
 
         self::assertSame($newAttributes, $index->getSortableAttributes());
     }
@@ -31,11 +30,8 @@ final class SortableAttributesTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $newAttributes = ['title'];
 
-        $task = $index->updateSortableAttributes($newAttributes);
-        $index->waitForTask($task->getTaskUid());
-
-        $task = $index->resetSortableAttributes();
-        $index->waitForTask($task->getTaskUid());
+        $index->updateSortableAttributes($newAttributes)->wait();
+        $index->resetSortableAttributes()->wait();
 
         self::assertEmpty($index->getSortableAttributes());
     }
