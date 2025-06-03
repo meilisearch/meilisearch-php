@@ -47,7 +47,8 @@ use Meilisearch\Contracts\TaskDetails;
  *         enabled: bool,
  *         minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
  *         disableOnWords: list<string>,
- *         disableOnAttributes: list<string>
+ *         disableOnAttributes: list<string>,
+ *         disableOnNumbers: bool
  *     }
  * }>
  */
@@ -91,7 +92,8 @@ final class SettingsUpdateDetails implements TaskDetails
      *     enabled: bool,
      *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
      *     disableOnWords: list<string>,
-     *     disableOnAttributes: list<string>
+     *     disableOnAttributes: list<string>,
+     *     disableOnNumbers: bool
      * }|null $typoTolerance
      */
     public function __construct(
