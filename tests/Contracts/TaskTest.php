@@ -68,7 +68,7 @@ final class TaskTest extends TestCase
         self::assertSame('documents', $task->getIndexUid());
         self::assertSame(TaskStatus::Enqueued, $task->getStatus());
         self::assertSame(TaskType::IndexCreation, $task->getType());
-        self::assertEquals(new \DateTimeImmutable('+2025-04-09T10:28:12.236789+0000'), $task->getEnqueuedAt());
+        self::assertEquals(new \DateTimeImmutable('2025-04-09T10:28:12.236789+0000'), $task->getEnqueuedAt());
         self::assertNull($task->getStartedAt());
         self::assertNull($task->getFinishedAt());
         self::assertNull($task->getDuration());
