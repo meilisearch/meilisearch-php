@@ -116,12 +116,10 @@ final class TasksTest extends TestCase
     {
         $date = new \DateTime('yesterday');
         $query = http_build_query(['afterEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
-        $task = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date));
+        $task = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date))->wait();
 
-        $cancelTask = $this->client->waitForTask($task->getTaskUid());
-        self::assertSame(TaskStatus::Succeeded, $cancelTask->getStatus());
-
-        self::assertInstanceOf(TaskCancelationDetails::class, $details = $cancelTask->getDetails());
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+        self::assertInstanceOf(TaskCancelationDetails::class, $details = $task->getDetails());
         self::assertSame('?'.$query, $details->originalFilter);
     }
 
@@ -154,8 +152,7 @@ final class TasksTest extends TestCase
     private function seedIndex(): array
     {
         $task = $this->index->updateDocuments(self::DOCUMENTS);
-        $completedTask = $this->client->waitForTask($task->getTaskUid());
 
-        return [$task, $completedTask];
+        return [$task, $task->wait()];
     }
 }

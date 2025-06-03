@@ -15,13 +15,15 @@ use Meilisearch\Contracts\TaskDetails\IndexUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\SettingsUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\TaskCancelationDetails;
 use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
+use Meilisearch\Exceptions\LogicException;
 
 final class Task
 {
     /**
-     * @param non-negative-int      $taskUid
-     * @param non-empty-string|null $indexUid
-     * @param non-empty-string|null $duration
+     * @param non-negative-int                   $taskUid
+     * @param non-empty-string|null              $indexUid
+     * @param non-empty-string|null              $duration
+     * @param \Closure(int, int, int): Task|null $await
      */
     public function __construct(
         private readonly int $taskUid,
@@ -36,6 +38,7 @@ final class Task
         private readonly ?int $batchUid = null,
         private readonly ?TaskDetails $details = null,
         private readonly ?TaskError $error = null,
+        private readonly ?\Closure $await = null,
     ) {
     }
 
@@ -113,6 +116,19 @@ final class Task
         return TaskStatus::Enqueued !== $this->status && TaskStatus::Processing !== $this->status;
     }
 
+    public function wait(int $timeoutInMs = 5000, int $intervalInMs = 50): Task
+    {
+        if ($this->isFinished()) {
+            return $this;
+        }
+
+        if (null !== $this->await) {
+            return ($this->await)($this->taskUid, $timeoutInMs, $intervalInMs);
+        }
+
+        throw new LogicException(\sprintf('Cannot wait for task because wait function is not provided.'));
+    }
+
     /**
      * @param array{
      *     taskUid?: int,
@@ -129,8 +145,9 @@ final class Task
      *     details?: array<mixed>|null,
      *     error?: array<mixed>|null
      * } $data
+     * @param \Closure(int, int, int): Task|null $await
      */
-    public static function fromArray(array $data): Task
+    public static function fromArray(array $data, ?\Closure $await = null): Task
     {
         $details = $data['details'] ?? null;
 
@@ -162,6 +179,7 @@ final class Task
                 TaskType::SnapshotCreation => null,
             },
             \array_key_exists('error', $data) && null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
+            $await,
         );
     }
 }

@@ -42,8 +42,7 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithSearchRulesOnly(): void
     {
-        $task = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
-        $this->client->waitForTask($task->getTaskUid());
+        $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS)->wait();
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), ['*']);
         $tokenClient = new Client($this->host, $token);
@@ -55,8 +54,7 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithSearchRulesAsObject(): void
     {
-        $task = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
-        $this->client->waitForTask($task->getTaskUid());
+        $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS)->wait();
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), (object) ['*' => (object) []]);
         $tokenClient = new Client($this->host, $token);
@@ -68,12 +66,10 @@ final class TenantTokenTest extends TestCase
 
     public function testGenerateTenantTokenWithFilter(): void
     {
-        $task = $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS);
-        $this->client->waitForTask($task->getTaskUid());
-        $taskFromFilter = $this->client->index('tenantToken')->updateFilterableAttributes([
+        $this->client->index('tenantToken')->addDocuments(self::DOCUMENTS)->wait();
+        $this->client->index('tenantToken')->updateFilterableAttributes([
             'id',
-        ]);
-        $this->client->waitForTask($taskFromFilter->getTaskUid());
+        ])->wait();
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), (object) ['tenantToken' => (object) ['filter' => 'id > 10']]);
         $tokenClient = new Client($this->host, $token);

@@ -14,9 +14,9 @@ final class SearchNestedFieldsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName('nestedIndex'));
-        $task = $this->index->updateDocuments(self::NESTED_DOCUMENTS);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateDocuments(self::NESTED_DOCUMENTS)->wait();
     }
 
     public function testBasicSearchOnNestedFields(): void
@@ -65,10 +65,9 @@ final class SearchNestedFieldsTest extends TestCase
         self::assertSame(1, $response['hits'][0]['id']);
     }
 
-    public function testSearchOnNestedFieldWithSearchableAtributes(): void
+    public function testSearchOnNestedFieldWithSearchableAttributes(): void
     {
-        $task = $this->index->updateSearchableAttributes(['title', 'info.comment']);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateSearchableAttributes(['title', 'info.comment'])->wait();
 
         $response = $this->index->search('An awesome');
 
@@ -84,10 +83,9 @@ final class SearchNestedFieldsTest extends TestCase
         self::assertSame(5, $response['hits'][0]['id']);
     }
 
-    public function testSearchOnNestedFieldWithSortableAtributes(): void
+    public function testSearchOnNestedFieldWithSortableAttributes(): void
     {
-        $task = $this->index->updateSortableAttributes(['info.reviewNb']);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateSortableAttributes(['info.reviewNb'])->wait();
 
         $response = $this->index->search('An awesome');
 
@@ -105,13 +103,12 @@ final class SearchNestedFieldsTest extends TestCase
         self::assertSame(5, $response['hits'][0]['id']);
     }
 
-    public function testSearchOnNestedFieldWithSortableAtributesAndSearchableAttributes(): void
+    public function testSearchOnNestedFieldWithSortableAttributesAndSearchableAttributes(): void
     {
-        $task = $this->index->updateSettings([
+        $this->index->updateSettings([
             'searchableAttributes' => ['title', 'info.comment'],
             'sortableAttributes' => ['info.reviewNb'],
-        ]);
-        $this->index->waitForTask($task->getTaskUid());
+        ])->wait();
 
         $response = $this->index->search('An awesome');
 

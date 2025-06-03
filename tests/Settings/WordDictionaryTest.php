@@ -31,16 +31,14 @@ final class WordDictionaryTest extends TestCase
             'J. R. R.',
         ];
 
-        $task = $this->index->updateDictionary($newWordDictionary);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateDictionary($newWordDictionary)->wait();
 
         self::assertSame($newWordDictionary, $this->index->getDictionary());
     }
 
     public function testResetWordDictionary(): void
     {
-        $task = $this->index->resetDictionary();
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->resetDictionary()->wait();
 
         self::assertSame(self::DEFAULT_WORD_DICTIONARY, $this->index->getDictionary());
     }

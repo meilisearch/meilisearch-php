@@ -41,7 +41,10 @@
         "psr-4": {
             "MeiliSearch\\": "src/",
             "Meilisearch\\": "src/"
-        }
+        },
+        "files": [
+          "src/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

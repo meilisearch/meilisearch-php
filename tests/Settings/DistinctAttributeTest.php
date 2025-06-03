@@ -14,6 +14,7 @@ final class DistinctAttributeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -28,8 +29,7 @@ final class DistinctAttributeTest extends TestCase
     {
         $distinctAttribute = 'description';
 
-        $task = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateDistinctAttribute($distinctAttribute)->wait();
 
         self::assertSame($distinctAttribute, $this->index->getDistinctAttribute());
     }
@@ -38,11 +38,8 @@ final class DistinctAttributeTest extends TestCase
     {
         $distinctAttribute = 'description';
 
-        $task = $this->index->updateDistinctAttribute($distinctAttribute);
-        $this->index->waitForTask($task->getTaskUid());
-
-        $task = $this->index->resetDistinctAttribute();
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateDistinctAttribute($distinctAttribute)->wait();
+        $this->index->resetDistinctAttribute()->wait();
 
         self::assertNull($this->index->getDistinctAttribute());
     }

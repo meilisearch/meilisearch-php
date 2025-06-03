@@ -18,6 +18,7 @@ final class EmbeddersTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -32,17 +33,15 @@ final class EmbeddersTest extends TestCase
     {
         $newEmbedders = ['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]];
 
-        $task = $this->index->updateEmbedders($newEmbedders);
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateEmbedders($newEmbedders)->wait();
 
         self::assertSame($newEmbedders, $this->index->getEmbedders());
     }
 
     public function testResetEmbedders(): void
     {
-        $task = $this->index->resetEmbedders();
-
-        $this->index->waitForTask($task->getTaskUid());
+        $this->index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]])->wait();
+        $this->index->resetEmbedders()->wait();
 
         self::assertSame(self::DEFAULT_EMBEDDER, $this->index->getEmbedders());
     }
@@ -55,15 +54,13 @@ final class EmbeddersTest extends TestCase
             'pooling' => 'useModel',
         ];
 
-        $task = $this->index->updateEmbedders([
+        $this->index->updateEmbedders([
             'embedder_name' => [
                 'source' => 'huggingFace',
                 'model' => 'sentence-transformers/all-MiniLM-L6-v2',
                 'pooling' => 'useModel',
             ],
-        ]);
-
-        $this->index->waitForTask($task->getTaskUid());
+        ])->wait();
 
         $embedders = $this->index->getEmbedders();
 
