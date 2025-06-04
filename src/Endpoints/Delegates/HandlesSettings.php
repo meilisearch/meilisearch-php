@@ -283,7 +283,8 @@ trait HandlesSettings
      *     enabled: bool,
      *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
      *     disableOnWords: list<non-empty-string>,
-     *     disableOnAttributes: list<non-empty-string>
+     *     disableOnAttributes: list<non-empty-string>,
+     *     disableOnNumbers: bool
      * }
      */
     public function getTypoTolerance(): array
@@ -297,7 +298,8 @@ trait HandlesSettings
      *     enabled: bool,
      *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
      *     disableOnWords: list<non-empty-string>,
-     *     disableOnAttributes: list<non-empty-string>
+     *     disableOnAttributes: list<non-empty-string>,
+     *     disableOnNumbers: bool
      * } $typoTolerance
      */
     public function updateTypoTolerance(array $typoTolerance): array
