@@ -25,6 +25,7 @@ final class SettingsTest extends TestCase
         ],
         'disableOnWords' => [],
         'disableOnAttributes' => [],
+        'disableOnNumbers' => false,
     ];
 
     public const DEFAULT_SEARCHABLE_ATTRIBUTES = ['*'];
@@ -123,6 +124,7 @@ final class SettingsTest extends TestCase
             ],
             'disableOnWords' => [],
             'disableOnAttributes' => [],
+            'disableOnNumbers' => false,
         ];
 
         $index = $this->createEmptyIndex($this->safeIndexName());
