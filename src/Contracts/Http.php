@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 use Meilisearch\Exceptions\ApiException;
-use Meilisearch\Exceptions\JsonDecodingException;
-use Meilisearch\Exceptions\JsonEncodingException;
 
 interface Http
 {
     /**
      * @throws ApiException
-     * @throws JsonDecodingException
+     * @throws \JsonException
      */
     public function get(string $path, array $query = []);
 
@@ -20,8 +18,7 @@ interface Http
      * @param non-empty-string|null $contentType
      *
      * @throws ApiException
-     * @throws JsonEncodingException
-     * @throws JsonDecodingException
+     * @throws \JsonException
      */
     public function post(string $path, $body = null, array $query = [], ?string $contentType = null);
 
@@ -29,21 +26,19 @@ interface Http
      * @param non-empty-string|null $contentType
      *
      * @throws ApiException
-     * @throws JsonEncodingException
-     * @throws JsonDecodingException
+     * @throws \JsonException
      */
     public function put(string $path, $body = null, array $query = [], ?string $contentType = null);
 
     /**
      * @throws ApiException
-     * @throws JsonEncodingException
-     * @throws JsonDecodingException
+     * @throws \JsonException
      */
     public function patch(string $path, $body = null, array $query = []);
 
     /**
      * @throws ApiException
-     * @throws JsonDecodingException
+     * @throws \JsonException
      */
     public function delete(string $path, array $query = []);
 }
