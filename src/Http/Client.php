@@ -224,7 +224,7 @@ class Client implements Http
             }
         }
 
-        return $queryParams !== [] ? '?'.http_build_query($queryParams) : '';
+        return [] !== $queryParams ? '?'.http_build_query($queryParams) : '';
     }
 
     /**
