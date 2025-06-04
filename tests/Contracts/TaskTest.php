@@ -42,9 +42,9 @@ final class TaskTest extends TestCase
         self::assertSame('documents', $task->getIndexUid());
         self::assertSame(TaskStatus::Failed, $task->getStatus());
         self::assertSame(TaskType::IndexCreation, $task->getType());
-        self::assertEquals(new \DateTimeImmutable('+2025-04-09T10:28:12.236789'), $task->getEnqueuedAt());
-        self::assertEquals(new \DateTimeImmutable('+2025-04-09T10:28:12.555566+0000'), $task->getStartedAt());
-        self::assertEquals(new \DateTimeImmutable('+2025-04-09T10:28:12.666677+0000'), $task->getFinishedAt());
+        self::assertEquals(new \DateTimeImmutable('2025-04-09T10:28:12.236789'), $task->getEnqueuedAt());
+        self::assertEquals(new \DateTimeImmutable('2025-04-09T10:28:12.555566+0000'), $task->getStartedAt());
+        self::assertEquals(new \DateTimeImmutable('2025-04-09T10:28:12.666677+0000'), $task->getFinishedAt());
         self::assertSame('PT0.184408715S', $task->getDuration());
         self::assertSame(123, $task->getCanceledBy());
         self::assertSame(666, $task->getBatchUid());
