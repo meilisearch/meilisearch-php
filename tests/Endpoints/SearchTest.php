@@ -888,11 +888,25 @@ final class SearchTest extends TestCase
 
         $response = $this->index->search(null, [
             'distinct' => 'genre',
-            'filter' => ['genre = fantasy'],
         ])->toArray();
 
-        self::assertArrayHasKey('title', $response['hits'][0]);
-        self::assertCount(1, $response['hits']);
+        // Should have one document per unique genre
+        // From DOCUMENTS: romance, adventure, fantasy, plus one document without genre
+        self::assertCount(4, $response['hits']);
+
+        // Extract genres from the results
+        $genres = [];
+        foreach ($response['hits'] as $hit) {
+            $genre = $hit['genre'] ?? null;
+            self::assertNotContains($genre, $genres, 'Each genre should appear only once in distinct results');
+            $genres[] = $genre;
+        }
+
+        // Verify we have the expected unique genres
+        $expectedGenres = ['romance', 'adventure', 'fantasy', null];
+        foreach ($expectedGenres as $expectedGenre) {
+            self::assertContains($expectedGenre, $genres, "Genre '{$expectedGenre}' should be present in distinct results");
+        }
     }
 
     public function testSearchWithLocales(): void
