@@ -6,7 +6,7 @@ namespace Meilisearch\Contracts;
 
 class Data implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    protected $data = [];
+    protected array $data = [];
 
     public function __construct(array $data = [])
     {
@@ -28,14 +28,9 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
         unset($this->data[$offset]);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
-        if (isset($this->data[$offset])) {
-            return $this->data[$offset];
-        }
-
-        return null;
+        return $this->data[$offset] ?? null;
     }
 
     public function count(): int

@@ -41,10 +41,7 @@ final class RankingRulesTest extends TestCase
             'description:desc',
         ];
 
-        $promise = $this->index->updateRankingRules($newRankingRules);
-
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->updateRankingRules($newRankingRules)->wait();
 
         $rankingRules = $this->index->getRankingRules();
 
@@ -53,11 +50,9 @@ final class RankingRulesTest extends TestCase
 
     public function testResetRankingRules(): void
     {
-        $promise = $this->index->resetRankingRules();
+        $this->index->updateRankingRules(['title:asc'])->wait();
+        $this->index->resetRankingRules()->wait();
 
-        $this->assertIsValidPromise($promise);
-
-        $this->index->waitForTask($promise['taskUid']);
         $rankingRules = $this->index->getRankingRules();
 
         self::assertSame(self::DEFAULT_RANKING_RULES, $rankingRules);

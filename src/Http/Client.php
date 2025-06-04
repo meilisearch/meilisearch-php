@@ -47,7 +47,7 @@ class Client implements Http
         ?ClientInterface $httpClient = null,
         ?RequestFactoryInterface $reqFactory = null,
         array $clientAgents = [],
-        ?StreamFactoryInterface $streamFactory = null
+        ?StreamFactoryInterface $streamFactory = null,
     ) {
         $this->baseUrl = $url;
         $this->http = $httpClient ?? Psr18ClientDiscovery::find();
@@ -161,7 +161,7 @@ class Client implements Http
 
     private function buildQueryString(array $queryParams = []): string
     {
-        return \count($queryParams) > 0 ? '?'.http_build_query($queryParams) : '';
+        return [] !== $queryParams ? '?'.http_build_query($queryParams) : '';
     }
 
     /**
@@ -197,10 +197,6 @@ class Client implements Http
      */
     private function isJSONResponse(array $headerValues): bool
     {
-        $filteredHeaders = array_filter($headerValues, static function (string $headerValue) {
-            return false !== strpos($headerValue, 'application/json');
-        });
-
-        return \count($filteredHeaders) > 0;
+        return [] !== array_filter($headerValues, static fn (string $v) => str_contains($v, 'application/json'));
     }
 }

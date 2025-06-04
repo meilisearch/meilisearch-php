@@ -23,7 +23,7 @@ interface Http
      * @throws JsonEncodingException
      * @throws JsonDecodingException
      */
-    public function post(string $path, $body = null, array $query = [], ?string $contentType = null);
+    public function post(string $path, mixed $body = null, array $query = [], ?string $contentType = null);
 
     /**
      * @param non-empty-string|null $contentType
@@ -32,14 +32,14 @@ interface Http
      * @throws JsonEncodingException
      * @throws JsonDecodingException
      */
-    public function put(string $path, $body = null, array $query = [], ?string $contentType = null);
+    public function put(string $path, mixed $body = null, array $query = [], ?string $contentType = null);
 
     /**
      * @throws ApiException
      * @throws JsonEncodingException
      * @throws JsonDecodingException
      */
-    public function patch(string $path, $body = null, array $query = []);
+    public function patch(string $path, mixed $body = null, array $query = []);
 
     /**
      * @throws ApiException

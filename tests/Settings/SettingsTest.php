@@ -83,15 +83,14 @@ final class SettingsTest extends TestCase
     public function testUpdateSettings(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
-        $promise = $index->updateSettings([
+
+        $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
             'facetSearch' => false,
             'prefixSearch' => 'disabled',
-        ]);
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        ])->wait();
 
         $settings = $index->getSettings();
 
@@ -126,22 +125,17 @@ final class SettingsTest extends TestCase
         ];
 
         $index = $this->createEmptyIndex($this->safeIndexName());
-        $promise = $index->updateSettings([
+
+        $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
             'typoTolerance' => $new_typo_tolerance,
-        ]);
+        ])->wait();
 
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
-
-        $promise = $index->updateSettings([
+        $index->updateSettings([
             'searchableAttributes' => ['title'],
-        ]);
-
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        ])->wait();
 
         $settings = $index->getSettings();
 
@@ -163,18 +157,14 @@ final class SettingsTest extends TestCase
     public function testResetSettings(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
-        $promise = $index->updateSettings([
+
+        $index->updateSettings([
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
-        ]);
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        ])->wait();
 
-        $promise = $index->resetSettings();
-
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
+        $index->resetSettings()->wait();
 
         $settings = $index->getSettings();
 
