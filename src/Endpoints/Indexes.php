@@ -171,7 +171,7 @@ class Indexes extends Endpoint
     {
         $options = $options ?? new TasksQuery();
 
-        if ($options->getIndexUids() !== []) {
+        if ([] !== $options->getIndexUids()) {
             $options->setIndexUids([$this->uid, ...$options->getIndexUids()]);
         } else {
             $options->setIndexUids([$this->uid]);
