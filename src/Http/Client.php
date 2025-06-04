@@ -159,7 +159,7 @@ class Client implements Http
 
     private function buildQueryString(array $queryParams = []): string
     {
-        return $queryParams !== [] ? '?'.http_build_query($queryParams) : '';
+        return [] !== $queryParams ? '?'.http_build_query($queryParams) : '';
     }
 
     /**
