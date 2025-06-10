@@ -19,6 +19,7 @@ final class TypoToleranceTest extends TestCase
         ],
         'disableOnWords' => [],
         'disableOnAttributes' => [],
+        'disableOnNumbers' => false,
     ];
 
     protected function setUp(): void
@@ -44,6 +45,7 @@ final class TypoToleranceTest extends TestCase
             ],
             'disableOnWords' => [],
             'disableOnAttributes' => ['title'],
+            'disableOnNumbers' => true,
         ];
         $promise = $this->index->updateTypoTolerance($newTypoTolerance);
         $this->index->waitForTask($promise['taskUid']);
