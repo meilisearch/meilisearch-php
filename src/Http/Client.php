@@ -10,8 +10,6 @@ use Meilisearch\Contracts\Http;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\CommunicationException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
-use Meilisearch\Exceptions\JsonDecodingException;
-use Meilisearch\Exceptions\JsonEncodingException;
 use Meilisearch\Http\Serialize\Json;
 use Meilisearch\Meilisearch;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -83,7 +81,7 @@ class Client implements Http
      * @throws ApiException
      * @throws ClientExceptionInterface
      * @throws CommunicationException
-     * @throws JsonEncodingException
+     * @throws \JsonException
      */
     public function post(string $path, $body = null, array $query = [], ?string $contentType = null)
     {
@@ -104,7 +102,7 @@ class Client implements Http
      * @throws ApiException
      * @throws ClientExceptionInterface
      * @throws CommunicationException
-     * @throws JsonEncodingException
+     * @throws \JsonException
      */
     public function put(string $path, $body = null, array $query = [], ?string $contentType = null)
     {
@@ -167,7 +165,7 @@ class Client implements Http
     /**
      * @throws ApiException
      * @throws InvalidResponseBodyException
-     * @throws JsonDecodingException
+     * @throws \JsonException
      */
     private function parseResponse(ResponseInterface $response)
     {
