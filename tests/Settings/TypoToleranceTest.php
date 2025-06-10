@@ -19,11 +19,13 @@ final class TypoToleranceTest extends TestCase
         ],
         'disableOnWords' => [],
         'disableOnAttributes' => [],
+        'disableOnNumbers' => false,
     ];
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -44,6 +46,7 @@ final class TypoToleranceTest extends TestCase
             ],
             'disableOnWords' => [],
             'disableOnAttributes' => ['title'],
+            'disableOnNumbers' => true,
         ];
         $this->index->updateTypoTolerance($newTypoTolerance)->wait();
         $typoTolerance = $this->index->getTypoTolerance();
