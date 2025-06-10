@@ -13,11 +13,11 @@ class ApiException extends \Exception implements ExceptionInterface
     public ?string $errorCode;
     public ?string $errorType;
     public ?string $errorLink;
-    public $httpBody;
+    public mixed $httpBody;
 
     public const HINT_MESSAGE = "Hint: It might not be working because maybe you're not up to date with the Meilisearch version that `%s` call requires.";
 
-    public function __construct(ResponseInterface $response, $httpBody, $previous = null)
+    public function __construct(ResponseInterface $response, mixed $httpBody, ?\Throwable $previous = null)
     {
         $this->httpBody = $httpBody;
         $this->httpStatus = $response->getStatusCode();
@@ -29,7 +29,7 @@ class ApiException extends \Exception implements ExceptionInterface
         parent::__construct($this->message, $this->httpStatus, $previous);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $base = 'Meilisearch ApiException: Http Status: '.$this->httpStatus;
 
@@ -88,7 +88,7 @@ class ApiException extends \Exception implements ExceptionInterface
         return null;
     }
 
-    public static function rethrowWithHint(\Exception $e, string $methodName)
+    public static function rethrowWithHint(\Throwable $e, string $methodName): \Exception
     {
         return new \Exception(\sprintf(self::HINT_MESSAGE, $methodName), 0, $e);
     }

@@ -14,6 +14,7 @@ final class SearchCutoffMsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -26,23 +27,15 @@ final class SearchCutoffMsTest extends TestCase
 
     public function testUpdateSearchCutoffMs(): void
     {
-        $promise = $this->index->updateSearchCutoffMs(50);
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->updateSearchCutoffMs(50)->wait();
 
         self::assertSame(50, $this->index->getSearchCutoffMs());
     }
 
     public function testResetSearchCutoffMs(): void
     {
-        $promise = $this->index->updateSearchCutoffMs(50);
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
-
-        $promise = $this->index->resetSearchCutoffMs();
-
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->updateSearchCutoffMs(50)->wait();
+        $this->index->resetSearchCutoffMs()->wait();
 
         self::assertNull($this->index->getSearchCutoffMs());
     }
