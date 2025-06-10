@@ -6,7 +6,7 @@ namespace Meilisearch\Http\Serialize;
 
 class Json implements SerializerInterface
 {
-    public function serialize(mixed $data): string|bool
+    public function serialize(mixed $data): string
     {
         return json_encode($data, JSON_THROW_ON_ERROR);
     }
