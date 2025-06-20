@@ -88,18 +88,10 @@ abstract class TestCase extends BaseTestCase
     protected function tearDown(): void
     {
         $indexes = $this->client->getIndexes((new IndexesQuery())->setLimit(100))->getResults();
-        $tasks = [];
 
         foreach ($indexes as $index) {
-            $tasks[] = $index->delete()['taskUid'];
+            $index->delete()->wait();
         }
-
-        $this->client->waitForTasks($tasks);
-    }
-
-    public function assertIsValidPromise(array $promise): void
-    {
-        self::assertArrayHasKey('taskUid', $promise);
     }
 
     public function assertFinitePagination(array $response): void
@@ -138,10 +130,9 @@ abstract class TestCase extends BaseTestCase
 
     public function createEmptyIndex($indexName, $options = []): Indexes
     {
-        $response = $this->client->createIndex($indexName, $options);
-        $this->client->waitForTask($response['taskUid']);
+        $task = $this->client->createIndex($indexName, $options)->wait();
 
-        return $this->client->getIndex($response['indexUid']);
+        return $this->client->getIndex($task->getIndexUid());
     }
 
     public function safeIndexName(string $indexName = 'index'): string

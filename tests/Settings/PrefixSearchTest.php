@@ -20,30 +20,18 @@ final class PrefixSearchTest extends TestCase
     public function testUpdatePrefixSearch(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
+        $index->updatePrefixSearch('disabled')->wait();
 
-        $promise = $index->updatePrefixSearch('disabled');
-
-        $this->assertIsValidPromise($promise);
-        $index->waitForTask($promise['taskUid']);
-
-        $prefixSearch = $index->getPrefixSearch();
-        self::assertSame('disabled', $prefixSearch);
+        self::assertSame('disabled', $index->getPrefixSearch());
     }
 
     public function testResetPrefixSearch(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updatePrefixSearch('disabled');
-        $index->waitForTask($promise['taskUid']);
+        $index->updatePrefixSearch('disabled')->wait();
+        $index->resetPrefixSearch()->wait();
 
-        $promise = $index->resetPrefixSearch();
-
-        $this->assertIsValidPromise($promise);
-
-        $index->waitForTask($promise['taskUid']);
-
-        $prefixSearch = $index->getPrefixSearch();
-        self::assertSame('indexingTime', $prefixSearch);
+        self::assertSame('indexingTime', $index->getPrefixSearch());
     }
 }

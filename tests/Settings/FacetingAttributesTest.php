@@ -12,14 +12,12 @@ final class FacetingAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName('books-1'));
 
-        $attributes = $index->getFaceting();
-
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => [
                 '*' => 'alpha',
             ],
-        ], $attributes);
+        ], $index->getFaceting());
     }
 
     public function testUpdateFacetingAttributes(): void
@@ -27,15 +25,12 @@ final class FacetingAttributesTest extends TestCase
         $newAttributes = ['sortFacetValuesBy' => ['*' => 'count']];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFaceting($newAttributes);
-        $index->waitForTask($promise['taskUid']);
-
-        $faceting = $index->getFaceting();
+        $index->updateFaceting($newAttributes)->wait();
 
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'count'],
-        ], $faceting);
+        ], $index->getFaceting());
     }
 
     public function testResetFaceting(): void
@@ -43,16 +38,12 @@ final class FacetingAttributesTest extends TestCase
         $newAttributes = ['sortFacetValuesBy' => ['*' => 'count']];
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        $promise = $index->updateFaceting($newAttributes);
-        $index->waitForTask($promise['taskUid']);
+        $index->updateFaceting($newAttributes)->wait();
+        $index->resetFaceting()->wait();
 
-        $promise = $index->resetFaceting();
-        $index->waitForTask($promise['taskUid']);
-
-        $faceting = $index->getFaceting();
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'alpha'],
-        ], $faceting);
+        ], $index->getFaceting());
     }
 }

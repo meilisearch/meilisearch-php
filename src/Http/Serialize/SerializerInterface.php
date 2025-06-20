@@ -11,11 +11,9 @@ interface SerializerInterface
      *
      * @param string|int|float|bool|array<mixed>|null $data
      *
-     * @return string|bool
-     *
      * @throws \JsonException
      */
-    public function serialize($data);
+    public function serialize(mixed $data): string;
 
     /**
      * Unserialize the given string.
@@ -24,5 +22,5 @@ interface SerializerInterface
      *
      * @throws \JsonException
      */
-    public function unserialize(string $string);
+    public function unserialize(mixed $string): mixed;
 }

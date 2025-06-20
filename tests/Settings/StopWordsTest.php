@@ -27,28 +27,16 @@ final class StopWordsTest extends TestCase
     public function testUpdateStopWords(): void
     {
         $newStopWords = ['the'];
-        $promise = $this->index->updateStopWords($newStopWords);
+        $this->index->updateStopWords($newStopWords)->wait();
 
-        $this->assertIsValidPromise($promise);
-
-        $this->index->waitForTask($promise['taskUid']);
-        $stopWords = $this->index->getStopWords();
-
-        self::assertSame($newStopWords, $stopWords);
+        self::assertSame($newStopWords, $this->index->getStopWords());
     }
 
     public function testResetStopWords(): void
     {
-        $promise = $this->index->updateStopWords(['the']);
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->updateStopWords(['the'])->wait();
+        $this->index->resetStopWords()->wait();
 
-        $promise = $this->index->resetStopWords();
-
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
-
-        $stopWords = $this->index->getStopWords();
-
-        self::assertEmpty($stopWords);
+        self::assertEmpty($this->index->getStopWords());
     }
 }

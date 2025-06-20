@@ -17,13 +17,13 @@ class TimeOutException extends \Exception implements ExceptionInterface
         parent::__construct($this->message, $this->code, $previous);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $base = 'Meilisearch TimeOutException: Code: '.$this->code;
         if ($this->message) {
             return $base.' - Message: '.$this->message;
-        } else {
-            return $base;
         }
+
+        return $base;
     }
 }
