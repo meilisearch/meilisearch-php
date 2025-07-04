@@ -37,17 +37,18 @@
     },
     "suggest": {
         "guzzlehttp/guzzle": "Use Guzzle ^7 as HTTP client",
-        "http-interop/http-factory-guzzle": "Factory for guzzlehttp/guzzle"
+        "http-interop/http-factory-guzzle": "Factory for guzzlehttp/guzzle",
+        "symfony/http-client": "Use Symfony Http client"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5 || ^10.5",
         "php-cs-fixer/shim": "^3.59.3",
-        "guzzlehttp/guzzle": "^7.8.1",
         "http-interop/http-factory-guzzle": "^1.2.0",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpstan/phpstan-strict-rules": "^2.0"
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "symfony/http-client": "^5.4|^6.0|^7.0"
     },
     "scripts": {
         "lint": [
