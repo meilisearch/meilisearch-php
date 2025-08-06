@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Meilisearch;
 
 use Meilisearch\Endpoints\Batches;
+use Meilisearch\Endpoints\ChatWorkspaces;
 use Meilisearch\Endpoints\Delegates\HandlesBatches;
+use Meilisearch\Endpoints\Delegates\HandlesChatWorkspaces;
 use Meilisearch\Endpoints\Delegates\HandlesDumps;
 use Meilisearch\Endpoints\Delegates\HandlesIndex;
 use Meilisearch\Endpoints\Delegates\HandlesKeys;
@@ -31,6 +33,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class Client
 {
+    use HandlesChatWorkspaces;
     use HandlesDumps;
     use HandlesIndex;
     use HandlesTasks;
@@ -53,6 +56,7 @@ class Client
         ?StreamFactoryInterface $streamFactory = null
     ) {
         $this->http = new MeilisearchClientAdapter($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory);
+        $this->chats = new ChatWorkspaces($this->http);
         $this->index = new Indexes($this->http);
         $this->health = new Health($this->http);
         $this->version = new Version($this->http);
