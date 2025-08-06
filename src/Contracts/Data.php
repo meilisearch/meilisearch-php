@@ -29,7 +29,7 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (isset($this->data[$offset])) {
             return $this->data[$offset];
