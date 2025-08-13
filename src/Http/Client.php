@@ -199,10 +199,10 @@ class Client implements Http
                     try {
                         $body = $this->json->unserialize($bodyContent) ?? $response->getReasonPhrase();
                     } catch (\JsonException $e) {
-                        $body = $bodyContent !== '' ? $bodyContent : $response->getReasonPhrase();
+                        $body = '' !== $bodyContent ? $bodyContent : $response->getReasonPhrase();
                     }
                 } else {
-                    $body = $bodyContent !== '' ? $bodyContent : $response->getReasonPhrase();
+                    $body = '' !== $bodyContent ? $bodyContent : $response->getReasonPhrase();
                 }
 
                 throw new ApiException($response, $body);
