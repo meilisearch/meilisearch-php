@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use Meilisearch\Client as MeilisearchClient;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
-final class ChatTest extends TestCase
+final class ChatWorkspaceTest extends TestCase
 {
     private array $workspaceSettings = [
       "source" => "openAi",
@@ -86,5 +87,47 @@ final class ChatTest extends TestCase
         self::assertSame([
           ['uid' => 'myWorkspace'],
         ], $listResponse->getResults());
+    }
+
+    public function testCompletionStreaming(): void
+    {
+        $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
+
+        $stream = $this->client->chats->workspace('myWorkspace')->streamCompletion([
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => 'Hello, how are you?',
+                ],
+            ],
+            'stream' => true,
+        ]);
+
+        $receivedData = '';
+        $chunkCount = 0;
+        $maxChunks = 1000; // Safety limit
+
+        try {
+            while (!$stream->eof() && $chunkCount < $maxChunks) {
+                $chunk = $stream->read(8192);
+                if ('' === $chunk) {
+                    // Small backoff to avoid tight loop on empty reads
+                    usleep(10_000);
+                    continue;
+                }
+                $receivedData .= $chunk;
+                $chunkCount++;
+            }
+
+            if ($chunkCount >= $maxChunks) {
+                self::fail('Test exceeded maximum chunk limit of '.$maxChunks);
+            }
+
+            self::assertGreaterThan(0, strlen($receivedData));
+        } finally {
+            // Ensure we release network resources
+            $stream->close();
+        }
     }
 }

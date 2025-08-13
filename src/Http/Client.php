@@ -140,6 +140,22 @@ class Client implements Http
     }
 
     /**
+     * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
+     * @throws JsonEncodingException
+     */
+    public function postStream(string $path, $body = null, array $query = []): \Psr\Http\Message\StreamInterface
+    {
+        $request = $this->requestFactory->createRequest(
+            'POST',
+            $this->baseUrl.$path.$this->buildQueryString($query)
+        )->withBody($this->streamFactory->createStream($this->json->serialize($body)));
+
+        return $this->executeStream($request, ['Content-type' => 'application/json']);
+    }
+
+    /**
      * @param array<string, string|string[]> $headers
      *
      * @throws ApiException
@@ -154,6 +170,45 @@ class Client implements Http
 
         try {
             return $this->parseResponse($this->http->sendRequest($request));
+        } catch (NetworkExceptionInterface $e) {
+            throw new CommunicationException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param array<string, string|string[]> $headers
+     *
+     * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
+     */
+    private function executeStream(RequestInterface $request, array $headers = []): \Psr\Http\Message\StreamInterface
+    {
+        foreach (array_merge($this->headers, $headers) as $header => $value) {
+            $request = $request->withAddedHeader($header, $value);
+        }
+
+        try {
+            $response = $this->http->sendRequest($request);
+
+            if ($response->getStatusCode() >= 300) {
+                $bodyContent = (string) $response->getBody();
+
+                // Try to parse as JSON for structured errors, fall back to raw content
+                if ($this->isJSONResponse($response->getHeader('content-type'))) {
+                    try {
+                        $body = $this->json->unserialize($bodyContent) ?? $response->getReasonPhrase();
+                    } catch (\JsonException $e) {
+                        $body = $bodyContent ?: $response->getReasonPhrase();
+                    }
+                } else {
+                    $body = $bodyContent ?: $response->getReasonPhrase();
+                }
+
+                throw new ApiException($response, $body);
+            }
+
+            return $response->getBody();
         } catch (NetworkExceptionInterface $e) {
             throw new CommunicationException($e->getMessage(), $e->getCode(), $e);
         }

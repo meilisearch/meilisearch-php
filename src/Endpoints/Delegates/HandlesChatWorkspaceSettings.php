@@ -13,7 +13,7 @@ trait HandlesChatWorkspaceSettings
      */
     public function getSettings(): ChatWorkspaceSettings
     {
-        if (!$this->workspaceName) {
+        if (null === $this->workspaceName) {
             throw new \InvalidArgumentException('Workspace name is required to get settings');
         }
 
@@ -43,7 +43,7 @@ trait HandlesChatWorkspaceSettings
      */
     public function updateSettings(array $settings): ChatWorkspaceSettings
     {
-        if (!$this->workspaceName) {
+        if (null === $this->workspaceName) {
             throw new \InvalidArgumentException('Workspace name is required to update settings');
         }
 
@@ -57,12 +57,32 @@ trait HandlesChatWorkspaceSettings
      */
     public function resetSettings(): ChatWorkspaceSettings
     {
-        if (!$this->workspaceName) {
+        if (null === $this->workspaceName) {
             throw new \InvalidArgumentException('Workspace name is required to reset settings');
         }
 
         $response = $this->http->delete('/chats/'.$this->workspaceName.'/settings');
 
         return new ChatWorkspaceSettings($response);
+    }
+
+    /**
+     * Create a streaming chat completion.
+     *
+     * @param array{
+     *     model: string,
+     *     messages: array<array{role: string, content: string}>,
+     *     stream: bool,
+     *     temperature?: float,
+     *     max_tokens?: int
+     * } $options
+     */
+    public function streamCompletion(array $options): \Psr\Http\Message\StreamInterface
+    {
+        if (null === $this->workspaceName) {
+            throw new \InvalidArgumentException('Workspace name is required for chat completion');
+        }
+
+        return $this->http->postStream('/chats/'.$this->workspaceName.'/chat/completions', $options);
     }
 }
