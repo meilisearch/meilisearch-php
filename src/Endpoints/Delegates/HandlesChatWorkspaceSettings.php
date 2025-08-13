@@ -33,12 +33,7 @@ trait HandlesChatWorkspaceSettings
      *     deploymentId?: string,
      *     baseUrl?: string,
      *     apiKey?: string,
-     *     prompts?: array{
-     *         system?: string,
-     *         searchDescription?: string,
-     *         searchQParam?: string,
-     *         searchIndexUidParam?: string
-     *     }
+     *     prompts?: array<string, string>
      * } $settings
      */
     public function updateSettings(array $settings): ChatWorkspaceSettings
@@ -67,15 +62,13 @@ trait HandlesChatWorkspaceSettings
     }
 
     /**
-     * Create a streaming chat completion.
+     * Create a streaming chat completion using OpenAI-compatible API.
      *
      * @param array{
      *     model: string,
      *     messages: array<array{role: string, content: string}>,
-     *     stream: bool,
-     *     temperature?: float,
-     *     max_tokens?: int
-     * } $options
+     *     stream: bool
+     * } $options The request body for the chat completion
      */
     public function streamCompletion(array $options): \Psr\Http\Message\StreamInterface
     {
