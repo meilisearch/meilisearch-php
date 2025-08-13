@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\ChatWorkspacesResults;
-use Meilisearch\Contracts\ChatWorkspaceSettings;
 use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Contracts\Http;
 use Meilisearch\Endpoints\Delegates\HandlesChatWorkspaceSettings;

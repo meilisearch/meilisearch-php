@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use Meilisearch\Client as MeilisearchClient;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class ChatWorkspaceTest extends TestCase
 {
     private array $workspaceSettings = [
-      "source" => "openAi",
-      "orgId" => "some-org-id",
-      "projectId" => "some-project-id",
-      "apiVersion" => "some-api-version",
-      "deploymentId" => "some-deployment-id",
-      "baseUrl" => "https://baseurl.com",
-      "apiKey" => "sk-abc...",
-      "prompts" => [
-        "system" => "You are a helpful assistant that answers questions based on the provided context.",
-      ],
+        'source' => 'openAi',
+        'orgId' => 'some-org-id',
+        'projectId' => 'some-project-id',
+        'apiVersion' => 'some-api-version',
+        'deploymentId' => 'some-deployment-id',
+        'baseUrl' => 'https://baseurl.com',
+        'apiKey' => 'sk-abc...',
+        'prompts' => [
+            'system' => 'You are a helpful assistant that answers questions based on the provided context.',
+        ],
     ];
 
     protected function setUp(): void
@@ -66,7 +65,7 @@ final class ChatWorkspaceTest extends TestCase
         $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
         $response = $this->client->chats->listWorkspaces();
         self::assertSame([
-          ['uid' => 'myWorkspace'],
+            ['uid' => 'myWorkspace'],
         ], $response->getResults());
     }
 
@@ -85,7 +84,7 @@ final class ChatWorkspaceTest extends TestCase
 
         $listResponse = $this->client->chats->listWorkspaces();
         self::assertSame([
-          ['uid' => 'myWorkspace'],
+            ['uid' => 'myWorkspace'],
         ], $listResponse->getResults());
     }
 
@@ -117,14 +116,14 @@ final class ChatWorkspaceTest extends TestCase
                     continue;
                 }
                 $receivedData .= $chunk;
-                $chunkCount++;
+                ++$chunkCount;
             }
 
             if ($chunkCount >= $maxChunks) {
                 self::fail('Test exceeded maximum chunk limit of '.$maxChunks);
             }
 
-            self::assertGreaterThan(0, strlen($receivedData));
+            self::assertGreaterThan(0, \strlen($receivedData));
         } finally {
             // Ensure we release network resources
             $stream->close();
