@@ -33,15 +33,15 @@ final class ChatTest extends TestCase
     public function testUpdateWorkspacesSettings(): void
     {
         $response = $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
-        self::assertSame($this->workspaceSettings['source'], $response['source']);
-        self::assertSame($this->workspaceSettings['orgId'], $response['orgId']);
-        self::assertSame($this->workspaceSettings['projectId'], $response['projectId']);
-        self::assertSame($this->workspaceSettings['apiVersion'], $response['apiVersion']);
-        self::assertSame($this->workspaceSettings['deploymentId'], $response['deploymentId']);
-        self::assertSame($this->workspaceSettings['baseUrl'], $response['baseUrl']);
-        self::assertSame($this->workspaceSettings['prompts']['system'], $response['prompts']['system']);
+        self::assertSame($this->workspaceSettings['source'], $response->getSource());
+        self::assertSame($this->workspaceSettings['orgId'], $response->getOrgId());
+        self::assertSame($this->workspaceSettings['projectId'], $response->getProjectId());
+        self::assertSame($this->workspaceSettings['apiVersion'], $response->getApiVersion());
+        self::assertSame($this->workspaceSettings['deploymentId'], $response->getDeploymentId());
+        self::assertSame($this->workspaceSettings['baseUrl'], $response->getBaseUrl());
+        self::assertSame($this->workspaceSettings['prompts']['system'], $response->getPrompts()['system']);
         // Meilisearch will mask the API key in the response
-        self::assertSame('XXX...', $response['apiKey']);
+        self::assertSame('XXX...', $response->getApiKey());
     }
 
     public function testGetWorkspaceSettings(): void
@@ -49,15 +49,15 @@ final class ChatTest extends TestCase
         $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
 
         $response = $this->client->chats->workspace('myWorkspace')->getSettings();
-        self::assertSame($this->workspaceSettings['source'], $response['source']);
-        self::assertSame($this->workspaceSettings['orgId'], $response['orgId']);
-        self::assertSame($this->workspaceSettings['projectId'], $response['projectId']);
-        self::assertSame($this->workspaceSettings['apiVersion'], $response['apiVersion']);
-        self::assertSame($this->workspaceSettings['deploymentId'], $response['deploymentId']);
-        self::assertSame($this->workspaceSettings['baseUrl'], $response['baseUrl']);
-        self::assertSame($this->workspaceSettings['prompts']['system'], $response['prompts']['system']);
+        self::assertSame($this->workspaceSettings['source'], $response->getSource());
+        self::assertSame($this->workspaceSettings['orgId'], $response->getOrgId());
+        self::assertSame($this->workspaceSettings['projectId'], $response->getProjectId());
+        self::assertSame($this->workspaceSettings['apiVersion'], $response->getApiVersion());
+        self::assertSame($this->workspaceSettings['deploymentId'], $response->getDeploymentId());
+        self::assertSame($this->workspaceSettings['baseUrl'], $response->getBaseUrl());
+        self::assertSame($this->workspaceSettings['prompts']['system'], $response->getPrompts()['system']);
         // Meilisearch will mask the API key in the response
-        self::assertSame('XXX...', $response['apiKey']);
+        self::assertSame('XXX...', $response->getApiKey());
     }
 
     public function testListWorkspaces(): void
@@ -66,7 +66,7 @@ final class ChatTest extends TestCase
         $response = $this->client->chats->listWorkspaces();
         self::assertSame([
           ['uid' => 'myWorkspace'],
-        ], $response['results']);
+        ], $response->getResults());
     }
 
     public function testDeleteWorkspaceSettings(): void
@@ -74,17 +74,17 @@ final class ChatTest extends TestCase
         $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
         $this->client->chats->workspace('myWorkspace')->resetSettings();
         $settingsResponse = $this->client->chats->workspace('myWorkspace')->getSettings();
-        self::assertSame('openAi', $settingsResponse['source']);
-        self::assertNull($settingsResponse['orgId']);
-        self::assertNull($settingsResponse['projectId']);
-        self::assertNull($settingsResponse['apiVersion']);
-        self::assertNull($settingsResponse['deploymentId']);
-        self::assertNull($settingsResponse['baseUrl']);
-        self::assertNull($settingsResponse['apiKey']);
+        self::assertSame('openAi', $settingsResponse->getSource());
+        self::assertNull($settingsResponse->getOrgId());
+        self::assertNull($settingsResponse->getProjectId());
+        self::assertNull($settingsResponse->getApiVersion());
+        self::assertNull($settingsResponse->getDeploymentId());
+        self::assertNull($settingsResponse->getBaseUrl());
+        self::assertNull($settingsResponse->getApiKey());
 
         $listResponse = $this->client->chats->listWorkspaces();
         self::assertSame([
           ['uid' => 'myWorkspace'],
-        ], $listResponse['results']);
+        ], $listResponse->getResults());
     }
 }
