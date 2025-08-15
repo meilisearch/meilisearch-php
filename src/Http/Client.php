@@ -198,7 +198,7 @@ class Client implements Http
                 if ($this->isJSONResponse($response->getHeader('content-type'))) {
                     try {
                         $body = $this->json->unserialize($bodyContent) ?? $response->getReasonPhrase();
-                    } catch (\JsonException $e) {
+                    } catch (JsonDecodingException $e) {
                         $body = '' !== $bodyContent ? $bodyContent : $response->getReasonPhrase();
                     }
                 } else {
