@@ -504,6 +504,7 @@ trait HandlesSettings
 
     /**
      * @since Meilisearch v1.15.1
+     *
      * @return array{
      *     description: string,
      *     documentTemplate: string,
@@ -546,6 +547,7 @@ trait HandlesSettings
 
     /**
      * @since Meilisearch v1.15.1
+     *
      * @param array{
      *     description: string,
      *     documentTemplate: string,
