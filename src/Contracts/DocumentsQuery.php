@@ -134,7 +134,7 @@ class DocumentsQuery
             'limit' => $this->limit,
             'fields' => $this->getFields(),
             'filter' => $this->filter,
-            'retrieveVectors' => (null !== $this->retrieveVectors ? ($this->retrieveVectors ? 'true' : 'false') : null),
+            'retrieveVectors' => $this->retrieveVectors,
             'ids' => ($this->ids ?? []) !== [] ? implode(',', $this->ids) : null,
         ], static function ($item) { return null !== $item; });
     }
