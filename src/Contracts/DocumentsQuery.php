@@ -34,6 +34,11 @@ class DocumentsQuery
     private ?array $ids = null;
 
     /**
+     * @var list<non-empty-string>|null
+     */
+    private ?array $sort = null;
+
+    /**
      * @param non-negative-int $offset
      *
      * @return $this
@@ -117,6 +122,13 @@ class DocumentsQuery
         return null !== $this->filter;
     }
 
+    public function setSort(array $sort): self
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
     /**
      * @return array{
      *     offset?: non-negative-int,
@@ -124,7 +136,8 @@ class DocumentsQuery
      *     fields?: non-empty-list<string>|non-empty-string,
      *     filter?: list<non-empty-string|list<non-empty-string>>,
      *     retrieveVectors?: bool,
-     *     ids?: string
+     *     ids?: string,
+     *     sort?: non-empty-list<string>,
      * }
      */
     public function toArray(): array
@@ -132,31 +145,11 @@ class DocumentsQuery
         return array_filter([
             'offset' => $this->offset,
             'limit' => $this->limit,
-            'fields' => $this->getFields(),
+            'fields' => $this->fields,
             'filter' => $this->filter,
             'retrieveVectors' => $this->retrieveVectors,
             'ids' => ($this->ids ?? []) !== [] ? implode(',', $this->ids) : null,
+            'sort' => $this->sort,
         ], static function ($item) { return null !== $item; });
-    }
-
-    /**
-     * Prepares fields for request
-     * Fix for 1.2 document/fetch.
-     *
-     * @see https://github.com/meilisearch/meilisearch-php/issues/522
-     *
-     * @return array|string|null
-     */
-    private function getFields()
-    {
-        if (null === $this->fields) {
-            return null;
-        }
-
-        if (null !== $this->filter) {
-            return $this->fields;
-        }
-
-        return implode(',', $this->fields);
     }
 }
