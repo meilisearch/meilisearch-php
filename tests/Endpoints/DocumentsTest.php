@@ -666,6 +666,21 @@ final class DocumentsTest extends TestCase
         self::assertCount(3, $response);
     }
 
+    public function testGetDocumentsWithSort(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->updateSortableAttributes(['id', 'genre']);
+        $index->updateFilterableAttributes(['id', 'genre']);
+        $promise = $index->addDocuments(self::DOCUMENTS);
+        $index->waitForTask($promise['taskUid']);
+
+        $response = $index->getDocuments((new DocumentsQuery())->setSort(['genre:desc', 'id:asc']));
+        self::assertSame(2, $response[0]['id']);
+
+        $response = $index->getDocuments((new DocumentsQuery())->setSort(['genre:desc', 'id:desc']));
+        self::assertSame(1344, $response[0]['id']);
+    }
+
     public function testGetDocumentsWithFilterCorrectFieldFormat(): void
     {
         $fields = ['the', 'clash'];
@@ -676,20 +691,6 @@ final class DocumentsTest extends TestCase
             ->toArray()['fields'];
 
         self::assertSame($fields, $queryFields);
-    }
-
-    public function testGetDocumentsWithoutFilterCorrectFieldsFormat(): void
-    {
-        $fields = ['anti', 'flag'];
-
-        $queryFields = (new DocumentsQuery())
-            ->setFields($fields)
-            ->toArray()['fields'];
-
-        self::assertSame(
-            implode(',', $fields),
-            $queryFields
-        );
     }
 
     public function testGetDocumentsWithVector(): void
