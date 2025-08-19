@@ -123,7 +123,7 @@ class DocumentsQuery
      *     limit?: non-negative-int,
      *     fields?: non-empty-list<string>|non-empty-string,
      *     filter?: list<non-empty-string|list<non-empty-string>>,
-     *     retrieveVectors?: 'true'|'false',
+     *     retrieveVectors?: bool,
      *     ids?: string
      * }
      */
