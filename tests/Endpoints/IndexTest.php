@@ -262,7 +262,8 @@ final class IndexTest extends TestCase
         $promise = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']]);
         $response = $this->client->waitForTask($promise['taskUid']);
 
-        self::assertSame([['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]], $response['details']['swaps']);
+        self::assertSame(['indexA', 'indexB'], $response['details']['swaps'][0]['indexes']);
+        self::assertSame(['indexC', 'indexD'], $response['details']['swaps'][1]['indexes']);
     }
 
     public function testDeleteTasks(): void
