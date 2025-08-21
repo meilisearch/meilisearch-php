@@ -122,6 +122,9 @@ class DocumentsQuery
         return null !== $this->filter;
     }
 
+    /**
+     * @param list<non-empty-string> $sort
+     */
     public function setSort(array $sort): self
     {
         $this->sort = $sort;
