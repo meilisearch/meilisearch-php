@@ -264,6 +264,8 @@ final class IndexTest extends TestCase
 
         self::assertSame(['indexA', 'indexB'], $response['details']['swaps'][0]['indexes']);
         self::assertSame(['indexC', 'indexD'], $response['details']['swaps'][1]['indexes']);
+        self::assertFalse($response['details']['swaps'][0]['rename']);
+        self::assertFalse($response['details']['swaps'][1]['rename']);
     }
 
     public function testDeleteTasks(): void
