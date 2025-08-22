@@ -182,7 +182,7 @@ class Client implements Http
      * @throws ClientExceptionInterface
      * @throws CommunicationException
      */
-    private function executeStream(RequestInterface $request, array $headers = []): \Psr\Http\Message\StreamInterface
+    private function executeStream(RequestInterface $request, array $headers = []): StreamInterface
     {
         foreach (array_merge($this->headers, $headers) as $header => $value) {
             $request = $request->withAddedHeader($header, $value);
