@@ -4,32 +4,51 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+use Meilisearch\Contracts\ChatWorkspacePromptsSettings;
+
 class ChatWorkspaceSettings extends Data
 {
-    private ?string $source;
+    private string $source;
     private ?string $orgId;
     private ?string $projectId;
     private ?string $apiVersion;
     private ?string $deploymentId;
     private ?string $baseUrl;
     private ?string $apiKey;
-    private array $prompts;
+    private ?ChatWorkspacePromptsSettings $prompts;
 
+    /**
+     * @param array{
+     *     source: string,
+     *     orgId?: string,
+     *     projectId?: string,
+     *     apiVersion?: string,
+     *     deploymentId?: string,
+     *     baseUrl?: string,
+     *     apiKey?: string,
+     *     prompts?: array{
+     *         system: string,
+     *         searchDescription: string,
+     *         searchQParam: string,
+     *         searchIndexUidParam: string
+     *     }
+     * } $params
+     */
     public function __construct(array $params)
     {
         parent::__construct($params);
 
-        $this->source = $params['source'] ?? null;
+        $this->source = $params['source'];
         $this->orgId = $params['orgId'] ?? null;
         $this->projectId = $params['projectId'] ?? null;
         $this->apiVersion = $params['apiVersion'] ?? null;
         $this->deploymentId = $params['deploymentId'] ?? null;
         $this->baseUrl = $params['baseUrl'] ?? null;
         $this->apiKey = $params['apiKey'] ?? null;
-        $this->prompts = $params['prompts'] ?? [];
+        $this->prompts = $params['prompts'] === null ? null : new ChatWorkspacePromptsSettings($params['prompts']);
     }
 
-    public function getSource(): ?string
+    public function getSource(): string
     {
         return $this->source;
     }
@@ -64,14 +83,28 @@ class ChatWorkspaceSettings extends Data
         return $this->apiKey;
     }
 
-    /**
-     * @return array{system?: string, searchDescription?: string, searchQParam?: string, searchIndexUidParam?: string}
-     */
-    public function getPrompts(): array
+    public function getPrompts(): ?ChatWorkspacePromptsSettings
     {
         return $this->prompts;
     }
 
+    /**
+     * @return array{
+     *     source: string,
+     *     orgId?: string,
+     *     projectId?: string,
+     *     apiVersion?: string,
+     *     deploymentId?: string,
+     *     baseUrl?: string,
+     *     apiKey?: string,
+     *     prompts?: array{
+     *         system: string,
+     *         searchDescription: string,
+     *         searchQParam: string,
+     *         searchIndexUidParam: string
+     *     }
+     * }
+     */
     public function toArray(): array
     {
         return [
@@ -82,7 +115,7 @@ class ChatWorkspaceSettings extends Data
             'deploymentId' => $this->deploymentId,
             'baseUrl' => $this->baseUrl,
             'apiKey' => $this->apiKey,
-            'prompts' => $this->prompts,
+            'prompts' => $this->prompts === null ? null : $this->prompts->toArray(),
         ];
     }
 }

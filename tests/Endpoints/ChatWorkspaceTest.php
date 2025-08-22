@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class ChatWorkspaceTest extends TestCase
 {
     private array $workspaceSettings = [
-        'source' => 'openAi',
+        'source' => 'mistral',
         'orgId' => 'some-org-id',
         'projectId' => 'some-project-id',
         'apiVersion' => 'some-api-version',
@@ -44,6 +45,13 @@ final class ChatWorkspaceTest extends TestCase
         self::assertSame('XXX...', $response->getApiKey());
     }
 
+    public function testExceptionWhenWorkspaceDoesNotExist(): void
+    {
+        self::expectException(ApiException::class);
+        self::expectExceptionCode(404);
+        $this->client->chats->workspace('non-existent-workspace')->getSettings();
+    }
+
     public function testGetWorkspaceSettings(): void
     {
         $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
@@ -55,9 +63,13 @@ final class ChatWorkspaceTest extends TestCase
         self::assertSame($this->workspaceSettings['apiVersion'], $response->getApiVersion());
         self::assertSame($this->workspaceSettings['deploymentId'], $response->getDeploymentId());
         self::assertSame($this->workspaceSettings['baseUrl'], $response->getBaseUrl());
-        self::assertSame($this->workspaceSettings['prompts']['system'], $response->getPrompts()['system']);
         // Meilisearch will mask the API key in the response
         self::assertSame('XXX...', $response->getApiKey());
+
+        self::assertSame($this->workspaceSettings['prompts']['system'], $response->getPrompts()->getSystem());
+        self::assertNotEmpty($response->getPrompts()->getSearchDescription());
+        self::assertNotEmpty($response->getPrompts()->getSearchQParam());
+        self::assertNotEmpty($response->getPrompts()->getSearchIndexUidParam());
     }
 
     public function testListWorkspaces(): void
@@ -69,19 +81,25 @@ final class ChatWorkspaceTest extends TestCase
         ], $response->getResults());
     }
 
-    public function testDeleteWorkspaceSettings(): void
+    public function testResetWorkspaceSettings(): void
     {
         $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
         $this->client->chats->workspace('myWorkspace')->resetSettings();
         $settingsResponse = $this->client->chats->workspace('myWorkspace')->getSettings();
-        self::assertSame('openAi', $settingsResponse->getSource());
+        self::assertSame('openAi', $settingsResponse->getSource()); // Source is reset to openAi for some reason
         self::assertNull($settingsResponse->getOrgId());
         self::assertNull($settingsResponse->getProjectId());
         self::assertNull($settingsResponse->getApiVersion());
         self::assertNull($settingsResponse->getDeploymentId());
         self::assertNull($settingsResponse->getBaseUrl());
         self::assertNull($settingsResponse->getApiKey());
+        // Prompts are reset to their original values
+        self::assertNotEmpty($settingsResponse->getPrompts()->getSystem());
+        self::assertNotEmpty($settingsResponse->getPrompts()->getSearchDescription());
+        self::assertNotEmpty($settingsResponse->getPrompts()->getSearchQParam());
+        self::assertNotEmpty($settingsResponse->getPrompts()->getSearchIndexUidParam());
 
+        // Workspace still appears when listing workspaces
         $listResponse = $this->client->chats->listWorkspaces();
         self::assertSame([
             ['uid' => 'myWorkspace'],

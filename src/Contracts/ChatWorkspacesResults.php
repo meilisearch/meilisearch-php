@@ -12,11 +12,11 @@ class ChatWorkspacesResults extends Data
 
     public function __construct(array $params)
     {
-        parent::__construct($params['results'] ?? []);
+        parent::__construct($params['results']);
 
         $this->offset = $params['offset'];
         $this->limit = $params['limit'];
-        $this->total = $params['total'] ?? 0;
+        $this->total = $params['total'];
     }
 
     /**
