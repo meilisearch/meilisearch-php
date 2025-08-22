@@ -20,7 +20,7 @@ final class DocumentsQueryTest extends TestCase
     {
         $data = (new DocumentsQuery())->setLimit(10)->setFields(['abc', 'xyz']);
 
-        self::assertSame(['limit' => 10, 'fields' => 'abc,xyz'], $data->toArray());
+        self::assertSame(['limit' => 10, 'fields' => ['abc', 'xyz']], $data->toArray());
     }
 
     public function testSetLimit(): void
