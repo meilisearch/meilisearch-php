@@ -20,6 +20,9 @@ final class ChatWorkspaceTest extends TestCase
         'apiKey' => 'sk-abc...',
         'prompts' => [
             'system' => 'You are a helpful assistant that answers questions based on the provided context.',
+            'searchDescription' => 'You are a helpful assistant that answers questions based on the provided context.',
+            'searchQParam' => 'q',
+            'searchIndexUidParam' => 'indexUid',
         ],
     ];
 
@@ -29,6 +32,8 @@ final class ChatWorkspaceTest extends TestCase
 
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
         $http->patch('/experimental-features', ['chatCompletions' => true]);
+
+        // List workspaces and
     }
 
     public function testUpdateWorkspacesSettings(): void
@@ -67,9 +72,9 @@ final class ChatWorkspaceTest extends TestCase
         self::assertSame('XXX...', $response->getApiKey());
 
         self::assertSame($this->workspaceSettings['prompts']['system'], $response->getPrompts()->getSystem());
-        self::assertNotEmpty($response->getPrompts()->getSearchDescription());
-        self::assertNotEmpty($response->getPrompts()->getSearchQParam());
-        self::assertNotEmpty($response->getPrompts()->getSearchIndexUidParam());
+        self::assertSame($this->workspaceSettings['prompts']['searchDescription'], $response->getPrompts()->getSearchDescription());
+        self::assertSame($this->workspaceSettings['prompts']['searchQParam'], $response->getPrompts()->getSearchQParam());
+        self::assertSame($this->workspaceSettings['prompts']['searchIndexUidParam'], $response->getPrompts()->getSearchIndexUidParam());
     }
 
     public function testListWorkspaces(): void

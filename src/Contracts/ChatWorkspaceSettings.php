@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-use Meilisearch\Contracts\ChatWorkspacePromptsSettings;
-
 class ChatWorkspaceSettings extends Data
 {
     private string $source;
@@ -15,7 +13,7 @@ class ChatWorkspaceSettings extends Data
     private ?string $deploymentId;
     private ?string $baseUrl;
     private ?string $apiKey;
-    private ?ChatWorkspacePromptsSettings $prompts;
+    private ChatWorkspacePromptsSettings $prompts;
 
     /**
      * @param array{
@@ -26,7 +24,7 @@ class ChatWorkspaceSettings extends Data
      *     deploymentId?: string,
      *     baseUrl?: string,
      *     apiKey?: string,
-     *     prompts?: array{
+     *     prompts: array{
      *         system: string,
      *         searchDescription: string,
      *         searchQParam: string,
@@ -45,7 +43,7 @@ class ChatWorkspaceSettings extends Data
         $this->deploymentId = $params['deploymentId'] ?? null;
         $this->baseUrl = $params['baseUrl'] ?? null;
         $this->apiKey = $params['apiKey'] ?? null;
-        $this->prompts = $params['prompts'] === null ? null : new ChatWorkspacePromptsSettings($params['prompts']);
+        $this->prompts = new ChatWorkspacePromptsSettings($params['prompts']);
     }
 
     public function getSource(): string
@@ -83,7 +81,7 @@ class ChatWorkspaceSettings extends Data
         return $this->apiKey;
     }
 
-    public function getPrompts(): ?ChatWorkspacePromptsSettings
+    public function getPrompts(): ChatWorkspacePromptsSettings
     {
         return $this->prompts;
     }
@@ -97,7 +95,7 @@ class ChatWorkspaceSettings extends Data
      *     deploymentId?: string,
      *     baseUrl?: string,
      *     apiKey?: string,
-     *     prompts?: array{
+     *     prompts: array{
      *         system: string,
      *         searchDescription: string,
      *         searchQParam: string,
@@ -115,7 +113,7 @@ class ChatWorkspaceSettings extends Data
             'deploymentId' => $this->deploymentId,
             'baseUrl' => $this->baseUrl,
             'apiKey' => $this->apiKey,
-            'prompts' => $this->prompts === null ? null : $this->prompts->toArray(),
+            'prompts' => $this->prompts->toArray(),
         ];
     }
 }
