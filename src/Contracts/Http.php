@@ -46,4 +46,10 @@ interface Http
      * @throws JsonDecodingException
      */
     public function delete(string $path, array $query = []);
+
+    /**
+     * @throws ApiException
+     * @throws JsonEncodingException
+     */
+    public function postStream(string $path, $body = null, array $query = []): \Psr\Http\Message\StreamInterface;
 }

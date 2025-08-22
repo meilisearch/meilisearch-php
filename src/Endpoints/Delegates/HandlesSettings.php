@@ -418,18 +418,27 @@ trait HandlesSettings
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms');
     }
 
-    // Settings - Experimental: Embedders (hybrid search)
+    // Settings - Embedders
 
+    /**
+     * @since Meilisearch v1.13.0
+     */
     public function getEmbedders(): ?array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/embedders');
     }
 
+    /**
+     * @since Meilisearch v1.13.0
+     */
     public function updateEmbedders(array $embedders): array
     {
         return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/embedders', $embedders);
     }
 
+    /**
+     * @since Meilisearch v1.13.0
+     */
     public function resetEmbedders(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/embedders');
@@ -489,5 +498,93 @@ trait HandlesSettings
     public function resetPrefixSearch(): array
     {
         return $this->http->delete(self::PATH.'/'.$this->uid.'/settings/prefix-search');
+    }
+
+    // Settings - Chat
+
+    /**
+     * @since Meilisearch v1.15.1
+     *
+     * @return array{
+     *     description: string,
+     *     documentTemplate: string,
+     *     documentTemplateMaxBytes: int,
+     *     searchParameters: array{
+     *         indexUid?: non-empty-string,
+     *         q?: string,
+     *         filter?: list<non-empty-string|list<non-empty-string>>,
+     *         locales?: list<non-empty-string>,
+     *         attributesToRetrieve?: list<non-empty-string>,
+     *         attributesToCrop?: list<non-empty-string>,
+     *         cropLength?: positive-int,
+     *         attributesToHighlight?: list<non-empty-string>,
+     *         cropMarker?: string,
+     *         highlightPreTag?: string,
+     *         highlightPostTag?: string,
+     *         facets?: list<non-empty-string>,
+     *         showMatchesPosition?: bool,
+     *         sort?: list<non-empty-string>,
+     *         matchingStrategy?: 'last'|'all'|'frequency',
+     *         offset?: non-negative-int,
+     *         limit?: non-negative-int,
+     *         hitsPerPage?: non-negative-int,
+     *         page?: non-negative-int,
+     *         vector?: non-empty-list<float|non-empty-list<float>>,
+     *         hybrid?: array<mixed>,
+     *         attributesToSearchOn?: non-empty-list<non-empty-string>,
+     *         showRankingScore?: bool,
+     *         showRankingScoreDetails?: bool,
+     *         rankingScoreThreshold?: float,
+     *         distinct?: non-empty-string,
+     *         federationOptions?: array<mixed>
+     *     }
+     * }
+     */
+    public function getChat(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/chat');
+    }
+
+    /**
+     * @since Meilisearch v1.15.1
+     *
+     * @param array{
+     *     description: string,
+     *     documentTemplate: string,
+     *     documentTemplateMaxBytes: int,
+     *     searchParameters: array{
+     *         indexUid?: non-empty-string,
+     *         q?: string,
+     *         filter?: list<non-empty-string|list<non-empty-string>>,
+     *         locales?: list<non-empty-string>,
+     *         attributesToRetrieve?: list<non-empty-string>,
+     *         attributesToCrop?: list<non-empty-string>,
+     *         cropLength?: positive-int,
+     *         attributesToHighlight?: list<non-empty-string>,
+     *         cropMarker?: string,
+     *         highlightPreTag?: string,
+     *         highlightPostTag?: string,
+     *         facets?: list<non-empty-string>,
+     *         showMatchesPosition?: bool,
+     *         sort?: list<non-empty-string>,
+     *         matchingStrategy?: 'last'|'all'|'frequency',
+     *         offset?: non-negative-int,
+     *         limit?: non-negative-int,
+     *         hitsPerPage?: non-negative-int,
+     *         page?: non-negative-int,
+     *         vector?: non-empty-list<float|non-empty-list<float>>,
+     *         hybrid?: array<mixed>,
+     *         attributesToSearchOn?: non-empty-list<non-empty-string>,
+     *         showRankingScore?: bool,
+     *         showRankingScoreDetails?: bool,
+     *         rankingScoreThreshold?: float,
+     *         distinct?: non-empty-string,
+     *         federationOptions?: array<mixed>
+     *     }
+     * } $chatSettings
+     */
+    public function updateChat(array $chatSettings): array
+    {
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', $chatSettings);
     }
 }
