@@ -15,6 +15,9 @@ class ChatWorkspaces extends Endpoint
 
     protected const PATH = '/chats';
 
+    /**
+     * @var non-empty-string|null
+     */
     private ?string $workspaceName;
 
     public function __construct(Http $http, ?string $workspaceName = null)
