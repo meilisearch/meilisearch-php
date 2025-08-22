@@ -145,7 +145,7 @@ class Client implements Http
      * @throws CommunicationException
      * @throws JsonEncodingException
      */
-    public function postStream(string $path, $body = null, array $query = []): \Psr\Http\Message\StreamInterface
+    public function postStream(string $path, $body = null, array $query = []): StreamInterface
     {
         $request = $this->requestFactory->createRequest(
             'POST',
