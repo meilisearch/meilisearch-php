@@ -24,9 +24,13 @@ final class ChatTest extends TestCase
     {
         parent::setUp();
 
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['chatCompletions' => true]);
+        $apiKey = getenv('MEILISEARCH_API_KEY');
+        if (!$apiKey) {
+            throw new \Exception('Missing `MEILISEARCH_API_KEY` environment variable');
+        }
 
+        $http = new Client($this->host, $apiKey);
+        $http->patch('/experimental-features', ['chatCompletions' => true]);
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
