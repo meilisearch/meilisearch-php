@@ -37,6 +37,13 @@ final class DocumentsQueryTest extends TestCase
         self::assertSame(['offset' => 5], $data->toArray());
     }
 
+    public function testSetRetrieveVectors(): void
+    {
+        $data = (new DocumentsQuery())->setRetrieveVectors(true);
+
+        self::assertSame(['retrieveVectors' => true], $data->toArray());
+    }
+
     /**
      * @dataProvider idsProvider
      */
