@@ -29,12 +29,6 @@ trait HandlesDocuments
             if ($options->hasFilter()) {
                 $response = $this->http->post(self::PATH.'/'.$this->uid.'/documents/fetch', $query);
             } else {
-                if (isset($query['sort'])) {
-                    $query['sort'] = implode(',', $query['sort']);
-                }
-                if (isset($query['fields'])) {
-                    $query['fields'] = implode(',', $query['fields']);
-                }
                 $response = $this->http->get(self::PATH.'/'.$this->uid.'/documents', $query);
             }
 

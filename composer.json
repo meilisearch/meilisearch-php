@@ -28,7 +28,8 @@
         "psr-4": {
             "MeiliSearch\\": "src/",
             "Meilisearch\\": "src/"
-        }
+        },
+      "files": ["src/polyfills.php"]
     },
     "autoload-dev": {
         "psr-4": {

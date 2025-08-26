@@ -165,6 +165,9 @@ class Client implements Http
             if (\is_bool($value)) {
                 $queryParams[$key] = $value ? 'true' : 'false';
             }
+            if (\is_array($value) && array_is_list($value)) {
+                $queryParams[$key] = implode(',', $value);
+            }
         }
 
         return \count($queryParams) > 0 ? '?'.http_build_query($queryParams) : '';
