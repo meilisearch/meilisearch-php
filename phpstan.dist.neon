@@ -10,7 +10,5 @@ parameters:
 	paths:
 		- src
 		- tests
-	tips:
-		treatPhpDocTypesAsCertain: false
 	additionalConstructors:
 		- PHPUnit\Framework\TestCase::setUp
