@@ -37,7 +37,7 @@ final class NetworksTest extends TestCase
 
         $updateResp = $this->client->updateNetwork($networks);
         self::assertSame($networks['self'], $updateResp->getSelf());
-        foreach ($networks['remotes'] as $key =>$remote) {
+        foreach ($networks['remotes'] as $key => $remote) {
             self::assertSame($remote['url'], $updateResp->getRemotes()[$key]['url']);
             self::assertSame($remote['searchApiKey'], $updateResp->getRemotes()[$key]['searchApiKey']);
             self::assertSame($remote['writeApiKey'], $updateResp->getRemotes()[$key]['writeApiKey']);
