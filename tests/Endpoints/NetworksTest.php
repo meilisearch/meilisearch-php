@@ -37,18 +37,30 @@ final class NetworksTest extends TestCase
 
         $updateResp = $this->client->updateNetwork($networks);
         self::assertSame($networks['self'], $updateResp->getSelf());
+
         foreach ($networks['remotes'] as $key => $remote) {
-            self::assertSame($remote['url'], $updateResp->getRemotes()[$key]['url']);
-            self::assertSame($remote['searchApiKey'], $updateResp->getRemotes()[$key]['searchApiKey']);
-            self::assertSame($remote['writeApiKey'], $updateResp->getRemotes()[$key]['writeApiKey']);
+            $respRemotes = $updateResp->getRemotes();
+            self::assertArrayHasKey($key, $respRemotes);
+            self::assertArrayHasKey('url', $respRemotes[$key]);
+            self::assertArrayHasKey('searchApiKey', $respRemotes[$key]);
+            self::assertArrayHasKey('writeApiKey', $respRemotes[$key]);
+            self::assertSame($remote['url'], $respRemotes[$key]['url']);
+            self::assertSame($remote['searchApiKey'], $respRemotes[$key]['searchApiKey']);
+            self::assertSame($remote['writeApiKey'], $respRemotes[$key]['writeApiKey']);
         }
 
         $getResp = $this->client->getNetwork();
         self::assertSame($networks['self'], $getResp->getSelf());
+        self::assertArrayHasKey($networks['self'], $getResp->getRemotes(), '"self" must be a key of remotes');
         foreach ($networks['remotes'] as $key => $remote) {
-            self::assertSame($remote['url'], $getResp->getRemotes()[$key]['url']);
-            self::assertSame($remote['searchApiKey'], $getResp->getRemotes()[$key]['searchApiKey']);
-            self::assertSame($remote['writeApiKey'], $getResp->getRemotes()[$key]['writeApiKey']);
+            $respRemotes = $getResp->getRemotes();
+            self::assertArrayHasKey($key, $respRemotes);
+            self::assertArrayHasKey('url', $respRemotes[$key]);
+            self::assertArrayHasKey('searchApiKey', $respRemotes[$key]);
+            self::assertArrayHasKey('writeApiKey', $respRemotes[$key]);
+            self::assertSame($remote['url'], $respRemotes[$key]['url']);
+            self::assertSame($remote['searchApiKey'], $respRemotes[$key]['searchApiKey']);
+            self::assertSame($remote['writeApiKey'], $respRemotes[$key]['writeApiKey']);
         }
     }
 }
