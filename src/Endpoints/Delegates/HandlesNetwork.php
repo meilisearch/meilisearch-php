@@ -21,7 +21,7 @@ trait HandlesNetwork
     /**
      * @param array{
      *     self?: non-empty-string,
-     *     remotes?: array<non-empty-string, array{url: non-empty-string, searchApiKey: string}>
+     *     remotes?: array<non-empty-string, array{url: non-empty-string, searchApiKey: string, writeApiKey: string}>
      * } $network
      */
     public function updateNetwork(array $network): NetworkResults
