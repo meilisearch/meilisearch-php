@@ -46,8 +46,8 @@ final class NetworksTest extends TestCase
     private function assertNetworkResponse(array $expected, NetworkResults $response): void
     {
         self::assertSame($expected['self'], $response->getSelf());
+        $respRemotes = $response->getRemotes();
         foreach ($expected['remotes'] as $key => $remote) {
-            $respRemotes = $response->getRemotes();
             self::assertArrayHasKey($key, $respRemotes);
             self::assertSame($remote['url'], $respRemotes[$key]['url']);
             self::assertSame($remote['searchApiKey'], $respRemotes[$key]['searchApiKey']);
