@@ -12,14 +12,14 @@ class NetworkResults extends Data
     private string $self;
 
     /**
-     * @var array<non-empty-string, array{url: non-empty-string, searchApiKey: string}> a mapping of remote node IDs to their connection details
+     * @var array<non-empty-string, array{url: non-empty-string, searchApiKey: string, writeApiKey: string}> a mapping of remote node IDs to their connection details
      */
     private array $remotes;
 
     /**
      * @param array{
      *     self?: non-empty-string,
-     *     remotes?: array<non-empty-string, array{url: non-empty-string, searchApiKey: string}>
+     *     remotes?: array<non-empty-string, array{url: non-empty-string, searchApiKey: string, writeApiKey: string}>
      * } $params
      */
     public function __construct(array $params)
@@ -39,7 +39,7 @@ class NetworkResults extends Data
     }
 
     /**
-     * @return array<non-empty-string, array{url: non-empty-string, searchApiKey: string}>
+     * @return array<non-empty-string, array{url: non-empty-string, searchApiKey: string, writeApiKey: string}>
      */
     public function getRemotes(): array
     {

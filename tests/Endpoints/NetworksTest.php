@@ -25,20 +25,30 @@ final class NetworksTest extends TestCase
                 'ms-00' => [
                     'url' => 'http://INSTANCE_URL',
                     'searchApiKey' => 'INSTANCE_API_KEY',
+                    'writeApiKey' => 'INSTANCE_WRITE_API_KEY',
                 ],
                 'ms-01' => [
                     'url' => 'http://ANOTHER_INSTANCE_URL',
                     'searchApiKey' => 'ANOTHER_INSTANCE_API_KEY',
+                    'writeApiKey' => 'ANOTHER_INSTANCE_WRITE_API_KEY',
                 ],
             ],
         ];
 
-        $response = $this->client->updateNetwork($networks);
-        self::assertSame($networks['self'], $response->getSelf());
-        self::assertSame($networks['remotes'], $response->getRemotes());
+        $updateResp = $this->client->updateNetwork($networks);
+        self::assertSame($networks['self'], $updateResp->getSelf());
+        foreach ($networks['remotes'] as $key =>$remote) {
+            self::assertSame($remote['url'], $updateResp->getRemotes()[$key]['url']);
+            self::assertSame($remote['searchApiKey'], $updateResp->getRemotes()[$key]['searchApiKey']);
+            self::assertSame($remote['writeApiKey'], $updateResp->getRemotes()[$key]['writeApiKey']);
+        }
 
-        $response = $this->client->getNetwork();
-        self::assertSame($networks['self'], $response->getSelf());
-        self::assertSame($networks['remotes'], $response->getRemotes());
+        $getResp = $this->client->getNetwork();
+        self::assertSame($networks['self'], $getResp->getSelf());
+        foreach ($networks['remotes'] as $key => $remote) {
+            self::assertSame($remote['url'], $getResp->getRemotes()[$key]['url']);
+            self::assertSame($remote['searchApiKey'], $getResp->getRemotes()[$key]['searchApiKey']);
+            self::assertSame($remote['writeApiKey'], $getResp->getRemotes()[$key]['writeApiKey']);
+        }
     }
 }
