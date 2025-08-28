@@ -221,7 +221,7 @@ class Client implements Http
             if (\is_bool($value)) {
                 $queryParams[$key] = $value ? 'true' : 'false';
             }
-            if (\is_array($value) && array_is_list($value)) {
+            if (\is_array($value) && \array_is_list($value)) {
                 $queryParams[$key] = implode(',', $value);
             }
         }

@@ -34,14 +34,14 @@
         "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "php-http/discovery": "^1.7",
-        "psr/http-client": "^1.0"
+        "psr/http-client": "^1.0",
+        "symfony/polyfill-php81": "^1.33"
     },
     "autoload": {
         "psr-4": {
             "MeiliSearch\\": "src/",
             "Meilisearch\\": "src/"
-        },
-        "files": ["src/polyfills.php"]
+        }
     },
     "autoload-dev": {
         "psr-4": {
