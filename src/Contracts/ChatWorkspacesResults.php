@@ -6,8 +6,19 @@ namespace Meilisearch\Contracts;
 
 class ChatWorkspacesResults extends Data
 {
+    /**
+     * @var non-negative-int
+     */
     private int $offset;
+    
+    /**
+     * @var non-negative-int
+     */
     private int $limit;
+    
+    /**
+     * @var non-negative-int
+     */
     private int $total;
 
     public function __construct(array $params)
