@@ -38,16 +38,25 @@ class ChatWorkspacesResults extends Data
         return $this->data;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getLimit(): int
     {
         return $this->limit;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getTotal(): int
     {
         return $this->total;
