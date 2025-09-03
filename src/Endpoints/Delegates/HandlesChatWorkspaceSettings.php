@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\ChatWorkspaceSettings;
+use Psr\Http\Message\StreamInterface;
 
 trait HandlesChatWorkspaceSettings
 {
@@ -70,7 +71,7 @@ trait HandlesChatWorkspaceSettings
      *     stream: bool
      * } $options The request body for the chat completion
      */
-    public function streamCompletion(array $options): \Psr\Http\Message\StreamInterface
+    public function streamCompletion(array $options): StreamInterface
     {
         if (null === $this->workspaceName) {
             throw new \InvalidArgumentException('Workspace name is required for chat completion');
