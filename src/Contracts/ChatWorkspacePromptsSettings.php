@@ -4,20 +4,29 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @phpstan-type ChatWorkspacePromptsArray array{
+ *     system: string,
+ *     searchDescription: string,
+ *     searchQParam: non-empty-string,
+ *     searchIndexUidParam: non-empty-string
+ * }
+ */
 class ChatWorkspacePromptsSettings extends Data
 {
     public string $system;
     public string $searchDescription;
+    /**
+     * @var non-empty-string
+     */
     public string $searchQParam;
+    /**
+     * @var non-empty-string
+     */
     public string $searchIndexUidParam;
 
     /**
-     * @param array{
-     *     system: string,
-     *     searchDescription: string,
-     *     searchQParam: string,
-     *     searchIndexUidParam: string
-     * } $params
+     * @param ChatWorkspacePromptsArray $params
      */
     public function __construct(array $params)
     {
@@ -39,23 +48,24 @@ class ChatWorkspacePromptsSettings extends Data
         return $this->searchDescription;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getSearchQParam(): string
     {
         return $this->searchQParam;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getSearchIndexUidParam(): string
     {
         return $this->searchIndexUidParam;
     }
 
     /**
-     * @return array{
-     *     system: string,
-     *     searchDescription: string,
-     *     searchQParam: string,
-     *     searchIndexUidParam: string
-     * }
+     * @return ChatWorkspacePromptsArray
      */
     public function toArray(): array
     {
