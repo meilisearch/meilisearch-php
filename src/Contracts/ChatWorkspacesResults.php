@@ -10,12 +10,12 @@ class ChatWorkspacesResults extends Data
      * @var non-negative-int
      */
     private int $offset;
-    
+
     /**
      * @var non-negative-int
      */
     private int $limit;
-    
+
     /**
      * @var non-negative-int
      */
@@ -62,6 +62,14 @@ class ChatWorkspacesResults extends Data
         return $this->total;
     }
 
+    /**
+     * @return array{
+     *     results: array,
+     *     offset: non-negative-int,
+     *     limit: non-negative-int,
+     *     total: non-negative-int
+     * }
+     */
     public function toArray(): array
     {
         return [
@@ -72,6 +80,9 @@ class ChatWorkspacesResults extends Data
         ];
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function count(): int
     {
         return \count($this->data);
