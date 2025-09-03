@@ -38,7 +38,7 @@ final class ChatWorkspaceTest extends TestCase
 
     public function testUpdateWorkspacesSettings(): void
     {
-        $response = $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
+        $response = $this->client->chatWorkspace('myWorkspace')->updateSettings($this->workspaceSettings);
         self::assertSame($this->workspaceSettings['source'], $response->getSource());
         self::assertSame($this->workspaceSettings['orgId'], $response->getOrgId());
         self::assertSame($this->workspaceSettings['projectId'], $response->getProjectId());
@@ -54,14 +54,14 @@ final class ChatWorkspaceTest extends TestCase
     {
         self::expectException(ApiException::class);
         self::expectExceptionCode(404);
-        $this->client->chats->workspace('non-existent-workspace')->getSettings();
+        $this->client->chatWorkspace('non-existent-workspace')->getSettings();
     }
 
     public function testGetWorkspaceSettings(): void
     {
-        $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
+        $this->client->chatWorkspace('myWorkspace')->updateSettings($this->workspaceSettings);
 
-        $response = $this->client->chats->workspace('myWorkspace')->getSettings();
+        $response = $this->client->chatWorkspace('myWorkspace')->getSettings();
         self::assertSame($this->workspaceSettings['source'], $response->getSource());
         self::assertSame($this->workspaceSettings['orgId'], $response->getOrgId());
         self::assertSame($this->workspaceSettings['projectId'], $response->getProjectId());
@@ -79,8 +79,8 @@ final class ChatWorkspaceTest extends TestCase
 
     public function testListWorkspaces(): void
     {
-        $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
-        $response = $this->client->chats->listWorkspaces();
+        $this->client->chatWorkspace('myWorkspace')->updateSettings($this->workspaceSettings);
+        $response = $this->client->getChatWorkspaces();
         self::assertSame([
             ['uid' => 'myWorkspace'],
         ], $response->getResults());
@@ -88,9 +88,9 @@ final class ChatWorkspaceTest extends TestCase
 
     public function testResetWorkspaceSettings(): void
     {
-        $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
-        $this->client->chats->workspace('myWorkspace')->resetSettings();
-        $settingsResponse = $this->client->chats->workspace('myWorkspace')->getSettings();
+        $this->client->chatWorkspace('myWorkspace')->updateSettings($this->workspaceSettings);
+        $this->client->chatWorkspace('myWorkspace')->resetSettings();
+        $settingsResponse = $this->client->chatWorkspace('myWorkspace')->getSettings();
         self::assertSame('openAi', $settingsResponse->getSource()); // Source is reset to openAi for some reason
         self::assertNull($settingsResponse->getOrgId());
         self::assertNull($settingsResponse->getProjectId());
@@ -105,7 +105,7 @@ final class ChatWorkspaceTest extends TestCase
         self::assertNotEmpty($settingsResponse->getPrompts()->getSearchIndexUidParam());
 
         // Workspace still appears when listing workspaces
-        $listResponse = $this->client->chats->listWorkspaces();
+        $listResponse = $this->client->getChatWorkspaces();
         self::assertSame([
             ['uid' => 'myWorkspace'],
         ], $listResponse->getResults());
@@ -113,9 +113,9 @@ final class ChatWorkspaceTest extends TestCase
 
     public function testCompletionStreaming(): void
     {
-        $this->client->chats->workspace('myWorkspace')->updateSettings($this->workspaceSettings);
+        $this->client->chatWorkspace('myWorkspace')->updateSettings($this->workspaceSettings);
 
-        $stream = $this->client->chats->workspace('myWorkspace')->streamCompletion([
+        $stream = $this->client->chatWorkspace('myWorkspace')->streamCompletion([
             'model' => 'gpt-4o-mini',
             'messages' => [
                 [
