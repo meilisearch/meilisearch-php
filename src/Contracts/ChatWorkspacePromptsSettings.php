@@ -14,16 +14,16 @@ namespace Meilisearch\Contracts;
  */
 class ChatWorkspacePromptsSettings extends Data
 {
-    public string $system;
-    public string $searchDescription;
+    private string $system;
+    private string $searchDescription;
     /**
      * @var non-empty-string
      */
-    public string $searchQParam;
+    private string $searchQParam;
     /**
      * @var non-empty-string
      */
-    public string $searchIndexUidParam;
+    private string $searchIndexUidParam;
 
     /**
      * @param ChatWorkspacePromptsArray $params

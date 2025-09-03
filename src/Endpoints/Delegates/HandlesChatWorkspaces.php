@@ -9,7 +9,7 @@ use Meilisearch\Endpoints\ChatWorkspaces;
 
 trait HandlesChatWorkspaces
 {
-    public ChatWorkspaces $chats;
+    private ChatWorkspaces $chats;
 
     /**
      * List all chat workspaces.
