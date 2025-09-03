@@ -33,9 +33,6 @@ class ChatWorkspaceSettings extends Data
      * @var non-empty-string|null
      */
     private ?string $baseUrl;
-    /**
-     * @var string|null
-     */
     private ?string $apiKey;
     private ChatWorkspacePromptsSettings $prompts;
 

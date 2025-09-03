@@ -12,16 +12,9 @@ namespace Meilisearch\Contracts;
  *     searchIndexUidParam: non-empty-string
  * }
  */
-
 class ChatWorkspacePromptsSettings extends Data
 {
-    /**
-     * @var string
-     */
     public string $system;
-    /**
-     * @var string
-     */
     public string $searchDescription;
     /**
      * @var non-empty-string

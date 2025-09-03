@@ -19,6 +19,7 @@ interface Http
 
     /**
      * @param non-empty-string|null $contentType
+     *
      * @throws ApiException
      * @throws JsonEncodingException
      * @throws JsonDecodingException
