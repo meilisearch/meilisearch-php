@@ -7,6 +7,7 @@ namespace Meilisearch\Contracts;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\JsonDecodingException;
 use Meilisearch\Exceptions\JsonEncodingException;
+use Psr\Http\Message\StreamInterface;
 
 interface Http
 {
@@ -46,4 +47,10 @@ interface Http
      * @throws JsonDecodingException
      */
     public function delete(string $path, array $query = []);
+
+    /**
+     * @throws ApiException
+     * @throws JsonEncodingException
+     */
+    public function postStream(string $path, $body = null, array $query = []): StreamInterface;
 }
