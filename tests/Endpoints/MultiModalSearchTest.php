@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use Meilisearch\Http\Client;
 use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class MultiModalSearchTest extends TestCase
@@ -69,8 +69,7 @@ final class MultiModalSearchTest extends TestCase
                             ],
                             [
                                 'type' => 'image_base64',
-                                'image_base64' =>
-                                    'data:{{media.textAndPoster.image.mime}};base64,{{media.textAndPoster.image.data}}',
+                                'image_base64' => 'data:{{media.textAndPoster.image.mime}};base64,{{media.textAndPoster.image.data}}',
                             ],
                         ],
                     ],
@@ -145,17 +144,17 @@ final class MultiModalSearchTest extends TestCase
 
     public function testTextOnlySearch(): void
     {
-        $query = "A movie with lightsabers in space";
+        $query = 'A movie with lightsabers in space';
         $response = $this->index->search($query, [
             'media' => [
-                'text' => ['text' => $query]
+                'text' => ['text' => $query],
             ],
             'hybrid' => [
                 'embedder' => 'multimodal',
-                'semanticRatio' => 1
-            ]
+                'semanticRatio' => 1,
+            ],
         ]);
-        self::assertSame("Star Wars", $response->getHits()[0]['title']);
+        self::assertSame('Star Wars', $response->getHits()[0]['title']);
     }
 
     public function testImageOnlySearch(): void
@@ -164,20 +163,20 @@ final class MultiModalSearchTest extends TestCase
         $response = $this->index->search(null, [
             'media' => [
                 'poster' => [
-                    'poster' => $theFifthElementPoster
-                ]
+                    'poster' => $theFifthElementPoster,
+                ],
             ],
             'hybrid' => [
                 'embedder' => 'multimodal',
-                'semanticRatio' => 1
-            ]
+                'semanticRatio' => 1,
+            ],
         ]);
-        self::assertSame("The Fifth Element", $response->getHits()[0]['title']);
+        self::assertSame('The Fifth Element', $response->getHits()[0]['title']);
     }
 
     public function testTextAndImageSearch(): void
     {
-        $query = "a futuristic movie";
+        $query = 'a futuristic movie';
         $masterYodaBase64 = base64_encode(file_get_contents('./tests/assets/master-yoda.jpeg'));
         $response = $this->index->search(null, [
             'media' => [
@@ -185,15 +184,15 @@ final class MultiModalSearchTest extends TestCase
                     'text' => $query,
                     'image' => [
                         'mime' => 'image/jpeg',
-                        'data' => $masterYodaBase64
-                    ]
-                ]
+                        'data' => $masterYodaBase64,
+                    ],
+                ],
             ],
             'hybrid' => [
                 'embedder' => 'multimodal',
-                'semanticRatio' => 1
-            ]
+                'semanticRatio' => 1,
+            ],
         ]);
-        self::assertSame("Star Wars", $response->getHits()[0]['title']);
+        self::assertSame('Star Wars', $response->getHits()[0]['title']);
     }
 }
