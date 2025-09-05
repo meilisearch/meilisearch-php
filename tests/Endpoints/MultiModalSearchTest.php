@@ -11,6 +11,7 @@ use Tests\TestCase;
 final class MultiModalSearchTest extends TestCase
 {
     private Indexes $index;
+    private array $documents;
 
     private function getEmbedderConfig(string $voyageApiKey): array
     {
@@ -125,22 +126,74 @@ final class MultiModalSearchTest extends TestCase
         }
 
         $this->index = $this->createEmptyIndex($this->safeIndexName());
-        $this->index->updateSettings([
+        $updateSettingsPromise = $this->index->updateSettings([
             'searchableAttributes' => ['title', 'overview'],
             'embedders' => [
                 'multimodal' => $this->getEmbedderConfig($voyageApiKey),
             ],
         ]);
+        $this->index->waitForTask($updateSettingsPromise['taskUid']);
 
         // Load the movies.json dataset
         $fileJson = fopen('./tests/datasets/movies.json', 'r');
         $documentJson = fread($fileJson, filesize('./tests/datasets/movies.json'));
         fclose($fileJson);
-        $this->index->addDocumentsJson($documentJson);
+        $this->documents = json_decode($documentJson, true);
+        $addDocumentsPromise = $this->index->addDocuments($this->documents);
+        $this->index->waitForTask($addDocumentsPromise['taskUid']);
     }
 
     public function testTextOnlySearch(): void
     {
-        self::markTestSkipped('MultiModalSearch is not implemented yet');
+        $query = "A movie with lightsabers in space";
+        $response = $this->index->search($query, [
+            'media' => [
+                'text' => ['text' => $query]
+            ],
+            'hybrid' => [
+                'embedder' => 'multimodal',
+                'semanticRatio' => 1
+            ]
+        ]);
+        self::assertSame("Star Wars", $response->getHits()[0]['title']);
+    }
+
+    public function testImageOnlySearch(): void
+    {
+        $theFifthElementPoster = $this->documents[3]['poster'];
+        $response = $this->index->search(null, [
+            'media' => [
+                'poster' => [
+                    'poster' => $theFifthElementPoster
+                ]
+            ],
+            'hybrid' => [
+                'embedder' => 'multimodal',
+                'semanticRatio' => 1
+            ]
+        ]);
+        self::assertSame("The Fifth Element", $response->getHits()[0]['title']);
+    }
+
+    public function testTextAndImageSearch(): void
+    {
+        $query = "a futuristic movie";
+        $masterYodaBase64 = base64_encode(file_get_contents('./tests/assets/master-yoda.jpeg'));
+        $response = $this->index->search(null, [
+            'media' => [
+                'textAndPoster' => [
+                    'text' => $query,
+                    'image' => [
+                        'mime' => 'image/jpeg',
+                        'data' => $masterYodaBase64
+                    ]
+                ]
+            ],
+            'hybrid' => [
+                'embedder' => 'multimodal',
+                'semanticRatio' => 1
+            ]
+        ]);
+        self::assertSame("Star Wars", $response->getHits()[0]['title']);
     }
 }
