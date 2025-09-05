@@ -121,7 +121,7 @@ final class MultiModalSearchTest extends TestCase
         $http->patch('/experimental-features', ['multimodal' => true]);
 
         $apiKey = getenv('VOYAGE_API_KEY');
-        if ($apiKey === false || $apiKey === '') {
+        if (false === $apiKey || '' === $apiKey) {
             $this->voyageApiKey = null;
         } else {
             $this->voyageApiKey = $apiKey;
@@ -147,7 +147,7 @@ final class MultiModalSearchTest extends TestCase
 
     private function skipIfVoyageApiKeyIsMissing(): void
     {
-        if ($this->voyageApiKey === null) {
+        if (null === $this->voyageApiKey) {
             self::markTestSkipped('Missing `VOYAGE_API_KEY` environment variable');
         }
     }
