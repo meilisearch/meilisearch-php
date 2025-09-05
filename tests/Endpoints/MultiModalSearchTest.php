@@ -123,6 +123,7 @@ final class MultiModalSearchTest extends TestCase
         $apiKey = getenv('VOYAGE_API_KEY');
         if (false === $apiKey || '' === $apiKey) {
             $this->voyageApiKey = null;
+
             return; // This test case is skipped if the Voyage API key is not set
         } else {
             $this->voyageApiKey = $apiKey;
