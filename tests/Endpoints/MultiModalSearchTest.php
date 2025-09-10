@@ -41,7 +41,7 @@ final class MultiModalSearchTest extends TestCase
 
         // Load the movies.json dataset
         $documentsJson = file_get_contents('./tests/datasets/movies.json');
-        $this->documents = json_decode($documentsJson, true);
+        $this->documents = json_decode($documentsJson, true, 512, JSON_THROW_ON_ERROR);
         $addDocumentsPromise = $this->index->addDocuments($this->documents);
         $this->index->waitForTask($addDocumentsPromise['taskUid']);
     }
