@@ -40,19 +40,10 @@ final class MultiModalSearchTest extends TestCase
         $this->index->waitForTask($updateSettingsPromise['taskUid']);
 
         // Load the movies.json dataset
-        $fileJson = fopen('./tests/datasets/movies.json', 'r');
-        $documentJson = fread($fileJson, filesize('./tests/datasets/movies.json'));
-        fclose($fileJson);
-        $this->documents = json_decode($documentJson, true);
+        $documentsJson = file_get_contents('./tests/datasets/movies.json');
+        $this->documents = json_decode($documentsJson, true);
         $addDocumentsPromise = $this->index->addDocuments($this->documents);
         $this->index->waitForTask($addDocumentsPromise['taskUid']);
-    }
-
-    private function skipIfVoyageApiKeyIsMissing(): void
-    {
-        if (null === $this->voyageApiKey) {
-            self::markTestSkipped('Missing `VOYAGE_API_KEY` environment variable');
-        }
     }
 
     public function testTextOnlySearch(): void
@@ -115,7 +106,12 @@ final class MultiModalSearchTest extends TestCase
         self::assertSame('Star Wars', $response->getHits()[0]['title']);
     }
 
-
+    private function skipIfVoyageApiKeyIsMissing(): void
+    {
+        if (null === $this->voyageApiKey) {
+            self::markTestSkipped('Missing `VOYAGE_API_KEY` environment variable');
+        }
+    }
 
     private static function getEmbedderConfig(string $voyageApiKey): array
     {
