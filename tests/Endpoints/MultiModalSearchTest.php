@@ -14,7 +14,110 @@ final class MultiModalSearchTest extends TestCase
     private array $documents;
     private ?string $voyageApiKey;
 
-    private function getEmbedderConfig(string $voyageApiKey): array
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['multimodal' => true]);
+
+        $apiKey = getenv('VOYAGE_API_KEY');
+        if (false === $apiKey || '' === $apiKey) {
+            $this->voyageApiKey = null;
+
+            return; // This test case is skipped if the Voyage API key is not set
+        } else {
+            $this->voyageApiKey = $apiKey;
+        }
+
+        $this->index = $this->createEmptyIndex($this->safeIndexName());
+        $updateSettingsPromise = $this->index->updateSettings([
+            'searchableAttributes' => ['title', 'overview'],
+            'embedders' => [
+                'multimodal' => self::getEmbedderConfig($this->voyageApiKey),
+            ],
+        ]);
+        $this->index->waitForTask($updateSettingsPromise['taskUid']);
+
+        // Load the movies.json dataset
+        $fileJson = fopen('./tests/datasets/movies.json', 'r');
+        $documentJson = fread($fileJson, filesize('./tests/datasets/movies.json'));
+        fclose($fileJson);
+        $this->documents = json_decode($documentJson, true);
+        $addDocumentsPromise = $this->index->addDocuments($this->documents);
+        $this->index->waitForTask($addDocumentsPromise['taskUid']);
+    }
+
+    private function skipIfVoyageApiKeyIsMissing(): void
+    {
+        if (null === $this->voyageApiKey) {
+            self::markTestSkipped('Missing `VOYAGE_API_KEY` environment variable');
+        }
+    }
+
+    public function testTextOnlySearch(): void
+    {
+        $this->skipIfVoyageApiKeyIsMissing();
+
+        $query = 'A movie with lightsabers in space';
+        $response = $this->index->search($query, [
+            'media' => [
+                'text' => ['text' => $query],
+            ],
+            'hybrid' => [
+                'embedder' => 'multimodal',
+                'semanticRatio' => 1,
+            ],
+        ]);
+        self::assertSame('Star Wars', $response->getHits()[0]['title']);
+    }
+
+    public function testImageOnlySearch(): void
+    {
+        $this->skipIfVoyageApiKeyIsMissing();
+
+        $theFifthElementPoster = $this->documents[3]['poster'];
+        $response = $this->index->search(null, [
+            'media' => [
+                'poster' => [
+                    'poster' => $theFifthElementPoster,
+                ],
+            ],
+            'hybrid' => [
+                'embedder' => 'multimodal',
+                'semanticRatio' => 1,
+            ],
+        ]);
+        self::assertSame('The Fifth Element', $response->getHits()[0]['title']);
+    }
+
+    public function testTextAndImageSearch(): void
+    {
+        $this->skipIfVoyageApiKeyIsMissing();
+
+        $query = 'a futuristic movie';
+        $masterYodaBase64 = base64_encode(file_get_contents('./tests/assets/master-yoda.jpeg'));
+        $response = $this->index->search(null, [
+            'media' => [
+                'textAndPoster' => [
+                    'text' => $query,
+                    'image' => [
+                        'mime' => 'image/jpeg',
+                        'data' => $masterYodaBase64,
+                    ],
+                ],
+            ],
+            'hybrid' => [
+                'embedder' => 'multimodal',
+                'semanticRatio' => 1,
+            ],
+        ]);
+        self::assertSame('Star Wars', $response->getHits()[0]['title']);
+    }
+
+
+
+    private static function getEmbedderConfig(string $voyageApiKey): array
     {
         return [
             'source' => 'rest',
@@ -111,106 +214,5 @@ final class MultiModalSearchTest extends TestCase
                 ],
             ],
         ];
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-        $http->patch('/experimental-features', ['multimodal' => true]);
-
-        $apiKey = getenv('VOYAGE_API_KEY');
-        if (false === $apiKey || '' === $apiKey) {
-            $this->voyageApiKey = null;
-
-            return; // This test case is skipped if the Voyage API key is not set
-        } else {
-            $this->voyageApiKey = $apiKey;
-        }
-
-        $this->index = $this->createEmptyIndex($this->safeIndexName());
-        $updateSettingsPromise = $this->index->updateSettings([
-            'searchableAttributes' => ['title', 'overview'],
-            'embedders' => [
-                'multimodal' => $this->getEmbedderConfig($this->voyageApiKey),
-            ],
-        ]);
-        $this->index->waitForTask($updateSettingsPromise['taskUid']);
-
-        // Load the movies.json dataset
-        $fileJson = fopen('./tests/datasets/movies.json', 'r');
-        $documentJson = fread($fileJson, filesize('./tests/datasets/movies.json'));
-        fclose($fileJson);
-        $this->documents = json_decode($documentJson, true);
-        $addDocumentsPromise = $this->index->addDocuments($this->documents);
-        $this->index->waitForTask($addDocumentsPromise['taskUid']);
-    }
-
-    private function skipIfVoyageApiKeyIsMissing(): void
-    {
-        if (null === $this->voyageApiKey) {
-            self::markTestSkipped('Missing `VOYAGE_API_KEY` environment variable');
-        }
-    }
-
-    public function testTextOnlySearch(): void
-    {
-        $this->skipIfVoyageApiKeyIsMissing();
-
-        $query = 'A movie with lightsabers in space';
-        $response = $this->index->search($query, [
-            'media' => [
-                'text' => ['text' => $query],
-            ],
-            'hybrid' => [
-                'embedder' => 'multimodal',
-                'semanticRatio' => 1,
-            ],
-        ]);
-        self::assertSame('Star Wars', $response->getHits()[0]['title']);
-    }
-
-    public function testImageOnlySearch(): void
-    {
-        $this->skipIfVoyageApiKeyIsMissing();
-
-        $theFifthElementPoster = $this->documents[3]['poster'];
-        $response = $this->index->search(null, [
-            'media' => [
-                'poster' => [
-                    'poster' => $theFifthElementPoster,
-                ],
-            ],
-            'hybrid' => [
-                'embedder' => 'multimodal',
-                'semanticRatio' => 1,
-            ],
-        ]);
-        self::assertSame('The Fifth Element', $response->getHits()[0]['title']);
-    }
-
-    public function testTextAndImageSearch(): void
-    {
-        $this->skipIfVoyageApiKeyIsMissing();
-
-        $query = 'a futuristic movie';
-        $masterYodaBase64 = base64_encode(file_get_contents('./tests/assets/master-yoda.jpeg'));
-        $response = $this->index->search(null, [
-            'media' => [
-                'textAndPoster' => [
-                    'text' => $query,
-                    'image' => [
-                        'mime' => 'image/jpeg',
-                        'data' => $masterYodaBase64,
-                    ],
-                ],
-            ],
-            'hybrid' => [
-                'embedder' => 'multimodal',
-                'semanticRatio' => 1,
-            ],
-        ]);
-        self::assertSame('Star Wars', $response->getHits()[0]['title']);
     }
 }
