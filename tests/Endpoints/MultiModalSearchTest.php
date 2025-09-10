@@ -12,7 +12,6 @@ final class MultiModalSearchTest extends TestCase
 {
     private Indexes $index;
     private array $documents;
-    private ?string $voyageApiKey;
 
     protected function setUp(): void
     {
@@ -21,20 +20,16 @@ final class MultiModalSearchTest extends TestCase
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
         $http->patch('/experimental-features', ['multimodal' => true]);
 
-        $apiKey = getenv('VOYAGE_API_KEY');
-        if (false === $apiKey || '' === $apiKey) {
-            $this->voyageApiKey = null;
-
-            return; // This test case is skipped if the Voyage API key is not set
-        } else {
-            $this->voyageApiKey = $apiKey;
+        $voyageApiKey = getenv('VOYAGE_API_KEY');
+        if (false === $voyageApiKey || '' === $voyageApiKey) {
+            self::markTestSkipped('Missing `VOYAGE_API_KEY` environment variable');
         }
 
         $this->index = $this->createEmptyIndex($this->safeIndexName());
         $updateSettingsPromise = $this->index->updateSettings([
             'searchableAttributes' => ['title', 'overview'],
             'embedders' => [
-                'multimodal' => self::getEmbedderConfig($this->voyageApiKey),
+                'multimodal' => self::getVoyageEmbedderConfig($voyageApiKey),
             ],
         ]);
         $this->index->waitForTask($updateSettingsPromise['taskUid']);
@@ -48,8 +43,6 @@ final class MultiModalSearchTest extends TestCase
 
     public function testTextOnlySearch(): void
     {
-        $this->skipIfVoyageApiKeyIsMissing();
-
         $query = 'A movie with lightsabers in space';
         $response = $this->index->search($query, [
             'media' => [
@@ -65,8 +58,6 @@ final class MultiModalSearchTest extends TestCase
 
     public function testImageOnlySearch(): void
     {
-        $this->skipIfVoyageApiKeyIsMissing();
-
         $theFifthElementPoster = $this->documents[3]['poster'];
         $response = $this->index->search(null, [
             'media' => [
@@ -84,8 +75,6 @@ final class MultiModalSearchTest extends TestCase
 
     public function testTextAndImageSearch(): void
     {
-        $this->skipIfVoyageApiKeyIsMissing();
-
         $query = 'a futuristic movie';
         $masterYodaBase64 = base64_encode(file_get_contents('./tests/assets/master-yoda.jpeg'));
         $response = $this->index->search(null, [
@@ -106,14 +95,7 @@ final class MultiModalSearchTest extends TestCase
         self::assertSame('Star Wars', $response->getHits()[0]['title']);
     }
 
-    private function skipIfVoyageApiKeyIsMissing(): void
-    {
-        if (null === $this->voyageApiKey) {
-            self::markTestSkipped('Missing `VOYAGE_API_KEY` environment variable');
-        }
-    }
-
-    private static function getEmbedderConfig(string $voyageApiKey): array
+    private static function getVoyageEmbedderConfig(string $voyageApiKey): array
     {
         return [
             'source' => 'rest',
