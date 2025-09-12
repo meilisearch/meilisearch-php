@@ -20,7 +20,7 @@ class TimeOutException extends \Exception implements ExceptionInterface
     public function __toString()
     {
         $base = 'Meilisearch TimeOutException: Code: '.$this->code;
-        if ($this->message) {
+        if ($this->message !== '') {
             return $base.' - Message: '.$this->message;
         } else {
             return $base;

@@ -33,7 +33,7 @@ class ApiException extends \Exception implements ExceptionInterface
     {
         $base = 'Meilisearch ApiException: Http Status: '.$this->httpStatus;
 
-        if (!\is_null($this->message)) {
+        if ($this->message !== '') {
             $base .= ' - Message: '.$this->message;
         }
 
