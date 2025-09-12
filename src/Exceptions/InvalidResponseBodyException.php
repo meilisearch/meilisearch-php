@@ -25,7 +25,7 @@ class InvalidResponseBodyException extends \Exception implements ExceptionInterf
     {
         $base = 'Meilisearch InvalidResponseBodyException: Http Status: '.$this->httpStatus;
 
-        if ($this->message !== '') {
+        if ('' !== $this->message) {
             $base .= ' - Message: '.$this->message;
         }
 
