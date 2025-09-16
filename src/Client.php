@@ -53,7 +53,7 @@ class Client
         ?ClientInterface $httpClient = null,
         ?RequestFactoryInterface $requestFactory = null,
         array $clientAgents = [],
-        ?StreamFactoryInterface $streamFactory = null
+        ?StreamFactoryInterface $streamFactory = null,
     ) {
         $this->http = new MeilisearchClientAdapter($url, $apiKey, $httpClient, $requestFactory, $clientAgents, $streamFactory);
         $this->chats = new ChatWorkspaces($this->http);

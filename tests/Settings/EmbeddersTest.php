@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Settings;
 
+use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
@@ -17,6 +18,7 @@ final class EmbeddersTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->index = $this->createEmptyIndex($this->safeIndexName());
     }
 
@@ -31,26 +33,17 @@ final class EmbeddersTest extends TestCase
     {
         $newEmbedders = ['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]];
 
-        $promise = $this->index->updateEmbedders($newEmbedders);
+        $this->index->updateEmbedders($newEmbedders)->wait();
 
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
-
-        $embedders = $this->index->getEmbedders();
-
-        self::assertSame($newEmbedders, $embedders);
+        self::assertSame($newEmbedders, $this->index->getEmbedders());
     }
 
     public function testResetEmbedders(): void
     {
-        $promise = $this->index->resetEmbedders();
+        $this->index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]])->wait();
+        $this->index->resetEmbedders()->wait();
 
-        $this->assertIsValidPromise($promise);
-
-        $this->index->waitForTask($promise['taskUid']);
-        $embedders = $this->index->getEmbedders();
-
-        self::assertSame(self::DEFAULT_EMBEDDER, $embedders);
+        self::assertSame(self::DEFAULT_EMBEDDER, $this->index->getEmbedders());
     }
 
     public function testHuggingFacePooling(): void
@@ -61,16 +54,13 @@ final class EmbeddersTest extends TestCase
             'pooling' => 'useModel',
         ];
 
-        $promise = $this->index->updateEmbedders([
+        $this->index->updateEmbedders([
             'embedder_name' => [
                 'source' => 'huggingFace',
                 'model' => 'sentence-transformers/all-MiniLM-L6-v2',
                 'pooling' => 'useModel',
             ],
-        ]);
-
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        ])->wait();
 
         $embedders = $this->index->getEmbedders();
 
@@ -96,10 +86,10 @@ final class EmbeddersTest extends TestCase
             ],
         ];
 
-        $promise = $this->index->updateEmbedders([
+        $task = $this->index->updateEmbedders([
             'embedder_name' => $embedder,
         ]);
 
-        $this->assertIsValidPromise($promise);
+        self::assertSame(TaskStatus::Enqueued, $task->getStatus());
     }
 }
