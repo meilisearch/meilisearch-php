@@ -47,7 +47,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
 
       - name: Validate composer.json and composer.lock
         run: composer validate
