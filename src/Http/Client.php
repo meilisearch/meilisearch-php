@@ -21,6 +21,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 
 class Client implements Http
 {
@@ -140,6 +141,22 @@ class Client implements Http
     }
 
     /**
+     * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
+     * @throws JsonEncodingException
+     */
+    public function postStream(string $path, $body = null, array $query = []): StreamInterface
+    {
+        $request = $this->requestFactory->createRequest(
+            'POST',
+            $this->baseUrl.$path.$this->buildQueryString($query)
+        )->withBody($this->streamFactory->createStream($this->json->serialize($body)));
+
+        return $this->executeStream($request, ['Content-type' => 'application/json']);
+    }
+
+    /**
      * @param array<string, string|string[]> $headers
      *
      * @throws ApiException
@@ -159,8 +176,53 @@ class Client implements Http
         }
     }
 
+    /**
+     * @param array<string, string|string[]> $headers
+     *
+     * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
+     */
+    private function executeStream(RequestInterface $request, array $headers = []): StreamInterface
+    {
+        foreach (array_merge($this->headers, $headers) as $header => $value) {
+            $request = $request->withAddedHeader($header, $value);
+        }
+
+        try {
+            $response = $this->http->sendRequest($request);
+
+            if ($response->getStatusCode() >= 300) {
+                $bodyContent = (string) $response->getBody();
+
+                // Try to parse as JSON for structured errors, fall back to raw content
+                if ($this->isJSONResponse($response->getHeader('content-type'))) {
+                    try {
+                        $body = $this->json->unserialize($bodyContent) ?? $response->getReasonPhrase();
+                    } catch (JsonDecodingException $e) {
+                        $body = '' !== $bodyContent ? $bodyContent : $response->getReasonPhrase();
+                    }
+                } else {
+                    $body = '' !== $bodyContent ? $bodyContent : $response->getReasonPhrase();
+                }
+
+                throw new ApiException($response, $body);
+            }
+
+            return $response->getBody();
+        } catch (NetworkExceptionInterface $e) {
+            throw new CommunicationException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
     private function buildQueryString(array $queryParams = []): string
     {
+        foreach ($queryParams as $key => $value) {
+            if (\is_bool($value)) {
+                $queryParams[$key] = $value ? 'true' : 'false';
+            }
+        }
+
         return \count($queryParams) > 0 ? '?'.http_build_query($queryParams) : '';
     }
 

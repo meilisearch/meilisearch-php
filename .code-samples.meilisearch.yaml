@@ -808,3 +808,18 @@ update_embedders_1: |-
       'documentTemplate' => 'A document titled '{{doc.title}}' whose description starts with {{doc.overview|truncatewords: 20}}'
     ]
   ]);
+search_parameter_reference_media_1: |-
+  $client->index('INDEX_NAME')->search('a futuristic movie', [
+    'hybrid' => [
+      'embedder' => 'EMBEDDER_NAME'
+    ],
+    'media' => [
+      'textAndPoster' => [
+        'text' => 'a futuristic movie',
+        'image' => [
+          'mime' => 'image/jpeg',
+          'data' => 'base64EncodedImageData'
+        ]
+      ]
+    ]
+  ]);
