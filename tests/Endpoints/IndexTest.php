@@ -6,7 +6,6 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\Task;
-use Meilisearch\Contracts\TaskDetails\IndexSwapDetails;
 use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
