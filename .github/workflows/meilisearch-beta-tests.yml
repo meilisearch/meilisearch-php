@@ -27,7 +27,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     needs: ['meilisearch-version']
-    name: integration-tests-against-rc (PHP ${{ matrix.php-version }}) (${{ matrix.http-client }})
+    name: integration-tests-against-rc (PHP ${{ matrix.php-version }})
     services:
       meilisearch:
         image: getmeili/meilisearch:${{ needs.meilisearch-version.outputs.version }}
@@ -38,11 +38,7 @@ jobs:
           MEILI_NO_ANALYTICS: true
     strategy:
       matrix:
-        php-version: ['8.1', '8.2', '8.3', '8.4']
-        http-client: ['Guzzle-7', 'Guzzle-7-Adapter', 'Symfony-HttpClient', 'PHP-HTTP-CurlClient', 'Kriswallsmith-Buzz']
-        exclude:
-          - php-version: '8.1'
-            http-client: 'Symfony-HttpClient'
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
 
     steps:
       - name: Checkout code
@@ -55,29 +51,6 @@ jobs:
 
       - name: Validate composer.json and composer.lock
         run: composer validate
-
-      - name: Switch to Guzzle7 Adapter
-        if: matrix.http-client == 'Guzzle-7-Adapter'
-        run: |
-          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/guzzle7-adapter": "^1.0.0",/' composer.json
-
-      - name: Switch to Symfony HttpClient
-        if: matrix.http-client == 'Symfony-HttpClient'
-        run: |
-          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"symfony\/http-client": "^7.1.1",/' composer.json
-          sed -i 's/"http-interop\/http-factory-guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"nyholm\/psr7": "^1.8.1",/' composer.json
-
-      - name: Switch to PHP HTTP CurlClient
-        if: matrix.http-client == 'PHP-HTTP-CurlClient'
-        run: |
-          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"php-http\/curl-client": "^2.3.2",/' composer.json
-          sed -i 's/"http-interop\/http-factory-guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"nyholm\/psr7": "^1.8.1",/' composer.json
-
-      - name: Switch to Kriswallsmith Buzz
-        if: matrix.http-client == 'Kriswallsmith-Buzz'
-        run: |
-          sed -i 's/"guzzlehttp\/guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"kriswallsmith\/buzz": "^1.2.1",/' composer.json
-          sed -i 's/"http-interop\/http-factory-guzzle": "^[0-9]\+\.[0-9]\+\.[0-9]\+\",/"nyholm\/psr7": "^1.8.1",/' composer.json
 
       - name: Install dependencies
         uses: ramsey/composer-install@v3

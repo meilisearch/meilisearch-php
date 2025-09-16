@@ -287,7 +287,8 @@ trait HandlesSettings
      *     enabled: bool,
      *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
      *     disableOnWords: list<non-empty-string>,
-     *     disableOnAttributes: list<non-empty-string>
+     *     disableOnAttributes: list<non-empty-string>,
+     *     disableOnNumbers: bool
      * }
      */
     public function getTypoTolerance(): array
@@ -301,7 +302,8 @@ trait HandlesSettings
      *     enabled: bool,
      *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
      *     disableOnWords: list<non-empty-string>,
-     *     disableOnAttributes: list<non-empty-string>
+     *     disableOnAttributes: list<non-empty-string>,
+     *     disableOnNumbers: bool
      * } $typoTolerance
      */
     public function updateTypoTolerance(array $typoTolerance): Task
@@ -426,19 +428,28 @@ trait HandlesSettings
         return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/search-cutoff-ms'), partial(Tasks::waitTask(...), $this->http));
     }
 
-    // Settings - Experimental: Embedders (hybrid search)
+    // Settings - Embedders
 
+    /**
+     * @since Meilisearch v1.13.0
+     */
     public function getEmbedders(): ?array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/embedders');
     }
 
-    public function updateEmbedders(array $embedders): Task
+    /**
+     * @since Meilisearch v1.13.0
+     */
+    public function updateEmbedders(array $embedders): array
     {
         return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/embedders', $embedders), partial(Tasks::waitTask(...), $this->http));
     }
 
-    public function resetEmbedders(): Task
+    /**
+     * @since Meilisearch v1.13.0
+     */
+    public function resetEmbedders(): array
     {
         return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/embedders'), partial(Tasks::waitTask(...), $this->http));
     }
@@ -497,5 +508,93 @@ trait HandlesSettings
     public function resetPrefixSearch(): Task
     {
         return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/prefix-search'), partial(Tasks::waitTask(...), $this->http));
+    }
+
+    // Settings - Chat
+
+    /**
+     * @since Meilisearch v1.15.1
+     *
+     * @return array{
+     *     description: string,
+     *     documentTemplate: string,
+     *     documentTemplateMaxBytes: int,
+     *     searchParameters: array{
+     *         indexUid?: non-empty-string,
+     *         q?: string,
+     *         filter?: list<non-empty-string|list<non-empty-string>>,
+     *         locales?: list<non-empty-string>,
+     *         attributesToRetrieve?: list<non-empty-string>,
+     *         attributesToCrop?: list<non-empty-string>,
+     *         cropLength?: positive-int,
+     *         attributesToHighlight?: list<non-empty-string>,
+     *         cropMarker?: string,
+     *         highlightPreTag?: string,
+     *         highlightPostTag?: string,
+     *         facets?: list<non-empty-string>,
+     *         showMatchesPosition?: bool,
+     *         sort?: list<non-empty-string>,
+     *         matchingStrategy?: 'last'|'all'|'frequency',
+     *         offset?: non-negative-int,
+     *         limit?: non-negative-int,
+     *         hitsPerPage?: non-negative-int,
+     *         page?: non-negative-int,
+     *         vector?: non-empty-list<float|non-empty-list<float>>,
+     *         hybrid?: array<mixed>,
+     *         attributesToSearchOn?: non-empty-list<non-empty-string>,
+     *         showRankingScore?: bool,
+     *         showRankingScoreDetails?: bool,
+     *         rankingScoreThreshold?: float,
+     *         distinct?: non-empty-string,
+     *         federationOptions?: array<mixed>
+     *     }
+     * }
+     */
+    public function getChat(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/chat');
+    }
+
+    /**
+     * @since Meilisearch v1.15.1
+     *
+     * @param array{
+     *     description: string,
+     *     documentTemplate: string,
+     *     documentTemplateMaxBytes: int,
+     *     searchParameters: array{
+     *         indexUid?: non-empty-string,
+     *         q?: string,
+     *         filter?: list<non-empty-string|list<non-empty-string>>,
+     *         locales?: list<non-empty-string>,
+     *         attributesToRetrieve?: list<non-empty-string>,
+     *         attributesToCrop?: list<non-empty-string>,
+     *         cropLength?: positive-int,
+     *         attributesToHighlight?: list<non-empty-string>,
+     *         cropMarker?: string,
+     *         highlightPreTag?: string,
+     *         highlightPostTag?: string,
+     *         facets?: list<non-empty-string>,
+     *         showMatchesPosition?: bool,
+     *         sort?: list<non-empty-string>,
+     *         matchingStrategy?: 'last'|'all'|'frequency',
+     *         offset?: non-negative-int,
+     *         limit?: non-negative-int,
+     *         hitsPerPage?: non-negative-int,
+     *         page?: non-negative-int,
+     *         vector?: non-empty-list<float|non-empty-list<float>>,
+     *         hybrid?: array<mixed>,
+     *         attributesToSearchOn?: non-empty-list<non-empty-string>,
+     *         showRankingScore?: bool,
+     *         showRankingScoreDetails?: bool,
+     *         rankingScoreThreshold?: float,
+     *         distinct?: non-empty-string,
+     *         federationOptions?: array<mixed>
+     *     }
+     * } $chatSettings
+     */
+    public function updateChat(array $chatSettings): array
+    {
+        return $this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', $chatSettings);
     }
 }

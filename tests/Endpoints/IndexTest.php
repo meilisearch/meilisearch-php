@@ -52,6 +52,7 @@ final class IndexTest extends TestCase
                 'minWordSizeForTypos' => ['oneTypo' => 5, 'twoTypos' => 9],
                 'disableOnWords' => [],
                 'disableOnAttributes' => [],
+                'disableOnNumbers' => false,
             ],
             $this->index->getTypoTolerance(),
         );
@@ -249,8 +250,10 @@ final class IndexTest extends TestCase
     {
         $task = $this->client->swapIndexes([['indexA', 'indexB'], ['indexC', 'indexD']])->wait();
 
-        self::assertInstanceOf(IndexSwapDetails::class, $details = $task->getDetails());
-        self::assertSame([['indexes' => ['indexA', 'indexB']], ['indexes' => ['indexC', 'indexD']]], $details->swaps);
+        self::assertSame(['indexA', 'indexB'], $response['details']['swaps'][0]['indexes']);
+        self::assertSame(['indexC', 'indexD'], $response['details']['swaps'][1]['indexes']);
+        self::assertFalse($response['details']['swaps'][0]['rename']);
+        self::assertFalse($response['details']['swaps'][1]['rename']);
     }
 
     public function testDeleteTasks(): void
