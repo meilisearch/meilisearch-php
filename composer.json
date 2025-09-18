@@ -13,8 +13,20 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Clementine",
+            "name": "Clémentine Urquizar",
             "email": "clementine@meilisearch.com"
+        },
+        {
+            "name": "Bruno Casali",
+            "email": "bruno@meilisearch.com"
+        },
+        {
+            "name": "Laurent Cazanove",
+            "email": "lau.cazanove@gmail.com"
+        },
+        {
+            "name": "Tomas Norkūnas",
+            "email": "norkunas.tom@gmail.com"
         }
     ],
     "minimum-stability": "stable",
@@ -59,7 +71,9 @@
             "./vendor/bin/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
         ],
         "phpstan": "./vendor/bin/phpstan",
-        "test": ["sh scripts/tests.sh"]
+        "test": [
+            "sh scripts/tests.sh"
+        ]
     },
     "config": {
         "allow-plugins": {

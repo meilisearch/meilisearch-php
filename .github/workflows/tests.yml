@@ -9,6 +9,7 @@ on:
       - staging
       - main
       - feature/**
+      - v1.x
 
 jobs:
   yaml-lint:
@@ -16,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Yaml lint check
         uses: ibiqlik/action-yamllint@v3
@@ -30,7 +31,7 @@ jobs:
       PHP_CS_FIXER_IGNORE_ENV: 1
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
@@ -49,7 +50,7 @@ jobs:
     name: phpstan-tests
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
@@ -82,7 +83,7 @@ jobs:
         php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
@@ -113,7 +114,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 2
 

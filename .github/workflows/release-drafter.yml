@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - v1.x
 
 jobs:
   update_release_draft:
@@ -11,6 +12,6 @@ jobs:
     steps:
       - uses: release-drafter/release-drafter@v6
         with:
-          config-name: release-draft-template.yml
+          config-name: ${{ github.ref_name == 'v1.x' && 'release-draft-template-v1.yml' || 'release-draft-template.yml' }}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_DRAFTER_TOKEN }}

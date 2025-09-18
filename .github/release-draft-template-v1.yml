@@ -1,4 +1,4 @@
-name-template: "v$RESOLVED_VERSION 🚀"
+name-template: "v$RESOLVED_VERSION 🔒"
 tag-template: "v$RESOLVED_VERSION"
 exclude-labels:
   - "skip-changelog"
@@ -10,8 +10,6 @@ version-resolver:
     labels:
       - "enhancement"
   default: patch
-# Set initial version for v2.x releases
-version-template: "2.0.0"
 categories:
   - title: "⚠️ Breaking changes"
     label: "breaking-change"
@@ -26,7 +24,10 @@ categories:
       - "maintenance"
       - "documentation"
 template: |
-  ## What's Changed
+  ## What's Changed in v1.x
+
+  This is a maintenance release for the v1.x series. For the latest features and improvements, please consider upgrading to v2.x.
+
   $CHANGES
 
   **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
