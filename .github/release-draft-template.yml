@@ -1,5 +1,6 @@
 name-template: "v$RESOLVED_VERSION 🚀"
 tag-template: "v$RESOLVED_VERSION"
+filter-by-commitish: true
 exclude-labels:
   - "skip-changelog"
 version-resolver:
@@ -28,9 +29,9 @@ categories:
 template: |
   $CHANGES
 
-  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
-
   Thanks to $CONTRIBUTORS! 🎉
+
+  **See full changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 no-changes-template: "Changes are coming soon 😎"
 sort-direction: "ascending"
 replacers:
