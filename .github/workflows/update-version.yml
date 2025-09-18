@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
       - name: Update Meilisearch.php file
         run: |
           raw_new_version=$(echo $NEW_VERSION | cut -d 'v' -f 2)
@@ -41,4 +43,5 @@ jobs:
             --title "Update version for the next release ($NEW_VERSION)" \
             --body '⚠️ This PR is automatically generated. Check the new version is the expected one.' \
             --label 'skip-changelog' \
-            --base ${{ github.event.inputs.target_branch }}
+            --base ${{ github.event.inputs.target_branch }} \
+            --head ${{ env.NEW_BRANCH }}
