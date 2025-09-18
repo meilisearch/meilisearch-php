@@ -142,7 +142,7 @@ class Client implements Http
      * @throws ApiException
      * @throws ClientExceptionInterface
      * @throws CommunicationException
-     * @throws JsonEncodingException
+     * @throws \JsonException
      */
     public function postStream(string $path, $body = null, array $query = []): StreamInterface
     {
@@ -197,7 +197,7 @@ class Client implements Http
                 if ($this->isJSONResponse($response->getHeader('content-type'))) {
                     try {
                         $body = $this->json->unserialize($bodyContent) ?? $response->getReasonPhrase();
-                    } catch (JsonDecodingException $e) {
+                    } catch (\JsonException $e) {
                         $body = '' !== $bodyContent ? $bodyContent : $response->getReasonPhrase();
                     }
                 } else {
