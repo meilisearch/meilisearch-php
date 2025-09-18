@@ -13,5 +13,6 @@ jobs:
       - uses: release-drafter/release-drafter@v6
         with:
           config-name: ${{ github.ref_name == 'v1.x' && 'release-draft-template-v1.yml' || 'release-draft-template.yml' }}
+          commitish: ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_DRAFTER_TOKEN }}
