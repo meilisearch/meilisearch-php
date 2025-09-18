@@ -1,5 +1,5 @@
-name-template: "v1.$RESOLVED_VERSION 🔒"
-tag-template: "v1.$RESOLVED_VERSION"
+name-template: "v$RESOLVED_VERSION 🔒"
+tag-template: "v$RESOLVED_VERSION"
 filter-by-commitish: true
 exclude-labels:
   - "skip-changelog"
@@ -30,7 +30,7 @@ template: |
 
   Thanks to $CONTRIBUTORS! 🎉
 
-  **See full changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v1.$RESOLVED_VERSION
+  **See full changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 
 no-changes-template: "Changes are coming soon 😎"
 sort-direction: "ascending"
