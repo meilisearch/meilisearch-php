@@ -1,21 +1,49 @@
 version: 2
 updates:
+  # GitHub Actions - main branch
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "main"
     schedule:
       interval: "monthly"
     labels:
-      - 'skip-changelog'
-      - 'dependencies'
-    rebase-strategy: disabled
+      - "skip-changelog"
+      - "dependencies"
+    rebase-strategy: "disabled"
 
-  - package-ecosystem: composer
+  # GitHub Actions - v1.x branch
+  - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "v1.x"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "skip-changelog"
+      - "dependencies"
+    rebase-strategy: "disabled"
+
+  # Composer - main branch
+  - package-ecosystem: "composer"
+    directory: "/"
+    target-branch: "main"
     schedule:
       interval: "monthly"
       time: "04:00"
     open-pull-requests-limit: 10
     labels:
-      - skip-changelog
-      - dependencies
-    rebase-strategy: disabled
+      - "skip-changelog"
+      - "dependencies"
+    rebase-strategy: "disabled"
+
+  # Composer - v1.x branch
+  - package-ecosystem: "composer"
+    directory: "/"
+    target-branch: "v1.x"
+    schedule:
+      interval: "monthly"
+      time: "04:00"
+    open-pull-requests-limit: 10
+    labels:
+      - "skip-changelog"
+      - "dependencies"
+    rebase-strategy: "disabled"
