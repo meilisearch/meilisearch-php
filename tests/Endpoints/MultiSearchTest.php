@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use Meilisearch\Client;
 use Meilisearch\Contracts\FederationOptions;
 use Meilisearch\Contracts\MultiSearchFederation;
 use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Indexes;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Psr18Client;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use Tests\TestCase;
 
 final class MultiSearchTest extends TestCase
@@ -158,5 +162,27 @@ final class MultiSearchTest extends TestCase
         self::assertArrayHasKey('query', $response['results'][1]);
         self::assertCount(1, $response['results'][1]['hits']);
         self::assertSame('fantasy', $response['results'][1]['hits'][0]['genre']);
+    }
+
+    public function testMultiSearchFederationCastingToObject(): void
+    {
+        $httpClient = new MockHttpClient(static function (string $method, string $url, array $options): MockResponse {
+            self::assertSame('POST', $method);
+            self::assertSame('http://meilisearch/multi-search', $url);
+            self::assertSame('{"queries":[{"indexUid":"first"},{"indexUid":"second"}],"federation":{}}', $options['body']);
+
+            return new MockResponse(
+                json_encode(['results' => []], \JSON_THROW_ON_ERROR),
+                ['response_headers' => ['content-type' => 'application/json']],
+            );
+        });
+
+        $client = new Client('http://meilisearch', 'apikey', new Psr18Client($httpClient));
+        $client->multiSearch([
+            (new SearchQuery())->setIndexUid('first'),
+            (new SearchQuery())->setIndexUid('second'),
+        ],
+            new MultiSearchFederation()
+        );
     }
 }

@@ -25,7 +25,7 @@ trait HandlesMultiSearch
 
         $payload = ['queries' => $body];
         if (null !== $federation) {
-            $payload['federation'] = $federation->toArray();
+            $payload['federation'] = (object) $federation->toArray();
         }
 
         return $this->http->post('/multi-search', $payload);
