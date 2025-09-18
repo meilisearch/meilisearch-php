@@ -17,7 +17,7 @@ jobs:
     name: Update version in Meilisearch.php
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Update Meilisearch.php file
         run: |
           raw_new_version=$(echo $NEW_VERSION | cut -d 'v' -f 2)
