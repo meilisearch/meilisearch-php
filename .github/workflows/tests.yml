@@ -9,6 +9,7 @@ on:
       - staging
       - main
       - feature/**
+      - v1.x
 
 jobs:
   yaml-lint:
