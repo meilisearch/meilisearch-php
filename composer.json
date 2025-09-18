@@ -69,7 +69,7 @@
         "lint:fix": [
             "./vendor/bin/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no  --diff"
         ],
-        "phpstan": "./vendor/bin/phpstan",
+        "phpstan": "./vendor/bin/phpstan --memory-limit=512M",
         "test": [
             "sh scripts/tests.sh"
         ]
