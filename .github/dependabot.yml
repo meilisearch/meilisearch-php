@@ -7,7 +7,6 @@ updates:
     schedule:
       interval: "monthly"
     labels:
-      - "skip-changelog"
       - "dependencies"
     rebase-strategy: "disabled"
 
@@ -18,7 +17,6 @@ updates:
     schedule:
       interval: "monthly"
     labels:
-      - "skip-changelog"
       - "dependencies"
     rebase-strategy: "disabled"
 
@@ -31,7 +29,6 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 10
     labels:
-      - "skip-changelog"
       - "dependencies"
     rebase-strategy: "disabled"
 
@@ -44,6 +41,5 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 10
     labels:
-      - "skip-changelog"
       - "dependencies"
     rebase-strategy: "disabled"
