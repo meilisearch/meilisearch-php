@@ -6,7 +6,6 @@
 .gitattributes export-ignore
 .gitignore export-ignore
 .php-cs-fixer.dist.php export-ignore
-bors.toml export-ignore
 CONTRIBUTING.md export-ignore
 phpstan.neon export-ignore
 phpunit.xml.dist export-ignore
