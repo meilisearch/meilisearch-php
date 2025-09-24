@@ -91,15 +91,9 @@ Some notes on GitHub PRs:
 
 Meilisearch tools follow the [Semantic Versioning Convention](https://semver.org/).
 
-### Automation to Rebase and Merge the PRs
-
-This project integrates a bot that helps us manage pull requests merging.<br>
-_[Read more about this](https://github.com/meilisearch/integration-guides/blob/main/resources/bors.md)._
-
 ### Automated Changelogs
 
-This project integrates a tool to create automated changelogs.<br>
-_[Read more about this](https://github.com/meilisearch/integration-guides/blob/main/resources/release-drafter.md)._
+This project uses [Release Drafter](https://github.com/release-drafter/release-drafter) to automate changelog creation.
 
 ### How to Publish the Release
 
@@ -121,4 +115,4 @@ A WebHook will be triggered and push the package to [Packagist](https://packagis
 
 <hr>
 
-Thank you again for reading this through. ❤️ We're excited to collaborate with you!
+Thank you for reading this through ❤️ We're excited to collaborate with you!
