@@ -4,9 +4,11 @@ name: Pre-Release Tests
 # Will only run for PRs and pushes to bump-meilisearch-v*
 on:
   push:
-    branches: ['bump-meilisearch-v*']
+    branches: ["bump-meilisearch-v*"]
   pull_request:
-    branches: ['bump-meilisearch-v*']
+    branches: ["bump-meilisearch-v*"]
+  merge_group:
+    branches: ["bump-meilisearch-v*"]
 
 jobs:
   meilisearch-version:
@@ -26,19 +28,19 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
-    needs: ['meilisearch-version']
+    needs: ["meilisearch-version"]
     name: integration-tests-against-rc (PHP ${{ matrix.php-version }})
     services:
       meilisearch:
         image: getmeili/meilisearch:${{ needs.meilisearch-version.outputs.version }}
         ports:
-          - '7700:7700'
+          - "7700:7700"
         env:
           MEILI_MASTER_KEY: masterKey
           MEILI_NO_ANALYTICS: true
     strategy:
       matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        php-version: ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]
 
     steps:
       - name: Checkout code
