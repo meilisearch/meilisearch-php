@@ -10,6 +10,8 @@ on:
       - main
       - feature/**
       - v1.x
+  merge_group:
+    types: [checks_requested]
 
 jobs:
   yaml-lint:
