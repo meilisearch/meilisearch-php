@@ -7,7 +7,7 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{}>
+ * @implements TaskDetails<array<mixed>>
  */
 final class UnknownTaskDetails implements TaskDetails
 {
