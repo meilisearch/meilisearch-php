@@ -15,6 +15,7 @@ use Meilisearch\Contracts\TaskDetails\IndexUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\SettingsUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\TaskCancelationDetails;
 use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
+use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Exceptions\LogicException;
 
 final class Task
@@ -150,12 +151,13 @@ final class Task
     public static function fromArray(array $data, ?\Closure $await = null): Task
     {
         $details = $data['details'] ?? null;
+        $type = TaskType::tryFrom($data['type']) ?? TaskType::Unknown;
 
         return new self(
             $data['taskUid'] ?? $data['uid'],
             $data['indexUid'] ?? null,
-            TaskStatus::from($data['status']),
-            $type = TaskType::from($data['type']),
+            TaskStatus::tryFrom($data['status']) ?? TaskStatus::Unknown,
+            $type,
             new \DateTimeImmutable($data['enqueuedAt']),
             \array_key_exists('startedAt', $data) && null !== $data['startedAt'] ? new \DateTimeImmutable($data['startedAt']) : null,
             \array_key_exists('finishedAt', $data) && null !== $data['finishedAt'] ? new \DateTimeImmutable($data['finishedAt']) : null,
@@ -177,6 +179,7 @@ final class Task
                 // It’s intentional that SnapshotCreation tasks don’t have a details object
                 // (no SnapshotCreationDetails exists and tests don’t exercise any details)
                 TaskType::SnapshotCreation => null,
+                TaskType::Unknown => UnknownTaskDetails::fromArray($details),
             },
             \array_key_exists('error', $data) && null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
             $await,

@@ -11,4 +11,5 @@ enum TaskStatus: string
     case Failed = 'failed';
     case Succeeded = 'succeeded';
     case Processing = 'processing';
+    case Unknown = 'unknown';
 }
