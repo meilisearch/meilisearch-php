@@ -490,7 +490,7 @@ final class SearchTest extends TestCase
 
     public function testSearchSortWithInt(): void
     {
-        $task = $this->index->updateRankingRules([
+        $this->index->updateRankingRules([
             'words',
             'typo',
             'sort',

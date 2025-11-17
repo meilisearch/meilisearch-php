@@ -23,7 +23,7 @@ final class DocumentsTest extends TestCase
     public function testAddDocuments(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
-        $task = $index->addDocuments(self::DOCUMENTS)->wait();
+        $index->addDocuments(self::DOCUMENTS)->wait();
 
         $response = $index->getDocuments();
         self::assertCount(\count(self::DOCUMENTS), $response);
@@ -53,7 +53,7 @@ final class DocumentsTest extends TestCase
         ];
 
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
-        $task = $index->addDocuments($documents)->wait();
+        $index->addDocuments($documents)->wait();
 
         $response = $index->getDocuments();
         self::assertCount(\count($documents), $response);
@@ -203,14 +203,14 @@ final class DocumentsTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
 
-        $task = $index->addDocuments(self::DOCUMENTS)->wait();
+        $index->addDocuments(self::DOCUMENTS)->wait();
 
         $replacement = [
             'id' => 2,
             'title' => 'The Red And The Black',
         ];
 
-        $task = $index->addDocuments([$replacement])->wait();
+        $index->addDocuments([$replacement])->wait();
 
         $response = $index->getDocument($replacement['id']);
 
@@ -283,7 +283,7 @@ final class DocumentsTest extends TestCase
 
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
 
-        $task = $index->addDocuments(self::DOCUMENTS)->wait();
+        $index->addDocuments(self::DOCUMENTS)->wait();
 
         $function = '
             if doc.id % context.modulo == 0 {
@@ -412,14 +412,14 @@ final class DocumentsTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
 
-        $task = $index->addDocuments(self::DOCUMENTS)->wait();
+        $index->addDocuments(self::DOCUMENTS)->wait();
 
         $document = [
             'id' => 9,
             'title' => '1984',
         ];
 
-        $task = $index->updateDocuments([$document])->wait();
+        $index->updateDocuments([$document])->wait();
 
         $response = $index->getDocument($document['id']);
 

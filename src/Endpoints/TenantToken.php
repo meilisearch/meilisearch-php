@@ -23,7 +23,7 @@ class TenantToken extends Endpoint
         if (!isset($options['apiKey']) || ('' === $options['apiKey'] || \strlen($options['apiKey']) <= 8)) {
             throw InvalidArgumentException::emptyArgument('api key');
         }
-        if ([] === $searchRules) {
+        if ([] === (array) $searchRules) {
             throw InvalidArgumentException::emptyArgument('search rules');
         }
         if (isset($options['expiresAt']) && new \DateTimeImmutable() > $options['expiresAt']) {
