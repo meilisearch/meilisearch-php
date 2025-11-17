@@ -11,7 +11,7 @@ class Json implements SerializerInterface
         return json_encode($data, JSON_THROW_ON_ERROR);
     }
 
-    public function unserialize(mixed $string): mixed
+    public function unserialize(string $string): mixed
     {
         return json_decode($string, true, 512, \JSON_BIGINT_AS_STRING | \JSON_THROW_ON_ERROR);
     }
