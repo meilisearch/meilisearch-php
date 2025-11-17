@@ -179,7 +179,7 @@ final class Task
                 // It’s intentional that SnapshotCreation tasks don’t have a details object
                 // (no SnapshotCreationDetails exists and tests don’t exercise any details)
                 TaskType::SnapshotCreation => null,
-                TaskType::Unknown => UnknownTaskDetails::fromArray($details),
+                TaskType::Unknown => UnknownTaskDetails::fromArray($details ?? []),
             },
             \array_key_exists('error', $data) && null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
             $await,
