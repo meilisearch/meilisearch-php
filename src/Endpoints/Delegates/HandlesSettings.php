@@ -595,6 +595,6 @@ trait HandlesSettings
      */
     public function updateChat(array $chatSettings): Task
     {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', $chatSettings));
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', $chatSettings), partial(Tasks::waitTask(...), $this->http));
     }
 }
