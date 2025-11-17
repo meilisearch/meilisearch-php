@@ -26,19 +26,17 @@ final class MultiModalSearchTest extends TestCase
         }
 
         $this->index = $this->createEmptyIndex($this->safeIndexName());
-        $updateSettingsPromise = $this->index->updateSettings([
+        $this->index->updateSettings([
             'searchableAttributes' => ['title', 'overview'],
             'embedders' => [
                 'multimodal' => self::getVoyageEmbedderConfig($voyageApiKey),
             ],
-        ]);
-        $this->index->waitForTask($updateSettingsPromise['taskUid']);
+        ])->wait();
 
         // Load the movies.json dataset
         $documentsJson = file_get_contents('./tests/datasets/movies.json');
         $this->documents = json_decode($documentsJson, true, 512, JSON_THROW_ON_ERROR);
-        $addDocumentsPromise = $this->index->addDocuments($this->documents);
-        $this->index->waitForTask($addDocumentsPromise['taskUid']);
+        $this->index->addDocuments($this->documents)->wait();
     }
 
     public function testTextOnlySearch(): void

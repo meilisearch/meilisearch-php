@@ -54,10 +54,7 @@ final class ChatTest extends TestCase
             ],
         ];
 
-        $promise = $this->index->updateChat($newSettings);
-
-        $this->assertIsValidPromise($promise);
-        $this->index->waitForTask($promise['taskUid']);
+        $this->index->updateChat($newSettings)->wait();
 
         $settings = $this->index->getChat();
         self::assertSame($newSettings['description'], $settings['description']);

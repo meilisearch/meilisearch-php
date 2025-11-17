@@ -628,8 +628,7 @@ final class DocumentsTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $index->updateSortableAttributes(['id', 'genre']);
         $index->updateFilterableAttributes(['id', 'genre']);
-        $promise = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForTask($promise['taskUid']);
+        $index->addDocuments(self::DOCUMENTS)->wait();
 
         $response = $index->getDocuments((new DocumentsQuery())->setSort(['genre:desc', 'id:asc']));
         self::assertSame(2, $response[0]['id']);
@@ -643,8 +642,7 @@ final class DocumentsTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
         $index->updateSortableAttributes(['id', 'genre']);
         $index->updateFilterableAttributes(['id', 'genre']);
-        $promise = $index->addDocuments(self::DOCUMENTS);
-        $index->waitForTask($promise['taskUid']);
+        $index->addDocuments(self::DOCUMENTS)->wait();
 
         $query = (new DocumentsQuery())
             ->setSort(['genre:desc', 'id:asc'])

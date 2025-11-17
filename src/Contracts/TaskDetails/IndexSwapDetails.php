@@ -8,13 +8,13 @@ use Meilisearch\Contracts\TaskDetails;
 
 /**
  * @implements TaskDetails<array{
- *     swaps: array<array{indexes: mixed}>
+ *     swaps: array<array{indexes: mixed, rename: bool}>
  * }>
  */
 final class IndexSwapDetails implements TaskDetails
 {
     /**
-     * @param array<array{indexes: mixed}> $swaps
+     * @param array<array{indexes: mixed, rename: bool}> $swaps
      */
     public function __construct(
         public readonly array $swaps,
