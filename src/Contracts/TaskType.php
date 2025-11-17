@@ -18,4 +18,5 @@ enum TaskType: string
     case TaskCancelation = 'taskCancelation';
     case TaskDeletion = 'taskDeletion';
     case SnapshotCreation = 'snapshotCreation';
+    case Unknown = 'unknown';
 }
