@@ -22,5 +22,5 @@ interface SerializerInterface
      *
      * @throws \JsonException
      */
-    public function unserialize(mixed $string): mixed;
+    public function unserialize(string $string): mixed;
 }
