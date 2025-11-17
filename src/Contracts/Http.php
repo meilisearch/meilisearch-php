@@ -47,5 +47,5 @@ interface Http
      * @throws ApiException
      * @throws \JsonException
      */
-    public function postStream(string $path, $body = null, array $query = []): StreamInterface;
+    public function postStream(string $path, mixed $body = null, array $query = []): StreamInterface;
 }
