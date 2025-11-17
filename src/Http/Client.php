@@ -84,7 +84,7 @@ class Client implements Http
      * @throws CommunicationException
      * @throws \JsonException
      */
-    public function post(string $path, $body = null, array $query = [], ?string $contentType = null)
+    public function post(string $path, mixed $body = null, array $query = [], ?string $contentType = null)
     {
         if (null === $contentType) {
             $body = $this->json->serialize($body);
@@ -105,7 +105,7 @@ class Client implements Http
      * @throws CommunicationException
      * @throws \JsonException
      */
-    public function put(string $path, $body = null, array $query = [], ?string $contentType = null)
+    public function put(string $path, mixed $body = null, array $query = [], ?string $contentType = null)
     {
         if (null === $contentType) {
             $body = $this->json->serialize($body);
@@ -118,7 +118,7 @@ class Client implements Http
         return $this->execute($request, ['Content-type' => $contentType ?? 'application/json']);
     }
 
-    public function patch(string $path, $body = null, array $query = [])
+    public function patch(string $path, mixed $body = null, array $query = [])
     {
         $request = $this->requestFactory->createRequest(
             'PATCH',
@@ -144,7 +144,7 @@ class Client implements Http
      * @throws CommunicationException
      * @throws \JsonException
      */
-    public function postStream(string $path, $body = null, array $query = []): StreamInterface
+    public function postStream(string $path, mixed $body = null, array $query = []): StreamInterface
     {
         $request = $this->requestFactory->createRequest(
             'POST',
