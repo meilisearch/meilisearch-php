@@ -64,7 +64,7 @@
         "phpstan/phpstan-phpunit": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
-        "symfony/http-client": "^5.4|^6.0|^7.0"
+        "symfony/http-client": "^5.4|^6.0|^7.0|^8.0"
     },
     "scripts": {
         "lint": [
