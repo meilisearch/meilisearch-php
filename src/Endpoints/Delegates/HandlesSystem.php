@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\Version as VersionContract;
 use Meilisearch\Endpoints\Health;
 use Meilisearch\Endpoints\Stats;
 use Meilisearch\Endpoints\TenantToken;
 use Meilisearch\Endpoints\Version;
+use Meilisearch\Exceptions\LogicException;
 
 trait HandlesSystem
 {
@@ -33,9 +35,15 @@ trait HandlesSystem
         return true;
     }
 
-    public function version(): array
+    public function version(): VersionContract
     {
-        return $this->version->show();
+        $version = $this->version->show();
+
+        if (!is_array($version)) {
+            throw new LogicException('Version did not respond with valid data.');
+        }
+
+        return VersionContract::fromArray($version);
     }
 
     public function stats(): array
