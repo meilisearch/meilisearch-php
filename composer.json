@@ -39,7 +39,6 @@
     },
     "autoload": {
         "psr-4": {
-            "MeiliSearch\\": "src/",
             "Meilisearch\\": "src/"
         },
         "files": [
