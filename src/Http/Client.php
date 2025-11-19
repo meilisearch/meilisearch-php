@@ -66,7 +66,7 @@ class Client implements Http
      * @throws ApiException
      * @throws CommunicationException
      */
-    public function get(string $path, array $query = [])
+    public function get(string $path, array $query = []): mixed
     {
         $request = $this->requestFactory->createRequest(
             'GET',
@@ -84,7 +84,7 @@ class Client implements Http
      * @throws CommunicationException
      * @throws \JsonException
      */
-    public function post(string $path, mixed $body = null, array $query = [], ?string $contentType = null)
+    public function post(string $path, mixed $body = null, array $query = [], ?string $contentType = null): mixed
     {
         if (null === $contentType) {
             $body = $this->json->serialize($body);
@@ -105,7 +105,7 @@ class Client implements Http
      * @throws CommunicationException
      * @throws \JsonException
      */
-    public function put(string $path, mixed $body = null, array $query = [], ?string $contentType = null)
+    public function put(string $path, mixed $body = null, array $query = [], ?string $contentType = null): mixed
     {
         if (null === $contentType) {
             $body = $this->json->serialize($body);
@@ -118,7 +118,7 @@ class Client implements Http
         return $this->execute($request, ['Content-type' => $contentType ?? 'application/json']);
     }
 
-    public function patch(string $path, mixed $body = null, array $query = [])
+    public function patch(string $path, mixed $body = null, array $query = []): mixed
     {
         $request = $this->requestFactory->createRequest(
             'PATCH',
@@ -128,7 +128,7 @@ class Client implements Http
         return $this->execute($request, ['Content-type' => 'application/json']);
     }
 
-    public function delete(string $path, array $query = [])
+    public function delete(string $path, array $query = []): mixed
     {
         $request = $this->requestFactory->createRequest(
             'DELETE',

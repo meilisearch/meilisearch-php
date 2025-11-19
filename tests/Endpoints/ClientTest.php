@@ -203,9 +203,8 @@ final class ClientTest extends TestCase
     {
         $response = $this->client->version();
 
-        self::assertArrayHasKey('commitSha', $response);
-        self::assertArrayHasKey('commitDate', $response);
-        self::assertArrayHasKey('pkgVersion', $response);
+        self::assertMatchesRegularExpression('/^[0-9a-f]{40}$/i', $response->getCommitSha());
+        self::assertGreaterThanOrEqual(0, version_compare($response->getPkgVersion(), '1.26.0'));
     }
 
     public function testStats(): void
