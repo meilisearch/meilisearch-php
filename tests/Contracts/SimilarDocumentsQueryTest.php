@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Contracts;
+namespace Tests\Contracts;
 
 use Meilisearch\Contracts\SimilarDocumentsQuery;
 use PHPUnit\Framework\TestCase;
