@@ -210,28 +210,41 @@ final class ClientTest extends TestCase
 
     public function testStats(): void
     {
+        $index = $this->createEmptyIndex($this->safeIndexName('stats'));
+        $index->addDocuments([
+            ['objectID' => 1, 'type' => 'Library'],
+            ['objectID' => 2],
+        ])->wait();
+
         $response = $this->client->stats();
 
-        self::assertArrayHasKey('databaseSize', $response);
-        self::assertArrayHasKey('lastUpdate', $response);
-        self::assertArrayHasKey('indexes', $response);
+        self::assertGreaterThanOrEqual(0, $response->getDatabaseSize());
+        self::assertGreaterThanOrEqual(0, $response->getUsedDatabaseSize());
+
+        $statsIndex = $response->getIndexes()[$index->getUid()];
+
+        self::assertSame(2, $statsIndex->getNumberOfDocuments());
+        self::assertSame(['objectID' => 2, 'type' => 1], $statsIndex->getFieldDistribution());
     }
 
     public function testBadClientUrl(): void
     {
-        $this->expectException(\Exception::class);
         $client = new Client('http://127.0.0.1.com:1234', 'some-key');
+
+        $this->expectException(\Exception::class);
+
         $client->createIndex('index');
     }
 
     public function testHeaderWithoutApiKey(): void
     {
         $client = new Client($this->host);
-
         $response = $client->health();
 
         self::assertSame('available', $response['status']);
+
         $this->expectException(ApiException::class);
-        $response = $client->stats();
+
+        $client->stats();
     }
 }

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
+use Meilisearch\Contracts\Stats as StatsContract;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Endpoints\Health;
 use Meilisearch\Endpoints\Stats;
 use Meilisearch\Endpoints\TenantToken;
 use Meilisearch\Endpoints\Version;
+use Meilisearch\Exceptions\LogicException;
 
 trait HandlesSystem
 {
@@ -38,9 +40,15 @@ trait HandlesSystem
         return $this->version->show();
     }
 
-    public function stats(): array
+    public function stats(): StatsContract
     {
-        return $this->stats->show();
+        $stats = $this->stats->show();
+
+        if (!\is_array($stats)) {
+            throw new LogicException('Stats did not respond with valid data.');
+        }
+
+        return StatsContract::fromArray($stats);
     }
 
     public function generateTenantToken(string $apiKeyUid, $searchRules, array $options = []): string
