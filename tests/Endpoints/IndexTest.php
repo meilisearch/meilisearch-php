@@ -261,31 +261,4 @@ final class IndexTest extends TestCase
         self::assertInstanceOf(TaskDeletionDetails::class, $details = $task->getDetails());
         self::assertSame('?uids=1%2C2', $details->originalFilter);
     }
-
-    public function testParseDate(): void
-    {
-        $date = '2021-01-01T01:23:45.123456Z';
-        $dateTime = Indexes::parseDate($date);
-        $formattedDate = '2021-01-01T01:23:45.123456+00:00';
-
-        self::assertInstanceOf(\DateTimeInterface::class, $dateTime);
-        self::assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
-    }
-
-    public function testParseDateWithExtraFractionalSeconds(): void
-    {
-        $date = '2021-01-01T01:23:45.123456789Z';
-        $dateTime = Indexes::parseDate($date);
-        $formattedDate = '2021-01-01T01:23:45.123456+00:00';
-
-        self::assertInstanceOf(\DateTimeInterface::class, $dateTime);
-        self::assertSame($formattedDate, $dateTime->format('Y-m-d\TH:i:s.uP'));
-    }
-
-    public function testParseDateWhenNull(): void
-    {
-        $dateTime = Indexes::parseDate(null);
-
-        self::assertNull($dateTime);
-    }
 }

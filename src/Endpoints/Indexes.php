@@ -54,8 +54,8 @@ class Indexes extends Endpoint
             $this->http,
             $attributes['uid'],
             $attributes['primaryKey'],
-            static::parseDate($attributes['createdAt']),
-            static::parseDate($attributes['updatedAt']),
+            null !== $attributes['createdAt'] ? new \DateTimeImmutable($attributes['createdAt']) : null,
+            null !== $attributes['updatedAt'] ? new \DateTimeImmutable($attributes['updatedAt']) : null,
         );
     }
 
@@ -66,8 +66,8 @@ class Indexes extends Endpoint
     {
         $this->uid = $attributes['uid'];
         $this->primaryKey = $attributes['primaryKey'];
-        $this->createdAt = static::parseDate($attributes['createdAt']);
-        $this->updatedAt = static::parseDate($attributes['updatedAt']);
+        $this->createdAt = null !== $attributes['createdAt'] ? new \DateTimeImmutable($attributes['createdAt']) : null;
+        $this->updatedAt = null !== $attributes['updatedAt'] ? new \DateTimeImmutable($attributes['updatedAt']) : null;
 
         return $this;
     }
@@ -258,25 +258,5 @@ class Indexes extends Endpoint
     public function resetSettings(): Task
     {
         return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings'), partial(Tasks::waitTask(...), $this->http));
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public static function parseDate(?string $dateTime): ?\DateTimeInterface
-    {
-        if (null === $dateTime) {
-            return null;
-        }
-
-        try {
-            return new \DateTimeImmutable($dateTime);
-        } catch (\Exception $e) {
-            // Trim 9th+ digit from fractional seconds. Meilisearch server can send 9 digits; PHP supports up to 8
-            $trimPattern = '/(^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,8})(?:\d{1,})?(Z|[\+-]\d{2}:\d{2})$/';
-            $trimmedDate = preg_replace($trimPattern, '$1$2', $dateTime);
-
-            return new \DateTimeImmutable($trimmedDate);
-        }
     }
 }
