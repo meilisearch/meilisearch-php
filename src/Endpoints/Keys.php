@@ -53,13 +53,13 @@ class Keys extends Endpoint
             $attributes['indexes'],
         );
         if ($attributes['expiresAt']) {
-            $key->expiresAt = $this->createDate($attributes['expiresAt']);
+            $key->expiresAt = new \DateTimeImmutable($attributes['expiresAt']);
         }
         if ($attributes['createdAt']) {
-            $key->createdAt = $this->createDate($attributes['createdAt']);
+            $key->createdAt = new \DateTimeImmutable($attributes['createdAt']);
         }
         if ($attributes['updatedAt']) {
-            $key->updatedAt = $this->createDate($attributes['updatedAt']);
+            $key->updatedAt = new \DateTimeImmutable($attributes['updatedAt']);
         }
 
         return $key;
@@ -77,32 +77,16 @@ class Keys extends Endpoint
         $this->actions = $attributes['actions'];
         $this->indexes = $attributes['indexes'];
         if ($attributes['expiresAt']) {
-            $this->expiresAt = $this->createDate($attributes['expiresAt']);
+            $this->expiresAt = new \DateTimeImmutable($attributes['expiresAt']);
         }
         if ($attributes['createdAt']) {
-            $this->createdAt = $this->createDate($attributes['createdAt']);
+            $this->createdAt = new \DateTimeImmutable($attributes['createdAt']);
         }
         if ($attributes['updatedAt']) {
-            $this->updatedAt = $this->createDate($attributes['updatedAt']);
+            $this->updatedAt = new \DateTimeImmutable($attributes['updatedAt']);
         }
 
         return $this;
-    }
-
-    protected function createDate($attribute): ?\DateTimeInterface
-    {
-        if (!\is_string($attribute)) {
-            return null;
-        }
-
-        if (!str_contains($attribute, '.')) {
-            $date = \DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $attribute);
-        } else {
-            $attribute = preg_replace('/(\.\d{6})\d+/', '$1', $attribute, 1);
-            $date = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.uP', $attribute);
-        }
-
-        return false === $date ? null : $date;
     }
 
     public function getUid(): ?string
