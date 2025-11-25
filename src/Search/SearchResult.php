@@ -223,6 +223,7 @@ class SearchResult implements \Countable, \IteratorAggregate
             'processingTimeMs' => $this->processingTimeMs,
             'query' => $this->query,
             'facetDistribution' => $this->facetDistribution,
+            'facetStats' => $this->facetStats,
         ];
 
         if (!$this->numberedPagination) {
