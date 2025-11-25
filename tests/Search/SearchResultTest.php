@@ -104,6 +104,7 @@ final class SearchResultTest extends TestCase
         self::assertSame(35, $this->basicResult->getProcessingTimeMs());
         self::assertSame('american', $this->basicResult->getQuery());
         self::assertEmpty($this->basicResult->getFacetDistribution());
+        self::assertEmpty($this->basicResult->getFacetStats());
         self::assertCount(2, $this->basicResult);
 
         self::assertArrayHasKey('hits', $this->basicResult->toArray());
@@ -114,6 +115,7 @@ final class SearchResultTest extends TestCase
         self::assertArrayHasKey('processingTimeMs', $this->basicResult->toArray());
         self::assertArrayHasKey('query', $this->basicResult->toArray());
         self::assertArrayHasKey('facetDistribution', $this->basicResult->toArray());
+        self::assertArrayHasKey('facetStats', $this->basicResult->toArray());
     }
 
     public function testSearchResultCanBeFiltered(): void
