@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Exceptions;
 
-class CommunicationException extends \Exception implements ExceptionInterface
+class CommunicationException extends \Exception implements \Stringable, ExceptionInterface
 {
     public function __toString(): string
     {

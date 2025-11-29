@@ -6,7 +6,7 @@ namespace Meilisearch\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
 
-class InvalidResponseBodyException extends \Exception implements ExceptionInterface
+class InvalidResponseBodyException extends \Exception implements \Stringable, ExceptionInterface
 {
     public int $httpStatus = 0;
     public mixed $httpBody;
