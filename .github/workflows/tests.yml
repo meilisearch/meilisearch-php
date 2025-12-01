@@ -24,8 +24,6 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: linter-check
-    env:
-      PHP_CS_FIXER_IGNORE_ENV: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
