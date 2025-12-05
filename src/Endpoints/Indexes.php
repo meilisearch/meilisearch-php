@@ -10,6 +10,7 @@ use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
+use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Contracts\SimilarDocumentsQuery;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
@@ -188,7 +189,7 @@ class Indexes extends Endpoint
     /**
      * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int} ? array : SearchResult)
      */
-    public function search(?string $query, array $searchParams = [], array $options = []): SearchResult|array
+    public function search(?string $query, SearchQuery|array $searchParams = [], array $options = []): SearchResult|array
     {
         $result = $this->rawSearch($query, $searchParams);
 
@@ -202,8 +203,9 @@ class Indexes extends Endpoint
         return $searchResult;
     }
 
-    public function rawSearch(?string $query, array $searchParams = []): array
+    public function rawSearch(?string $query, SearchQuery|array $searchParams = []): array
     {
+        $searchParams = $searchParams instanceof SearchQuery ? $searchParams->toArray() : $searchParams;
         $parameters = array_merge(
             ['q' => $query],
             $searchParams
