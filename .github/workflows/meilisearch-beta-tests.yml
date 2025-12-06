@@ -32,7 +32,7 @@ jobs:
     name: integration-tests-against-rc (PHP ${{ matrix.php-version }})
     services:
       meilisearch:
-        image: getmeili/meilisearch:${{ needs.meilisearch-version.outputs.version }}
+        image: getmeili/meilisearch-enterprise:${{ needs.meilisearch-version.outputs.version }}
         ports:
           - "7700:7700"
         env:
