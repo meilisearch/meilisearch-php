@@ -12,7 +12,7 @@ final class Version
      */
     public function __construct(
         private readonly string $commitSha,
-        private readonly \DateTimeImmutable $commitDate,
+        private readonly ?\DateTimeImmutable $commitDate,
         private readonly string $pkgVersion,
     ) {
     }
@@ -25,7 +25,7 @@ final class Version
         return $this->commitSha;
     }
 
-    public function getCommitDate(): \DateTimeImmutable
+    public function getCommitDate(): ?\DateTimeImmutable
     {
         return $this->commitDate;
     }
@@ -44,9 +44,14 @@ final class Version
      */
     public static function fromArray(array $data): Version
     {
+        $commitDate = null;
+        if ('unknown' !== $data['commitDate']) {
+            $commitDate = new \DateTimeImmutable($data['commitDate']);
+        }
+
         return new self(
             $data['commitSha'],
-            new \DateTimeImmutable($data['commitDate']),
+            $commitDate,
             $data['pkgVersion'],
         );
     }
