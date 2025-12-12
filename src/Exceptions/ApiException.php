@@ -6,27 +6,26 @@ namespace Meilisearch\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
 
-class ApiException extends \Exception implements \Stringable, ExceptionInterface
+final class ApiException extends \Exception implements \Stringable, ExceptionInterface
 {
-    public $httpStatus = 0;
-    public $message;
-    public ?string $errorCode;
-    public ?string $errorType;
-    public ?string $errorLink;
-    public mixed $httpBody;
+    public readonly int $httpStatus;
+    public readonly ?string $errorCode;
+    public readonly ?string $errorType;
+    public readonly ?string $errorLink;
 
     public const HINT_MESSAGE = "Hint: It might not be working because maybe you're not up to date with the Meilisearch version that `%s` call requires.";
 
-    public function __construct(ResponseInterface $response, mixed $httpBody, ?\Throwable $previous = null)
-    {
-        $this->httpBody = $httpBody;
+    public function __construct(
+        public readonly ResponseInterface $response,
+        public readonly mixed $httpBody,
+        ?\Throwable $previous = null,
+    ) {
         $this->httpStatus = $response->getStatusCode();
-        $this->message = $this->getMessageFromHttpBody() ?? $response->getReasonPhrase();
         $this->errorCode = $this->getErrorCodeFromHttpBody();
         $this->errorLink = $this->getErrorLinkFromHttpBody();
         $this->errorType = $this->getErrorTypeFromHttpBody();
 
-        parent::__construct($this->message, $this->httpStatus, $previous);
+        parent::__construct($this->getMessageFromHttpBody() ?? $response->getReasonPhrase(), $this->httpStatus, $previous);
     }
 
     public function __toString(): string
@@ -90,6 +89,6 @@ class ApiException extends \Exception implements \Stringable, ExceptionInterface
 
     public static function rethrowWithHint(\Throwable $e, string $methodName): \Exception
     {
-        return new \Exception(\sprintf(self::HINT_MESSAGE, $methodName), 0, $e);
+        return new \RuntimeException(\sprintf(self::HINT_MESSAGE, $methodName), 0, $e);
     }
 }

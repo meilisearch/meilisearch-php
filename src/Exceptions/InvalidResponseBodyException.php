@@ -6,19 +6,18 @@ namespace Meilisearch\Exceptions;
 
 use Psr\Http\Message\ResponseInterface;
 
-class InvalidResponseBodyException extends \Exception implements \Stringable, ExceptionInterface
+final class InvalidResponseBodyException extends \Exception implements \Stringable, ExceptionInterface
 {
-    public int $httpStatus = 0;
-    public mixed $httpBody;
-    public $message;
+    public readonly int $httpStatus;
 
-    public function __construct(ResponseInterface $response, $httpBody, $previous = null)
-    {
+    public function __construct(
+        public readonly ResponseInterface $response,
+        public readonly mixed $httpBody,
+        ?\Throwable $previous = null,
+    ) {
         $this->httpStatus = $response->getStatusCode();
-        $this->httpBody = $httpBody;
-        $this->message = $this->getMessageFromHttpBody() ?? $response->getReasonPhrase();
 
-        parent::__construct($this->message, $this->httpStatus, $previous);
+        parent::__construct($this->getMessageFromHttpBody() ?? $response->getReasonPhrase(), $this->httpStatus, $previous);
     }
 
     public function __toString(): string
