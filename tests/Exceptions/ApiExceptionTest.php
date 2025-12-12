@@ -30,7 +30,7 @@ final class ApiExceptionTest extends TestCase
             throw new ApiException($response, $httpBodyExample);
         } catch (ApiException $apiException) {
             self::assertSame($statusCode, $apiException->httpStatus);
-            self::assertSame($httpBodyExample['message'], $apiException->message);
+            self::assertSame($httpBodyExample['message'], $apiException->getMessage());
             self::assertSame($httpBodyExample['code'], $apiException->errorCode);
             self::assertSame($httpBodyExample['type'], $apiException->errorType);
             self::assertSame($httpBodyExample['link'], $apiException->errorLink);
@@ -50,7 +50,7 @@ final class ApiExceptionTest extends TestCase
             throw new ApiException($response, null);
         } catch (ApiException $apiException) {
             self::assertSame($statusCode, $apiException->httpStatus);
-            self::assertSame($response->getReasonPhrase(), $apiException->message);
+            self::assertSame($response->getReasonPhrase(), $apiException->getMessage());
             self::assertNull($apiException->errorCode);
             self::assertNull($apiException->errorType);
             self::assertNull($apiException->errorLink);
