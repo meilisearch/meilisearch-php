@@ -22,6 +22,7 @@ final class NetworksTest extends TestCase
     {
         $networks = [
             'self' => 'ms-00',
+            'leader' => 'ms-00',
             'remotes' => [
                 'ms-00' => [
                     'url' => 'http://INSTANCE_URL',
@@ -46,6 +47,7 @@ final class NetworksTest extends TestCase
     private function assertNetworkResponse(array $expected, NetworkResults $response): void
     {
         self::assertSame($expected['self'], $response->getSelf());
+        self::assertSame($expected['leader'], $response->getLeader());
         $respRemotes = $response->getRemotes();
         foreach ($expected['remotes'] as $key => $remote) {
             self::assertArrayHasKey($key, $respRemotes);

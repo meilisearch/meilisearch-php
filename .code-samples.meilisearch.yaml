@@ -823,3 +823,22 @@ search_parameter_reference_media_1: |-
       ]
     ]
   ]);
+get_network_1: |-
+  $client->getNetwork();
+update_network_1: |-
+  $client->updateNetwork([
+    'self' => 'ms-00',
+    'leader' => 'ms-00',
+    'remotes' => [
+      'ms-00' => [
+        'url' => 'http://INSTANCE_URL',
+        'searchApiKey' => 'INSTANCE_API_KEY',
+        'writeApiKey' => 'INSTANCE_WRITE_API_KEY'
+      ],
+      'ms-01' => [
+        'url' => 'http://ANOTHER_INSTANCE_URL',
+        'searchApiKey' => 'ANOTHER_INSTANCE_API_KEY',
+        'writeApiKey' => 'ANOTHER_INSTANCE_WRITE_API_KEY'
+      ]
+    ]
+  ]);
