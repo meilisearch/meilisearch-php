@@ -17,6 +17,7 @@ class Network extends Endpoint
     /**
      * @return array{
      *     self: non-empty-string,
+     *     leader: non-empty-string,
      *     remotes: array<non-empty-string, RemoteConfig>
      * }
      */
@@ -28,11 +29,13 @@ class Network extends Endpoint
     /**
      * @param array{
      *     self?: non-empty-string,
+     *     leader?: non-empty-string,
      *     remotes?: array<non-empty-string, RemoteConfig>
-     * } $body
+     * } $body leader must equal self when provided
      *
      * @return array{
      *     self: non-empty-string,
+     *     leader: non-empty-string,
      *     remotes: array<non-empty-string, RemoteConfig>
      * }
      */

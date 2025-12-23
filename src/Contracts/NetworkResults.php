@@ -15,6 +15,11 @@ class NetworkResults extends Data
     private string $self;
 
     /**
+     * @var non-empty-string the identifier for the leader node
+     */
+    private string $leader;
+
+    /**
      * @var array<non-empty-string, RemoteConfig> a mapping of remote node IDs to their connection details
      */
     private array $remotes;
@@ -22,6 +27,7 @@ class NetworkResults extends Data
     /**
      * @param array{
      *     self?: non-empty-string,
+     *     leader?: non-empty-string,
      *     remotes?: array<non-empty-string, RemoteConfig>
      * } $params
      */
@@ -30,6 +36,7 @@ class NetworkResults extends Data
         parent::__construct($params);
 
         $this->self = $params['self'] ?? '';
+        $this->leader = $params['leader'] ?? '';
         $this->remotes = $params['remotes'] ?? [];
     }
 
@@ -39,6 +46,14 @@ class NetworkResults extends Data
     public function getSelf(): string
     {
         return $this->self;
+    }
+
+    /**
+     * @return non-empty-string the identifier for the leader node
+     */
+    public function getLeader(): string
+    {
+        return $this->leader;
     }
 
     /**
