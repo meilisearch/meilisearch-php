@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use Meilisearch\Contracts\NetworkResults;
+use Meilisearch\Contracts\TaskType;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
@@ -18,42 +18,37 @@ final class NetworksTest extends TestCase
         $http->patch('/experimental-features', ['network' => true]);
     }
 
-    public function testUpdateNetworks(): void
+    public function testInitializeNetwork(): void
     {
-        $networks = [
-            'self' => 'ms-00',
-            'leader' => 'ms-00',
+        $apiKey = getenv('MEILISEARCH_API_KEY');
+        $instanceName = 'ms-00';
+
+        $options = [
+            'self' => $instanceName,
             'remotes' => [
-                'ms-00' => [
-                    'url' => 'http://INSTANCE_URL',
-                    'searchApiKey' => 'INSTANCE_API_KEY',
-                    'writeApiKey' => 'INSTANCE_WRITE_API_KEY',
-                ],
-                'ms-01' => [
-                    'url' => 'http://ANOTHER_INSTANCE_URL',
-                    'searchApiKey' => 'ANOTHER_INSTANCE_API_KEY',
-                    'writeApiKey' => 'ANOTHER_INSTANCE_WRITE_API_KEY',
+                $instanceName => [
+                    'url' => $this->host,
+                    'searchApiKey' => $apiKey,
+                    'writeApiKey' => $apiKey,
                 ],
             ],
         ];
 
-        $updateResp = $this->client->updateNetwork($networks);
-        $this->assertNetworkResponse($networks, $updateResp);
+        $task = $this->client->initializeNetwork($options);
+        self::assertSame(TaskType::NetworkTopologyChange, $task->getType());
 
-        $getResp = $this->client->getNetwork();
-        $this->assertNetworkResponse($networks, $getResp);
-    }
+        $finishedTask = $task->wait();
+        self::assertTrue($finishedTask->isFinished());
 
-    private function assertNetworkResponse(array $expected, NetworkResults $response): void
-    {
-        self::assertSame($expected['self'], $response->getSelf());
-        self::assertSame($expected['leader'], $response->getLeader());
-        $respRemotes = $response->getRemotes();
-        foreach ($expected['remotes'] as $key => $remote) {
-            self::assertArrayHasKey($key, $respRemotes);
-            self::assertSame($remote['url'], $respRemotes[$key]['url']);
-            self::assertSame($remote['searchApiKey'], $respRemotes[$key]['searchApiKey']);
-            self::assertSame($remote['writeApiKey'], $respRemotes[$key]['writeApiKey']);
-        }
+        $network = $this->client->getNetwork();
+        self::assertSame($instanceName, $network->getSelf());
+        self::assertSame($instanceName, $network->getLeader());
+
+        $remotes = $network->getRemotes();
+        self::assertArrayHasKey($instanceName, $remotes);
+        self::assertNotNull($remotes[$instanceName]);
+        self::assertSame($this->host, $remotes[$instanceName]['url']);
+        self::assertSame($apiKey, $remotes[$instanceName]['searchApiKey']);
+        self::assertSame($apiKey, $remotes[$instanceName]['writeApiKey']);
     }
 }

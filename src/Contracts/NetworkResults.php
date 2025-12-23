@@ -10,54 +10,69 @@ namespace Meilisearch\Contracts;
 class NetworkResults extends Data
 {
     /**
-     * @var non-empty-string the identifier for the local node
+     * @var non-empty-string|null the identifier for the local node
      */
-    private string $self;
+    private ?string $self;
 
     /**
-     * @var non-empty-string the identifier for the leader node
+     * @var non-empty-string|null the identifier for the leader node
      */
-    private string $leader;
+    private ?string $leader;
 
     /**
-     * @var array<non-empty-string, RemoteConfig> a mapping of remote node IDs to their connection details
+     * @var non-empty-string|null the version of the network configuration
+     */
+    private ?string $version;
+
+    /**
+     * @var array<non-empty-string, RemoteConfig|null> a mapping of remote node IDs to their connection details
      */
     private array $remotes;
 
     /**
      * @param array{
-     *     self?: non-empty-string,
-     *     leader?: non-empty-string,
-     *     remotes?: array<non-empty-string, RemoteConfig>
+     *     self?: non-empty-string|null,
+     *     leader?: non-empty-string|null,
+     *     version?: non-empty-string|null,
+     *     remotes?: array<non-empty-string, RemoteConfig|null>
      * } $params
      */
     public function __construct(array $params)
     {
         parent::__construct($params);
 
-        $this->self = $params['self'] ?? '';
-        $this->leader = $params['leader'] ?? '';
+        $this->self = $params['self'] ?? null;
+        $this->leader = $params['leader'] ?? null;
+        $this->version = $params['version'] ?? null;
         $this->remotes = $params['remotes'] ?? [];
     }
 
     /**
-     * @return non-empty-string the identifier for the local node
+     * @return non-empty-string|null the identifier for the local node
      */
-    public function getSelf(): string
+    public function getSelf(): ?string
     {
         return $this->self;
     }
 
     /**
-     * @return non-empty-string the identifier for the leader node
+     * @return non-empty-string|null the identifier for the leader node
      */
-    public function getLeader(): string
+    public function getLeader(): ?string
     {
         return $this->leader;
     }
 
     /**
-     * @return array<non-empty-string, RemoteConfig>
+     * @return non-empty-string|null the version of the network configuration
+     */
+    public function getVersion(): ?string
+    {
+        return $this->version;
+    }
+
+    /**
+     * @return array<non-empty-string, RemoteConfig|null>
      */
     public function getRemotes(): array
     {

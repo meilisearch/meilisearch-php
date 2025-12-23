@@ -18,5 +18,6 @@ enum TaskType: string
     case TaskCancelation = 'taskCancelation';
     case TaskDeletion = 'taskDeletion';
     case SnapshotCreation = 'snapshotCreation';
+    case NetworkTopologyChange = 'networkTopologyChange';
     case Unknown = 'unknown';
 }
