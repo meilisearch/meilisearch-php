@@ -18,7 +18,7 @@ use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Exceptions\LogicException;
 
-final class Task
+final class Task implements \ArrayAccess
 {
     /**
      * @param non-negative-int                   $taskUid
@@ -39,6 +39,7 @@ final class Task
         private readonly ?int $batchUid = null,
         private readonly ?TaskDetails $details = null,
         private readonly ?TaskError $error = null,
+        private readonly array $raw = [],
         private readonly ?\Closure $await = null,
     ) {
     }
@@ -131,6 +132,34 @@ final class Task
     }
 
     /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
+    {
+        return $this->raw;
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        throw new LogicException('Cannot set data on Task');
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->raw[$offset]);
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        throw new LogicException('Cannot unset data from Task');
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->raw[$offset] ?? null;
+    }
+
+    /**
      * @param array{
      *     taskUid?: int,
      *     uid?: int,
@@ -183,6 +212,7 @@ final class Task
                 TaskType::Unknown => UnknownTaskDetails::fromArray($details ?? []),
             },
             \array_key_exists('error', $data) && null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
+            $data,
             $await,
         );
     }
