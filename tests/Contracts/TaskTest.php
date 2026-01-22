@@ -36,6 +36,7 @@ final class TaskTest extends TestCase
                 'invalid_request',
                 'https://docs.meilisearch.com/errors#index_not_found',
             ),
+            raw: ['taskUid' => 1],
         );
 
         self::assertSame(1, $task->getTaskUid());
@@ -55,6 +56,10 @@ final class TaskTest extends TestCase
             'invalid_request',
             'https://docs.meilisearch.com/errors#index_not_found',
         ), $task->getError());
+
+        self::assertTrue(isset($task['taskUid']));
+        self::assertSame(1, $task['taskUid']);
+        self::assertSame(['taskUid' => 1], $task->toArray());
     }
 
     public function testCreateEnqueuedTask(): void
@@ -111,5 +116,25 @@ final class TaskTest extends TestCase
         $this->expectExceptionMessage('Cannot wait for task because wait function is not provided.');
 
         $task->wait();
+    }
+
+    public function testOffsetSetThrows(): void
+    {
+        $task = MockTask::create(TaskType::DocumentAdditionOrUpdate);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Cannot set data on Task');
+
+        $task['taskUid'] = 2;
+    }
+
+    public function testOffsetUnsetThrows(): void
+    {
+        $task = MockTask::create(TaskType::DocumentAdditionOrUpdate);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Cannot unset data from Task');
+
+        unset($task['taskUid']);
     }
 }
