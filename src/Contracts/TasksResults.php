@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class TasksResults extends Data
+final class TasksResults extends Data
 {
     /**
      * @var non-negative-int
@@ -26,14 +26,23 @@ class TasksResults extends Data
      */
     private int $total;
 
+    /**
+     * @param array{
+     *     results: array<int, Task>,
+     *     from: non-negative-int|null,
+     *     limit: non-negative-int,
+     *     next: non-negative-int|null,
+     *     total: non-negative-int
+     * } $params
+     */
     public function __construct(array $params)
     {
-        parent::__construct(isset($params['results']) ? array_map(static fn (array $data) => Task::fromArray($data), $params['results']) : []);
+        parent::__construct($params['results']);
 
         $this->from = $params['from'] ?? 0;
-        $this->limit = $params['limit'] ?? 0;
+        $this->limit = $params['limit'];
         $this->next = $params['next'] ?? 0;
-        $this->total = $params['total'] ?? 0;
+        $this->total = $params['total'];
     }
 
     /**
@@ -76,6 +85,15 @@ class TasksResults extends Data
         return $this->total;
     }
 
+    /**
+     * @return array{
+     *     results: array<int, Task>,
+     *     from: non-negative-int,
+     *     limit: non-negative-int,
+     *     next: non-negative-int,
+     *     total: non-negative-int
+     * }
+     */
     public function toArray(): array
     {
         return [
@@ -85,10 +103,5 @@ class TasksResults extends Data
             'from' => $this->from,
             'total' => $this->total,
         ];
-    }
-
-    public function count(): int
-    {
-        return \count($this->data);
     }
 }
