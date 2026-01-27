@@ -133,7 +133,7 @@ final class TaskTest extends TestCase
         $task = MockTask::create(TaskType::DocumentAdditionOrUpdate);
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Cannot unset data from Task');
+        $this->expectExceptionMessage('The Task object is immutable.');
 
         unset($task['taskUid']);
     }
