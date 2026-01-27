@@ -22,9 +22,7 @@ trait HandlesTasks
 
     public function getTasks(?TasksQuery $options = null): TasksResults
     {
-        $query = isset($options) ? $options->toArray() : [];
-
-        $response = $this->tasks->all($query);
+        $response = $this->tasks->all($options?->toArray() ?? []);
 
         return new TasksResults($response);
     }

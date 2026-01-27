@@ -178,6 +178,7 @@ class Indexes extends Endpoint
         }
 
         $response = $this->http->get('/tasks', $options->toArray());
+        $response['results'] = array_map(fn (array $task) => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
 
         return new TasksResults($response);
     }
