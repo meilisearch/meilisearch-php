@@ -151,7 +151,7 @@ final class Task implements \ArrayAccess
 
     public function offsetUnset(mixed $offset): void
     {
-        throw new LogicException('Cannot unset data from Task');
+        throw new LogicException('The Task object is immutable.');
     }
 
     public function offsetGet(mixed $offset): mixed
