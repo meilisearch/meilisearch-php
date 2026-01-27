@@ -141,7 +141,7 @@ final class Task implements \ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new LogicException('Cannot set data on Task');
+        throw new LogicException('The Task object is immutable.');
     }
 
     public function offsetExists(mixed $offset): bool
