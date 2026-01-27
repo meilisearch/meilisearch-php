@@ -123,7 +123,7 @@ final class TaskTest extends TestCase
         $task = MockTask::create(TaskType::DocumentAdditionOrUpdate);
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Cannot set data on Task');
+        $this->expectExceptionMessage('The Task object is immutable.');
 
         $task['taskUid'] = 2;
     }
