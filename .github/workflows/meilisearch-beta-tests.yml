@@ -38,6 +38,7 @@ jobs:
         env:
           MEILI_MASTER_KEY: masterKey
           MEILI_NO_ANALYTICS: true
+          MEILI_EXPERIMENTAL_ALLOWED_IP_NETWORKS: any
     strategy:
       matrix:
         php-version: ["8.1", "8.2", "8.3", "8.4", "8.5"]

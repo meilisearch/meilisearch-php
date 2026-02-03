@@ -69,13 +69,14 @@ jobs:
       meilisearch:
         image: getmeili/meilisearch-enterprise:latest
         ports:
-          - '7700:7700'
+          - "7700:7700"
         env:
           MEILI_MASTER_KEY: masterKey
           MEILI_NO_ANALYTICS: true
+          MEILI_EXPERIMENTAL_ALLOWED_IP_NETWORKS: any
     strategy:
       matrix:
-        php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        php-version: ["8.1", "8.2", "8.3", "8.4", "8.5"]
 
     steps:
       - uses: actions/checkout@v6
@@ -98,8 +99,8 @@ jobs:
       - name: Upload coverage file
         uses: actions/upload-artifact@v6
         with:
-          name: 'phpunit-${{ matrix.php-version }}-coverage'
-          path: 'coverage*.xml'
+          name: "phpunit-${{ matrix.php-version }}-coverage"
+          path: "coverage*.xml"
 
   upload-coverage:
     name: Upload coverage to Codecov
