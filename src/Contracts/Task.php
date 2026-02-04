@@ -147,7 +147,7 @@ final class Task implements \ArrayAccess
 
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->raw[$offset]);
+        return \array_key_exists($offset, $this->raw);
     }
 
     public function offsetUnset(mixed $offset): void
