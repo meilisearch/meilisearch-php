@@ -274,9 +274,6 @@ class SearchQuery
     /**
      * @return $this
      */
-    /**
-     * @return $this
-     */
     public function setShowPerformanceDetails(?bool $showPerformanceDetails): self
     {
         $this->showPerformanceDetails = $showPerformanceDetails;
