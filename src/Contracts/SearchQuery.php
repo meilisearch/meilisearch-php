@@ -102,6 +102,8 @@ class SearchQuery
 
     private ?bool $showRankingScoreDetails = null;
 
+    private ?bool $showPerformanceDetails = null;
+
     private ?float $rankingScoreThreshold = null;
 
     /**
@@ -265,6 +267,19 @@ class SearchQuery
     public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): self
     {
         $this->showRankingScoreDetails = $showRankingScoreDetails;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
+    public function setShowPerformanceDetails(?bool $showPerformanceDetails): self
+    {
+        $this->showPerformanceDetails = $showPerformanceDetails;
 
         return $this;
     }
@@ -455,6 +470,7 @@ class SearchQuery
      *     attributesToSearchOn?: non-empty-list<non-empty-string>,
      *     showRankingScore?: bool,
      *     showRankingScoreDetails?: bool,
+     *     showPerformanceDetails?: bool,
      *     rankingScoreThreshold?: float,
      *     distinct?: non-empty-string,
      *     federationOptions?: array<mixed>
@@ -487,6 +503,7 @@ class SearchQuery
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
+            'showPerformanceDetails' => $this->showPerformanceDetails,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
             'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,
