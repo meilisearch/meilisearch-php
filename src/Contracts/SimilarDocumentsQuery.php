@@ -35,6 +35,8 @@ class SimilarDocumentsQuery
 
     private ?bool $showRankingScoreDetails = null;
 
+    private ?bool $showPerformanceDetails = null;
+
     private ?bool $retrieveVectors = null;
 
     /**
@@ -127,6 +129,18 @@ class SimilarDocumentsQuery
     }
 
     /**
+     * @param bool|null $showPerformanceDetails boolean value to show performance details
+     *
+     * @return $this
+     */
+    public function setShowPerformanceDetails(?bool $showPerformanceDetails): self
+    {
+        $this->showPerformanceDetails = $showPerformanceDetails;
+
+        return $this;
+    }
+
+    /**
      * @param bool|null $retrieveVectors boolean value to show _vector details
      *
      * @return $this
@@ -158,6 +172,7 @@ class SimilarDocumentsQuery
      *     attributesToRetrieve?: list<non-empty-string>,
      *     showRankingScore?: bool,
      *     showRankingScoreDetails?: bool,
+     *     showPerformanceDetails?: bool,
      *     retrieveVectors?: bool,
      *     rankingScoreThreshold?: int|float
      * }
@@ -173,6 +188,7 @@ class SimilarDocumentsQuery
             'attributesToRetrieve' => $this->attributesToRetrieve,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
+            'showPerformanceDetails' => $this->showPerformanceDetails,
             'retrieveVectors' => $this->retrieveVectors,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
         ], static function ($item) {return null !== $item; });
