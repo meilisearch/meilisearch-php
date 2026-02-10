@@ -41,14 +41,6 @@ delete_documents_by_filter_1: |-
   $client->index('movies')->deleteDocuments(['filter' => 'genres = action OR genres = adventure']);
 get_documents_1: |-
   $client->index('movies')->getDocuments((new DocumentsQuery())->setFilter('genres = action')->setLimit(2));
-getting_started_faceting: |-
-  $client->index('movies')
-    ->updateFaceting([
-      'maxValuesPerFacet' => 2,
-      'sortFacetValuesBy' => ['*' => 'count']
-    ]);
-getting_started_pagination: |-
-  $client->index('movies')->updatePagination(['maxTotalHits' => 500]);
 synonyms_guide_1: |-
   $client->index('movies')->updateSynonyms([
     'great' => ['fantastic'],
@@ -69,8 +61,6 @@ date_guide_sortable_attributes_1: |-
   $client->index('games')->updateSortableAttributes(['release_timestamp']);
 date_guide_sort_1: |-
   $client->index('games')->search('', ['sort' => ['release_timestamp:desc']]);
-async_guide_filter_by_date_1: |-
-  $client->getTasks((new TasksQuery())->setAfterEnqueuedAt(new \DateTime('2020-10-11T11:49:53.000Z'));
 async_guide_multiple_filters_1: |-
   $client->getTasks(
     (new TasksQuery())
@@ -78,32 +68,18 @@ async_guide_multiple_filters_1: |-
       ->setUids(['movies'])
       ->setTypes(['documentAdditionOrUpdate', 'documentDeletion'])
   );
-async_guide_filter_by_ids_1: |-
-  $client->getTasks((new TasksQuery())->setUids([5, 10, 13]));
 async_guide_filter_by_statuses_1: |-
   $client->getTasks((new TasksQuery())->setStatuses(['failed', 'canceled']));
-async_guide_filter_by_types_1: |-
-  $client->getTasks((new TasksQuery())->setTypes(['dumpCreation', 'indexSwap']));
-async_guide_filter_by_index_uids_1: |-
-  $client->getTasks((new TasksQuery())->setIndexUids(['movies']));
 delete_tasks_1: |-
   $client->deleteTasks((new DeleteTasksQuery())->setUids([1, 2]));
 cancel_tasks_1: |-
   $client->cancelTasks((new CancelTasksQuery())->setUids([1, 2]));
-async_guide_canceled_by_1: |-
-  $client->getTasks((new TasksQuery())->setCanceledBy([9, 15]));
 swap_indexes_1: |-
   $client->swapIndexes([['indexA', 'indexB'], ['indexX', 'indexY']]);
 search_parameter_guide_hitsperpage_1: |-
   $client->index('movies')->search('', ['hitsPerPage' => 15]);
 search_parameter_guide_page_1: |-
   $client->index('movies')->search('', ['page' => 2]);
-getting_started_typo_tolerance: |-
-  $client->index('books')->updateTypoTolerance([
-    'minWordSizeForTypos' => [
-      'oneTypo' => 4
-    ]
-  ]);
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
 list_all_indexes_1: |-
@@ -417,26 +393,11 @@ typo_tolerance_guide_4: |-
       'twoTypos' => 10
     ]
   ]);
-typo_tolerance_guide_5: |-
-  $client->index('movies')->updateTypoTolerance([
-    'disableOnNumbers' => true
-  ]);
 add_movies_json_1: |-
   $moviesJson = file_get_contents('movies.json');
   $movies = json_decode($moviesJson);
 
   $client->index('movies')->addDocuments($movies);
-landing_getting_started_1: |-
-  $client = new Client('http://localhost:7700', 'masterKey');
-
-  $client->index('movies')->addDocuments([
-    ['id' => 1, 'title' => 'Carol'],
-    ['id' => 2, 'title' => 'Wonder Woman'],
-    ['id' => 3, 'title' => 'Life of Pi'],
-    ['id' => 4, 'title' => 'Mad Max: Fury Road'],
-    ['id' => 5, 'title' => 'Moana'],
-    ['id' => 6, 'title' => 'Philadelphia'],
-  ]);
 getting_started_add_documents: |-
   /**
    * Using `meilisearch-php` with the Guzzle HTTP client, in the command line:
@@ -465,67 +426,6 @@ getting_started_check_task_status: |-
   $client->getTask(0);
 getting_started_search: |-
   $client->index('movies')->search('botman');
-getting_started_add_meteorites: |-
-  $client = new Client('http://localhost:7700');
-
-  $meteorites_json = file_get_contents('meteorites.json');
-  $meteorites = json_decode($meteorites_json);
-
-  $client->index('meteorites')->addDocuments($meteorites);
-getting_started_update_ranking_rules: |-
-  $client->index('movies')->updateRankingRules([
-    'exactness',
-    'words',
-    'typo',
-    'proximity',
-    'attribute',
-    'sort',
-    'release_date:asc',
-    'rank:desc'
-  ]);
-getting_started_update_displayed_attributes: |-
-  $client->index('movies')->updateDisplayedAttributes([
-    'title',
-    'overview',
-    'poster'
-  ]);
-getting_started_update_searchable_attributes: |-
-  $client->index('movies')->updateSearchableAttributes(['title']);
-getting_started_update_stop_words: |-
-  $client->index('movies')->updateStopWords(['the']);
-getting_started_synonyms: |-
-  $client->index('movies')->updateSynonyms([
-    'winnie' => ['piglet'],
-    'piglet' => ['winnie']
-  ]);
-getting_started_filtering: |-
-  $client->index('meteorites')->search('', [
-    'filter' => 'mass < 200'
-  ]);
-getting_started_geo_radius: |-
-  $client->index('meteorites')->search('', [
-    'filter' => '_geoRadius(46.9480, 7.4474, 210000)'
-  ]);
-getting_started_geo_point: |-
-  $client->index('meteorites')->search('', [
-    'sort' => ['_geoPoint(48.8583701,2.2922926):asc']
-  ]);
-getting_started_sorting: |-
-  $client->index('meteorites')->search('', [
-    'filter' => 'mass < 200',
-    'sort' => ['mass:asc']
-  ]);
-getting_started_configure_settings: |-
-  $client->index('meteorites')->updateSettings([
-    'filterableAttributes' => [
-      'mass',
-      '_geo'
-    ],
-    'sortableAttributes' => [
-      'mass',
-      '_geo'
-    ]
-  ]);
 filtering_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
 faceted_search_walkthrough_filter_1: |-
@@ -612,47 +512,9 @@ primary_field_guide_add_document_primary_key: |-
       'price' => 5.00
     ]
   ], 'reference_number');
-security_guide_search_key_1: |-
-  $client = new Client('http://localhost:7700', 'masterKey');
-  $client->index('patient_medical_records')->search();
-security_guide_update_key_1: |-
-  $client = new Client('http://localhost:7700', 'masterKey');
-  $client->updateKey('74c9c733-3368-4738-bbe5-1d18a5fecb37',
-    ['description' => 'Default Search API Key']
-  );
-security_guide_create_key_1: |-
-  $client = new Client('http://localhost:7700', 'masterKey');
-  $client->createKey([
-    'description' => 'Search patient records key',
-    'actions' => ['search'],
-    'indexes' => ['patient_medical_records'],
-    'expiresAt' => '2023-01-01T00:00:00Z',
-  ]);
-security_guide_list_keys_1: |-
-  $client = new Client('http://localhost:7700', 'masterKey');
-  $client->getKeys();
-security_guide_delete_key_1: |-
-  $client = new Client('http://localhost:7700', 'masterKey');
-  $client->deleteKey('ac5cd97d-5a4b-4226-a868-2d0eb6d197ab');
 authorization_header_1: |-
   $client = new Client('http://localhost:7700', 'masterKey');
   $client->getKeys();
-tenant_token_guide_generate_sdk_1: |-
-  $apiKeyUid = '85c3c2f9-bdd6-41f1-abd8-11fcf80e0f76';
-  $searchRules = (object) [
-    'patient_medical_records' => (object) [
-      'filter' => 'user_id = 1',
-    ]
-  ];
-  $options = [
-      'apiKey' => 'B5KdX2MY2jV6EXfUs6scSfmC...',
-      'expiresAt' => new DateTime('2025-12-20'),
-  ];
-
-  $token = $client->generateTenantToken($apiKeyUid, $searchRules, $options);
-tenant_token_guide_search_sdk_1: |-
-  $frontEndClient = new Client('http://localhost:7700', $token);
-  $frontEndClient->index('patient_medical_records')->search('blood test');
 get_all_tasks_paginating_1: |-
   $taskQuery = (new TasksQuery())->setLimit(2)->setFrom(10));
   $client->getTasks($taskQuery);
@@ -806,21 +668,6 @@ update_embedders_1: |-
       'apiKey' => 'OPEN_AI_API_KEY',
       'model' => 'text-embedding-3-small',
       'documentTemplate' => 'A document titled '{{doc.title}}' whose description starts with {{doc.overview|truncatewords: 20}}'
-    ]
-  ]);
-search_parameter_reference_media_1: |-
-  $client->index('INDEX_NAME')->search('a futuristic movie', [
-    'hybrid' => [
-      'embedder' => 'EMBEDDER_NAME'
-    ],
-    'media' => [
-      'textAndPoster' => [
-        'text' => 'a futuristic movie',
-        'image' => [
-          'mime' => 'image/jpeg',
-          'data' => 'base64EncodedImageData'
-        ]
-      ]
     ]
   ]);
 get_network_1: |-
