@@ -6,6 +6,8 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Client;
 use Meilisearch\Contracts\IndexesQuery;
+use Meilisearch\Contracts\TaskStatus;
+use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
@@ -157,6 +159,20 @@ final class ClientTest extends TestCase
         $index = $this->client->index('index');
         self::assertSame('index', $index->getUid());
         self::assertNull($index->getPrimaryKey());
+    }
+
+    public function testCompactIndex(): void
+    {
+        $name = $this->safeIndexName();
+        $this->createEmptyIndex($name);
+
+        $response = $this->client->getIndexes();
+        self::assertCount(1, $response);
+
+        $task = $this->client->compactIndex($name)->wait();
+
+        self::assertSame(TaskType::IndexCompaction, $task->getType());
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
     }
 
     public function testExceptionIfUidIsNullWhenCreating(): void
