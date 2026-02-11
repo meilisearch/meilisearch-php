@@ -79,7 +79,7 @@ class Indexes extends Endpoint
     {
         $options['uid'] = $uid;
 
-        return Task::fromArray($this->http->post(self::PATH, $options), partial(\Closure::fromCallable([Tasks::class, 'waitTask']), $this->http));
+        return Task::fromArray($this->http->post(self::PATH, $options), partial(Tasks::waitTask(...), $this->http));
     }
 
     public function all(?IndexesQuery $options = null): IndexesResults
@@ -158,6 +158,11 @@ class Indexes extends Endpoint
     public function swapIndexes(array $indexes): Task
     {
         return Task::fromArray($this->http->post('/swap-indexes', $indexes), partial(Tasks::waitTask(...), $this->http));
+    }
+
+    public function compact(): Task
+    {
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/compact'), partial(Tasks::waitTask(...), $this->http));
     }
 
     // Tasks

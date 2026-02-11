@@ -8,6 +8,7 @@ use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\DocumentDeletionDetails;
 use Meilisearch\Contracts\TaskDetails\DocumentEditionDetails;
 use Meilisearch\Contracts\TaskDetails\DumpCreationDetails;
+use Meilisearch\Contracts\TaskDetails\IndexCompactionDetails;
 use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
 use Meilisearch\Contracts\TaskDetails\IndexDeletionDetails;
 use Meilisearch\Contracts\TaskDetails\IndexSwapDetails;
@@ -194,21 +195,22 @@ final class Task implements \ArrayAccess
             $data['canceledBy'] ?? null,
             $data['batchUid'] ?? null,
             match ($type) {
-                TaskType::IndexCreation => null !== $details ? IndexCreationDetails::fromArray($details) : null,
-                TaskType::IndexUpdate => null !== $details ? IndexUpdateDetails::fromArray($details) : null,
-                TaskType::IndexDeletion => null !== $details ? IndexDeletionDetails::fromArray($details) : null,
-                TaskType::IndexSwap => null !== $details ? IndexSwapDetails::fromArray($details) : null,
-                TaskType::DocumentAdditionOrUpdate => null !== $details ? DocumentAdditionOrUpdateDetails::fromArray($details) : null,
-                TaskType::DocumentDeletion => null !== $details ? DocumentDeletionDetails::fromArray($details) : null,
-                TaskType::DocumentEdition => null !== $details ? DocumentEditionDetails::fromArray($details) : null,
-                TaskType::SettingsUpdate => null !== $details ? SettingsUpdateDetails::fromArray($details) : null,
-                TaskType::DumpCreation => null !== $details ? DumpCreationDetails::fromArray($details) : null,
-                TaskType::TaskCancelation => null !== $details ? TaskCancelationDetails::fromArray($details) : null,
-                TaskType::TaskDeletion => null !== $details ? TaskDeletionDetails::fromArray($details) : null,
+                TaskType::IndexCreation => null !== $details && [] !== $details ? IndexCreationDetails::fromArray($details) : null,
+                TaskType::IndexUpdate => null !== $details && [] !== $details ? IndexUpdateDetails::fromArray($details) : null,
+                TaskType::IndexDeletion => null !== $details && [] !== $details ? IndexDeletionDetails::fromArray($details) : null,
+                TaskType::IndexSwap => null !== $details && [] !== $details ? IndexSwapDetails::fromArray($details) : null,
+                TaskType::DocumentAdditionOrUpdate => null !== $details && [] !== $details ? DocumentAdditionOrUpdateDetails::fromArray($details) : null,
+                TaskType::DocumentDeletion => null !== $details && [] !== $details ? DocumentDeletionDetails::fromArray($details) : null,
+                TaskType::DocumentEdition => null !== $details && [] !== $details ? DocumentEditionDetails::fromArray($details) : null,
+                TaskType::SettingsUpdate => null !== $details && [] !== $details ? SettingsUpdateDetails::fromArray($details) : null,
+                TaskType::DumpCreation => null !== $details && [] !== $details ? DumpCreationDetails::fromArray($details) : null,
+                TaskType::TaskCancelation => null !== $details && [] !== $details ? TaskCancelationDetails::fromArray($details) : null,
+                TaskType::TaskDeletion => null !== $details && [] !== $details ? TaskDeletionDetails::fromArray($details) : null,
                 // It’s intentional that SnapshotCreation tasks don’t have a details object
                 // (no SnapshotCreationDetails exists and tests don’t exercise any details)
                 TaskType::SnapshotCreation => null,
                 TaskType::NetworkTopologyChange => null,
+                TaskType::IndexCompaction => null !== $details && [] !== $details ? IndexCompactionDetails::fromArray($details) : null,
                 TaskType::Unknown => UnknownTaskDetails::fromArray($details ?? []),
             },
             \array_key_exists('error', $data) && null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
