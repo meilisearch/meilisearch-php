@@ -258,7 +258,7 @@ class SearchQuery
      * It's available after Meilisearch v1.3.
      * To enable it properly and use ranking scoring details its required to opt-in through the /experimental-features route.
      *
-     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental_features
      *
      * @param bool $showRankingScoreDetails whether the feature is enabled or not
      *
@@ -399,7 +399,7 @@ class SearchQuery
      * It's available from Meilisearch v1.3.
      * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
      *
-     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental_features
      *
      * @param non-empty-list<float|non-empty-list<float>> $vector a multi-level array floats
      *
