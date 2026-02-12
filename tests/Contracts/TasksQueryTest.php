@@ -41,9 +41,9 @@ final class TasksQueryTest extends TestCase
 
     public function testSetUids(): void
     {
-        $data = (new TasksQuery())->setUids(['uid1', 'uid2']);
+        $data = (new TasksQuery())->setUids([1, 2]);
 
-        self::assertSame(['uids' => 'uid1,uid2'], $data->toArray());
+        self::assertSame(['uids' => '1,2'], $data->toArray());
     }
 
     public function testSetBeforeEnqueuedAt(): void

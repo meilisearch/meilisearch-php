@@ -39,9 +39,9 @@ final class DeleteTasksQueryTest extends TestCase
 
     public function testSetUids(): void
     {
-        $data = (new DeleteTasksQuery())->setUids(['uid1', 'uid2']);
+        $data = (new DeleteTasksQuery())->setUids([1, 2]);
 
-        self::assertSame(['uids' => 'uid1,uid2'], $data->toArray());
+        self::assertSame(['uids' => '1,2'], $data->toArray());
     }
 
     public function testSetBeforeEnqueuedAt(): void
