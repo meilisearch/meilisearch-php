@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Client;
-use Meilisearch\Contracts\FederationOptions;
 use Meilisearch\Contracts\MultiSearchFederation;
 use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Indexes;
@@ -84,13 +83,11 @@ final class MultiSearchTest extends TestCase
     {
         $response = $this->client->multiSearch([
             (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
-                ->setQuery('princ')
+                ->setQuery('petit')
                 ->setSort(['author:desc']),
             (new SearchQuery())->setIndexUid($this->songsIndex->getUid())
                 ->setQuery('be')
-                ->setFilter(['duration-float > 3'])
-                // By setting the weight to 0.9 this query should appear second
-                ->setFederationOptions((new FederationOptions())->setWeight(0.9)),
+                ->setFilter(['duration-float > 3']),
         ],
             (new MultiSearchFederation())->setLimit(2)->setFacetsByIndex([$this->booksIndex->getUid() => ['genre'], $this->songsIndex->getUid() => ['duration-float']])->setMergeFacets(['maxValuesPerFacet' => 10])
         );
