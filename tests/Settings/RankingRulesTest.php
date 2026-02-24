@@ -15,8 +15,9 @@ final class RankingRulesTest extends TestCase
         'words',
         'typo',
         'proximity',
-        'attribute',
+        'attributeRank',
         'sort',
+        'wordPosition',
         'exactness',
     ];
 
