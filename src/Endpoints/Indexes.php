@@ -194,7 +194,7 @@ class Indexes extends Endpoint
     /**
      * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int} ? array : SearchResult)
      */
-    public function search(?string $query, SearchQuery|array $searchParams = [], array $options = []): SearchResult|array
+    public function search(?string $query, array|SearchQuery $searchParams = [], array $options = []): SearchResult|array
     {
         $result = $this->rawSearch($query, $searchParams);
 
@@ -208,7 +208,7 @@ class Indexes extends Endpoint
         return $searchResult;
     }
 
-    public function rawSearch(?string $query, SearchQuery|array $searchParams = []): array
+    public function rawSearch(?string $query, array|SearchQuery $searchParams = []): array
     {
         $searchParams = $searchParams instanceof SearchQuery ? $searchParams->toArray() : $searchParams;
         $parameters = array_merge(
