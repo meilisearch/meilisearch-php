@@ -480,7 +480,6 @@ final class SearchQueryTest extends TestCase
 
     public function testShowRankingScoreDetails(): void
     {
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
         $searchQuery = new SearchQuery();
         $searchQuery->setShowRankingScoreDetails(true);
         $response = $this->index->search('the', $searchQuery);
