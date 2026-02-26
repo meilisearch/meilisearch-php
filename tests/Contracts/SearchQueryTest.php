@@ -247,4 +247,23 @@ final class SearchQueryTest extends TestCase
 
         self::assertSame(['federationOptions' => ['weight' => 0.5]], $data->toArray());
     }
+
+    /**
+     * @testWith [true]
+     *           [false]
+     */
+    public function testSetRetrieveVectors(bool $retrieveVectors): void
+    {
+        $data = (new SearchQuery())->setRetrieveVectors($retrieveVectors);
+
+        self::assertSame(['retrieveVectors' => $retrieveVectors], $data->toArray());
+    }
+
+    public function testSetMedia(): void
+    {
+        $media = ['image' => ['mime' => 'image/jpeg', 'data' => 'data://foo:bar']];
+        $data = (new SearchQuery())->setMedia($media);
+
+        self::assertSame(['media' => $media], $data->toArray());
+    }
 }
