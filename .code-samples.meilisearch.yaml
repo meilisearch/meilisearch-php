@@ -18,17 +18,9 @@ facet_search_3: |-
         ->setFacetQuery('c')
         ->setFacetName('genres')
   );
-search_parameter_guide_show_ranking_score_1: |-
-  $client->index('movies')->search('dragon', [
-    'showRankingScore' => true
-  ]);
 search_parameter_guide_show_ranking_score_details_1: |-
   $client->index('movies')->search('dragon', [
     'showRankingScoreDetails' => true
-  ]);
-search_parameter_guide_attributes_to_search_on_1: |-
-  $client->index('movies')->search('adventure', [
-    'attributesToSearchOn' => ['overview']
   ]);
 get_documents_post_1: |-
   $client->index('books')->getDocuments(
@@ -76,10 +68,6 @@ cancel_tasks_1: |-
   $client->cancelTasks((new CancelTasksQuery())->setUids([1, 2]));
 swap_indexes_1: |-
   $client->swapIndexes([['indexA', 'indexB'], ['indexX', 'indexY']]);
-search_parameter_guide_hitsperpage_1: |-
-  $client->index('movies')->search('', ['hitsPerPage' => 15]);
-search_parameter_guide_page_1: |-
-  $client->index('movies')->search('', ['page' => 2]);
 get_one_index_1: |-
   $client->index('movies')->fetchRawInfo();
 list_all_indexes_1: |-
@@ -337,45 +325,6 @@ filtering_guide_nested_1: |-
   $client->index('movie_ratings')->search('thriller', [
     'filter' => 'rating.users >= 90'
   ]);
-search_parameter_guide_query_1: |-
-  $client->index('movies')->search('shifu');
-search_parameter_guide_offset_1: |-
-  $client->index('movies')->search('shifu', ['offset' => 1]);
-search_parameter_guide_limit_1: |-
-  $client->index('movies')->search('shifu', ['limit' => 2]);
-search_parameter_guide_retrieve_1: |-
-  $client->index('movies')->search('shifu', [
-    'attributesToRetrieve' => ['overview', 'title']
-  ]);
-search_parameter_guide_crop_1: |-
-  $client->index('movies')->search('shifu', [
-    'attributesToCrop' => ['overview'],
-    'cropLength' => 5
-  ]);
-search_parameter_guide_crop_marker_1: |-
-  $client->index('movies')->search('shifu', [
-    'attributesToCrop' => ['overview'],
-    'cropMarker' => '[…]'
-  ]);
-search_parameter_guide_highlight_1: |-
-  $client->index('movies')->search('winter feast', [
-    'attributesToHighlight' => ['overview']
-  ]);
-search_parameter_guide_highlight_tag_1: |-
-  $client->index('movies')->search('winter feast', [
-    'attributesToHighlight' => ['overview'],
-    'highlightPreTag' => '<span class="highlight">',
-    'highlightPostTag' => '</span>'
-  ]);
-search_parameter_guide_show_matches_position_1: |-
-  $client->index('movies')->search('winter feast', [
-    'attributesToHighlight' => ['overview'],
-    'showMatchesPosition' => true
-  ]);
-search_parameter_guide_matching_strategy_1: |-
-  $client->index('movies')->search('big fat liar', ['matchingStrategy' => 'last']);
-search_parameter_guide_matching_strategy_2: |-
-  $client->index('movies')->search('big fat liar', ['matchingStrategy' => 'all']);
 typo_tolerance_guide_1: |-
   $client->index('movies')->updateTypoTolerance([
     'enabled' => false
@@ -430,10 +379,6 @@ getting_started_search: |-
   $client->index('movies')->search('botman');
 filtering_update_settings_1: |-
   $client->index('movies')->updateFilterableAttributes(['director', 'genres']);
-faceted_search_walkthrough_filter_1: |-
-  $client->index('movies')->search('thriller', [
-    'filter' => [['genres = Horror', 'genres = Mystery'], 'director = "Jordan Peele"']
-  ]);
 faceted_search_update_settings_1: |-
   $client->index('movie_ratings')->updateFilterableAttributes(['genres', 'rating', 'language']);
 faceted_search_1: |-
@@ -444,8 +389,6 @@ post_dump_1: |-
   $client->createDump();
 create_snapshot_1: |-
   $client->createSnapshot();
-phrase_search_1: |-
-  $client->index('movies')->search('"african american" horror');
 sorting_guide_update_sortable_attributes_1: |-
   $client->index('books')->updateSortableAttributes([
     'author',
@@ -466,12 +409,6 @@ sorting_guide_sort_parameter_2: |-
   $client->index('books')->search('butler', ['sort' => ['author:desc']]);
 sorting_guide_sort_nested_1: |-
   $client->index('books')->search('science fiction', ['sort' => ['rating.users:asc']]);
-search_parameter_guide_sort_1: |-
-  $client->index('books')->search('science fiction', ['sort' => ['price:asc']]);
-search_parameter_guide_facet_stats_1: |-
-  $client->index('movie_ratings')->search('Batman', [
-    'facets' => ['genres', 'rating']
-  ]);
 geosearch_guide_filter_settings_1: |-
   $client->index('restaurants')->updateFilterableAttributes([
     '_geo'
@@ -602,58 +539,15 @@ update_search_cutoff_1: |-
   $client->index('movies')->updateSearchCutoffMs(150);
 reset_search_cutoff_1: |-
   $client->index('movies')->resetSearchCutoffMs();
-negative_search_1: |-
-  $client->index('movies')->search('-escape');
-negative_search_2: |-
-  $client->index('movies')->search('-"escape"');
-search_parameter_reference_retrieve_vectors_1: |-
-  $client->index('INDEX_NAME')->search('kitchen utensils', [
-    'retrieveVectors' => true,
-    'hybrid' => [
-      'embedder': 'EMBEDDER_NAME'
-    ]
-  ]);
-search_parameter_guide_hybrid_1: |-
-  $client->index('INDEX_NAME')->search('kitchen utensils', [
-    'hybrid' => [
-      'semanticRatio' => 0.9,
-      'embedder' => 'EMBEDDER_NAME'
-    ]
-  ]);
-search_parameter_reference_ranking_score_threshold_1: |-
-  $client->index('INDEX_NAME')->search('badman', [
-    'rankingScoreThreshold' => 0.2
-  ]);
-search_parameter_reference_distinct_1: |-
-  $client->index('INDEX_NAME')->search('QUERY TERMS', [
-    'distinct' => 'ATTRIBUTE_A'
-  ]);
 distinct_attribute_guide_filterable_1: |-
   $client->index('products')->updateFilterableAttributes(['product_id', 'sku', 'url']);
 distinct_attribute_guide_distinct_parameter_1: |-
   $client->index('products')->search('white shirt', [
     'distinct' => 'sku'
   ]);
-search_parameter_guide_matching_strategy_3: |-
-  $client->index('movies')->search('white shirt', ['matchingStrategy' => 'frequency']);
 get_similar_post_1: |-
   $similarQuery = new SimilarDocumentsQuery('TARGET_DOCUMENT_ID', 'default');
   $client->index('INDEX_NAME')->searchSimilarDocuments($similarQuery);
-multi_search_federated_1: |-
-  $client->multiSearch([
-      (new SearchQuery())
-        ->setIndexUid('movies'))
-        ->setQuery('batman'),
-      (new SearchQuery())
-        ->setIndexUid('comics')
-        ->setQuery('batman'),
-    ],
-    (new MultiSearchFederation())
-  );
-search_parameter_reference_locales_1: |-
-  $client->index('INDEX_NAME')->search('QUERY TEXT IN JAPANESE', [
-    'locales' => ['jpn']
-  ]);
 get_localized_attribute_settings_1: |-
   $client->index('INDEX_NAME')->getLocalizedAttributes();
 update_localized_attribute_settings_1: |-
