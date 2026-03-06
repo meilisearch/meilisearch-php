@@ -97,7 +97,7 @@ jobs:
         run: sh scripts/tests.sh --coverage-clover coverage-${{ matrix.php-version }}.xml
 
       - name: Upload coverage file
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: "phpunit-${{ matrix.php-version }}-coverage"
           path: "coverage*.xml"
