@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints;
 
-use InvalidArgumentException;
 use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Contracts\NetworkResults;
 use Meilisearch\Contracts\Task;
@@ -13,6 +12,7 @@ use function Meilisearch\partial;
 
 /**
  * @phpstan-import-type RemoteConfig from NetworkResults
+ *
  * @phpstan-type ShardConfig array{
  *   remotes?: list<non-empty-string>,
  *   addRemotes?: list<non-empty-string>,
@@ -98,7 +98,7 @@ class Network extends Endpoint
     }
 
     /**
-     * @param non-empty-string   $shardName
+     * @param non-empty-string       $shardName
      * @param list<non-empty-string> $remoteNames
      */
     public function addRemotesToShard(string $shardName, array $remoteNames): Task
@@ -116,7 +116,7 @@ class Network extends Endpoint
     }
 
     /**
-     * @param non-empty-string   $shardName
+     * @param non-empty-string       $shardName
      * @param list<non-empty-string> $remoteNames
      */
     public function removeRemotesFromShard(string $shardName, array $remoteNames): Task
@@ -148,42 +148,42 @@ class Network extends Endpoint
         $remotes = $options['remotes'] ?? null;
         $shards = $options['shards'] ?? null;
 
-        if (!\is_array($remotes) || $remotes === []) {
-            throw new InvalidArgumentException('remotes must be a non-empty array of remote definitions.');
+        if (!\is_array($remotes) || [] === $remotes) {
+            throw new \InvalidArgumentException('remotes must be a non-empty array of remote definitions.');
         }
 
         $validatedRemotes = $this->validateRemotes($remotes);
 
-        if (!array_key_exists($options['self'], $validatedRemotes)) {
-            throw new InvalidArgumentException('self must be one of the defined remotes.');
+        if (!\array_key_exists($options['self'], $validatedRemotes)) {
+            throw new \InvalidArgumentException('self must be one of the defined remotes.');
         }
 
-        if (!array_key_exists($options['leader'], $validatedRemotes)) {
-            throw new InvalidArgumentException('leader must be one of the defined remotes.');
+        if (!\array_key_exists($options['leader'], $validatedRemotes)) {
+            throw new \InvalidArgumentException('leader must be one of the defined remotes.');
         }
 
-        if (!\is_array($shards) || $shards === []) {
-            throw new InvalidArgumentException('shards must be a non-empty array.');
+        if (!\is_array($shards) || [] === $shards) {
+            throw new \InvalidArgumentException('shards must be a non-empty array.');
         }
 
         foreach ($shards as $shardName => $definition) {
             $this->assertNonEmptyString($shardName, 'shard name');
 
             if (!\is_array($definition)) {
-                throw new InvalidArgumentException('shard definition must be an array with remotes.');
+                throw new \InvalidArgumentException('shard definition must be an array with remotes.');
             }
 
             $remotesList = $definition['remotes'] ?? null;
 
-            if (!\is_array($remotesList) || $remotesList === []) {
-                throw new InvalidArgumentException('each shard must define at least one remote.');
+            if (!\is_array($remotesList) || [] === $remotesList) {
+                throw new \InvalidArgumentException('each shard must define at least one remote.');
             }
 
             foreach ($remotesList as $remoteName) {
                 $this->assertNonEmptyString($remoteName, 'shard remote');
 
-                if (!array_key_exists($remoteName, $validatedRemotes)) {
-                    throw new InvalidArgumentException(sprintf('shard references unknown remote "%s".', $remoteName));
+                if (!\array_key_exists($remoteName, $validatedRemotes)) {
+                    throw new \InvalidArgumentException(\sprintf('shard references unknown remote "%s".', $remoteName));
                 }
             }
         }
@@ -202,16 +202,16 @@ class Network extends Endpoint
             $this->assertNonEmptyString($name, 'remote name');
 
             if (!\is_array($config)) {
-                throw new InvalidArgumentException('remote configuration must be an array.');
+                throw new \InvalidArgumentException('remote configuration must be an array.');
             }
 
             foreach (['url', 'searchApiKey', 'writeApiKey'] as $field) {
-                if (!\is_string($config[$field] ?? null) || $config[$field] === '') {
-                    throw new InvalidArgumentException(sprintf('remote "%s" is missing a valid %s.', $name, $field));
+                if (!\is_string($config[$field] ?? null) || '' === $config[$field]) {
+                    throw new \InvalidArgumentException(\sprintf('remote "%s" is missing a valid %s.', $name, $field));
                 }
             }
 
-            /** @var RemoteConfig $config */
+            /* @var RemoteConfig $config */
             $validated[$name] = $config;
         }
 
@@ -225,8 +225,8 @@ class Network extends Endpoint
      */
     private function assertRemoteNames(array $remoteNames): array
     {
-        if ($remoteNames === []) {
-            throw new InvalidArgumentException('remoteNames must be a non-empty list of strings.');
+        if ([] === $remoteNames) {
+            throw new \InvalidArgumentException('remoteNames must be a non-empty list of strings.');
         }
 
         $list = [];
@@ -241,8 +241,8 @@ class Network extends Endpoint
 
     private function assertNonEmptyString(mixed $value, string $field): void
     {
-        if (!\is_string($value) || $value === '') {
-            throw new InvalidArgumentException(sprintf('%s must be a non-empty string.', $field));
+        if (!\is_string($value) || '' === $value) {
+            throw new \InvalidArgumentException(\sprintf('%s must be a non-empty string.', $field));
         }
     }
 

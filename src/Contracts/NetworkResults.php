@@ -52,7 +52,7 @@ class NetworkResults extends Data
         $this->leader = $params['leader'] ?? null;
         $this->version = $params['version'] ?? null;
         $this->remotes = $params['remotes'] ?? [];
-        $this->shards = $this->normalizeShards($params['shards'] ?? []);
+        $this->shards = $params['shards'] ?? [];
     }
 
     /**
@@ -93,34 +93,5 @@ class NetworkResults extends Data
     public function getShards(): array
     {
         return $this->shards;
-    }
-
-    /**
-     * @param array<non-empty-string, array{remotes: list<non-empty-string>}> $shards
-     *
-     * @return array<non-empty-string, Shard>
-     */
-    private function normalizeShards(array $shards): array
-    {
-        $normalized = [];
-
-        foreach ($shards as $name => $definition) {
-            if (!\is_array($definition)) {
-                continue;
-            }
-
-            $remotes = $definition['remotes'] ?? [];
-
-            if (!\is_array($remotes)) {
-                $remotes = [];
-            }
-
-            /** @var list<non-empty-string> $remoteList */
-            $remoteList = array_values(array_filter($remotes, static fn ($remote): bool => \is_string($remote) && $remote !== ''));
-
-            $normalized[$name] = ['remotes' => $remoteList];
-        }
-
-        return $normalized;
     }
 }
