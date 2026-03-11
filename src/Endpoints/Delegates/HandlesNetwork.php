@@ -10,6 +10,7 @@ use Meilisearch\Endpoints\Network;
 
 /**
  * @phpstan-import-type RemoteConfig from NetworkResults
+ * @phpstan-import-type ShardConfig from \Meilisearch\Endpoints\Network
  */
 trait HandlesNetwork
 {
@@ -27,7 +28,9 @@ trait HandlesNetwork
      *
      * @param array{
      *     self: non-empty-string,
-     *     remotes: array<non-empty-string, RemoteConfig>
+     *     leader: non-empty-string,
+     *     remotes: array<non-empty-string, RemoteConfig>,
+     *     shards: array<non-empty-string, ShardConfig>,
      * } $options
      */
     public function initializeNetwork(array $options): Task
@@ -54,5 +57,23 @@ trait HandlesNetwork
     public function removeRemote(string $name): Task
     {
         return $this->network->removeRemote($name);
+    }
+
+    /**
+     * @param non-empty-string      $shardName
+     * @param list<non-empty-string> $remoteNames
+     */
+    public function addRemotesToShard(string $shardName, array $remoteNames): Task
+    {
+        return $this->network->addRemotesToShard($shardName, $remoteNames);
+    }
+
+    /**
+     * @param non-empty-string      $shardName
+     * @param list<non-empty-string> $remoteNames
+     */
+    public function removeRemotesFromShard(string $shardName, array $remoteNames): Task
+    {
+        return $this->network->removeRemotesFromShard($shardName, $remoteNames);
     }
 }
