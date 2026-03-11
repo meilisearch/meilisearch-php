@@ -35,6 +35,7 @@ final class NetworksTest extends TestCase
         ];
 
         $this->expectException(\InvalidArgumentException::class);
+        /** @phpstan-ignore-next-line intentional invalid input to test validation */
         $this->client->initializeNetwork($options);
     }
 

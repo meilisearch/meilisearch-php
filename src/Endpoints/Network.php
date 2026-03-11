@@ -190,7 +190,7 @@ class Network extends Endpoint
     }
 
     /**
-     * @param array<non-empty-string, RemoteConfig> $remotes
+     * @param array<non-empty-string, mixed> $remotes
      *
      * @return array<non-empty-string, RemoteConfig>
      */
@@ -206,7 +206,7 @@ class Network extends Endpoint
             }
 
             foreach (['url', 'searchApiKey', 'writeApiKey'] as $field) {
-                if (!\is_string($config[$field] ?? null) || '' === $config[$field]) {
+                if (!isset($config[$field]) || !\is_string($config[$field]) || '' === $config[$field]) {
                     throw new \InvalidArgumentException(\sprintf('remote "%s" is missing a valid %s.', $name, $field));
                 }
             }
