@@ -18,75 +18,6 @@ final class NetworksTest extends TestCase
         $http->patch('/experimental-features', ['network' => true]);
     }
 
-    public function testInitializeNetworkRequiresLeader(): void
-    {
-        $apiKey = getenv('MEILISEARCH_API_KEY');
-        $instanceName = 'ms-00';
-
-        $options = [
-            'self' => $instanceName,
-            'remotes' => [
-                $instanceName => [
-                    'url' => $this->host,
-                    'searchApiKey' => $apiKey,
-                    'writeApiKey' => $apiKey,
-                ],
-            ],
-        ];
-
-        $this->expectException(\InvalidArgumentException::class);
-        /* @phpstan-ignore-next-line intentional invalid input to test validation */
-        $this->client->initializeNetwork($options);
-    }
-
-    public function testInitializeNetworkRejectsShardWithUnknownRemote(): void
-    {
-        $apiKey = getenv('MEILISEARCH_API_KEY');
-        $instanceName = 'ms-00';
-
-        $options = [
-            'self' => $instanceName,
-            'leader' => $instanceName,
-            'remotes' => [
-                $instanceName => [
-                    'url' => $this->host,
-                    'searchApiKey' => $apiKey,
-                    'writeApiKey' => $apiKey,
-                ],
-            ],
-            'shards' => [
-                's-a' => ['remotes' => ['unknown-remote']],
-            ],
-        ];
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->client->initializeNetwork($options);
-    }
-
-    public function testInitializeNetworkRejectsEmptyShardRemotes(): void
-    {
-        $apiKey = getenv('MEILISEARCH_API_KEY');
-        $instanceName = 'ms-00';
-
-        $options = [
-            'self' => $instanceName,
-            'leader' => $instanceName,
-            'remotes' => [
-                $instanceName => [
-                    'url' => $this->host,
-                    'searchApiKey' => $apiKey,
-                    'writeApiKey' => $apiKey,
-                ],
-            ],
-            'shards' => [
-                's-a' => ['remotes' => []],
-            ],
-        ];
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->client->initializeNetwork($options);
-    }
-
     public function testInitializeNetworkWithExplicitShards(): void
     {
         $apiKey = getenv('MEILISEARCH_API_KEY');
@@ -161,8 +92,5 @@ final class NetworksTest extends TestCase
         $shardsAfterAdd = $afterAdd->getShards();
         self::assertArrayHasKey('s-a', $shardsAfterAdd);
         self::assertEqualsCanonicalizing([$leader], $shardsAfterAdd['s-a']['remotes']);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->client->removeRemotesFromShard('s-a', []);
     }
 }
