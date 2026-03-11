@@ -18,7 +18,7 @@ final class NetworksTest extends TestCase
         $http->patch('/experimental-features', ['network' => true]);
     }
 
-    public function testInitializeNetwork(): void
+    public function testInitializeNetworkRequiresLeader(): void
     {
         $apiKey = getenv('MEILISEARCH_API_KEY');
         $instanceName = 'ms-00';
@@ -31,6 +31,78 @@ final class NetworksTest extends TestCase
                     'searchApiKey' => $apiKey,
                     'writeApiKey' => $apiKey,
                 ],
+            ],
+        ];
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->client->initializeNetwork($options);
+    }
+
+    public function testInitializeNetworkRejectsShardWithUnknownRemote(): void
+    {
+        $apiKey = getenv('MEILISEARCH_API_KEY');
+        $instanceName = 'ms-00';
+
+        $options = [
+            'self' => $instanceName,
+            'leader' => $instanceName,
+            'remotes' => [
+                $instanceName => [
+                    'url' => $this->host,
+                    'searchApiKey' => $apiKey,
+                    'writeApiKey' => $apiKey,
+                ],
+            ],
+            'shards' => [
+                's-a' => ['remotes' => ['unknown-remote']],
+            ],
+        ];
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->client->initializeNetwork($options);
+    }
+
+    public function testInitializeNetworkRejectsEmptyShardRemotes(): void
+    {
+        $apiKey = getenv('MEILISEARCH_API_KEY');
+        $instanceName = 'ms-00';
+
+        $options = [
+            'self' => $instanceName,
+            'leader' => $instanceName,
+            'remotes' => [
+                $instanceName => [
+                    'url' => $this->host,
+                    'searchApiKey' => $apiKey,
+                    'writeApiKey' => $apiKey,
+                ],
+            ],
+            'shards' => [
+                's-a' => ['remotes' => []],
+            ],
+        ];
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->client->initializeNetwork($options);
+    }
+
+    public function testInitializeNetworkWithExplicitShards(): void
+    {
+        $apiKey = getenv('MEILISEARCH_API_KEY');
+        $instanceName = 'ms-00';
+
+        $options = [
+            'self' => $instanceName,
+            'leader' => $instanceName,
+            'remotes' => [
+                $instanceName => [
+                    'url' => $this->host,
+                    'searchApiKey' => $apiKey,
+                    'writeApiKey' => $apiKey,
+                ],
+            ],
+            'shards' => [
+                's-a' => ['remotes' => [$instanceName]],
             ],
         ];
 
@@ -50,5 +122,46 @@ final class NetworksTest extends TestCase
         self::assertSame($this->host, $remotes[$instanceName]['url']);
         self::assertSame($apiKey, $remotes[$instanceName]['searchApiKey']);
         self::assertSame($apiKey, $remotes[$instanceName]['writeApiKey']);
+
+        $shards = $network->getShards();
+        self::assertArrayHasKey('s-a', $shards);
+        self::assertEqualsCanonicalizing([$instanceName], $shards['s-a']['remotes']);
+    }
+
+    public function testAddAndRemoveRemotesOnShard(): void
+    {
+        $apiKey = getenv('MEILISEARCH_API_KEY');
+        $leader = 'ms-00';
+
+        $options = [
+            'self' => $leader,
+            'leader' => $leader,
+            'remotes' => [
+                $leader => [
+                    'url' => $this->host,
+                    'searchApiKey' => $apiKey,
+                    'writeApiKey' => $apiKey,
+                ],
+            ],
+            'shards' => [
+                's-a' => ['remotes' => [$leader]],
+            ],
+        ];
+
+        $task = $this->client->initializeNetwork($options);
+        self::assertSame(TaskType::NetworkTopologyChange, $task->getType());
+        $task->wait();
+
+        $addTask = $this->client->addRemotesToShard('s-a', [$leader]);
+        self::assertSame(TaskType::NetworkTopologyChange, $addTask->getType());
+        $addTask->wait();
+
+        $afterAdd = $this->client->getNetwork();
+        $shardsAfterAdd = $afterAdd->getShards();
+        self::assertArrayHasKey('s-a', $shardsAfterAdd);
+        self::assertEqualsCanonicalizing([$leader], $shardsAfterAdd['s-a']['remotes']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->client->removeRemotesFromShard('s-a', []);
     }
 }
