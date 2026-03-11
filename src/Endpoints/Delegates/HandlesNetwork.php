@@ -60,7 +60,7 @@ trait HandlesNetwork
     }
 
     /**
-     * @param non-empty-string      $shardName
+     * @param non-empty-string       $shardName
      * @param list<non-empty-string> $remoteNames
      */
     public function addRemotesToShard(string $shardName, array $remoteNames): Task
@@ -69,7 +69,7 @@ trait HandlesNetwork
     }
 
     /**
-     * @param non-empty-string      $shardName
+     * @param non-empty-string       $shardName
      * @param list<non-empty-string> $remoteNames
      */
     public function removeRemotesFromShard(string $shardName, array $remoteNames): Task
