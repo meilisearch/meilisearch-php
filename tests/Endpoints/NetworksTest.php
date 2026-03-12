@@ -18,7 +18,7 @@ final class NetworksTest extends TestCase
         $http->patch('/experimental-features', ['network' => true]);
     }
 
-    public function testInitializeNetworkWithExplicitShards(): void
+    public function testInitializeNetwork(): void
     {
         $apiKey = getenv('MEILISEARCH_API_KEY');
         $instanceName = 'ms-00';
