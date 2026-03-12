@@ -6,7 +6,7 @@ namespace Meilisearch\Contracts;
 
 /**
  * @phpstan-type RemoteConfig array{url: non-empty-string, searchApiKey: non-empty-string, writeApiKey: non-empty-string}
- * @phpstan-type Shard array{remotes: list<non-empty-string>}
+ * @phpstan-type ShardConfig array{remotes: list<non-empty-string>}
  */
 class NetworkResults extends Data
 {
@@ -31,7 +31,7 @@ class NetworkResults extends Data
     private array $remotes;
 
     /**
-     * @var array<non-empty-string, Shard> a mapping of shard names to their remote owners
+     * @var array<non-empty-string, ShardConfig> a mapping of shard names to their remote owners
      */
     private array $shards;
 
@@ -41,7 +41,7 @@ class NetworkResults extends Data
      *     leader?: non-empty-string|null,
      *     version?: non-empty-string|null,
      *     remotes?: array<non-empty-string, RemoteConfig|null>,
-     *     shards?: array<non-empty-string, array{remotes: list<non-empty-string>}>
+     *     shards?: array<non-empty-string, ShardConfig>
      * } $params
      */
     public function __construct(array $params)
@@ -88,7 +88,7 @@ class NetworkResults extends Data
     }
 
     /**
-     * @return array<non-empty-string, Shard>
+     * @return array<non-empty-string, ShardConfig>
      */
     public function getShards(): array
     {
