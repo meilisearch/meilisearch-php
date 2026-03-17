@@ -7,13 +7,8 @@ namespace Endpoints;
 use Meilisearch\Contracts\HybridSearchOptions;
 use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Indexes;
-use Meilisearch\Http\Client;
 use Tests\TestCase;
 
-/**
- * @internal
- * @coversNothing
- */
 final class SearchQueryTest extends TestCase
 {
     private Indexes $index;
@@ -209,6 +204,7 @@ final class SearchQueryTest extends TestCase
         $searchQuery->setCropLength(6);
         $searchQuery->setAttributesToHighlight(['*']);
         $searchQuery->setFilter(['title = "Le Petit Prince"']);
+        $searchQuery->setShowMatchesPosition(true);
         $response = $this->index->search('prince', $searchQuery);
 
         self::assertArrayHasKey('_matchesPosition', $response->getHit(0));
