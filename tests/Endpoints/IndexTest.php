@@ -6,6 +6,7 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TaskDetails\IndexCompactionDetails;
 use Meilisearch\Contracts\TaskDetails\IndexSwapDetails;
 use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TasksQuery;
@@ -34,7 +35,15 @@ final class IndexTest extends TestCase
         self::assertSame([], $this->index->getSortableAttributes());
         self::assertSame(['*'], $this->index->getSearchableAttributes());
         self::assertSame(
-            ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+            [
+                'words',
+                'typo',
+                'proximity',
+                'attributeRank',
+                'sort',
+                'wordPosition',
+                'exactness',
+            ],
             $this->index->getRankingRules()
         );
         self::assertSame([], $this->index->getFilterableAttributes());
@@ -252,6 +261,17 @@ final class IndexTest extends TestCase
         self::assertSame(['indexC', 'indexD'], $details->swaps[1]['indexes']);
         self::assertFalse($details->swaps[0]['rename']);
         self::assertFalse($details->swaps[1]['rename']);
+    }
+
+    public function testCompact(): void
+    {
+        $task = $this->index->compact()->wait();
+
+        self::assertSame(TaskType::IndexCompaction, $task->getType());
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+        self::assertInstanceOf(IndexCompactionDetails::class, $details = $task->getDetails());
+        self::assertMatchesRegularExpression('/^\d+\sKiB$/', $details->preCompactionSize);
+        self::assertMatchesRegularExpression('/^\d+\sKiB$/', $details->postCompactionSize);
     }
 
     public function testDeleteTasks(): void

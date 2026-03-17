@@ -80,6 +80,17 @@ final class SimilarDocumentsQueryTest extends TestCase
      * @testWith [false]
      *           [true]
      */
+    public function testSetShowPerformanceDetails(bool $showPerformanceDetails): void
+    {
+        $data = (new SimilarDocumentsQuery('test', 'default'))->setShowPerformanceDetails($showPerformanceDetails);
+
+        self::assertSame(['id' => 'test', 'embedder' => 'default', 'showPerformanceDetails' => $showPerformanceDetails], $data->toArray());
+    }
+
+    /**
+     * @testWith [false]
+     *           [true]
+     */
     public function testSetRetrieveVectors(bool $retrieveVectors): void
     {
         $data = (new SimilarDocumentsQuery('test', 'default'))->setRetrieveVectors($retrieveVectors);

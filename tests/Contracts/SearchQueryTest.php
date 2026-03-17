@@ -216,6 +216,17 @@ final class SearchQueryTest extends TestCase
         self::assertSame(['showRankingScoreDetails' => $value], $data->toArray());
     }
 
+    /**
+     * @testWith [true]
+     *           [false]
+     */
+    public function testSetShowPerformanceDetails(?bool $value): void
+    {
+        $data = (new SearchQuery())->setShowPerformanceDetails($value);
+
+        self::assertSame(['showPerformanceDetails' => $value], $data->toArray());
+    }
+
     public function testSetRankingScoreThreshold(): void
     {
         $data = (new SearchQuery())->setRankingScoreThreshold(0.123);

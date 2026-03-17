@@ -12,8 +12,9 @@ final class SettingsTest extends TestCase
         'words',
         'typo',
         'proximity',
-        'attribute',
+        'attributeRank',
         'sort',
+        'wordPosition',
         'exactness',
     ];
 

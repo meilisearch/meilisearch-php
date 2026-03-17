@@ -65,4 +65,12 @@ trait HandlesIndex
     {
         return $this->index($uid)->update($options);
     }
+
+    /**
+     * @param non-empty-string $uid
+     */
+    public function compactIndex(string $uid): Task
+    {
+        return $this->index($uid)->compact();
+    }
 }

@@ -102,6 +102,8 @@ class SearchQuery
 
     private ?bool $showRankingScoreDetails = null;
 
+    private ?bool $showPerformanceDetails = null;
+
     private ?float $rankingScoreThreshold = null;
 
     /**
@@ -256,7 +258,7 @@ class SearchQuery
      * It's available after Meilisearch v1.3.
      * To enable it properly and use ranking scoring details its required to opt-in through the /experimental-features route.
      *
-     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental_features
      *
      * @param bool $showRankingScoreDetails whether the feature is enabled or not
      *
@@ -265,6 +267,16 @@ class SearchQuery
     public function setShowRankingScoreDetails(?bool $showRankingScoreDetails): self
     {
         $this->showRankingScoreDetails = $showRankingScoreDetails;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setShowPerformanceDetails(?bool $showPerformanceDetails): self
+    {
+        $this->showPerformanceDetails = $showPerformanceDetails;
 
         return $this;
     }
@@ -387,7 +399,7 @@ class SearchQuery
      * It's available from Meilisearch v1.3.
      * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
      *
-     * More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     * More info: https://www.meilisearch.com/docs/reference/api/experimental_features
      *
      * @param non-empty-list<float|non-empty-list<float>> $vector a multi-level array floats
      *
@@ -455,6 +467,7 @@ class SearchQuery
      *     attributesToSearchOn?: non-empty-list<non-empty-string>,
      *     showRankingScore?: bool,
      *     showRankingScoreDetails?: bool,
+     *     showPerformanceDetails?: bool,
      *     rankingScoreThreshold?: float,
      *     distinct?: non-empty-string,
      *     federationOptions?: array<mixed>
@@ -487,6 +500,7 @@ class SearchQuery
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
             'showRankingScoreDetails' => $this->showRankingScoreDetails,
+            'showPerformanceDetails' => $this->showPerformanceDetails,
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
             'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,

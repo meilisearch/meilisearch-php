@@ -172,7 +172,7 @@ trait HandlesDocuments
      * It's available after Meilisearch v1.10.
      *
      * More info about the feature: https://github.com/orgs/meilisearch/discussions/762
-     * More info about experimental features in general: https://www.meilisearch.com/docs/reference/api/experimental-features
+     * More info about experimental features in general: https://www.meilisearch.com/docs/reference/api/experimental_features
      *
      * @param non-empty-string                                                                                       $function
      * @param array{filter?: non-empty-string|list<non-empty-string>|null, context?: array<non-empty-string, mixed>} $options

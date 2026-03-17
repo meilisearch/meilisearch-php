@@ -6,21 +6,35 @@ namespace Meilisearch\Endpoints\Delegates;
 
 trait TasksQueryTrait
 {
-    private array $types;
-    private array $statuses;
-    private array $indexUids;
-    private array $uids;
-    private \DateTimeInterface $beforeEnqueuedAt;
-    private \DateTimeInterface $afterEnqueuedAt;
-    private \DateTimeInterface $beforeStartedAt;
-    private \DateTimeInterface $afterStartedAt;
-    private \DateTimeInterface $beforeFinishedAt;
-    private \DateTimeInterface $afterFinishedAt;
+    /**
+     * @var list<non-empty-string>
+     */
+    private ?array $types = null;
+    /**
+     * @var list<non-empty-string>
+     */
+    private ?array $statuses = null;
+    /**
+     * @var list<non-empty-string>
+     */
+    private ?array $indexUids = null;
+    /**
+     * @var list<int>
+     */
+    private ?array $uids = null;
+    private ?\DateTimeInterface $beforeEnqueuedAt = null;
+    private ?\DateTimeInterface $afterEnqueuedAt = null;
+    private ?\DateTimeInterface $beforeStartedAt = null;
+    private ?\DateTimeInterface $afterStartedAt = null;
+    private ?\DateTimeInterface $beforeFinishedAt = null;
+    private ?\DateTimeInterface $afterFinishedAt = null;
 
     /**
+     * @param list<non-empty-string>|null $types
+     *
      * @return $this
      */
-    public function setTypes(array $types): self
+    public function setTypes(?array $types): self
     {
         $this->types = $types;
 
@@ -28,9 +42,11 @@ trait TasksQueryTrait
     }
 
     /**
+     * @param list<non-empty-string>|null $statuses
+     *
      * @return $this
      */
-    public function setStatuses(array $statuses): self
+    public function setStatuses(?array $statuses): self
     {
         $this->statuses = $statuses;
 
@@ -38,24 +54,31 @@ trait TasksQueryTrait
     }
 
     /**
+     * @param list<non-empty-string>|null $indexUids
+     *
      * @return $this
      */
-    public function setIndexUids(array $indexUids): self
+    public function setIndexUids(?array $indexUids): self
     {
         $this->indexUids = $indexUids;
 
         return $this;
     }
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getIndexUids(): array
     {
         return $this->indexUids ?? [];
     }
 
     /**
+     * @param list<int>|null $uids
+     *
      * @return $this
      */
-    public function setUids(array $uids): self
+    public function setUids(?array $uids): self
     {
         $this->uids = $uids;
 
@@ -65,7 +88,7 @@ trait TasksQueryTrait
     /**
      * @return $this
      */
-    public function setBeforeEnqueuedAt(\DateTimeInterface $date): self
+    public function setBeforeEnqueuedAt(?\DateTimeInterface $date): self
     {
         $this->beforeEnqueuedAt = $date;
 
@@ -75,7 +98,7 @@ trait TasksQueryTrait
     /**
      * @return $this
      */
-    public function setAfterEnqueuedAt(\DateTimeInterface $date): self
+    public function setAfterEnqueuedAt(?\DateTimeInterface $date): self
     {
         $this->afterEnqueuedAt = $date;
 
@@ -85,7 +108,7 @@ trait TasksQueryTrait
     /**
      * @return $this
      */
-    public function setBeforeStartedAt(\DateTimeInterface $date): self
+    public function setBeforeStartedAt(?\DateTimeInterface $date): self
     {
         $this->beforeStartedAt = $date;
 
@@ -95,7 +118,7 @@ trait TasksQueryTrait
     /**
      * @return $this
      */
-    public function setAfterStartedAt(\DateTimeInterface $date): self
+    public function setAfterStartedAt(?\DateTimeInterface $date): self
     {
         $this->afterStartedAt = $date;
 
@@ -105,7 +128,7 @@ trait TasksQueryTrait
     /**
      * @return $this
      */
-    public function setBeforeFinishedAt(\DateTimeInterface $date): self
+    public function setBeforeFinishedAt(?\DateTimeInterface $date): self
     {
         $this->beforeFinishedAt = $date;
 
@@ -115,7 +138,7 @@ trait TasksQueryTrait
     /**
      * @return $this
      */
-    public function setAfterFinishedAt(\DateTimeInterface $date): self
+    public function setAfterFinishedAt(?\DateTimeInterface $date): self
     {
         $this->afterFinishedAt = $date;
 
@@ -133,16 +156,16 @@ trait TasksQueryTrait
     protected function baseArray(): array
     {
         return [
-            'beforeEnqueuedAt' => $this->formatDate($this->beforeEnqueuedAt ?? null),
-            'afterEnqueuedAt' => $this->formatDate($this->afterEnqueuedAt ?? null),
-            'beforeStartedAt' => $this->formatDate($this->beforeStartedAt ?? null),
-            'afterStartedAt' => $this->formatDate($this->afterStartedAt ?? null),
-            'beforeFinishedAt' => $this->formatDate($this->beforeFinishedAt ?? null),
-            'afterFinishedAt' => $this->formatDate($this->afterFinishedAt ?? null),
-            'statuses' => $this->formatArray($this->statuses ?? null),
-            'uids' => $this->formatArray($this->uids ?? null),
-            'types' => $this->formatArray($this->types ?? null),
-            'indexUids' => $this->formatArray($this->indexUids ?? null),
+            'beforeEnqueuedAt' => $this->formatDate($this->beforeEnqueuedAt),
+            'afterEnqueuedAt' => $this->formatDate($this->afterEnqueuedAt),
+            'beforeStartedAt' => $this->formatDate($this->beforeStartedAt),
+            'afterStartedAt' => $this->formatDate($this->afterStartedAt),
+            'beforeFinishedAt' => $this->formatDate($this->beforeFinishedAt),
+            'afterFinishedAt' => $this->formatDate($this->afterFinishedAt),
+            'statuses' => $this->formatArray($this->statuses),
+            'uids' => $this->formatArray($this->uids),
+            'types' => $this->formatArray($this->types),
+            'indexUids' => $this->formatArray($this->indexUids),
         ];
     }
 
