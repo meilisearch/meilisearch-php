@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Http\Client;
@@ -892,5 +893,14 @@ final class SearchTest extends TestCase
         ])->toArray();
 
         self::assertCount(2, $response['hits']);
+    }
+
+    public function testSearchQueryParameter(): void
+    {
+        $searchQuery = new SearchQuery();
+        $searchQuery->setLimit(1);
+        $response = $this->index->search('prince', $searchQuery);
+
+        self::assertCount(1, $response->getHits());
     }
 }
