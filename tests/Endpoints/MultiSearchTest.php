@@ -119,6 +119,28 @@ final class MultiSearchTest extends TestCase
         self::assertSame(1, $response['hits'][1]['_federation']['queriesPosition']);
     }
 
+    public function testFederationDistinct(): void
+    {
+        $httpClient = new MockHttpClient(static function (string $method, string $url, array $options): MockResponse {
+            self::assertSame('POST', $method);
+            self::assertSame('http://meilisearch/multi-search', $url);
+            self::assertSame('{"queries":[{"indexUid":"first"}],"federation":{"distinct":"id"}}', $options['body']);
+
+            return new MockResponse(
+                json_encode(['results' => []], \JSON_THROW_ON_ERROR),
+                ['response_headers' => ['content-type' => 'application/json']],
+            );
+        });
+
+        $client = new Client('http://meilisearch', 'apikey', new Psr18Client($httpClient));
+        $client->multiSearch(
+            [
+                (new SearchQuery())->setIndexUid('first'),
+            ],
+            (new MultiSearchFederation())->setDistinct('id'),
+        );
+    }
+
     public function testSupportedQueryParams(): void
     {
         $query = (new SearchQuery())
