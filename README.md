@@ -11,7 +11,7 @@
   <a href="https://discord.meilisearch.com">Discord</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
   <a href="https://www.meilisearch.com">Website</a> |
-  <a href="https://www.meilisearch.com/docs/faq">FAQ</a>
+  <a href="https://www.meilisearch.com/docs/learn/resources/faq">FAQ</a>
 </h4>
 
 <p align="center">
@@ -41,7 +41,7 @@
 ## 📖 Documentation
 
 
-To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://php-sdk.meilisearch.com). To learn more about Meilisearch in general, refer to our [documentation](https://www.meilisearch.com/docs/learn/getting_started/quick_start) or our [API reference](https://www.meilisearch.com/docs/reference/api/overview).
+To learn more about Meilisearch PHP, refer to the in-depth [Meilisearch PHP Documentation](https://php-sdk.meilisearch.com). To learn more about Meilisearch in general, refer to our [documentation](https://www.meilisearch.com/docs/learn/self_hosted/getting_started_with_self_hosted_meilisearch) or our [API reference](https://www.meilisearch.com/docs/reference/api/authorization).
 
 ## 🔧 Installation
 
@@ -98,7 +98,7 @@ $documents = [
 $index->addDocuments($documents); // => { "uid": 0 }
 ```
 
-With the `uid`, you can check the status (`enqueued`, `canceled`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/tasks#status).
+With the `uid`, you can check the status (`enqueued`, `canceled`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/async-task-management/list-tasks#status).
 
 #### Basic Search <!-- omit in toc -->
 
@@ -127,7 +127,7 @@ Array
 
 #### Custom Search <!-- omit in toc -->
 
-All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters) section of the documentation.
+All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search/search-with-post#search-parameters) section of the documentation.
 
 💡 **More about the `search()` method in [the Wiki](https://github.com/meilisearch/meilisearch-php/wiki/Search).**
 
@@ -175,7 +175,7 @@ $index->updateFilterableAttributes([
 
 You only need to perform this operation once.
 
-Note that Meilisearch will rebuild your index whenever you update `filterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [tasks](https://www.meilisearch.com/docs/reference/api/tasks#get-tasks)).
+Note that Meilisearch will rebuild your index whenever you update `filterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [tasks](https://www.meilisearch.com/docs/reference/api/async-task-management/list-tasks#get-tasks)).
 
 Then, you can perform the search:
 
@@ -213,10 +213,10 @@ This package guarantees compatibility with [version v1.x of Meilisearch](https:/
 
 The following sections in our main documentation website may interest you:
 
-- **Manipulate documents**: see the [API references](https://www.meilisearch.com/docs/reference/api/documents) or read more about [documents](https://www.meilisearch.com/docs/learn/core_concepts/documents).
-- **Search**: see the [API references](https://www.meilisearch.com/docs/reference/api/search) or follow our guide on [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters).
-- **Manage the indexes**: see the [API references](https://www.meilisearch.com/docs/reference/api/indexes) or read more about [indexes](https://www.meilisearch.com/docs/learn/core_concepts/indexes).
-- **Configure the index settings**: see the [API references](https://www.meilisearch.com/docs/reference/api/settings) or follow our guide on [settings parameters](https://www.meilisearch.com/docs/learn/configuration/settings).
+- **Manipulate documents**: see the [API references](https://www.meilisearch.com/docs/reference/api/documents/list-documents-with-get) or read more about [documents](https://www.meilisearch.com/docs/learn/getting_started/documents).
+- **Search**: see the [API references](https://www.meilisearch.com/docs/reference/api/search/search-with-post) or follow our guide on [search parameters](https://www.meilisearch.com/docs/reference/api/search/search-with-post#search-parameters).
+- **Manage the indexes**: see the [API references](https://www.meilisearch.com/docs/reference/api/indexes/list-all-indexes) or read more about [indexes](https://www.meilisearch.com/docs/learn/getting_started/indexes).
+- **Configure the index settings**: see the [API references](https://www.meilisearch.com/docs/reference/api/settings/list-all-settings) or follow our guide on [settings parameters](https://www.meilisearch.com/docs/learn/configuration/configuring_index_settings).
 
 ## 🧰 HTTP Client Compatibilities
 
