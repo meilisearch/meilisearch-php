@@ -108,6 +108,8 @@ get_all_tasks_1: |-
   $client->getTasks();
 get_task_1: |-
   $client->getTask(1);
+get_task_documents_1: |-
+  $client->getTaskDocuments(1);
 get_one_key_1: |-
   $client->getKey('6062abda-a5aa-4414-ac91-ecd7944c0f8d');
 get_all_keys_1: |-

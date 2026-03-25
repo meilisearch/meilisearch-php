@@ -40,6 +40,11 @@ class Tasks extends Endpoint
         return Task::fromArray($this->http->get(self::PATH.'/'.$taskUid), partial(self::waitTask(...), $this->http));
     }
 
+    public function getDocuments(int $taskUid): array
+    {
+        return $this->http->get(self::PATH.'/'.$taskUid.'/documents');
+    }
+
     /**
      * @return TasksResponse
      */
