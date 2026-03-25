@@ -20,6 +20,11 @@ trait HandlesTasks
         return $this->tasks->get($uid);
     }
 
+    public function getTaskDocuments(int $uid): array
+    {
+        return $this->tasks->getDocuments($uid);
+    }
+
     public function getTasks(?TasksQuery $options = null): TasksResults
     {
         $response = $this->tasks->all($options?->toArray() ?? []);
