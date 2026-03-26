@@ -154,6 +154,13 @@ class Indexes extends Endpoint
         return $this->http->post('/swap-indexes', $indexes);
     }
 
+    // Compact
+
+    public function compact(): array
+    {
+        return $this->http->post(self::PATH.'/'.$this->uid.'/compact');
+    }
+
     // Tasks
 
     public function getTask($uid): array
