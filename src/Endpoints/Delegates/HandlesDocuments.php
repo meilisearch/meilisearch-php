@@ -38,24 +38,24 @@ trait HandlesDocuments
         }
     }
 
-    public function addDocuments(array $documents, ?string $primaryKey = null)
+    public function addDocuments(array $documents, ?string $primaryKey = null, ?bool $skipCreation = null)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]);
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)]);
     }
 
-    public function addDocumentsJson(string $documents, ?string $primaryKey = null)
+    public function addDocumentsJson(string $documents, ?string $primaryKey = null, ?bool $skipCreation = null)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)], 'application/json');
     }
 
-    public function addDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null)
+    public function addDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null, ?bool $skipCreation = null)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv');
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)], 'text/csv');
     }
 
-    public function addDocumentsNdjson(string $documents, ?string $primaryKey = null)
+    public function addDocumentsNdjson(string $documents, ?string $primaryKey = null, ?bool $skipCreation = null)
     {
-        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
+        return $this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)], 'application/x-ndjson');
     }
 
     public function addDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
@@ -91,24 +91,24 @@ trait HandlesDocuments
         return $promises;
     }
 
-    public function updateDocuments(array $documents, ?string $primaryKey = null)
+    public function updateDocuments(array $documents, ?string $primaryKey = null, ?bool $skipCreation = null)
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]);
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)]);
     }
 
-    public function updateDocumentsJson(string $documents, ?string $primaryKey = null)
+    public function updateDocumentsJson(string $documents, ?string $primaryKey = null, ?bool $skipCreation = null)
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json');
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)], 'application/json');
     }
 
-    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null)
+    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null, ?bool $skipCreation = null)
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv');
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)], 'text/csv');
     }
 
-    public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null)
+    public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null, ?bool $skipCreation = null)
     {
-        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson');
+        return $this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'skipCreation' => (null !== $skipCreation ? var_export($skipCreation, true) : null)], 'application/x-ndjson');
     }
 
     public function updateDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null)
