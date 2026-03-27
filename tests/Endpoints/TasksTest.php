@@ -48,6 +48,15 @@ final class TasksTest extends TestCase
         self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $task->getDetails());
     }
 
+    public function testGetTaskDocumentsClient(): void
+    {
+        [$seedTask, $completedTask] = $this->seedIndex();
+
+        $documents = $this->client->getTaskDocuments($completedTask->getTaskUid());
+
+        self::assertIsArray($documents);
+    }
+
     public function testGetAllTasksClient(): void
     {
         $tasks = $this->client->getTasks();
