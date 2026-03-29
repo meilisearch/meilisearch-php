@@ -55,6 +55,7 @@ final class TasksTest extends TestCase
         $documents = $this->client->getTaskDocuments($completedTask->getTaskUid());
 
         self::assertIsArray($documents);
+        self::assertNotEmpty($documents);
     }
 
     public function testGetAllTasksClient(): void
