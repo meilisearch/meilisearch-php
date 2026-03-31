@@ -50,11 +50,10 @@ final class TasksTest extends TestCase
 
     public function testGetTaskDocumentsClient(): void
     {
-        [$seedTask, $completedTask] = $this->seedIndex();
+        [, $completedTask] = $this->seedIndex();
 
         $documents = $this->client->getTaskDocuments($completedTask->getTaskUid());
 
-        self::assertIsArray($documents);
         self::assertNotEmpty($documents);
     }
 
