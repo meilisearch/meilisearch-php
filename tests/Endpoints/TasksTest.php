@@ -13,6 +13,7 @@ use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class TasksTest extends TestCase
@@ -50,6 +51,9 @@ final class TasksTest extends TestCase
 
     public function testGetTaskDocumentsClient(): void
     {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['getTaskDocumentsRoute' => true]);
+
         [, $completedTask] = $this->seedIndex();
 
         $documents = $this->client->getTaskDocuments($completedTask->getTaskUid());
