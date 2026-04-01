@@ -10,7 +10,7 @@ jobs:
   update_release_draft:
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@v7
         with:
           config-name: ${{ github.ref_name == 'v1.x' && 'release-draft-template-v1.yml' || 'release-draft-template.yml' }}
           commitish: ${{ github.ref_name }}
