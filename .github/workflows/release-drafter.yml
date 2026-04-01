@@ -11,7 +11,7 @@ jobs:
     if: github.ref_name == 'v1.x'
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@v7
         with:
           config-name: release-draft-template-v1.yml
           commitish: v1.x
