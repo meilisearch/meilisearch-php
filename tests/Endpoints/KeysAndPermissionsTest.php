@@ -5,329 +5,252 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Client;
+use Meilisearch\Contracts\CreateKeyQuery;
+use Meilisearch\Contracts\Key;
+use Meilisearch\Contracts\KeyAction;
 use Meilisearch\Contracts\KeysQuery;
+use Meilisearch\Contracts\UpdateKeyQuery;
 use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class KeysAndPermissionsTest extends TestCase
 {
-    public function testGetRawKeysAlwaysReturnsArray(): void
+    protected function tearDown(): void
     {
-        /* @phpstan-ignore-next-line */
-        self::assertIsArray($this->client->getRawKeys());
+        foreach ($this->client->getKeys() as $key) {
+            $this->client->deleteKey($key->getUid());
+        }
+
+        parent::tearDown();
     }
 
-    public function testGetKeysAlwaysReturnsArray(): void
+    public function testCreate(): void
     {
-        /* @phpstan-ignore-next-line */
-        self::assertIsIterable($this->client->getKeys());
-    }
+        $key = $this->client->createKey(new CreateKeyQuery(
+            actions: [KeyAction::Any],
+            indexes: ['*'],
+        ));
 
-    public function testGetKeysDefault(): void
-    {
-        $response = $this->client->getKeys();
-
-        self::assertGreaterThan(0, $response->count());
-        self::assertIsArray($response[0]->getActions());
-        self::assertIsArray($response[0]->getIndexes());
-        self::assertNull($response[0]->getExpiresAt());
-        self::assertNotNull($response[0]->getCreatedAt());
-        self::assertNotNull($response[0]->getUpdatedAt());
-    }
-
-    public function testGetRawKeysDefault(): void
-    {
-        $response = $this->client->getRawKeys();
-
-        self::assertGreaterThan(2, $response['results']);
-        self::assertArrayHasKey('actions', $response['results'][0]);
-        self::assertArrayHasKey('indexes', $response['results'][0]);
-        self::assertArrayHasKey('createdAt', $response['results'][0]);
-        self::assertArrayHasKey('expiresAt', $response['results'][0]);
-        self::assertArrayHasKey('updatedAt', $response['results'][0]);
-    }
-
-    public function testExceptionIfNoMasterKeyProvided(): void
-    {
-        $newClient = new Client($this->host);
-
-        $this->expectException(ApiException::class);
-        $newClient->index('index')->search('test');
-    }
-
-    public function testExceptionIfBadKeyProvidedToGetSettings(): void
-    {
-        $index = $this->safeIndexName();
-        $this->createEmptyIndex($index);
-        $response = $this->client->index($index)->getSettings();
-        self::assertSame(['*'], $response['searchableAttributes']);
-
-        $newClient = new Client($this->host, 'bad-key');
-
-        $this->expectException(ApiException::class);
-        $newClient->index($index)->getSettings();
-    }
-
-    public function testExceptionIfBadKeyProvidedToGetKeys(): void
-    {
-        $this->expectException(ApiException::class);
-        $client = new Client($this->host, 'bad-key');
-        $client->getKeys();
-    }
-
-    public function testGetKeysWithLimit(): void
-    {
-        $response = $this->client->getKeys((new KeysQuery())->setLimit(1));
-
-        self::assertCount(1, $response);
-    }
-
-    public function testGetKeysWithOffset(): void
-    {
-        $response = $this->client->getKeys((new KeysQuery())->setOffset(100));
-
-        self::assertCount(0, $response);
-    }
-
-    public function testGetKey(): void
-    {
-        $key = $this->client->createKey(self::INFO_KEY);
-        $response = $this->client->getKey($key->getKey());
-
-        self::assertNotNull($response->getKey());
-        self::assertNull($response->getDescription());
-        self::assertIsArray($response->getActions());
-        self::assertIsArray($response->getIndexes());
-        self::assertNull($response->getExpiresAt());
-        self::assertNotNull($response->getCreatedAt());
-        self::assertNotNull($response->getUpdatedAt());
-
-        $this->client->deleteKey($key->getKey());
-    }
-
-    public function testExceptionIfKeyDoesntExist(): void
-    {
-        $this->expectException(ApiException::class);
-        $this->client->getKey('No existing key');
-    }
-
-    public function testCreateKey(): void
-    {
-        $key = $this->client->createKey(self::INFO_KEY);
-
-        self::assertNotNull($key->getKey());
+        self::assertSame([KeyAction::Any], $key->getActions());
+        self::assertSame(['*'], $key->getIndexes());
+        self::assertNull($key->getName());
         self::assertNull($key->getDescription());
-        self::assertIsArray($key->getActions());
-        self::assertSame(self::INFO_KEY['actions'], $key->getActions());
-        self::assertIsArray($key->getIndexes());
-        self::assertSame(self::INFO_KEY['indexes'], $key->getIndexes());
         self::assertNull($key->getExpiresAt());
-        self::assertNotNull($key->getCreatedAt());
-        self::assertNotNull($key->getUpdatedAt());
-
-        $this->client->deleteKey($key->getKey());
+        self::assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $key->getUid());
+        self::assertNotSame('', $key->getKey());
+        self::assertEqualsWithDelta(microtime(true), (float) $key->getCreatedAt()->format('U.u'), 2);
+        self::assertEqualsWithDelta(microtime(true), (float) $key->getUpdatedAt()->format('U.u'), 2);
     }
 
-    public function testCreateKeyWithWildcard(): void
+    public function testCreateWithFullInfo(): void
     {
-        $key = $this->client->createKey([
-            'actions' => ['tasks.*', 'indexes.get'],
-            'indexes' => ['*'],
-            'expiresAt' => null,
-        ]);
+        $key = $this->client->createKey(new CreateKeyQuery(
+            actions: [KeyAction::TasksAny, KeyAction::IndexesGet],
+            indexes: ['movies*'],
+            name: 'task_manager',
+            description: 'manages tasks',
+            uid: 'a6524df1-fe31-4019-8578-0e0ee2302104',
+            expiresAt: new \DateTimeImmutable('tomorrow 08:00:00'),
+        ));
 
-        self::assertIsArray($key->getActions());
-        self::assertSame(['tasks.*', 'indexes.get'], $key->getActions());
-
-        $this->client->deleteKey($key->getKey());
+        self::assertSame([KeyAction::TasksAny, KeyAction::IndexesGet], $key->getActions());
+        self::assertSame(['movies*'], $key->getIndexes());
+        self::assertSame('task_manager', $key->getName());
+        self::assertSame('manages tasks', $key->getDescription());
+        self::assertEquals(new \DateTimeImmutable('tomorrow 08:00:00'), $key->getExpiresAt());
+        self::assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $key->getUid());
+        self::assertNotSame('', $key->getKey());
+        self::assertEqualsWithDelta(microtime(true), (float) $key->getCreatedAt()->format('U.u'), 2);
+        self::assertEqualsWithDelta(microtime(true), (float) $key->getUpdatedAt()->format('U.u'), 2);
     }
 
-    public function testCreateKeyWithExpInString(): void
+    public function testUpdate(): void
     {
-        $key = [
-            'description' => 'test create',
-            'actions' => ['search'],
-            'indexes' => ['index'],
-            'expiresAt' => date('Y-m-d', strtotime('+1 day')),
-        ];
-        $response = $this->client->createKey($key);
+        $this->createKey('a1338fe4-2768-4710-a12b-be914aa68da7');
 
-        self::assertNotNull($response->getKey());
-        self::assertNotNull($response->getDescription());
-        self::assertSame('test create', $response->getDescription());
-        self::assertIsArray($response->getActions());
-        self::assertSame(['search'], $response->getActions());
-        self::assertIsArray($response->getIndexes());
-        self::assertSame(['index'], $response->getIndexes());
-        self::assertNotNull($response->getExpiresAt());
-        self::assertNotNull($response->getCreatedAt());
-        self::assertNotNull($response->getUpdatedAt());
+        $updatedKey = $this->client->updateKey(new UpdateKeyQuery('a1338fe4-2768-4710-a12b-be914aa68da7', 'task_manager', 'manages tasks'));
 
-        $this->client->deleteKey($response->getKey());
-    }
+        self::assertSame('task_manager', $updatedKey->getName());
+        self::assertSame('manages tasks', $updatedKey->getDescription());
 
-    public function testCreateKeyWithExpInDate(): void
-    {
-        $key = [
-            'description' => 'test create',
-            'actions' => ['search'],
-            'indexes' => ['index'],
-            'expiresAt' => date_create_from_format('Y-m-d', date('Y-m-d', strtotime('+1 day'))),
-        ];
-        $response = $this->client->createKey($key);
+        $removedDataKey = $this->client->updateKey(new UpdateKeyQuery($updatedKey->getKey(), null, null));
 
-        self::assertNotNull($response->getKey());
-        self::assertNotNull($response->getDescription());
-        self::assertSame('test create', $response->getDescription());
-        self::assertIsArray($response->getActions());
-        self::assertSame(['search'], $response->getActions());
-        self::assertIsArray($response->getIndexes());
-        self::assertSame(['index'], $response->getIndexes());
-        self::assertNotNull($response->getExpiresAt());
-        self::assertNotNull($response->getCreatedAt());
-        self::assertNotNull($response->getUpdatedAt());
-
-        $this->client->deleteKey($response->getKey());
-    }
-
-    public function testCreateKeyWithoutActions(): void
-    {
-        $this->expectException(ApiException::class);
-        $this->client->createKey([
-            'description' => 'test create',
-            'indexes' => ['index'],
-            'expiresAt' => null,
-        ]);
-    }
-
-    public function testUpdateKeyWithExpInString(): void
-    {
-        $key = $this->client->createKey(self::INFO_KEY);
-        $response = $this->client->updateKey($key->getKey(), [
-            'description' => 'test update',
-        ]);
-
-        self::assertNotNull($response->getKey());
-        self::assertNotNull($response->getDescription());
-        self::assertSame('test update', $response->getDescription());
-        self::assertIsArray($response->getActions());
-        self::assertSame(self::INFO_KEY['actions'], $response->getActions());
-        self::assertIsArray($response->getIndexes());
-        self::assertSame(['index'], $response->getIndexes());
-        self::assertNull($response->getExpiresAt());
-        self::assertNotNull($response->getCreatedAt());
-        self::assertNotNull($response->getUpdatedAt());
-
-        $this->client->deleteKey($response->getKey());
-    }
-
-    public function testCreateKeyWithUid(): void
-    {
-        $key = $this->client->createKey([
-            'uid' => 'acab6d06-5385-47a2-a534-1ed4fd7f6402',
-            'actions' => ['*'],
-            'indexes' => ['*'],
-            'expiresAt' => null,
-        ]);
-
-        self::assertNotNull($key->getKey());
-        self::assertSame('acab6d06-5385-47a2-a534-1ed4fd7f6402', $key->getUid());
-
-        $this->client->deleteKey($key->getKey());
-    }
-
-    public function testUpdateKeyWithExpInDate(): void
-    {
-        $key = $this->client->createKey(self::INFO_KEY);
-        $response = $this->client->updateKey($key->getKey(), [
-            'description' => 'test update',
-            'indexes' => ['*'],
-            'expiresAt' => date_create_from_format('Y-m-d', date('Y-m-d', strtotime('+1 day'))),
-        ]);
-
-        self::assertNotNull($response->getKey());
-        self::assertNotNull($response->getDescription());
-        self::assertSame('test update', $response->getDescription());
-        self::assertIsArray($response->getActions());
-        self::assertSame(self::INFO_KEY['actions'], $response->getActions());
-        self::assertIsArray($response->getIndexes());
-        self::assertSame(['index'], $response->getIndexes());
-        self::assertNull($response->getExpiresAt());
-        self::assertNotNull($response->getCreatedAt());
-        self::assertNotNull($response->getUpdatedAt());
-
-        $this->client->deleteKey($response->getKey());
+        self::assertNull($removedDataKey->getName());
+        self::assertNull($removedDataKey->getDescription());
     }
 
     public function testDeleteKey(): void
     {
-        $key = $this->client->createKey(self::INFO_KEY);
+        $key = $this->client->createKey(new CreateKeyQuery(
+            actions: [KeyAction::Any],
+            indexes: ['*'],
+        ));
+
         $this->client->deleteKey($key->getKey());
+
         $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('API key `'.$key->getKey().'` not found.');
+
         $this->client->getKey($key->getKey());
     }
 
-    public function testInextistingDeleteKey(): void
+    public function testDeleteUnexistingKey(): void
     {
         $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('API key `No existing key` not found.');
+
         $this->client->deleteKey('No existing key');
     }
 
-    public function testDateParsing(): void
+    public function testGetKey(): void
     {
-        $httpClient = $this->createHttpClientMock(200, '
-        {
-            "results": [
-                {
-                  "description": "test_key_1",
-                  "name": null,
-                  "uid": "e3091e84-928c-44b5-8a61-7e5b15cd5009",
-                  "key": "z1ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
-                  "actions": ["*"],
-                  "indexes": ["*"],
-                  "expiresAt": "2023-06-14T10:34:03Z",
-                  "createdAt": "2022-06-14T10:34:03Z",
-                  "updatedAt": "2022-06-14T10:34:03Z"
-                },
-                {
-                  "description": "test_key_2",
-                  "name": null,
-                  "uid": "85f12b91-cf39-493a-9364-7d8b85b87798",
-                  "key": "z2ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
-                  "actions": ["*"],
-                  "indexes": ["*"],
-                  "expiresAt": "2023-06-14T10:34:03.629Z",
-                  "createdAt": "2022-06-14T10:34:03.627Z",
-                  "updatedAt": "2022-06-14T10:34:03.627Z"
-                },
-                {
-                  "description": "test_key_3",
-                  "name": "test_key_3",
-                  "uid": "6dffa3ee-b98f-4218-827a-7a062f23ebf5",
-                  "key": "z3ySBsnp002e8bc6a31b794a95d623333be1fe4fd2d7eacdeaf7baf2c439866723e659ee",
-                  "actions": ["*"],
-                  "indexes": ["*"],
-                  "expiresAt": "2023-06-14T10:34:03.629690014Z",
-                  "createdAt": "2022-06-14T10:34:03.627606639Z",
-                  "updatedAt": "2022-06-14T10:34:03.627606639Z"
-                }
-              ],
-              "limit": 10,
-              "offset": 0,
-              "total": 3
-          }
-        ');
+        $this->client->createKey(new CreateKeyQuery(
+            actions: [KeyAction::TasksAny],
+            indexes: ['movies*'],
+            name: 'task_manager',
+            description: 'manages tasks',
+            uid: '030d67d8-0f8c-4ce1-85a7-81a016066317',
+            expiresAt: new \DateTimeImmutable('tomorrow 08:00:00'),
+        ));
 
-        $newClient = new Client('https://localhost:7700', null, $httpClient);
+        $key = $this->client->getKey('030d67d8-0f8c-4ce1-85a7-81a016066317');
 
-        $response = $newClient->getKeys();
+        self::assertSame([KeyAction::TasksAny], $key->getActions());
+        self::assertSame(['movies*'], $key->getIndexes());
+        self::assertSame('task_manager', $key->getName());
+        self::assertSame('manages tasks', $key->getDescription());
+        self::assertEquals(new \DateTimeImmutable('tomorrow 08:00:00'), $key->getExpiresAt());
+        self::assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $key->getUid());
+        self::assertNotSame('', $key->getKey());
+        self::assertEqualsWithDelta(microtime(true), (float) $key->getCreatedAt()->format('U.u'), 2);
+        self::assertEqualsWithDelta(microtime(true), (float) $key->getUpdatedAt()->format('U.u'), 2);
+    }
 
-        self::assertCount(3, $response);
+    public function testGetKeyThrowsIfDoesntExist(): void
+    {
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('API key `No existing key` not found.');
 
-        for ($i = 0; $i < 3; ++$i) {
-            self::assertNotNull($response[$i]->getExpiresAt(), (string) $i);
-            self::assertNotNull($response[$i]->getCreatedAt(), (string) $i);
-            self::assertNotNull($response[$i]->getUpdatedAt(), (string) $i);
+        $this->client->getKey('No existing key');
+    }
+
+    public function testGetKeys(): void
+    {
+        $uids = [
+            '77b29717-e3ba-470f-9db6-3cdbc289e77d',
+            'b52e8bfd-477c-4f5d-855e-78d1f5dce5c4',
+        ];
+
+        foreach ($uids as $uid) {
+            $this->createKey($uid);
         }
+
+        $keys = $this->client->getKeys();
+
+        self::assertCount(2, $keys);
+        self::assertSame(2, $keys->getTotal());
+        self::assertSame(20, $keys->getLimit());
+        self::assertSame(0, $keys->getOffset());
+        self::assertSame(array_reverse($uids), array_map(static fn (Key $key) => $key->getUid(), $keys->getResults()));
+        $array = $keys->toArray();
+        self::assertSame(2, $array['total']);
+        self::assertSame(20, $array['limit']);
+        self::assertSame(0, $array['offset']);
+    }
+
+    public function testGetKeysPaginated(): void
+    {
+        $uids = [
+            '77b29717-e3ba-470f-9db6-3cdbc289e77d',
+            'b52e8bfd-477c-4f5d-855e-78d1f5dce5c4',
+            'c2885f87-92f5-4d82-8619-f6d65c086a5c',
+        ];
+
+        foreach ($uids as $uid) {
+            $this->createKey($uid);
+        }
+
+        $keys = $this->client->getKeys(
+            (new KeysQuery())
+                ->setLimit(1)
+                ->setOffset(1)
+        );
+
+        self::assertCount(1, $keys);
+        self::assertSame(3, $keys->getTotal());
+        self::assertSame(1, $keys->getLimit());
+        self::assertSame(1, $keys->getOffset());
+        self::assertSame(['b52e8bfd-477c-4f5d-855e-78d1f5dce5c4'], array_map(static fn (Key $key) => $key->getUid(), $keys->getResults()));
+        $array = $keys->toArray();
+        self::assertSame(3, $array['total']);
+        self::assertSame(1, $array['limit']);
+        self::assertSame(1, $array['offset']);
+    }
+
+    public function testGetRawKeys(): void
+    {
+        $uids = [
+            '77b29717-e3ba-470f-9db6-3cdbc289e77d',
+            'b52e8bfd-477c-4f5d-855e-78d1f5dce5c4',
+        ];
+
+        foreach ($uids as $uid) {
+            $this->createKey($uid);
+        }
+
+        $raw = $this->client->getRawKeys();
+
+        self::assertSame(0, $raw['offset']);
+        self::assertSame(20, $raw['limit']);
+        self::assertSame(2, $raw['total']);
+        self::assertCount(2, $raw['results']);
+        self::assertSame($uids[0], $raw['results'][1]['uid']);
+        self::assertSame($uids[1], $raw['results'][0]['uid']);
+    }
+
+    public function testExceptionIfBadKeyProvidedToGetKeys(): void
+    {
+        $client = new Client($this->host, 'bad-key');
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('The provided API key is invalid.');
+
+        $client->getKeys();
+    }
+
+    public function testThrowsIfNoMasterKeyProvided(): void
+    {
+        $client = new Client($this->host);
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('The Authorization header is missing. It must use the bearer authorization method.');
+
+        $client->index('index')->search('test');
+    }
+
+    public function testThrowsIfBadKeyProvidedToGetSettings(): void
+    {
+        $index = $this->safeIndexName();
+        $this->createEmptyIndex($index);
+
+        $response = $this->client->index($index)->getSettings();
+
+        self::assertSame(['*'], $response['searchableAttributes']);
+
+        $client = new Client($this->host, 'bad-key');
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('The provided API key is invalid.');
+
+        $client->index($index)->getSettings();
+    }
+
+    private function createKey(string $uid): void
+    {
+        $this->client->createKey(new CreateKeyQuery(
+            actions: [KeyAction::Any],
+            indexes: ['*'],
+            uid: $uid,
+        ));
     }
 }

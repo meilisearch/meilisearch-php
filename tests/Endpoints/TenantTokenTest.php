@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Client;
+use Meilisearch\Contracts\CreateKeyQuery;
+use Meilisearch\Contracts\Key;
+use Meilisearch\Contracts\KeyAction;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidArgumentException;
 use Tests\TestCase;
 
 final class TenantTokenTest extends TestCase
 {
-    private $key;
-    private $privateKey;
+    private Key $key;
+    private string $privateKey;
     private Client $privateClient;
     private string $indexName;
 
@@ -22,13 +25,12 @@ final class TenantTokenTest extends TestCase
         $this->indexName = $this->safeIndexName('tenantToken');
         $this->createEmptyIndex($this->indexName);
 
-        $response = $this->client->getKeys();
-        $this->key = $this->client->createKey([
-            'description' => 'tenant token key',
-            'actions' => ['*'],
-            'indexes' => ['tenant*'],
-            'expiresAt' => '2055-10-02T00:00:00Z',
-        ]);
+        $this->key = $this->client->createKey(new CreateKeyQuery(
+            description: 'tenant token key',
+            actions: [KeyAction::Any],
+            indexes: ['tenant*'],
+            expiresAt: new \DateTimeImmutable('2055-10-02T00:00:00Z'),
+        ));
 
         $this->privateKey = $this->key->getKey();
         $this->privateClient = new Client($this->host, $this->privateKey);
@@ -36,8 +38,9 @@ final class TenantTokenTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
         $this->client->deleteKey($this->privateKey);
+
+        parent::tearDown();
     }
 
     public function testGenerateTenantTokenWithSearchRulesOnly(): void

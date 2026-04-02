@@ -68,12 +68,6 @@ abstract class TestCase extends BaseTestCase
         ['id' => 7, 'title' => "The Hitchhiker's Guide to the Galaxy"],
     ];
 
-    protected const INFO_KEY = [
-        'actions' => ['search'],
-        'indexes' => ['index'],
-        'expiresAt' => null,
-    ];
-
     protected Client $client;
     protected string $host;
     protected ?string $defaultKey;

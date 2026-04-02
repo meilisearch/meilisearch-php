@@ -4,186 +4,84 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints;
 
+use Meilisearch\Contracts\CreateKeyQuery;
 use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Contracts\Http;
+use Meilisearch\Contracts\Key;
 use Meilisearch\Contracts\KeysQuery;
 use Meilisearch\Contracts\KeysResults;
+use Meilisearch\Contracts\UpdateKeyQuery;
 
+/**
+ * @phpstan-type RawKey array{
+ *     uid: non-empty-string,
+ *     key: non-empty-string,
+ *     actions: list<non-empty-string>,
+ *     indexes: list<non-empty-string>,
+ *     name?: non-empty-string,
+ *     description?: non-empty-string,
+ *     expiresAt: non-empty-string|null,
+ *     createdAt: non-empty-string,
+ *     updatedAt: non-empty-string
+ * }
+ * @phpstan-type RawKeys array{
+ *     results: array<int, RawKey>,
+ *     offset: non-negative-int,
+ *     limit: non-negative-int,
+ *     total: non-negative-int
+ * }
+ */
 class Keys extends Endpoint
 {
     protected const PATH = '/keys';
 
-    protected Keys $keys;
     protected Http $http;
-
-    private ?string $uid;
-    private ?string $name;
-    private ?string $key;
-    private ?string $description;
-    private ?array $actions;
-    private ?array $indexes;
-    private ?\DateTimeInterface $expiresAt;
-    private ?\DateTimeInterface $createdAt;
-    private ?\DateTimeInterface $updatedAt;
-
-    public function __construct(Http $http, ?string $uid = null, ?string $name = null, ?string $key = null, ?string $description = null, ?array $actions = null, ?array $indexes = null, ?\DateTimeInterface $expiresAt = null, ?\DateTimeInterface $createdAt = null, ?\DateTimeInterface $updatedAt = null)
-    {
-        $this->uid = $uid;
-        $this->name = $name;
-        $this->key = $key;
-        $this->description = $description;
-        $this->actions = $actions;
-        $this->indexes = $indexes;
-        $this->expiresAt = $expiresAt;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
-
-        parent::__construct($http);
-    }
-
-    protected function newInstance(array $attributes): self
-    {
-        $key = new self(
-            $this->http,
-            $attributes['uid'],
-            $attributes['name'],
-            $attributes['key'],
-            $attributes['description'],
-            $attributes['actions'],
-            $attributes['indexes'],
-        );
-        if ($attributes['expiresAt']) {
-            $key->expiresAt = new \DateTimeImmutable($attributes['expiresAt']);
-        }
-        if ($attributes['createdAt']) {
-            $key->createdAt = new \DateTimeImmutable($attributes['createdAt']);
-        }
-        if ($attributes['updatedAt']) {
-            $key->updatedAt = new \DateTimeImmutable($attributes['updatedAt']);
-        }
-
-        return $key;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function fill(array $attributes): self
-    {
-        $this->uid = $attributes['uid'];
-        $this->name = $attributes['name'];
-        $this->key = $attributes['key'];
-        $this->description = $attributes['description'];
-        $this->actions = $attributes['actions'];
-        $this->indexes = $attributes['indexes'];
-        if ($attributes['expiresAt']) {
-            $this->expiresAt = new \DateTimeImmutable($attributes['expiresAt']);
-        }
-        if ($attributes['createdAt']) {
-            $this->createdAt = new \DateTimeImmutable($attributes['createdAt']);
-        }
-        if ($attributes['updatedAt']) {
-            $this->updatedAt = new \DateTimeImmutable($attributes['updatedAt']);
-        }
-
-        return $this;
-    }
-
-    public function getUid(): ?string
-    {
-        return $this->uid;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function getKey(): ?string
-    {
-        return $this->key;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function getActions(): ?array
-    {
-        return $this->actions;
-    }
-
-    public function getIndexes(): ?array
-    {
-        return $this->indexes;
-    }
-
-    public function getExpiresAt(): ?\DateTimeInterface
-    {
-        return $this->expiresAt;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
 
     /**
      * @param non-empty-string $keyOrUid
      */
-    public function get(string $keyOrUid): self
+    public function get(string $keyOrUid): Key
     {
         $response = $this->http->get(self::PATH.'/'.$keyOrUid);
 
-        return $this->fill($response);
+        return Key::fromArray($response);
     }
 
     public function all(?KeysQuery $options = null): KeysResults
     {
         $query = isset($options) ? $options->toArray() : [];
 
-        $keys = [];
         $response = $this->allRaw($query);
-
-        foreach ($response['results'] as $key) {
-            $keys[] = $this->newInstance($key);
-        }
-
-        $response['results'] = $keys;
+        $response['results'] = array_map(static fn (array $data) => Key::fromArray($data), $response['results']);
 
         return new KeysResults($response);
     }
 
+    /**
+     * @param array{
+     *     limit?: non-negative-int,
+     *     offset?: non-negative-int,
+     * } $options
+     *
+     * @return RawKeys
+     */
     public function allRaw(array $options = []): array
     {
         return $this->http->get(self::PATH.'/', $options);
     }
 
-    public function create(array $options = []): self
+    public function create(CreateKeyQuery $request): Key
     {
-        if (isset($options['expiresAt']) && $options['expiresAt'] instanceof \DateTimeInterface) {
-            $options['expiresAt'] = $options['expiresAt']->format('Y-m-d\TH:i:s.vu\Z');
-        }
-        $response = $this->http->post(self::PATH, $options);
+        $response = $this->http->post(self::PATH, $request->toArray());
 
-        return $this->fill($response);
+        return Key::fromArray($response);
     }
 
-    /**
-     * @param non-empty-string $keyOrUid
-     */
-    public function update(string $keyOrUid, array $options = []): self
+    public function update(UpdateKeyQuery $request): Key
     {
-        $data = array_intersect_key($options, array_flip(['description', 'name']));
-        $response = $this->http->patch(self::PATH.'/'.$keyOrUid, $data);
+        $response = $this->http->patch(self::PATH.'/'.$request->keyOrUid, $request->toArray());
 
-        return $this->fill($response);
+        return Key::fromArray($response);
     }
 
     /**
