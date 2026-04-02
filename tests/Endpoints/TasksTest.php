@@ -54,9 +54,9 @@ final class TasksTest extends TestCase
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
         $http->patch('/experimental-features', ['getTaskDocumentsRoute' => true]);
 
-        [, $completedTask] = $this->seedIndex();
+        $task = $this->index->updateDocuments(self::DOCUMENTS);
 
-        $documents = $this->client->getTaskDocuments($completedTask->getTaskUid());
+        $documents = $this->client->getTaskDocuments($task->getTaskUid());
 
         self::assertNotEmpty($documents);
     }
