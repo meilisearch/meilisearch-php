@@ -14,7 +14,6 @@ use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Http\Client;
-use Psr\Http\Message\StreamInterface;
 use Tests\TestCase;
 
 final class TasksTest extends TestCase
@@ -59,9 +58,13 @@ final class TasksTest extends TestCase
 
         $stream = $this->client->getTaskDocuments($task->getTaskUid());
 
-        self::assertInstanceOf(StreamInterface::class, $stream);
-        $content = (string) $stream;
-        self::assertNotEmpty($content);
+        // Parse NDJSON: each line is a separate JSON document
+        $lines = array_filter(explode("\n", (string) $stream), fn (string $line) => '' !== trim($line));
+        self::assertNotEmpty($lines, 'Stream should contain at least one NDJSON line');
+
+        $documents = array_map(fn (string $line) => json_decode($line, true, 512, \JSON_THROW_ON_ERROR), $lines);
+        self::assertNotEmpty($documents);
+        self::assertArrayHasKey('id', $documents[0], 'Each document should have an id field');
     }
 
     public function testGetAllTasksClient(): void
