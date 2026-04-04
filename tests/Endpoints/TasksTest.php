@@ -14,6 +14,7 @@ use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Http\Client;
+use Psr\Http\Message\StreamInterface;
 use Tests\TestCase;
 
 final class TasksTest extends TestCase
@@ -56,9 +57,11 @@ final class TasksTest extends TestCase
 
         $task = $this->index->updateDocuments(self::DOCUMENTS);
 
-        $documents = $this->client->getTaskDocuments($task->getTaskUid());
+        $stream = $this->client->getTaskDocuments($task->getTaskUid());
 
-        self::assertNotEmpty($documents);
+        self::assertInstanceOf(StreamInterface::class, $stream);
+        $content = (string) $stream;
+        self::assertNotEmpty($content);
     }
 
     public function testGetAllTasksClient(): void
