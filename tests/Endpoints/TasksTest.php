@@ -55,6 +55,7 @@ final class TasksTest extends TestCase
         $http->patch('/experimental-features', ['getTaskDocumentsRoute' => true]);
 
         $task = $this->index->updateDocuments(self::DOCUMENTS);
+        $task->wait();
 
         $stream = $this->client->getTaskDocuments($task->getTaskUid());
 
@@ -63,7 +64,6 @@ final class TasksTest extends TestCase
         self::assertNotEmpty($lines, 'Stream should contain at least one NDJSON line');
 
         $documents = array_map(fn (string $line) => json_decode($line, true, 512, \JSON_THROW_ON_ERROR), $lines);
-        self::assertNotEmpty($documents);
         self::assertArrayHasKey('id', $documents[0], 'Each document should have an id field');
     }
 
