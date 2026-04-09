@@ -18,10 +18,6 @@ facet_search_3: |-
         ->setFacetQuery('c')
         ->setFacetName('genres')
   );
-search_parameter_guide_show_ranking_score_details_1: |-
-  $client->index('movies')->search('dragon', [
-    'showRankingScoreDetails' => true
-  ]);
 get_documents_post_1: |-
   $client->index('books')->getDocuments(
     (new DocumentsQuery())
@@ -296,12 +292,6 @@ get_version_1: |-
   $client->version();
 distinct_attribute_guide_1: |-
   $client->index('jackets')->updateDistinctAttribute('product_id');
-field_properties_guide_searchable_1: |-
-  $client->index('movies')->updateSearchableAttributes([
-    'title',
-    'overview',
-    'genres'
-  ]);
 field_properties_guide_displayed_1: |-
   $client->index('movies')->updateDisplayedAttributes([
     'title',
