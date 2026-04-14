@@ -7,12 +7,37 @@ on:
       - v1.x
 
 jobs:
-  update_release_draft:
+  update_release_draft_v1:
+    if: github.ref_name == 'v1.x'
     runs-on: ubuntu-latest
     steps:
       - uses: release-drafter/release-drafter@v6
         with:
-          config-name: ${{ github.ref_name == 'v1.x' && 'release-draft-template-v1.yml' || 'release-draft-template.yml' }}
-          commitish: ${{ github.ref_name }}
+          config-name: release-draft-template-v1.yml
+          commitish: v1.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_DRAFTER_TOKEN }}
+
+  update_release_draft_v2_stable:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-draft-template-v2-stable.yml
+          commitish: main
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_DRAFTER_TOKEN }}
+
+  update_release_draft_v2_beta:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-draft-template-v2-beta.yml
+          commitish: main
+          prerelease: true
+          prerelease-identifier: beta
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_DRAFTER_TOKEN }}
