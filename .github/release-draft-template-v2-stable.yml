@@ -1,0 +1,40 @@
+name-template: "v$RESOLVED_VERSION 🚀"
+tag-template: "v$RESOLVED_VERSION"
+filter-by-commitish: true
+exclude-labels:
+  - "skip-changelog"
+version-resolver:
+  major:
+    labels:
+      - "breaking-change"
+  minor:
+    labels:
+      - "enhancement"
+  default: patch
+# Set initial version for v2.x releases
+version-template: "2.0.0"
+categories:
+  - title: "⚠️ Breaking changes"
+    label: "breaking-change"
+  - title: "🚀 Enhancements"
+    label: "enhancement"
+  - title: "🐛 Bug Fixes"
+    label: "bug"
+  - title: "🔒 Security"
+    label: "security"
+  - title: "⚙️ Maintenance/misc"
+    label:
+      - "dependencies"
+      - "maintenance"
+      - "documentation"
+template: |
+  $CHANGES
+
+  Thanks to $CONTRIBUTORS! 🎉
+
+  **See full changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+no-changes-template: "Changes are coming soon 😎"
+sort-direction: "ascending"
+replacers:
+  - search: "/(?:and )?@meili-bot,?/g"
+    replace: ""
