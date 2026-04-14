@@ -13,6 +13,7 @@ use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Indexes;
 use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class TasksTest extends TestCase
@@ -46,6 +47,24 @@ final class TasksTest extends TestCase
         self::assertSame(TaskType::DocumentAdditionOrUpdate, $task->getType());
         self::assertSame($this->indexName, $task->getIndexUid());
         self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $task->getDetails());
+    }
+
+    public function testGetTaskDocumentsClient(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['getTaskDocumentsRoute' => true]);
+
+        $task = $this->index->updateDocuments(self::DOCUMENTS);
+        $task->wait();
+
+        $stream = $this->client->getTaskDocuments($task->getTaskUid());
+
+        // Parse NDJSON: each line is a separate JSON document
+        $lines = array_filter(explode("\n", (string) $stream), fn (string $line) => '' !== trim($line));
+        self::assertNotEmpty($lines, 'Stream should contain at least one NDJSON line');
+
+        $documents = array_map(fn (string $line) => json_decode($line, true, 512, \JSON_THROW_ON_ERROR), $lines);
+        self::assertArrayHasKey('id', $documents[0], 'Each document should have an id field');
     }
 
     public function testGetAllTasksClient(): void
