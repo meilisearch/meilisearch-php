@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Meilisearch\Search;
 
 /**
- * @implements \IteratorAggregate<array<int, array<string, mixed>>>
+ * @implements \IteratorAggregate<int, array<string, mixed>>
  */
-class SearchResult implements \Countable, \IteratorAggregate
+final class SearchResult implements \Countable, \IteratorAggregate
 {
     /**
      * @var array<int, array<string, mixed>>
@@ -18,19 +18,56 @@ class SearchResult implements \Countable, \IteratorAggregate
      * `estimatedTotalHits` is the attributes returned by the Meilisearch server
      * and its value will not be modified by the methods in this class.
      * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
+     *
+     * @var non-negative-int|null
      */
     private ?int $estimatedTotalHits = null;
+
+    /**
+     * @var non-negative-int
+     */
     private int $hitsCount;
+
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $offset = null;
+
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $limit = null;
+
+    /**
+     * @var non-negative-int
+     */
     private int $semanticHitCount;
 
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $hitsPerPage = null;
+
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $page = null;
+
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $totalPages = null;
+
+    /**
+     * @var non-negative-int|null
+     */
     private ?int $totalHits = null;
 
+    /**
+     * @var non-negative-int
+     */
     private int $processingTimeMs;
+
     private bool $numberedPagination;
 
     private string $query;
@@ -50,6 +87,23 @@ class SearchResult implements \Countable, \IteratorAggregate
      */
     private array $raw;
 
+    /**
+     * @param array{
+     *     hits: array<int, array<string, mixed>>,
+     *     processingTimeMs: non-negative-int,
+     *     query: string,
+     *     facetDistribution?: array<string, mixed>,
+     *     facetStats?: array<string, mixed>,
+     *     offset?: non-negative-int,
+     *     limit?: non-negative-int,
+     *     semanticHitCount?: non-negative-int,
+     *     page?: non-negative-int,
+     *     totalPages?: non-negative-int,
+     *     totalHits?: non-negative-int,
+     *     estimatedTotalHits?: non-negative-int,
+     *     hitsPerPage?: non-negative-int,
+     * } $body
+     */
     public function __construct(array $body)
     {
         if (isset($body['estimatedTotalHits'])) {
@@ -68,7 +122,7 @@ class SearchResult implements \Countable, \IteratorAggregate
         }
 
         $this->semanticHitCount = $body['semanticHitCount'] ?? 0;
-        $this->hits = $body['hits'] ?? [];
+        $this->hits = $body['hits'];
         $this->hitsCount = \count($body['hits']);
         $this->processingTimeMs = $body['processingTimeMs'];
         $this->query = $body['query'];
@@ -85,19 +139,27 @@ class SearchResult implements \Countable, \IteratorAggregate
      * - transformHits (callable)
      *
      * The method does NOT trigger a new search.
+     *
+     * @param array{
+     *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
+     *     transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>
+     * } $options
      */
-    public function applyOptions($options): self
+    public function applyOptions(array $options): self
     {
-        if (\array_key_exists('transformHits', $options) && \is_callable($options['transformHits'])) {
+        if (\array_key_exists('transformHits', $options)) {
             $this->transformHits($options['transformHits']);
         }
-        if (\array_key_exists('transformFacetDistribution', $options) && \is_callable($options['transformFacetDistribution'])) {
+        if (\array_key_exists('transformFacetDistribution', $options)) {
             $this->transformFacetDistribution($options['transformFacetDistribution']);
         }
 
         return $this;
     }
 
+    /**
+     * @param callable(array<int, array<string, mixed>>): array<int, array<string, mixed>> $callback
+     */
     public function transformHits(callable $callback): self
     {
         $this->hits = $callback($this->hits);
@@ -106,6 +168,9 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this;
     }
 
+    /**
+     * @param callable(array<string, mixed>): array<string, mixed> $callback
+     */
     public function transformFacetDistribution(callable $callback): self
     {
         $this->facetDistribution = $callback($this->facetDistribution);
@@ -113,7 +178,14 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this;
     }
 
-    public function getHit(int $key, $default = null)
+    /**
+     * @template TDefault
+     *
+     * @param TDefault $default
+     *
+     * @return array<string, mixed>|TDefault
+     */
+    public function getHit(int $key, mixed $default = null): mixed
     {
         return $this->hits[$key] ?? $default;
     }
@@ -126,16 +198,25 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->hits;
     }
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getOffset(): ?int
     {
         return $this->offset;
     }
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getLimit(): ?int
     {
         return $this->limit;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getHitsCount(): int
     {
         return $this->hitsCount;
@@ -149,16 +230,25 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->semanticHitCount;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function count(): int
     {
         return $this->hitsCount;
     }
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getEstimatedTotalHits(): ?int
     {
         return $this->estimatedTotalHits;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getProcessingTimeMs(): int
     {
         return $this->processingTimeMs;
@@ -169,21 +259,33 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->query;
     }
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getHitsPerPage(): ?int
     {
         return $this->hitsPerPage;
     }
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getPage(): ?int
     {
         return $this->page;
     }
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getTotalPages(): ?int
     {
         return $this->totalPages;
     }
 
+    /**
+     * @return non-negative-int|null
+     */
     public function getTotalHits(): ?int
     {
         return $this->totalHits;
@@ -215,6 +317,23 @@ class SearchResult implements \Countable, \IteratorAggregate
         return $this->raw;
     }
 
+    /**
+     * @return array{
+     *     hits: array<int, array<string, mixed>>,
+     *     hitsCount: non-negative-int,
+     *     processingTimeMs: non-negative-int,
+     *     query: string,
+     *     facetDistribution: array<string, mixed>,
+     *     facetStats: array<string, mixed>,
+     *     offset?: non-negative-int,
+     *     limit?: non-negative-int,
+     *     estimatedTotalHits?: non-negative-int,
+     *     hitsPerPage?: non-negative-int,
+     *     page?: non-negative-int,
+     *     totalPages?: non-negative-int,
+     *     totalHits?: non-negative-int,
+     * }
+     */
     public function toArray(): array
     {
         $arr = [

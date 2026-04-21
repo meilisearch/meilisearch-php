@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Meilisearch\Search;
 
 /**
- * @implements \IteratorAggregate<array<int, array<string, mixed>>>
+ * @implements \IteratorAggregate<int, array<string, mixed>>
  */
-class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
+final class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
 {
     /**
      * @var array<int, array<string, mixed>>
@@ -20,12 +20,54 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
      * Please, use `hitsCount` if you want to know the real size of the `hits` array at any time.
      */
     private int $estimatedTotalHits;
-    private int $hitsCount;
-    private int $offset;
-    private int $limit;
-    private int $processingTimeMs;
-    private string $id;
 
+    /**
+     * @var non-negative-int
+     */
+    private int $hitsCount;
+
+    /**
+     * @var non-negative-int
+     */
+    private int $offset;
+
+    /**
+     * @var non-negative-int
+     */
+    private int $limit;
+
+    /**
+     * @var non-negative-int
+     */
+    private int $processingTimeMs;
+
+    /**
+     * @var int|non-empty-string
+     */
+    private int|string $id;
+
+    /**
+     * @var array<string, string>|null
+     */
+    private ?array $performanceDetails;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $raw;
+
+    /**
+     * @param array{
+     *     id: int|non-empty-string,
+     *     hits: array<int, array<string, mixed>>,
+     *     hitsCount: non-negative-int,
+     *     processingTimeMs: non-negative-int,
+     *     offset: non-negative-int,
+     *     limit: non-negative-int,
+     *     estimatedTotalHits: non-negative-int,
+     *     performanceDetails?: array<string, string>|null,
+     * } $body
+     */
     public function __construct(array $body)
     {
         $this->id = $body['id'];
@@ -35,14 +77,20 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
         $this->offset = $body['offset'];
         $this->limit = $body['limit'];
         $this->estimatedTotalHits = $body['estimatedTotalHits'];
+        $this->performanceDetails = $body['performanceDetails'] ?? null;
+        $this->raw = $body;
     }
 
     /**
-     * @return array<string, mixed>|null
+     * @template TDefault
+     *
+     * @param TDefault $default
+     *
+     * @return array<string, mixed>|TDefault
      */
-    public function getHit(int $key): ?array
+    public function getHit(int $key, mixed $default = null): mixed
     {
-        return $this->hits[$key];
+        return $this->hits[$key] ?? $default;
     }
 
     /**
@@ -53,40 +101,83 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
         return $this->hits;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getLimit(): int
     {
         return $this->limit;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getEstimatedTotalHits(): int
     {
         return $this->estimatedTotalHits;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getProcessingTimeMs(): int
     {
         return $this->processingTimeMs;
     }
 
-    public function getId(): string
+    /**
+     * @return int|non-empty-string
+     */
+    public function getId(): int|string
     {
         return $this->id;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getHitsCount(): int
     {
         return $this->hitsCount;
     }
 
     /**
+     * @return array<string, string>|null
+     */
+    public function getPerformanceDetails(): ?array
+    {
+        return $this->performanceDetails;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getRaw(): array
+    {
+        return $this->raw;
+    }
+
+    /**
      * Converts the SimilarDocumentsSearchResult to an array representation.
      *
-     * @return array<string, mixed>
+     * @return array{
+     *     id: int|non-empty-string,
+     *     hits: array<int, array<string, mixed>>,
+     *     hitsCount: non-negative-int,
+     *     processingTimeMs: non-negative-int,
+     *     offset: non-negative-int,
+     *     limit: non-negative-int,
+     *     estimatedTotalHits: non-negative-int,
+     *     performanceDetails?: array<string, string>|null,
+     * }
      */
     public function toArray(): array
     {
@@ -98,6 +189,7 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
             'offset' => $this->offset,
             'limit' => $this->limit,
             'estimatedTotalHits' => $this->estimatedTotalHits,
+            'performanceDetails' => $this->performanceDetails,
         ];
     }
 
@@ -106,6 +198,9 @@ class SimilarDocumentsSearchResult implements \Countable, \IteratorAggregate
         return new \ArrayIterator($this->hits);
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function count(): int
     {
         return $this->hitsCount;

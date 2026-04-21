@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class SimilarDocumentsQuery
+final class SimilarDocumentsQuery
 {
     /**
      * @var int|non-empty-string

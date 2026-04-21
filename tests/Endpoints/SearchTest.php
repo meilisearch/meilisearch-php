@@ -371,7 +371,6 @@ final class SearchTest extends TestCase
             'facets' => ['genre'],
         ]);
         self::assertSame(2, $response->getHitsCount());
-        self::assertArrayHasKey('facetDistribution', $response->toArray());
         self::assertArrayHasKey('genre', $response->getFacetDistribution());
         self::assertSame($response->getFacetDistribution()['genre']['fantasy'], 1);
         self::assertSame($response->getFacetDistribution()['genre']['adventure'], 1);
