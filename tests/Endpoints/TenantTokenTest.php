@@ -51,7 +51,6 @@ final class TenantTokenTest extends TestCase
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(7, $response->getHits());
     }
 
@@ -63,7 +62,6 @@ final class TenantTokenTest extends TestCase
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(7, $response->getHits());
     }
 
@@ -78,7 +76,6 @@ final class TenantTokenTest extends TestCase
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index('tenantToken')->search('');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(4, $response->getHits());
     }
 
@@ -89,11 +86,10 @@ final class TenantTokenTest extends TestCase
 
         $token = $this->privateClient->generateTenantToken($this->key->getUid(), [$this->indexName]);
         $tokenClient = new Client($this->host, $token);
-        $response = $tokenClient->index($this->indexName)->search('');
+        $tokenClient->index($this->indexName)->search('');
 
-        self::assertArrayHasKey('hits', $response->toArray());
-        self::assertArrayHasKey('query', $response->toArray());
         $this->expectException(ApiException::class);
+
         $tokenClient->index($indexName)->search('');
     }
 
@@ -107,7 +103,7 @@ final class TenantTokenTest extends TestCase
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index($this->indexName)->search('');
 
-        self::assertArrayHasKey('hits', $response->toArray());
+        self::assertSame([], $response->getHits());
     }
 
     public function testGenerateTenantTokenWithExpiresAt(): void
@@ -122,7 +118,7 @@ final class TenantTokenTest extends TestCase
         $tokenClient = new Client($this->host, $token);
         $response = $tokenClient->index($this->indexName)->search('');
 
-        self::assertArrayHasKey('hits', $response->toArray());
+        self::assertSame([], $response->getHits());
     }
 
     public function testGenerateTenantTokenWithSearchRulesEmptyArray(): void

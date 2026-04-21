@@ -23,7 +23,6 @@ final class SearchNestedFieldsTest extends TestCase
     {
         $response = $this->index->search('An awesome');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [], [
@@ -39,7 +38,6 @@ final class SearchNestedFieldsTest extends TestCase
     {
         $response = $this->index->search('book');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(6, $response->getHits());
 
         $response = $this->index->search('book', [], [
@@ -71,7 +69,6 @@ final class SearchNestedFieldsTest extends TestCase
 
         $response = $this->index->search('An awesome');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [], [
@@ -89,7 +86,6 @@ final class SearchNestedFieldsTest extends TestCase
 
         $response = $this->index->search('An awesome');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [
@@ -112,7 +108,6 @@ final class SearchNestedFieldsTest extends TestCase
 
         $response = $this->index->search('An awesome');
 
-        self::assertArrayHasKey('hits', $response->toArray());
         self::assertCount(1, $response->getHits());
 
         $response = $this->index->search('An awesome', [

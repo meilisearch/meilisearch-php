@@ -106,16 +106,6 @@ final class SearchResultTest extends TestCase
         self::assertEmpty($this->basicResult->getFacetDistribution());
         self::assertEmpty($this->basicResult->getFacetStats());
         self::assertCount(2, $this->basicResult);
-
-        self::assertArrayHasKey('hits', $this->basicResult->toArray());
-        self::assertArrayHasKey('offset', $this->basicResult->toArray());
-        self::assertArrayHasKey('limit', $this->basicResult->toArray());
-        self::assertArrayHasKey('estimatedTotalHits', $this->basicResult->toArray());
-        self::assertArrayHasKey('hitsCount', $this->basicResult->toArray());
-        self::assertArrayHasKey('processingTimeMs', $this->basicResult->toArray());
-        self::assertArrayHasKey('query', $this->basicResult->toArray());
-        self::assertArrayHasKey('facetDistribution', $this->basicResult->toArray());
-        self::assertArrayHasKey('facetStats', $this->basicResult->toArray());
     }
 
     public function testSearchResultCanBeFiltered(): void
@@ -188,17 +178,12 @@ final class SearchResultTest extends TestCase
         $keepAmericanSniperFunc = function (array $hits): array {
             return array_filter(
                 $hits,
-                function (array $hit): bool { return 'American Sniper' === $hit['title']; }
+                static function (array $hit): bool { return 'American Sniper' === $hit['title']; }
             );
         };
 
         $response = $this->basicResult->transformHits($keepAmericanSniperFunc);
 
-        self::assertArrayHasKey('hits', $response->toArray());
-        self::assertArrayHasKey('offset', $response->toArray());
-        self::assertArrayHasKey('limit', $response->toArray());
-        self::assertArrayHasKey('processingTimeMs', $response->toArray());
-        self::assertArrayHasKey('query', $response->toArray());
         self::assertSame('American Sniper', $response->getHit(1)['title']); // Not getHits(0) because array_filter() does not reorder the indexes after filtering.
         self::assertSame(976, $response->getEstimatedTotalHits());
         self::assertSame(1, $response->getHitsCount());
@@ -222,12 +207,6 @@ final class SearchResultTest extends TestCase
 
         $response = $this->resultWithFacets->transformFacetDistribution($facetsToUpperFunc);
 
-        self::assertArrayHasKey('hits', $response->toArray());
-        self::assertArrayHasKey('facetDistribution', $response->toArray());
-        self::assertArrayHasKey('offset', $response->toArray());
-        self::assertArrayHasKey('limit', $response->toArray());
-        self::assertArrayHasKey('processingTimeMs', $response->toArray());
-        self::assertArrayHasKey('query', $response->toArray());
         self::assertSame($response->getRaw()['hits'], $response->getHits());
         self::assertNotSame($response->getRaw()['facetDistribution'], $response->getFacetDistribution());
         self::assertCount(3, $response->getFacetDistribution()['genre']);

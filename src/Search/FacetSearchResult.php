@@ -5,37 +5,73 @@ declare(strict_types=1);
 namespace Meilisearch\Search;
 
 /**
- * @implements \IteratorAggregate<array<int, array<string, mixed>>>
+ * @implements \IteratorAggregate<int, array<string, mixed>>
  */
-class FacetSearchResult implements \Countable, \IteratorAggregate
+final class FacetSearchResult implements \Countable, \IteratorAggregate
 {
     /**
      * @var array<int, array<string, mixed>>
      */
     private array $facetHits;
+
+    /**
+     * @var non-negative-int
+     */
     private int $processingTimeMs;
+
     private ?string $facetQuery;
 
+    /**
+     * @var array<string, mixed>
+     */
+    private array $raw;
+
+    /**
+     * @param array{
+     *     facetHits: array<int, array<string, mixed>>,
+     *     facetQuery: string|null,
+     *     processingTimeMs: non-negative-int
+     * } $body
+     */
     public function __construct(array $body)
     {
-        $this->facetHits = $body['facetHits'] ?? [];
+        $this->facetHits = $body['facetHits'];
         $this->facetQuery = $body['facetQuery'];
         $this->processingTimeMs = $body['processingTimeMs'];
+        $this->raw = $body;
     }
 
     /**
-     * @return array<int, array>
+     * @return array<int, array<string, mixed>>
      */
     public function getFacetHits(): array
     {
         return $this->facetHits;
     }
 
+    /**
+     * @return non-negative-int
+     */
     public function getProcessingTimeMs(): int
     {
         return $this->processingTimeMs;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
+    public function getRaw(): array
+    {
+        return $this->raw;
+    }
+
+    /**
+     * @return array{
+     *     facetHits: array<int, array<string, mixed>>,
+     *     facetQuery: string|null,
+     *     processingTimeMs: non-negative-int
+     * }
+     */
     public function toArray(): array
     {
         return [
