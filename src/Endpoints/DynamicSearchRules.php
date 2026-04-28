@@ -20,7 +20,7 @@ use Meilisearch\Contracts\UpdateDynamicSearchRuleQuery;
  *     total: non-negative-int
  * }
  */
-class DynamicSearchRules extends Endpoint
+final class DynamicSearchRules extends Endpoint
 {
     protected const PATH = '/dynamic-search-rules';
 
