@@ -23,7 +23,7 @@ final class DynamicSearchRulesResults extends Data
 
     /**
      * @param array{
-     *     results: array<int, DynamicSearchRule>,
+     *     results: list<DynamicSearchRule>,
      *     offset: non-negative-int,
      *     limit: non-negative-int,
      *     total: non-negative-int
