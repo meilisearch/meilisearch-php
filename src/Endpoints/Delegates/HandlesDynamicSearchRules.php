@@ -4,47 +4,32 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
+use Meilisearch\Contracts\DynamicSearchRule;
+use Meilisearch\Contracts\DynamicSearchRulesQuery;
+use Meilisearch\Contracts\DynamicSearchRulesResults;
+use Meilisearch\Contracts\UpdateDynamicSearchRuleQuery;
 use Meilisearch\Endpoints\DynamicSearchRules;
 
-/**
- * @phpstan-import-type DynamicSearchRuleUpdatePayload from DynamicSearchRules
- * @phpstan-import-type DynamicSearchRulesQuery from DynamicSearchRules
- * @phpstan-import-type RawDynamicSearchRule from DynamicSearchRules
- * @phpstan-import-type RawDynamicSearchRules from DynamicSearchRules
- */
 trait HandlesDynamicSearchRules
 {
     protected DynamicSearchRules $dynamicSearchRules;
 
-    /**
-     * @param DynamicSearchRulesQuery $options
-     *
-     * @return RawDynamicSearchRules
-     */
-    public function getDynamicSearchRules(array $options = []): array
+    public function getDynamicSearchRules(?DynamicSearchRulesQuery $options = null): DynamicSearchRulesResults
     {
         return $this->dynamicSearchRules->all($options);
     }
 
     /**
      * @param non-empty-string $uid
-     *
-     * @return RawDynamicSearchRule
      */
-    public function getDynamicSearchRule(string $uid): array
+    public function getDynamicSearchRule(string $uid): DynamicSearchRule
     {
         return $this->dynamicSearchRules->get($uid);
     }
 
-    /**
-     * @param non-empty-string               $uid
-     * @param DynamicSearchRuleUpdatePayload $payload
-     *
-     * @return RawDynamicSearchRule
-     */
-    public function updateDynamicSearchRule(string $uid, array $payload): array
+    public function updateDynamicSearchRule(UpdateDynamicSearchRuleQuery $request): DynamicSearchRule
     {
-        return $this->dynamicSearchRules->update($uid, $payload);
+        return $this->dynamicSearchRules->update($request);
     }
 
     /**
