@@ -6,29 +6,35 @@ namespace Meilisearch\Contracts;
 
 class Data implements \ArrayAccess, \Countable, \IteratorAggregate
 {
+    /**
+     * @var array<mixed>
+     */
     protected array $data = [];
 
+    /**
+     * @param array<mixed> $data
+     */
     public function __construct(array $data = [])
     {
         $this->data = $data;
     }
 
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->data[$offset] = $value;
     }
 
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->data[$offset]) || \array_key_exists($offset, $this->data);
     }
 
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->data[$offset]);
     }
 
-    public function offsetGet($offset): mixed
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->data[$offset] ?? null;
     }
