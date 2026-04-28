@@ -19,14 +19,20 @@ final class DynamicSearchRuleTest extends TestCase
             'conditions' => [
                 [
                     'scope' => 'query',
+                    'isEmpty' => false,
                     'contains' => 'movie',
+                ],
+                [
+                    'scope' => 'time',
+                    'start' => '2026-01-01T00:00:00Z',
+                    'end' => null,
                 ],
             ],
             'actions' => [
                 [
                     'selector' => [
                         'indexUid' => 'movies',
-                        'id' => '1',
+                        'id' => null,
                     ],
                     'action' => [
                         'type' => 'pin',

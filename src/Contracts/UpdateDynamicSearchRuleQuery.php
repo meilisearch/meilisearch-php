@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @phpstan-import-type SearchRuleAction from DynamicSearchRule
+ * @phpstan-import-type SearchRuleCondition from DynamicSearchRule
+ */
 final class UpdateDynamicSearchRuleQuery
 {
     private bool $hasDescription = false;
@@ -22,12 +26,12 @@ final class UpdateDynamicSearchRuleQuery
     private ?bool $active = null;
 
     /**
-     * @var list<array<string, mixed>>|null
+     * @var list<SearchRuleCondition>|null
      */
     private ?array $conditions = null;
 
     /**
-     * @var list<array<string, mixed>>|null
+     * @var list<SearchRuleAction>|null
      */
     private ?array $actions = null;
 
@@ -74,11 +78,11 @@ final class UpdateDynamicSearchRuleQuery
     }
 
     /**
-     * @param list<array<string, mixed>> $conditions
+     * @param list<SearchRuleCondition>|null $conditions
      *
      * @return $this
      */
-    public function setConditions(array $conditions): self
+    public function setConditions(?array $conditions): self
     {
         $this->conditions = $conditions;
         $this->hasConditions = true;
@@ -87,11 +91,11 @@ final class UpdateDynamicSearchRuleQuery
     }
 
     /**
-     * @param list<array<string, mixed>> $actions
+     * @param list<SearchRuleAction>|null $actions
      *
      * @return $this
      */
-    public function setActions(array $actions): self
+    public function setActions(?array $actions): self
     {
         $this->actions = $actions;
         $this->hasActions = true;
@@ -104,8 +108,8 @@ final class UpdateDynamicSearchRuleQuery
      *     description?: string|null,
      *     priority?: non-negative-int|null,
      *     active?: bool,
-     *     conditions?: list<array<string, mixed>>,
-     *     actions?: list<array<string, mixed>>
+     *     conditions?: list<SearchRuleCondition>|null,
+     *     actions?: list<SearchRuleAction>|null
      * }
      */
     public function toArray(): array
