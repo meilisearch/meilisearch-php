@@ -39,7 +39,7 @@ final class DynamicSearchRulesResults extends Data
     }
 
     /**
-     * @return array<int, DynamicSearchRule>
+     * @return list<DynamicSearchRule>
      */
     public function getResults(): array
     {
@@ -72,7 +72,7 @@ final class DynamicSearchRulesResults extends Data
 
     /**
      * @return array{
-     *     results: array<int, DynamicSearchRule>,
+     *     results: list<DynamicSearchRule>,
      *     offset: non-negative-int,
      *     limit: non-negative-int,
      *     total: non-negative-int
