@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class DynamicSearchRulesFilter
+final class DynamicSearchRulesFilter
 {
     /**
      * @var list<non-empty-string>|null

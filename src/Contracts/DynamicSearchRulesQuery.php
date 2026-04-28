@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class DynamicSearchRulesQuery
+final class DynamicSearchRulesQuery
 {
     /**
      * @var non-negative-int|null
