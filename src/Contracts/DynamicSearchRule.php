@@ -40,21 +40,41 @@ namespace Meilisearch\Contracts;
 final class DynamicSearchRule
 {
     /**
-     * @param non-empty-string               $uid
-     * @param list<SearchRuleAction>         $actions
-     * @param non-negative-int|null          $priority
-     * @param list<SearchRuleCondition>|null $conditions
-     * @param array<string, mixed>           $raw
+     * @var non-empty-string
+     */
+    private readonly string $uid;
+
+    /**
+     * @var list<SearchRuleAction>
+     */
+    private readonly array $actions;
+
+    private readonly ?string $description;
+
+    /**
+     * @var non-negative-int|null
+     */
+    private readonly ?int $priority;
+
+    private readonly ?bool $active;
+
+    /**
+     * @var list<SearchRuleCondition>|null
+     */
+    private readonly ?array $conditions;
+
+    /**
+     * @param RawDynamicSearchRule $raw
      */
     public function __construct(
-        private readonly string $uid,
-        private readonly array $actions,
-        private readonly ?string $description = null,
-        private readonly ?int $priority = null,
-        private readonly ?bool $active = null,
-        private readonly ?array $conditions = null,
-        private readonly array $raw = [],
+        private readonly array $raw,
     ) {
+        $this->uid = $raw['uid'];
+        $this->actions = $raw['actions'];
+        $this->description = $raw['description'] ?? null;
+        $this->priority = $raw['priority'] ?? null;
+        $this->active = $raw['active'] ?? null;
+        $this->conditions = $raw['conditions'] ?? null;
     }
 
     public function getUid(): string
@@ -96,7 +116,7 @@ final class DynamicSearchRule
     /**
      * Return the original dynamic search rule.
      *
-     * @return array<string, mixed>
+     * @return RawDynamicSearchRule
      */
     public function getRaw(): array
     {
@@ -104,7 +124,7 @@ final class DynamicSearchRule
     }
 
     /**
-     * @return array<string, mixed>
+     * @return RawDynamicSearchRule
      */
     public function toArray(): array
     {
@@ -116,14 +136,6 @@ final class DynamicSearchRule
      */
     public static function fromArray(array $data): self
     {
-        return new self(
-            uid: $data['uid'],
-            actions: $data['actions'],
-            description: $data['description'] ?? null,
-            priority: $data['priority'] ?? null,
-            active: $data['active'] ?? null,
-            conditions: $data['conditions'] ?? null,
-            raw: $data,
-        );
+        return new self($data);
     }
 }
