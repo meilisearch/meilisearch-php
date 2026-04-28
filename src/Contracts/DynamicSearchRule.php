@@ -4,14 +4,47 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @phpstan-type SearchRuleSelector array{
+ *     indexUid?: non-empty-string|null,
+ *     id?: non-empty-string|null
+ * }
+ * @phpstan-type SearchRulePinAction array{
+ *     type: 'pin',
+ *     position: int
+ * }
+ * @phpstan-type SearchRuleAction array{
+ *     selector: SearchRuleSelector,
+ *     action: SearchRulePinAction
+ * }
+ * @phpstan-type SearchRuleQueryCondition array{
+ *     scope: 'query',
+ *     isEmpty?: bool|null,
+ *     contains?: non-empty-string|null
+ * }
+ * @phpstan-type SearchRuleTimeCondition array{
+ *     scope: 'time',
+ *     start?: non-empty-string|null,
+ *     end?: non-empty-string|null
+ * }
+ * @phpstan-type SearchRuleCondition SearchRuleQueryCondition|SearchRuleTimeCondition
+ * @phpstan-type RawDynamicSearchRule array{
+ *     uid: non-empty-string,
+ *     description?: string|null,
+ *     priority?: non-negative-int|null,
+ *     active?: bool,
+ *     conditions?: list<SearchRuleCondition>,
+ *     actions: list<SearchRuleAction>
+ * }
+ */
 final class DynamicSearchRule
 {
     /**
-     * @param non-empty-string                $uid
-     * @param list<array<string, mixed>>      $actions
-     * @param non-negative-int|null           $priority
-     * @param list<array<string, mixed>>|null $conditions
-     * @param array<string, mixed>            $raw
+     * @param non-empty-string               $uid
+     * @param list<SearchRuleAction>         $actions
+     * @param non-negative-int|null          $priority
+     * @param list<SearchRuleCondition>|null $conditions
+     * @param array<string, mixed>           $raw
      */
     public function __construct(
         private readonly string $uid,
@@ -30,7 +63,7 @@ final class DynamicSearchRule
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return list<SearchRuleAction>
      */
     public function getActions(): array
     {
@@ -53,7 +86,7 @@ final class DynamicSearchRule
     }
 
     /**
-     * @return list<array<string, mixed>>|null
+     * @return list<SearchRuleCondition>|null
      */
     public function getConditions(): ?array
     {
@@ -71,14 +104,7 @@ final class DynamicSearchRule
     }
 
     /**
-     * @return array{
-     *     uid: non-empty-string,
-     *     description?: string|null,
-     *     priority?: non-negative-int|null,
-     *     active?: bool,
-     *     conditions?: list<array<string, mixed>>,
-     *     actions: list<array<string, mixed>>
-     * }
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -86,14 +112,7 @@ final class DynamicSearchRule
     }
 
     /**
-     * @param array{
-     *     uid: non-empty-string,
-     *     description?: string|null,
-     *     priority?: non-negative-int|null,
-     *     active?: bool,
-     *     conditions?: list<array<string, mixed>>,
-     *     actions: list<array<string, mixed>>
-     * } $data
+     * @param RawDynamicSearchRule $data
      */
     public static function fromArray(array $data): self
     {

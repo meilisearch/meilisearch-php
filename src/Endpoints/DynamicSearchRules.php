@@ -11,14 +11,8 @@ use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Contracts\UpdateDynamicSearchRuleQuery;
 
 /**
- * @phpstan-type RawDynamicSearchRule array{
- *     uid: non-empty-string,
- *     description?: string|null,
- *     priority?: non-negative-int|null,
- *     active?: bool,
- *     conditions?: list<array<string, mixed>>,
- *     actions: list<array<string, mixed>>
- * }
+ * @phpstan-import-type RawDynamicSearchRule from DynamicSearchRule
+ *
  * @phpstan-type RawDynamicSearchRules array{
  *     results: list<RawDynamicSearchRule>,
  *     offset: non-negative-int,

@@ -54,6 +54,18 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
         ], $data->toArray());
     }
 
+    public function testNullableActionsAndConditionsCanBeExplicitlySetToNull(): void
+    {
+        $data = (new UpdateDynamicSearchRuleQuery('movie-rule'))
+            ->setConditions(null)
+            ->setActions(null);
+
+        self::assertSame([
+            'conditions' => null,
+            'actions' => null,
+        ], $data->toArray());
+    }
+
     public function testFullPayload(): void
     {
         $data = (new UpdateDynamicSearchRuleQuery('movie-rule'))
@@ -63,14 +75,20 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
             ->setConditions([
                 [
                     'scope' => 'query',
+                    'isEmpty' => false,
                     'contains' => 'movie',
+                ],
+                [
+                    'scope' => 'time',
+                    'start' => '2026-01-01T00:00:00Z',
+                    'end' => null,
                 ],
             ])
             ->setActions([
                 [
                     'selector' => [
                         'indexUid' => 'movies',
-                        'id' => '1',
+                        'id' => null,
                     ],
                     'action' => [
                         'type' => 'pin',
@@ -86,14 +104,20 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
             'conditions' => [
                 [
                     'scope' => 'query',
+                    'isEmpty' => false,
                     'contains' => 'movie',
+                ],
+                [
+                    'scope' => 'time',
+                    'start' => '2026-01-01T00:00:00Z',
+                    'end' => null,
                 ],
             ],
             'actions' => [
                 [
                     'selector' => [
                         'indexUid' => 'movies',
-                        'id' => '1',
+                        'id' => null,
                     ],
                     'action' => [
                         'type' => 'pin',
