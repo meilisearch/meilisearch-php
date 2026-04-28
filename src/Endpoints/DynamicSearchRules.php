@@ -26,7 +26,7 @@ final class DynamicSearchRules extends Endpoint
 
     public function all(?DynamicSearchRulesQuery $options = null): DynamicSearchRulesResults
     {
-        $query = null !== $options ? $options->toArray() : [];
+        $query = $options?->toArray() ?? [];
 
         $response = $this->http->post(self::PATH, (object) $query);
         $response['results'] = array_map(static fn (array $data) => DynamicSearchRule::fromArray($data), $response['results']);
