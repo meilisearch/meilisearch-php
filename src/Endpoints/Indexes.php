@@ -5,75 +5,22 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\Endpoint;
-use Meilisearch\Contracts\FacetSearchQuery;
-use Meilisearch\Contracts\Http;
-use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
-use Meilisearch\Contracts\SimilarDocumentsQuery;
 use Meilisearch\Contracts\Task;
-use Meilisearch\Contracts\TasksQuery;
-use Meilisearch\Contracts\TasksResults;
-use Meilisearch\Endpoints\Delegates\HandlesDocuments;
-use Meilisearch\Endpoints\Delegates\HandlesSettings;
-use Meilisearch\Endpoints\Delegates\HandlesTasks;
-use Meilisearch\Exceptions\ApiException;
-use Meilisearch\Search\FacetSearchResult;
-use Meilisearch\Search\SearchResult;
-use Meilisearch\Search\SimilarDocumentsSearchResult;
 
 use function Meilisearch\partial;
 
-class Indexes extends Endpoint
+final class Indexes extends Endpoint
 {
-    use HandlesDocuments;
-    use HandlesSettings;
-    use HandlesTasks;
-
     protected const PATH = '/indexes';
 
-    private ?string $uid;
-    private ?string $primaryKey;
-    private ?\DateTimeInterface $createdAt;
-    private ?\DateTimeInterface $updatedAt;
-
-    public function __construct(Http $http, ?string $uid = null, ?string $primaryKey = null, ?\DateTimeInterface $createdAt = null, ?\DateTimeInterface $updatedAt = null)
-    {
-        $this->uid = $uid;
-        $this->primaryKey = $primaryKey;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
-        $this->tasks = new Tasks($http);
-
-        parent::__construct($http);
-    }
-
-    protected function newInstance(array $attributes): self
-    {
-        return new self(
-            $this->http,
-            $attributes['uid'],
-            $attributes['primaryKey'],
-            null !== $attributes['createdAt'] ? new \DateTimeImmutable($attributes['createdAt']) : null,
-            null !== $attributes['updatedAt'] ? new \DateTimeImmutable($attributes['updatedAt']) : null,
-        );
-    }
-
     /**
-     * @return $this
-     */
-    protected function fill(array $attributes): self
-    {
-        $this->uid = $attributes['uid'];
-        $this->primaryKey = $attributes['primaryKey'];
-        $this->createdAt = null !== $attributes['createdAt'] ? new \DateTimeImmutable($attributes['createdAt']) : null;
-        $this->updatedAt = null !== $attributes['updatedAt'] ? new \DateTimeImmutable($attributes['updatedAt']) : null;
-
-        return $this;
-    }
-
-    /**
-     * @throws \Exception|ApiException
+     * @param array{
+     *     primaryKey?: string|null
+     * } $options
+     *
+     * @throws \Exception
      */
     public function create(string $uid, array $options = []): Task
     {
@@ -89,7 +36,7 @@ class Indexes extends Endpoint
         $response = $this->allRaw($query);
 
         foreach ($response['results'] as $index) {
-            $indexes[] = $this->newInstance($index);
+            $indexes[] = Index::fromArray($index, $this->http);
         }
 
         $response['results'] = $indexes;
@@ -97,59 +44,27 @@ class Indexes extends Endpoint
         return new IndexesResults($response);
     }
 
+    /**
+     * @param array{
+     *     offset?: int,
+     *     limit?: int
+     * } $options
+     *
+     * @return array{
+     *     results: list<array{
+     *         uid: non-empty-string,
+     *         primaryKey: string|null,
+     *         createdAt: non-empty-string,
+     *         updatedAt: non-empty-string
+     *     }>,
+     *     offset: int,
+     *     limit: int,
+     *     total: int
+     * }
+     */
     public function allRaw(array $options = []): array
     {
         return $this->http->get(self::PATH, $options);
-    }
-
-    public function getPrimaryKey(): ?string
-    {
-        return $this->primaryKey;
-    }
-
-    public function fetchPrimaryKey(): ?string
-    {
-        return $this->fetchInfo()->getPrimaryKey();
-    }
-
-    public function getUid(): ?string
-    {
-        return $this->uid;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function fetchRawInfo(): ?array
-    {
-        return $this->http->get(self::PATH.'/'.$this->uid);
-    }
-
-    public function fetchInfo(): self
-    {
-        $response = $this->fetchRawInfo();
-
-        return $this->fill($response);
-    }
-
-    public function update(array $body): Task
-    {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid, $body), partial(Tasks::waitTask(...), $this->http));
-    }
-
-    public function delete(): Task
-    {
-        $response = $this->http->delete(self::PATH.'/'.$this->uid);
-        \assert(null !== $response);
-
-        return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
     }
 
     /**
@@ -158,111 +73,5 @@ class Indexes extends Endpoint
     public function swapIndexes(array $indexes): Task
     {
         return Task::fromArray($this->http->post('/swap-indexes', $indexes), partial(Tasks::waitTask(...), $this->http));
-    }
-
-    public function compact(): Task
-    {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/compact'), partial(Tasks::waitTask(...), $this->http));
-    }
-
-    // Tasks
-
-    public function getTask(int $uid): Task
-    {
-        return Task::fromArray($this->http->get('/tasks/'.$uid), partial(Tasks::waitTask(...), $this->http));
-    }
-
-    public function getTasks(?TasksQuery $options = null): TasksResults
-    {
-        $options = $options ?? new TasksQuery();
-
-        if ([] !== $options->getIndexUids()) {
-            $options->setIndexUids([$this->uid, ...$options->getIndexUids()]);
-        } else {
-            $options->setIndexUids([$this->uid]);
-        }
-
-        $response = $this->http->get('/tasks', $options->toArray());
-        $response['results'] = array_map(fn (array $task) => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
-
-        return new TasksResults($response);
-    }
-
-    // Search
-
-    /**
-     * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int} ? array : SearchResult)
-     */
-    public function search(?string $query, array $searchParams = [], array $options = []): SearchResult|array
-    {
-        $result = $this->rawSearch($query, $searchParams);
-
-        if (\array_key_exists('raw', $options) && $options['raw']) {
-            return $result;
-        }
-
-        $searchResult = new SearchResult($result);
-        $searchResult->applyOptions($options);
-
-        return $searchResult;
-    }
-
-    public function rawSearch(?string $query, array $searchParams = []): array
-    {
-        $parameters = array_merge(
-            ['q' => $query],
-            $searchParams
-        );
-
-        $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', $parameters);
-
-        // patch to prevent breaking in laravel/scout getTotalCount method,
-        // affects only Meilisearch >= v0.28.0.
-        if (isset($result['estimatedTotalHits'])) {
-            $result['nbHits'] = $result['estimatedTotalHits'];
-        }
-
-        return $result;
-    }
-
-    public function searchSimilarDocuments(SimilarDocumentsQuery $parameters): SimilarDocumentsSearchResult
-    {
-        $result = $this->http->post(self::PATH.'/'.$this->uid.'/similar', $parameters->toArray());
-
-        return new SimilarDocumentsSearchResult($result);
-    }
-
-    // Facet Search
-
-    public function facetSearch(FacetSearchQuery $params): FacetSearchResult
-    {
-        $response = $this->http->post(self::PATH.'/'.$this->uid.'/facet-search', $params->toArray());
-
-        return new FacetSearchResult($response);
-    }
-
-    // Stats
-
-    public function stats(): array
-    {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/stats');
-    }
-
-    // Settings - Global
-
-    public function getSettings(): array
-    {
-        return (new Settings($this->http->get(self::PATH.'/'.$this->uid.'/settings')))
-            ->getIterator()->getArrayCopy();
-    }
-
-    public function updateSettings($settings): Task
-    {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings), partial(Tasks::waitTask(...), $this->http));
-    }
-
-    public function resetSettings(): Task
-    {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings'), partial(Tasks::waitTask(...), $this->http));
     }
 }

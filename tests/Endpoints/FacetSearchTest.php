@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\FacetSearchQuery;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Contracts\SearchQuery;
+use Meilisearch\Endpoints\Index;
 use Tests\TestCase;
 
 final class FacetSearchTest extends TestCase
 {
-    private Indexes $index;
+    private Index $index;
 
     protected function setUp(): void
     {
@@ -23,7 +24,7 @@ final class FacetSearchTest extends TestCase
 
     public function testBasicSearchWithFilters(): void
     {
-        $response = $this->index->search('prince', ['facets' => ['genre']]);
+        $response = $this->index->search((new SearchQuery())->setQuery('prince')->setFacets(['genre']));
 
         self::assertSame(['adventure', 'fantasy'], array_keys($response->getFacetDistribution()['genre']));
 

@@ -10,7 +10,7 @@ use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Http\Client;
@@ -358,31 +358,26 @@ final class DocumentsTest extends TestCase
         $documentCsv .= '888221515;Young folks'.PHP_EOL;
         $documentCsv .= '235115704;Mister Klein'.PHP_EOL;
 
-        $index = $this
-            ->getMockBuilder(Indexes::class)
-            ->onlyMethods(['addDocumentsCsv'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $http = $this->createMock(Http::class);
+        $http->expects(self::exactly(2))
+            ->method('post')
+            ->willReturnCallback(function (string $path, $documents, $query, $contentType): array {
+                static $invocation = 0;
+                switch (++$invocation) {
+                    case 1:
+                        self::assertSame("id;title\n888221515;Young folks", $documents);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        break;
+                    case 2:
+                        self::assertSame("id;title\n235115704;Mister Klein", $documents);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        break;
+                }
 
-        $index->expects(self::exactly(2))
-              ->method('addDocumentsCsv')
-              ->willReturnCallback(function (string $documents, $primaryKey, $delimiter): Task {
-                  static $invocation = 0;
-                  // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
-                  switch (++$invocation) {
-                      case 1:
-                          self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
+                return ['taskUid' => 1, 'indexUid' => 'index', 'status' => 'enqueued', 'type' => 'documentAdditionOrUpdate', 'enqueuedAt' => '2021-08-11T09:25:53.000000Z'];
+            });
 
-                          return MockTask::create(TaskType::DocumentEdition);
-                      case 2:
-                          self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
-
-                          return MockTask::create(TaskType::DocumentEdition);
-                      default:
-                          self::fail();
-                  }
-              });
-
+        $index = new Index($http, 'index');
         $index->addDocumentsCsvInBatches($documentCsv, 1, null, ';');
     }
 
@@ -519,7 +514,7 @@ final class DocumentsTest extends TestCase
                 ->method('post')
                 ->willThrowException($mockedException);
 
-            $indexMock = new Indexes($httpMock, 'uid');
+            $indexMock = new Index($httpMock, 'uid');
             $indexMock->deleteDocuments(['filter' => ['id > 0']]);
         } catch (\Exception $ex) {
             $rethrowed = ApiException::rethrowWithHint($mockedException, 'deleteDocuments');
@@ -582,7 +577,7 @@ final class DocumentsTest extends TestCase
 
         $index->addDocuments($documents, 'unique')->wait();
 
-        self::assertSame('unique', $index->fetchPrimaryKey());
+        self::assertSame('unique', $index->getPrimaryKey());
         self::assertCount(1, $index->getDocuments());
     }
 
@@ -598,7 +593,7 @@ final class DocumentsTest extends TestCase
         $index = $this->createEmptyIndex($this->safeIndexName());
         $index->updateDocuments($documents, 'unique')->wait();
 
-        self::assertSame('unique', $index->fetchPrimaryKey());
+        self::assertSame('unique', $index->getPrimaryKey());
         self::assertCount(1, $index->getDocuments());
     }
 
@@ -693,7 +688,7 @@ final class DocumentsTest extends TestCase
                 ->method('post')
                 ->willThrowException($mockedException);
 
-            $indexMock = new Indexes($httpMock, 'uid');
+            $indexMock = new Index($httpMock, 'uid');
             $indexMock->getDocuments((new DocumentsQuery())->setFilter(['id > 1']));
         } catch (\Exception $ex) {
             $rethrowed = ApiException::rethrowWithHint($mockedException, 'getDocuments');
@@ -837,31 +832,26 @@ final class DocumentsTest extends TestCase
         $replacement .= '888221515;Young folks'.PHP_EOL;
         $replacement .= '235115704;Mister Klein'.PHP_EOL;
 
-        $index = $this
-            ->getMockBuilder(Indexes::class)
-            ->onlyMethods(['updateDocumentsCsv'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $http = $this->createMock(Http::class);
+        $http->expects(self::atLeastOnce())
+            ->method('put')
+            ->willReturnCallback(function (string $path, $documents, $query, $contentType): array {
+                static $invocation = 0;
+                switch (++$invocation) {
+                    case 1:
+                        self::assertSame("id;title\n888221515;Young folks", $documents);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        break;
+                    case 2:
+                        self::assertSame("id;title\n235115704;Mister Klein", $documents);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        break;
+                }
 
-        $index->expects(self::atLeastOnce())
-              ->method('updateDocumentsCsv')
-              ->willReturnCallback(function (string $documents, $primaryKey, $delimiter): Task {
-                  static $invocation = 0;
-                  // withConsecutive has no replacement https://github.com/sebastianbergmann/phpunit/issues/4026
-                  switch (++$invocation) {
-                      case 1:
-                          self::assertSame(["id;title\n888221515;Young folks", null, ';'], [$documents, $primaryKey, $delimiter]);
+                return ['taskUid' => 1, 'indexUid' => 'index', 'status' => 'enqueued', 'type' => 'documentAdditionOrUpdate', 'enqueuedAt' => '2021-08-11T09:25:53.000000Z'];
+            });
 
-                          return MockTask::create(TaskType::DocumentEdition);
-                      case 2:
-                          self::assertSame(["id;title\n235115704;Mister Klein", null, ';'], [$documents, $primaryKey, $delimiter]);
-
-                          return MockTask::create(TaskType::DocumentEdition);
-                      default:
-                          self::fail();
-                  }
-              });
-
+        $index = new Index($http, 'index');
         $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
     }
 

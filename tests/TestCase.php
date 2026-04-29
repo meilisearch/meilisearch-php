@@ -6,7 +6,7 @@ namespace Tests;
 
 use Meilisearch\Client;
 use Meilisearch\Contracts\IndexesQuery;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -122,7 +122,7 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-    public function createEmptyIndex($indexName, $options = []): Indexes
+    public function createEmptyIndex($indexName, $options = []): Index
     {
         $task = $this->client->createIndex($indexName, $options)->wait();
 

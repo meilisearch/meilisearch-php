@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\SimilarDocumentsQuery;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Tests\TestCase;
 
 final class SimilarDocumentsTest extends TestCase
 {
-    private Indexes $index;
+    private Index $index;
 
     protected function setUp(): void
     {

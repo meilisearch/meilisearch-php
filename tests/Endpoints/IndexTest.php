@@ -12,13 +12,13 @@ use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Meilisearch\Exceptions\TimeOutException;
 use Tests\TestCase;
 
 final class IndexTest extends TestCase
 {
-    private Indexes $index;
+    private Index $index;
     private string $indexName;
 
     protected function setUp(): void
@@ -92,18 +92,12 @@ final class IndexTest extends TestCase
 
     public function testGetCreatedAt(): void
     {
-        $indexB = $this->client->index('indexB');
-
-        self::assertNull($indexB->getCreatedAt());
-        self::assertInstanceOf(\DateTimeInterface::class, $this->index->getCreatedAt());
+        self::assertGreaterThan(0, $this->index->getCreatedAt()->getTimestamp());
     }
 
     public function testGetUpdatedAt(): void
     {
-        $indexB = $this->client->index('indexB');
-
-        self::assertNull($indexB->getUpdatedAt());
-        self::assertInstanceOf(\DateTimeInterface::class, $this->index->getUpdatedAt());
+        self::assertGreaterThan(0, $this->index->getUpdatedAt()->getTimestamp());
     }
 
     public function testFetchRawInfo(): void
@@ -116,10 +110,6 @@ final class IndexTest extends TestCase
 
         $response = $index->fetchRawInfo();
 
-        self::assertArrayHasKey('primaryKey', $response);
-        self::assertArrayHasKey('uid', $response);
-        self::assertArrayHasKey('createdAt', $response);
-        self::assertArrayHasKey('updatedAt', $response);
         self::assertSame('objectId', $response['primaryKey']);
         self::assertSame($indexName, $response['uid']);
     }
@@ -147,24 +137,6 @@ final class IndexTest extends TestCase
         self::assertArrayHasKey('fieldDistribution', $stats);
     }
 
-    public function testFetchInfo(): void
-    {
-        $indexName = $this->safeIndexName('books-1');
-        $this->createEmptyIndex(
-            $indexName,
-            ['primaryKey' => 'objectID']
-        );
-
-        $index = $this->client->index($indexName);
-        self::assertNull($index->getPrimaryKey());
-
-        $index = $index->fetchInfo();
-        self::assertSame('objectID', $index->getPrimaryKey());
-        self::assertSame($indexName, $index->getUid());
-        self::assertInstanceOf(\DateTimeInterface::class, $index->getCreatedAt());
-        self::assertInstanceOf(\DateTimeInterface::class, $index->getUpdatedAt());
-    }
-
     public function testGetAndFetchPrimaryKey(): void
     {
         $indexName = $this->safeIndexName('books-1');
@@ -174,8 +146,6 @@ final class IndexTest extends TestCase
         );
 
         $index = $this->client->index($indexName);
-        self::assertNull($index->getPrimaryKey());
-        self::assertSame('objectID', $index->fetchPrimaryKey());
         self::assertSame('objectID', $index->getPrimaryKey());
     }
 

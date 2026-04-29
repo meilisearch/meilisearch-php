@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tests\Settings;
 
 use Meilisearch\Contracts\TaskStatus;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class EmbeddersTest extends TestCase
 {
-    private Indexes $index;
+    private Index $index;
 
     private const DEFAULT_EMBEDDER = [];
 
