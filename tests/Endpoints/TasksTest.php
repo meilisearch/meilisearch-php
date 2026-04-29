@@ -11,13 +11,13 @@ use Meilisearch\Contracts\TaskDetails\TaskCancelationDetails;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
 final class TasksTest extends TestCase
 {
-    private Indexes $index;
+    private Index $index;
     private string $indexName;
 
     protected function setUp(): void

@@ -6,14 +6,14 @@ namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\MultiSearchFederation;
-use Meilisearch\Contracts\SearchQuery;
+use Meilisearch\Contracts\MultiSearchQuery;
 
 trait HandlesMultiSearch
 {
     protected Http $http;
 
     /**
-     * @param list<SearchQuery> $queries
+     * @param list<MultiSearchQuery> $queries
      */
     public function multiSearch(array $queries = [], ?MultiSearchFederation $federation = null)
     {

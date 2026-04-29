@@ -6,8 +6,8 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Client;
 use Meilisearch\Contracts\MultiSearchFederation;
-use Meilisearch\Contracts\SearchQuery;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Contracts\MultiSearchQuery;
+use Meilisearch\Endpoints\Index;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Psr18Client;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -15,8 +15,8 @@ use Tests\TestCase;
 
 final class MultiSearchTest extends TestCase
 {
-    private Indexes $booksIndex;
-    private Indexes $songsIndex;
+    private Index $booksIndex;
+    private Index $songsIndex;
 
     protected function setUp(): void
     {
@@ -36,9 +36,9 @@ final class MultiSearchTest extends TestCase
         $this->songsIndex->addDocumentsCsv($documents, null, '|')->wait();
     }
 
-    public function testSearchQueryData(): void
+    public function testMultiSearchQueryData(): void
     {
-        $data = (new SearchQuery())->setIndexUid($this->booksIndex->getUid())->setQuery('butler')->setSort(['author:desc']);
+        $data = (new MultiSearchQuery())->setIndexUid($this->booksIndex->getUid())->setQuery('butler')->setSort(['author:desc']);
 
         self::assertSame([
             'indexUid' => $this->booksIndex->getUid(),
@@ -50,10 +50,10 @@ final class MultiSearchTest extends TestCase
     public function testMultiSearch(): void
     {
         $response = $this->client->multiSearch([
-            (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
+            (new MultiSearchQuery())->setIndexUid($this->booksIndex->getUid())
                 ->setQuery('princ')
                 ->setSort(['author:desc']),
-            (new SearchQuery())->setIndexUid($this->songsIndex->getUid())
+            (new MultiSearchQuery())->setIndexUid($this->songsIndex->getUid())
                 ->setQuery('be')
                 ->setHitsPerPage(4)
                 ->setFilter(['duration-float > 3']),
@@ -82,10 +82,10 @@ final class MultiSearchTest extends TestCase
     public function testFederation(): void
     {
         $response = $this->client->multiSearch([
-            (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
+            (new MultiSearchQuery())->setIndexUid($this->booksIndex->getUid())
                 ->setQuery('petit')
                 ->setSort(['author:desc']),
-            (new SearchQuery())->setIndexUid($this->songsIndex->getUid())
+            (new MultiSearchQuery())->setIndexUid($this->songsIndex->getUid())
                 ->setQuery('be')
                 ->setFilter(['duration-float > 3']),
         ],
@@ -135,7 +135,7 @@ final class MultiSearchTest extends TestCase
         $client = new Client('http://meilisearch', 'apikey', new Psr18Client($httpClient));
         $client->multiSearch(
             [
-                (new SearchQuery())->setIndexUid('first'),
+                (new MultiSearchQuery())->setIndexUid('first'),
             ],
             (new MultiSearchFederation())->setDistinct('id'),
         );
@@ -143,7 +143,7 @@ final class MultiSearchTest extends TestCase
 
     public function testSupportedQueryParams(): void
     {
-        $query = (new SearchQuery())
+        $query = (new MultiSearchQuery())
             ->setIndexUid($this->booksIndex->getUid())
             ->setVector([1, 0.9, [0.9874]])
             ->setAttributesToSearchOn(['comment'])
@@ -161,9 +161,9 @@ final class MultiSearchTest extends TestCase
     public function testMultiSearchWithDistinctAttribute(): void
     {
         $response = $this->client->multiSearch([
-            (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
+            (new MultiSearchQuery())->setIndexUid($this->booksIndex->getUid())
                 ->setFilter(['genre = fantasy']),
-            (new SearchQuery())->setIndexUid($this->booksIndex->getUid())
+            (new MultiSearchQuery())->setIndexUid($this->booksIndex->getUid())
                 ->setFilter(['genre = fantasy'])
                 ->setDistinct('genre'),
         ]);
@@ -197,8 +197,8 @@ final class MultiSearchTest extends TestCase
 
         $client = new Client('http://meilisearch', 'apikey', new Psr18Client($httpClient));
         $client->multiSearch([
-            (new SearchQuery())->setIndexUid('first'),
-            (new SearchQuery())->setIndexUid('second'),
+            (new MultiSearchQuery())->setIndexUid('first'),
+            (new MultiSearchQuery())->setIndexUid('second'),
         ],
             new MultiSearchFederation()
         );

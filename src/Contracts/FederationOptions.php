@@ -13,6 +13,26 @@ class FederationOptions
     private ?string $remote = null;
 
     /**
+     * @param array{
+     *     weight?: float,
+     *     remote?: non-empty-string,
+     * } $data
+     */
+    public static function fromArray(array $data): self
+    {
+        $options = new self();
+
+        if (isset($data['weight'])) {
+            $options->setWeight($data['weight']);
+        }
+        if (isset($data['remote'])) {
+            $options->setRemote($data['remote']);
+        }
+
+        return $options;
+    }
+
+    /**
      * @return $this
      */
     public function setWeight(float $weight): self

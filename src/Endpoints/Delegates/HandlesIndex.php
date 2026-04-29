@@ -7,6 +7,7 @@ namespace Meilisearch\Endpoints\Delegates;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
 use Meilisearch\Contracts\Task;
+use Meilisearch\Endpoints\Index;
 use Meilisearch\Endpoints\Indexes;
 
 trait HandlesIndex
@@ -20,6 +21,13 @@ trait HandlesIndex
 
     /**
      * @param non-empty-string $uid
+     *
+     * @return array{
+     *     uid: non-empty-string,
+     *     primaryKey: string|null,
+     *     createdAt: non-empty-string,
+     *     updatedAt: non-empty-string
+     * }
      */
     public function getRawIndex(string $uid): array
     {
@@ -29,17 +37,17 @@ trait HandlesIndex
     /**
      * @param non-empty-string $uid
      */
-    public function index(string $uid): Indexes
+    public function index(string $uid): Index
     {
-        return new Indexes($this->http, $uid);
+        return new Index($this->http, $uid);
     }
 
     /**
      * @param non-empty-string $uid
      */
-    public function getIndex(string $uid): Indexes
+    public function getIndex(string $uid): Index
     {
-        return $this->index($uid)->fetchInfo();
+        return $this->index($uid);
     }
 
     /**
@@ -52,6 +60,9 @@ trait HandlesIndex
 
     /**
      * @param non-empty-string $uid
+     * @param array{
+     *     primaryKey?: string|null
+     * } $options
      */
     public function createIndex(string $uid, array $options = []): Task
     {
@@ -60,6 +71,10 @@ trait HandlesIndex
 
     /**
      * @param non-empty-string $uid
+     * @param array{
+     *     primaryKey?: string|null,
+     *     uid?: non-empty-string
+     * } $options
      */
     public function updateIndex(string $uid, array $options = []): Task
     {

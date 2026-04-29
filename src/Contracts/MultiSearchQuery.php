@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
- * @phpstan-type SearchQueryArray array{
+ * @phpstan-type MultiSearchQueryArray array{
+ *     indexUid?: non-empty-string,
  *     q?: string|null,
  *     filter?: string|list<non-empty-string|list<non-empty-string>>,
  *     locales?: list<non-empty-string>,
@@ -33,11 +34,17 @@ namespace Meilisearch\Contracts;
  *     rankingScoreThreshold?: float,
  *     distinct?: non-empty-string,
  *     retrieveVectors?: bool,
- *     media?: array<mixed>
+ *     media?: array<mixed>,
+ *     federationOptions?: array<mixed>
  * }
  */
-class SearchQuery
+class MultiSearchQuery
 {
+    /**
+     * @var non-empty-string|null
+     */
+    private ?string $indexUid = null;
+
     private ?string $q = null;
 
     /**
@@ -142,13 +149,18 @@ class SearchQuery
 
     private ?array $media = null;
 
+    private ?FederationOptions $federationOptions = null;
+
     /**
-     * @param SearchQueryArray $data
+     * @param MultiSearchQueryArray $data
      */
     public static function fromArray(array $data): self
     {
         $query = new self();
 
+        if (\array_key_exists('indexUid', $data)) {
+            $query->setIndexUid($data['indexUid']);
+        }
         if (\array_key_exists('q', $data)) {
             $query->setQuery($data['q']);
         }
@@ -232,6 +244,9 @@ class SearchQuery
         }
         if (\array_key_exists('media', $data)) {
             $query->setMedia($data['media']);
+        }
+        if (\array_key_exists('federationOptions', $data)) {
+            $query->setFederationOptions(FederationOptions::fromArray($data['federationOptions']));
         }
 
         return $query;
@@ -496,6 +511,29 @@ class SearchQuery
     }
 
     /**
+     * @return $this
+     */
+    public function setIndexUid(string $uid): self
+    {
+        $this->indexUid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * This option is only available while doing a federated search.
+     * If used in another context an error will be returned by Meilisearch.
+     *
+     * @return $this
+     */
+    public function setFederationOptions(FederationOptions $federationOptions): self
+    {
+        $this->federationOptions = $federationOptions;
+
+        return $this;
+    }
+
+    /**
      * This is an EXPERIMENTAL feature, which may break without a major version.
      * It's available from Meilisearch v1.3.
      * To enable it properly and use vector store capabilities it's required to activate it through the /experimental-features route.
@@ -563,11 +601,12 @@ class SearchQuery
     }
 
     /**
-     * @return SearchQueryArray
+     * @return MultiSearchQueryArray
      */
     public function toArray(): array
     {
         return array_filter([
+            'indexUid' => $this->indexUid,
             'q' => $this->q,
             'filter' => $this->filter,
             'locales' => $this->locales,
@@ -596,6 +635,7 @@ class SearchQuery
             'distinct' => $this->distinct,
             'retrieveVectors' => $this->retrieveVectors,
             'media' => $this->media,
+            'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,
         ], static function ($item) { return null !== $item; });
     }
 }

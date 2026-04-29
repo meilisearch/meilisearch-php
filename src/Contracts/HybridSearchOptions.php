@@ -14,6 +14,26 @@ class HybridSearchOptions
     private ?string $embedder = null;
 
     /**
+     * @param array{
+     *     semanticRatio?: float,
+     *     embedder?: non-empty-string
+     * } $data
+     */
+    public static function fromArray(array $data): self
+    {
+        $options = new self();
+
+        if (isset($data['semanticRatio'])) {
+            $options->setSemanticRatio($data['semanticRatio']);
+        }
+        if (isset($data['embedder'])) {
+            $options->setEmbedder($data['embedder']);
+        }
+
+        return $options;
+    }
+
+    /**
      * @return $this
      */
     public function setSemanticRatio(float $ratio): self

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class MultiModalSearchTest extends TestCase
 {
-    private Indexes $index;
+    private Index $index;
     private array $documents;
 
     protected function setUp(): void
