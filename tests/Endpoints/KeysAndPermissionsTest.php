@@ -10,6 +10,7 @@ use Meilisearch\Contracts\Key;
 use Meilisearch\Contracts\KeyAction;
 use Meilisearch\Contracts\KeysQuery;
 use Meilisearch\Contracts\UpdateKeyQuery;
+use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
@@ -225,7 +226,7 @@ final class KeysAndPermissionsTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('The Authorization header is missing. It must use the bearer authorization method.');
 
-        $client->index('index')->search('test');
+        $client->index('index')->search((new SearchQuery())->setQuery('test'));
     }
 
     public function testThrowsIfBadKeyProvidedToGetSettings(): void

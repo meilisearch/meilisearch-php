@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Settings;
 
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Tests\TestCase;
 
 final class SeparatorTokensTest extends TestCase
 {
-    private Indexes $index;
+    private Index $index;
 
     public const DEFAULT_SEPARATOR_TOKENS = [];
 
