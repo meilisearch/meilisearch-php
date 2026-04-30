@@ -154,6 +154,16 @@ class Client implements Http
         return $this->executeStream($request, ['Content-type' => 'application/json']);
     }
 
+    public function getStream(string $path, array $query = []): StreamInterface
+    {
+        $request = $this->requestFactory->createRequest(
+            'GET',
+            $this->baseUrl.$path.$this->buildQueryString($query)
+        );
+
+        return $this->executeStream($request);
+    }
+
     /**
      * @param array<string, string|string[]> $headers
      *

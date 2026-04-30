@@ -10,6 +10,7 @@ use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Endpoints\Tasks;
+use Psr\Http\Message\StreamInterface;
 
 trait HandlesTasks
 {
@@ -18,6 +19,11 @@ trait HandlesTasks
     public function getTask(int $uid): Task
     {
         return $this->tasks->get($uid);
+    }
+
+    public function getTaskDocuments(int $uid): StreamInterface
+    {
+        return $this->tasks->getDocuments($uid);
     }
 
     public function getTasks(?TasksQuery $options = null): TasksResults

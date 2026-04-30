@@ -10,6 +10,7 @@ use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Exceptions\TimeOutException;
+use Psr\Http\Message\StreamInterface;
 
 use function Meilisearch\partial;
 
@@ -20,6 +21,11 @@ class Tasks extends Endpoint
     public function get(int $taskUid): Task
     {
         return Task::fromArray($this->http->get(self::PATH.'/'.$taskUid), partial(self::waitTask(...), $this->http));
+    }
+
+    public function getDocuments(int $taskUid): StreamInterface
+    {
+        return $this->http->getStream(self::PATH.'/'.$taskUid.'/documents');
     }
 
     public function all(array $query = []): array
