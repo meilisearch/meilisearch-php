@@ -7,30 +7,38 @@ namespace Meilisearch\Contracts;
 final class Stats
 {
     /**
-     * @param non-negative-int                    $databaseSize
-     * @param non-negative-int                    $usedDatabaseSize
+     * @param int|string                          $databaseSize     Bytes when sizeFormat is 'raw', human-readable string when 'human'
+     * @param int|string                          $usedDatabaseSize Bytes when sizeFormat is 'raw', human-readable string when 'human'
      * @param array<non-empty-string, IndexStats> $indexes
      */
     public function __construct(
-        private readonly int $databaseSize,
-        private readonly int $usedDatabaseSize,
+        private readonly int|string $databaseSize,
+        private readonly int|string $usedDatabaseSize,
         private readonly ?\DateTimeImmutable $lastUpdate,
         private readonly array $indexes,
     ) {
     }
 
     /**
-     * @return non-negative-int
+     * Returns the total database size.
+     * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
+     * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
+     *
+     * @return int|string
      */
-    public function getDatabaseSize(): int
+    public function getDatabaseSize(): int|string
     {
         return $this->databaseSize;
     }
 
     /**
-     * @return non-negative-int
+     * Returns the used database size.
+     * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
+     * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
+     *
+     * @return int|string
      */
-    public function getUsedDatabaseSize(): int
+    public function getUsedDatabaseSize(): int|string
     {
         return $this->usedDatabaseSize;
     }
@@ -50,8 +58,8 @@ final class Stats
 
     /**
      * @param array{
-     *     databaseSize: non-negative-int,
-     *     usedDatabaseSize: non-negative-int,
+     *     databaseSize: int|string,
+     *     usedDatabaseSize: int|string,
      *     lastUpdate: non-empty-string|null,
      *     indexes: array<non-empty-string, mixed>
      * } $data

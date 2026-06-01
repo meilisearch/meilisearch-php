@@ -47,9 +47,14 @@ trait HandlesSystem
         return VersionContract::fromArray($version);
     }
 
-    public function stats(): StatsContract
+    /**
+     * Get stats of all indexes.
+     *
+     * @param array{showInternalDatabaseSizes?: bool, sizeFormat?: 'raw'|'human'} $query
+     */
+    public function stats(array $query = []): StatsContract
     {
-        $stats = $this->stats->show();
+        $stats = $this->stats->show($query);
 
         if (!\is_array($stats)) {
             throw new LogicException('Stats did not respond with valid data.');

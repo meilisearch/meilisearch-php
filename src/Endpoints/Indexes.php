@@ -243,9 +243,12 @@ class Indexes extends Endpoint
 
     // Stats
 
-    public function stats(): array
+    /**
+     * @param array{showInternalDatabaseSizes?: bool, sizeFormat?: 'raw'|'human'} $query
+     */
+    public function stats(array $query = []): array
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/stats');
+        return $this->http->get(self::PATH.'/'.$this->uid.'/stats', $query);
     }
 
     // Settings - Global
