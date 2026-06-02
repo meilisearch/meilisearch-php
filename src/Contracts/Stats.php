@@ -23,8 +23,6 @@ final class Stats
      * Returns the total database size.
      * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
      * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
-     *
-     * @return int|string
      */
     public function getDatabaseSize(): int|string
     {
@@ -35,8 +33,6 @@ final class Stats
      * Returns the used database size.
      * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
      * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
-     *
-     * @return int|string
      */
     public function getUsedDatabaseSize(): int|string
     {

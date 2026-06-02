@@ -39,8 +39,6 @@ final class IndexStats
      * Returns the raw document DB size.
      * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
      * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
-     *
-     * @return int|string
      */
     public function getRawDocumentDbSize(): int|string
     {
@@ -51,8 +49,6 @@ final class IndexStats
      * Returns the average document size.
      * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
      * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
-     *
-     * @return int|string
      */
     public function getAvgDocumentSize(): int|string
     {
