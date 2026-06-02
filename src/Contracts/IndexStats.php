@@ -8,20 +8,22 @@ final class IndexStats
 {
     /**
      * @param non-negative-int                          $numberOfDocuments
-     * @param non-negative-int                          $rawDocumentDbSize
-     * @param non-negative-int                          $avgDocumentSize
+     * @param int|string                                $rawDocumentDbSize         Bytes or human-readable string
+     * @param int|string                                $avgDocumentSize           Bytes or human-readable string
      * @param non-negative-int                          $numberOfEmbeddings
      * @param non-negative-int                          $numberOfEmbeddedDocuments
      * @param array<non-empty-string, non-negative-int> $fieldDistribution
+     * @param array<non-empty-string, int|string>|null  $internalDatabaseSizes     Present when showInternalDatabaseSizes=true; keys subject to change
      */
     public function __construct(
         private readonly int $numberOfDocuments,
-        private readonly int $rawDocumentDbSize,
-        private readonly int $avgDocumentSize,
+        private readonly int|string $rawDocumentDbSize,
+        private readonly int|string $avgDocumentSize,
         private readonly bool $isIndexing,
         private readonly int $numberOfEmbeddings,
         private readonly int $numberOfEmbeddedDocuments,
         private readonly array $fieldDistribution,
+        private readonly ?array $internalDatabaseSizes = null,
     ) {
     }
 
@@ -34,17 +36,21 @@ final class IndexStats
     }
 
     /**
-     * @return non-negative-int
+     * Returns the raw document DB size.
+     * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
+     * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
      */
-    public function getRawDocumentDbSize(): int
+    public function getRawDocumentDbSize(): int|string
     {
         return $this->rawDocumentDbSize;
     }
 
     /**
-     * @return non-negative-int
+     * Returns the average document size.
+     * Value is an integer (bytes) when `sizeFormat` is `'raw'` (default),
+     * or a human-readable string such as `"2.3 MiB"` when `sizeFormat` is `'human'`.
      */
-    public function getAvgDocumentSize(): int
+    public function getAvgDocumentSize(): int|string
     {
         return $this->avgDocumentSize;
     }
@@ -79,14 +85,26 @@ final class IndexStats
     }
 
     /**
+     * Returns the internal database sizes map when requested via `showInternalDatabaseSizes=true`.
+     * Returns null if the parameter was not set. Keys are subject to change.
+     *
+     * @return array<non-empty-string, int|string>|null
+     */
+    public function getInternalDatabaseSizes(): ?array
+    {
+        return $this->internalDatabaseSizes;
+    }
+
+    /**
      * @param array{
      *     numberOfDocuments: non-negative-int,
-     *     rawDocumentDbSize: non-negative-int,
-     *     avgDocumentSize: non-negative-int,
+     *     rawDocumentDbSize: int|string,
+     *     avgDocumentSize: int|string,
      *     isIndexing: bool,
      *     numberOfEmbeddings: non-negative-int,
      *     numberOfEmbeddedDocuments: non-negative-int,
-     *     fieldDistribution: array<non-empty-string, non-negative-int>
+     *     fieldDistribution: array<non-empty-string, non-negative-int>,
+     *     internalDatabaseSizes?: array<non-empty-string, int|string>|null
      * } $data
      */
     public static function fromArray(array $data): self
@@ -99,6 +117,7 @@ final class IndexStats
             $data['numberOfEmbeddings'],
             $data['numberOfEmbeddedDocuments'],
             $data['fieldDistribution'],
+            $data['internalDatabaseSizes'] ?? null,
         );
     }
 }

@@ -283,9 +283,9 @@ update_sortable_attributes_1: |-
 reset_sortable_attributes_1: |-
   $client->index('books')->resetSortableAttributes();
 get_index_stats_1: |-
-  $client->index('movies')->stats();
+  $client->index('movies')->stats(['showInternalDatabaseSizes' => true, 'sizeFormat' => 'human']);
 get_indexes_stats_1: |-
-  $client->stats();
+  $client->stats(['showInternalDatabaseSizes' => true, 'sizeFormat' => 'human']);
 get_health_1: |-
   $client->health();
 get_version_1: |-
