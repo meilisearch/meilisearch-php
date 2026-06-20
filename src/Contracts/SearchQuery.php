@@ -489,7 +489,9 @@ class SearchQuery
      *     rankingScoreThreshold?: float,
      *     distinct?: non-empty-string,
      *     federationOptions?: array<mixed>,
-     *     personalize?: array<mixed>
+     *     personalize?: array{
+     *         userContext?: non-empty-string
+     *     }
      * }
      */
     public function toArray(): array
