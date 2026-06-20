@@ -113,6 +113,8 @@ class SearchQuery
 
     private ?FederationOptions $federationOptions = null;
 
+    private ?PersonalizeOptions $personalize = null;
+
     /**
      * @return $this
      */
@@ -430,6 +432,22 @@ class SearchQuery
     }
 
     /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     *
+     * Set personalization options
+     * (new PersonalizeOptions())
+     *     ->setUserContext('The user prefers ...');
+     *
+     * @return $this
+     */
+    public function setPersonalize(PersonalizeOptions $personalize): self
+    {
+        $this->personalize = $personalize;
+
+        return $this;
+    }
+
+    /**
      * @param non-empty-list<non-empty-string> $attributesToSearchOn
      *
      * @return $this
@@ -470,7 +488,8 @@ class SearchQuery
      *     showPerformanceDetails?: bool,
      *     rankingScoreThreshold?: float,
      *     distinct?: non-empty-string,
-     *     federationOptions?: array<mixed>
+     *     federationOptions?: array<mixed>,
+     *     personalize?: array<mixed>
      * }
      */
     public function toArray(): array
@@ -504,6 +523,7 @@ class SearchQuery
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
             'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,
+            'personalize' => null !== $this->personalize ? $this->personalize->toArray() : null,
         ], static function ($item) { return null !== $item; });
     }
 }
