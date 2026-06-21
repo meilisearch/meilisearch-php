@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class PersonalizeOptions
+final class PersonalizeOptions
 {
     /**
      * @var non-empty-string|null

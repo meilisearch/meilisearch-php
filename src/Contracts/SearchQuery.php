@@ -525,7 +525,7 @@ class SearchQuery
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
             'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,
-            'personalize' => null !== $this->personalize ? $this->personalize->toArray() : null,
+            'personalize' => $this->personalize?->toArray(),
         ], static function ($item) { return null !== $item; });
     }
 }
