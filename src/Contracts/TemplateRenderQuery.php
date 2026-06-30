@@ -56,7 +56,7 @@ class TemplateRenderQuery
     }
 
     /**
-     * @return array{template: array{kind: string, ...}, input?: array{kind: string, ...}|null}
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
