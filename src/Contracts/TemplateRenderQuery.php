@@ -7,24 +7,30 @@ namespace Meilisearch\Contracts;
 class TemplateRenderQuery
 {
     /**
-     * @var array{kind: string, inline: string}
+     * @var array{kind: string, ...}
      */
     private array $template = ['kind' => '', 'inline' => ''];
 
     /**
-     * @var array{kind: string, inline: array|object|null}
+     * @var array{kind: string, ...}|null
      */
-    private array $input = ['kind' => '', 'inline' => null];
+    private ?array $input = null;
+
+    private bool $inputSet = false;
 
     /**
      * Set the template to render.
      *
-     * @param string $kind   e.g. 'inlineDocumentTemplate'
-     * @param string $inline the template string
+     * Supports two kinds:
+     * - inlineDocumentTemplate: ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.name }}']
+     * - documentTemplate: ['kind' => 'documentTemplate', 'indexUid' => 'movies', 'embedder' => 'myEmbedder']
+     *   or ['kind' => 'documentTemplate', 'indexUid' => 'movies', 'templateUid' => 'myTemplate']
+     *
+     * @param array{kind: string, ...} $template
      */
-    public function setTemplate(string $kind, string $inline): self
+    public function setTemplate(array $template): self
     {
-        $this->template = ['kind' => $kind, 'inline' => $inline];
+        $this->template = $template;
 
         return $this;
     }
@@ -32,27 +38,36 @@ class TemplateRenderQuery
     /**
      * Set the input document for template rendering.
      *
-     * @param string            $kind   e.g. 'inlineDocument'
-     * @param array|object|null $inline the document data
+     * Supports two kinds:
+     * - inlineDocument: ['kind' => 'inlineDocument', 'inline' => ['name' => 'John']]
+     * - indexDocument: ['kind' => 'indexDocument', 'indexUid' => 'movies', 'id' => '2']
+     *
+     * Pass null to explicitly send null input (API returns rendered: null).
+     * Omit this call entirely to not include input in the request.
+     *
+     * @param array{kind: string, ...}|null $input
      */
-    public function setInput(string $kind, array|object|null $inline): self
+    public function setInput(?array $input): self
     {
-        $this->input = ['kind' => $kind, 'inline' => $inline];
+        $this->input = $input;
+        $this->inputSet = true;
 
         return $this;
     }
 
     /**
-     * @return array{
-     *     template: array{kind: string, inline: string},
-     *     input: array{kind: string, inline: array|object|null}
-     * }
+     * @return array{template: array{kind: string, ...}, input?: array{kind: string, ...}|null}
      */
     public function toArray(): array
     {
-        return [
+        $result = [
             'template' => $this->template,
-            'input' => $this->input,
         ];
+
+        if ($this->inputSet) {
+            $result['input'] = $this->input;
+        }
+
+        return $result;
     }
 }
