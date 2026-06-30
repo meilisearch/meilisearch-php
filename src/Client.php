@@ -17,6 +17,7 @@ use Meilisearch\Endpoints\Delegates\HandlesNetwork;
 use Meilisearch\Endpoints\Delegates\HandlesSnapshots;
 use Meilisearch\Endpoints\Delegates\HandlesSystem;
 use Meilisearch\Endpoints\Delegates\HandlesTasks;
+use Meilisearch\Endpoints\Delegates\HandlesTemplates;
 use Meilisearch\Endpoints\Dumps;
 use Meilisearch\Endpoints\DynamicSearchRules;
 use Meilisearch\Endpoints\Health;
@@ -26,6 +27,7 @@ use Meilisearch\Endpoints\Network;
 use Meilisearch\Endpoints\Snapshots;
 use Meilisearch\Endpoints\Stats;
 use Meilisearch\Endpoints\Tasks;
+use Meilisearch\Endpoints\Templates;
 use Meilisearch\Endpoints\TenantToken;
 use Meilisearch\Endpoints\Version;
 use Meilisearch\Http\Client as MeilisearchClientAdapter;
@@ -46,6 +48,7 @@ class Client
     use HandlesBatches;
     use HandlesNetwork;
     use HandlesDynamicSearchRules;
+    use HandlesTemplates;
 
     /**
      * @param array<int, string> $clientAgents
@@ -72,5 +75,6 @@ class Client
         $this->tenantToken = new TenantToken($this->http, $apiKey);
         $this->network = new Network($this->http);
         $this->dynamicSearchRules = new DynamicSearchRules($this->http);
+        $this->templates = new Templates($this->http);
     }
 }

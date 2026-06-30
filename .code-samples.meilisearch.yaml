@@ -612,3 +612,9 @@ patch_dynamic_search_rule_1: |-
   ]);
 delete_dynamic_search_rule_1: |-
   $client->deleteDynamicSearchRule('RULE_UID');
+render_template_1: |-
+  $client->renderTemplate(
+    (new TemplateRenderQuery())
+      ->setTemplate('inlineDocumentTemplate', '{{ doc.breed }} called {{ doc.name }}')
+      ->setInput('inlineDocument', ['breed' => 'Jack Russell', 'name' => 'Iko'])
+  );
