@@ -29,12 +29,24 @@ final class TemplatesTest extends TestCase
     public function testCanRenderInlineTemplate(): void
     {
         $query = (new TemplateRenderQuery())
-            ->setTemplate('inlineDocumentTemplate', '{{ doc.breed }} called {{ doc.name }}')
-            ->setInput('inlineDocument', ['breed' => 'Jack Russell', 'name' => 'Iko']);
+            ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'])
+            ->setInput(['kind' => 'inlineDocument', 'inline' => ['breed' => 'Jack Russell', 'name' => 'Iko']]);
 
         $response = $this->client->renderTemplate($query);
 
         self::assertSame('{{ doc.breed }} called {{ doc.name }}', $response->getTemplate());
         self::assertSame('Jack Russell called Iko', $response->getRendered());
+    }
+
+    public function testCanRenderTemplateWithNullInput(): void
+    {
+        $query = (new TemplateRenderQuery())
+            ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'])
+            ->setInput(null);
+
+        $response = $this->client->renderTemplate($query);
+
+        self::assertSame('{{ doc.breed }} called {{ doc.name }}', $response->getTemplate());
+        self::assertNull($response->getRendered());
     }
 }
