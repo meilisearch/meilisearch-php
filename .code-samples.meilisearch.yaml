@@ -617,6 +617,6 @@ render_template_1: |-
 
   $client->renderTemplate(
     (new TemplateRenderQuery())
-      ->setTemplate('inlineDocumentTemplate', '{{ doc.breed }} called {{ doc.name }}')
-      ->setInput('inlineDocument', ['breed' => 'Jack Russell', 'name' => 'Iko'])
+      ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'])
+      ->setInput(['kind' => 'inlineDocument', 'inline' => ['breed' => 'Jack Russell', 'name' => 'Iko']])
   );
