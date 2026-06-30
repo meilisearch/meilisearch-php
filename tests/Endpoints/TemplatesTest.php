@@ -18,6 +18,14 @@ final class TemplatesTest extends TestCase
         $http->patch('/experimental-features', ['renderRoute' => true]);
     }
 
+    protected function tearDown(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['renderRoute' => false]);
+
+        parent::tearDown();
+    }
+
     public function testCanRenderInlineTemplate(): void
     {
         $query = (new TemplateRenderQuery())

@@ -12,7 +12,7 @@ class TemplateRenderQuery
     private array $template = ['kind' => '', 'inline' => ''];
 
     /**
-     * @var array{kind: string, inline: mixed}
+     * @var array{kind: string, inline: array|object|null}
      */
     private array $input = ['kind' => '', 'inline' => null];
 
@@ -35,7 +35,7 @@ class TemplateRenderQuery
      * @param string               $kind   e.g. 'inlineDocument'
      * @param array|object|null    $inline the document data
      */
-    public function setInput(string $kind, mixed $inline): self
+    public function setInput(string $kind, array|object|null $inline): self
     {
         $this->input = ['kind' => $kind, 'inline' => $inline];
 
@@ -43,7 +43,10 @@ class TemplateRenderQuery
     }
 
     /**
-     * @return array{template: array{kind: string, inline: string}, input: array{kind: string, inline: mixed}}
+     * @return array{
+     *     template: array{kind: string, inline: string},
+     *     input: array{kind: string, inline: array|object|null}
+     * }
      */
     public function toArray(): array
     {
