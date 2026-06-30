@@ -11,9 +11,10 @@ final class TemplateRenderQueryTest extends TestCase
 {
     public function testToArrayWithInlineTemplateAndInlineInput(): void
     {
-        $query = (new TemplateRenderQuery())
-            ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.name }}'])
-            ->setInput(['kind' => 'inlineDocument', 'inline' => ['name' => 'John']]);
+        $query = new TemplateRenderQuery(
+            ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.name }}'],
+            ['kind' => 'inlineDocument', 'inline' => ['name' => 'John']],
+        );
 
         $result = $query->toArray();
 
@@ -25,9 +26,10 @@ final class TemplateRenderQueryTest extends TestCase
 
     public function testToArrayWithDocumentTemplateAndIndexDocumentInput(): void
     {
-        $query = (new TemplateRenderQuery())
-            ->setTemplate(['kind' => 'documentTemplate', 'indexUid' => 'movies', 'embedder' => 'myEmbedder'])
-            ->setInput(['kind' => 'indexDocument', 'indexUid' => 'movies', 'id' => '2']);
+        $query = new TemplateRenderQuery(
+            ['kind' => 'documentTemplate', 'indexUid' => 'movies', 'embedder' => 'myEmbedder'],
+            ['kind' => 'indexDocument', 'indexUid' => 'movies', 'id' => '2'],
+        );
 
         $result = $query->toArray();
 
@@ -39,9 +41,10 @@ final class TemplateRenderQueryTest extends TestCase
 
     public function testToArrayOmitsInputWhenNotSet(): void
     {
-        $query = (new TemplateRenderQuery())
-            ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.name }}']);
-        // setInput() never called
+        $query = new TemplateRenderQuery(
+            ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.name }}'],
+            // input omitted — not passed
+        );
 
         $result = $query->toArray();
 
@@ -53,9 +56,10 @@ final class TemplateRenderQueryTest extends TestCase
 
     public function testToArrayIncludesNullInputWhenExplicitlySet(): void
     {
-        $query = (new TemplateRenderQuery())
-            ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.name }}'])
-            ->setInput(null);
+        $query = new TemplateRenderQuery(
+            ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.name }}'],
+            null,
+        );
 
         $result = $query->toArray();
 

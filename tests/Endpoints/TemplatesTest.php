@@ -28,9 +28,10 @@ final class TemplatesTest extends TestCase
 
     public function testCanRenderInlineTemplate(): void
     {
-        $query = (new TemplateRenderQuery())
-            ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'])
-            ->setInput(['kind' => 'inlineDocument', 'inline' => ['breed' => 'Jack Russell', 'name' => 'Iko']]);
+        $query = new TemplateRenderQuery(
+            ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'],
+            ['kind' => 'inlineDocument', 'inline' => ['breed' => 'Jack Russell', 'name' => 'Iko']],
+        );
 
         $response = $this->client->renderTemplate($query);
 
@@ -40,9 +41,10 @@ final class TemplatesTest extends TestCase
 
     public function testCanRenderTemplateWithNullInput(): void
     {
-        $query = (new TemplateRenderQuery())
-            ->setTemplate(['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'])
-            ->setInput(null);
+        $query = new TemplateRenderQuery(
+            ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'],
+            null,
+        );
 
         $response = $this->client->renderTemplate($query);
 

@@ -7,16 +7,30 @@ namespace Meilisearch\Contracts;
 class TemplateRenderQuery
 {
     /**
-     * @var array{kind: string, ...}
+     * @var array{kind: 'inlineDocumentTemplate', inline: string}|array{kind: 'documentTemplate', indexUid: non-empty-string, embedder: non-empty-string}|array{kind: 'documentTemplate', indexUid: non-empty-string, templateUid: non-empty-string}
      */
-    private array $template = ['kind' => '', 'inline' => ''];
+    private array $template;
 
     /**
-     * @var array{kind: string, ...}|null
+     * @var array{kind: 'inlineDocument', inline: array<string, mixed>}|array{kind: 'indexDocument', indexUid: non-empty-string, id: string|int}|null
      */
     private ?array $input = null;
 
     private bool $inputSet = false;
+
+    /**
+     * @param array{kind: 'inlineDocumentTemplate', inline: string}|array{kind: 'documentTemplate', indexUid: non-empty-string, embedder: non-empty-string}|array{kind: 'documentTemplate', indexUid: non-empty-string, templateUid: non-empty-string} $template
+     * @param array{kind: 'inlineDocument', inline: array<string, mixed>}|array{kind: 'indexDocument', indexUid: non-empty-string, id: string|int}|null                                                                                                $input
+     */
+    public function __construct(array $template, ?array $input = null)
+    {
+        $this->template = $template;
+
+        if (\func_num_args() >= 2) {
+            $this->input = $input;
+            $this->inputSet = true;
+        }
+    }
 
     /**
      * Set the template to render.
@@ -26,7 +40,7 @@ class TemplateRenderQuery
      * - documentTemplate: ['kind' => 'documentTemplate', 'indexUid' => 'movies', 'embedder' => 'myEmbedder']
      *   or ['kind' => 'documentTemplate', 'indexUid' => 'movies', 'templateUid' => 'myTemplate']
      *
-     * @param array{kind: string, ...} $template
+     * @param array{kind: 'inlineDocumentTemplate', inline: string}|array{kind: 'documentTemplate', indexUid: non-empty-string, embedder: non-empty-string}|array{kind: 'documentTemplate', indexUid: non-empty-string, templateUid: non-empty-string} $template
      */
     public function setTemplate(array $template): self
     {
@@ -45,7 +59,7 @@ class TemplateRenderQuery
      * Pass null to explicitly send null input (API returns rendered: null).
      * Omit this call entirely to not include input in the request.
      *
-     * @param array{kind: string, ...}|null $input
+     * @param array{kind: 'inlineDocument', inline: array<string, mixed>}|array{kind: 'indexDocument', indexUid: non-empty-string, id: string|int}|null $input
      */
     public function setInput(?array $input): self
     {
@@ -56,7 +70,7 @@ class TemplateRenderQuery
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array{template: array{kind: 'inlineDocumentTemplate', inline: string}|array{kind: 'documentTemplate', indexUid: non-empty-string, embedder: non-empty-string}|array{kind: 'documentTemplate', indexUid: non-empty-string, templateUid: non-empty-string}, input?: array{kind: 'inlineDocument', inline: array<string, mixed>}|array{kind: 'indexDocument', indexUid: non-empty-string, id: string|int}|null}
      */
     public function toArray(): array
     {
