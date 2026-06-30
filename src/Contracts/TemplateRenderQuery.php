@@ -32,8 +32,8 @@ class TemplateRenderQuery
     /**
      * Set the input document for template rendering.
      *
-     * @param string               $kind   e.g. 'inlineDocument'
-     * @param array|object|null    $inline the document data
+     * @param string            $kind   e.g. 'inlineDocument'
+     * @param array|object|null $inline the document data
      */
     public function setInput(string $kind, array|object|null $inline): self
     {
