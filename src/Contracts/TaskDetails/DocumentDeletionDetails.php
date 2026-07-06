@@ -44,7 +44,9 @@ final class DocumentDeletionDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawDocumentDeletionDetails $data */
-        return self::fromArray($data);
+        /** @var RawDocumentDeletionDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

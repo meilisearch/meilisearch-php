@@ -44,7 +44,9 @@ final class TaskCancelationDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawTaskCancelationDetails $data */
-        return self::fromArray($data);
+        /** @var RawTaskCancelationDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

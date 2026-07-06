@@ -44,7 +44,9 @@ final class TaskDeletionDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawTaskDeletionDetails $data */
-        return self::fromArray($data);
+        /** @var RawTaskDeletionDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

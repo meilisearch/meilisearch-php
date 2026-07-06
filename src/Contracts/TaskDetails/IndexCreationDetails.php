@@ -36,7 +36,9 @@ final class IndexCreationDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawIndexCreationDetails $data */
-        return self::fromArray($data);
+        /** @var RawIndexCreationDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

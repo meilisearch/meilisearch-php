@@ -48,7 +48,9 @@ final class DocumentEditionDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawDocumentEditionDetails $data */
-        return self::fromArray($data);
+        /** @var RawDocumentEditionDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

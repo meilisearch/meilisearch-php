@@ -40,7 +40,9 @@ final class DocumentAdditionOrUpdateDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawDocumentAdditionOrUpdateDetails $data */
-        return self::fromArray($data);
+        /** @var RawDocumentAdditionOrUpdateDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

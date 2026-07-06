@@ -24,6 +24,27 @@ use Meilisearch\Search\SimilarDocumentsSearchResult;
 
 use function Meilisearch\partial;
 
+/**
+ * @phpstan-type RawSearchResult array{
+ *     hits: array<int, array<string, mixed>>,
+ *     processingTimeMs: non-negative-int,
+ *     query: string,
+ *     facetDistribution?: array<string, mixed>,
+ *     facetStats?: array<string, mixed>,
+ *     offset?: non-negative-int,
+ *     limit?: non-negative-int,
+ *     semanticHitCount?: non-negative-int,
+ *     page?: non-negative-int,
+ *     totalPages?: non-negative-int,
+ *     totalHits?: non-negative-int,
+ *     estimatedTotalHits?: non-negative-int,
+ *     hitsPerPage?: non-negative-int
+ * }
+ * @phpstan-type SearchResultOptions array{
+ *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
+ *     transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>
+ * }
+ */
 class Indexes extends Endpoint
 {
     use HandlesDocuments;
@@ -183,7 +204,7 @@ class Indexes extends Endpoint
         }
 
         $response = $this->http->get('/tasks', $options->toArray());
-        $response['results'] = array_map(fn (array $task) => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
+        $response['results'] = array_map(fn ($task) => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
 
         return new TasksResults($response);
     }
@@ -191,18 +212,24 @@ class Indexes extends Endpoint
     // Search
 
     /**
-     * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int} ? array : SearchResult)
+     * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int, ...} ? array : SearchResult)
      */
     public function search(?string $query, array $searchParams = [], array $options = []): SearchResult|array
     {
         $result = $this->rawSearch($query, $searchParams);
+        /** @var RawSearchResult $rawResult */
+        $rawResult = $result;
 
         if (\array_key_exists('raw', $options) && $options['raw']) {
-            return $result;
+            return $rawResult;
         }
 
-        $searchResult = new SearchResult($result);
-        $searchResult->applyOptions($options);
+        $searchResultOptions = $options;
+        unset($searchResultOptions['raw']);
+        /** @var SearchResultOptions $typedSearchResultOptions */
+        $typedSearchResultOptions = $searchResultOptions;
+        $searchResult = new SearchResult($rawResult);
+        $searchResult->applyOptions($typedSearchResultOptions);
 
         return $searchResult;
     }
