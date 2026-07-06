@@ -36,7 +36,9 @@ final class DumpCreationDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawDumpCreationDetails $data */
-        return self::fromArray($data);
+        /** @var RawDumpCreationDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

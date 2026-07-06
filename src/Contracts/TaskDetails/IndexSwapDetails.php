@@ -36,7 +36,9 @@ final class IndexSwapDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawIndexSwapDetails $data */
-        return self::fromArray($data);
+        /** @var RawIndexSwapDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

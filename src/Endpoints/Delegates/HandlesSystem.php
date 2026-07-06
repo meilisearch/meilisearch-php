@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
+use Meilisearch\Contracts\IndexStats;
 use Meilisearch\Contracts\Stats as StatsContract;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\Version as VersionContract;
@@ -13,6 +14,9 @@ use Meilisearch\Endpoints\TenantToken;
 use Meilisearch\Endpoints\Version;
 use Meilisearch\Exceptions\LogicException;
 
+/**
+ * @phpstan-import-type RawIndexStats from IndexStats
+ */
 trait HandlesSystem
 {
     protected Health $health;
@@ -44,7 +48,10 @@ trait HandlesSystem
             throw new LogicException('Version did not respond with valid data.');
         }
 
-        return VersionContract::fromArray($version);
+        /** @var array{commitSha: non-empty-string, commitDate: non-empty-string, pkgVersion: non-empty-string} $rawVersion */
+        $rawVersion = $version;
+
+        return VersionContract::fromArray($rawVersion);
     }
 
     public function stats(): StatsContract
@@ -55,9 +62,21 @@ trait HandlesSystem
             throw new LogicException('Stats did not respond with valid data.');
         }
 
-        return StatsContract::fromArray($stats);
+        /** @var array{
+         *     databaseSize: non-negative-int,
+         *     usedDatabaseSize: non-negative-int,
+         *     lastUpdate: non-empty-string|null,
+         *     indexes: array<non-empty-string, RawIndexStats>
+         * } $rawStats
+         */
+        $rawStats = $stats;
+
+        return StatsContract::fromArray($rawStats);
     }
 
+    /**
+     * @param array{apiKey?: string|null, expiresAt?: \DateTimeInterface|null} $options
+     */
     public function generateTenantToken(string $apiKeyUid, $searchRules, array $options = []): string
     {
         return $this->tenantToken->generateTenantToken($apiKeyUid, $searchRules, $options);

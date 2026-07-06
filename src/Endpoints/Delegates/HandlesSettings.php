@@ -136,8 +136,13 @@ trait HandlesSettings
      */
     public function getFaceting(): array
     {
-        return (new Faceting($this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting')))
+        $faceting = (new Faceting($this->http->get(self::PATH.'/'.$this->uid.'/settings/faceting')))
             ->getIterator()->getArrayCopy();
+
+        /** @var array{maxValuesPerFacet: int, sortFacetValuesBy: array<non-empty-string, 'count'|'alpha'>} $typedFaceting */
+        $typedFaceting = $faceting;
+
+        return $typedFaceting;
     }
 
     /**
@@ -293,8 +298,20 @@ trait HandlesSettings
      */
     public function getTypoTolerance(): array
     {
-        return (new TypoTolerance($this->http->get(self::PATH.'/'.$this->uid.'/settings/typo-tolerance')))
+        $typoTolerance = (new TypoTolerance($this->http->get(self::PATH.'/'.$this->uid.'/settings/typo-tolerance')))
             ->getIterator()->getArrayCopy();
+
+        /** @var array{
+         *     enabled: bool,
+         *     minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
+         *     disableOnWords: list<non-empty-string>,
+         *     disableOnAttributes: list<non-empty-string>,
+         *     disableOnNumbers: bool
+         * } $typedTypoTolerance
+         */
+        $typedTypoTolerance = $typoTolerance;
+
+        return $typedTypoTolerance;
     }
 
     /**

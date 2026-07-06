@@ -25,7 +25,7 @@ class Tasks extends Endpoint
     public function all(array $query = []): array
     {
         $data = $this->http->get(self::PATH.'/', $query);
-        $data['results'] = array_map(fn (array $task) => Task::fromArray($task, partial(self::waitTask(...), $this->http)), $data['results']);
+        $data['results'] = array_map(fn ($task) => Task::fromArray($task, partial(self::waitTask(...), $this->http)), $data['results']);
 
         return $data;
     }

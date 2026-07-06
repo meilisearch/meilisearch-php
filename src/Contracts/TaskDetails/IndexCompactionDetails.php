@@ -40,7 +40,9 @@ final class IndexCompactionDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawIndexCompactionDetails $data */
-        return self::fromArray($data);
+        /** @var RawIndexCompactionDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

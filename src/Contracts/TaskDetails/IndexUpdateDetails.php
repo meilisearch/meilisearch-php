@@ -36,7 +36,9 @@ final class IndexUpdateDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawIndexUpdateDetails $data */
-        return self::fromArray($data);
+        /** @var RawIndexUpdateDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

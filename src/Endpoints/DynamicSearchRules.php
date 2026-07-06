@@ -28,8 +28,14 @@ final class DynamicSearchRules extends Endpoint
     {
         $query = $options?->toArray() ?? [];
 
-        $response = $this->http->post(self::PATH, (object) $query);
-        $response['results'] = array_map(static fn (array $data) => DynamicSearchRule::fromArray($data), $response['results']);
+        $rawResponse = $this->http->post(self::PATH, (object) $query);
+        /** @var RawDynamicSearchRules $response */
+        $response = $rawResponse;
+        $results = [];
+        foreach ($response['results'] as $data) {
+            $results[] = DynamicSearchRule::fromArray($data);
+        }
+        $response['results'] = $results;
 
         return new DynamicSearchRulesResults($response);
     }

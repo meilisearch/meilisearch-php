@@ -36,7 +36,9 @@ final class IndexDeletionDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawIndexDeletionDetails $data */
-        return self::fromArray($data);
+        /** @var RawIndexDeletionDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

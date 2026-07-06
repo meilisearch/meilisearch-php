@@ -154,7 +154,9 @@ final class SettingsUpdateDetails implements TaskDetails
             return null;
         }
 
-        /* @var RawSettingsUpdateDetails $data */
-        return self::fromArray($data);
+        /** @var RawSettingsUpdateDetails $rawData */
+        $rawData = $data;
+
+        return self::fromArray($rawData);
     }
 }

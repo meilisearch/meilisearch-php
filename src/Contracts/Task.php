@@ -182,6 +182,13 @@ final class Task implements \ArrayAccess
     {
         $details = $data['details'] ?? null;
         $type = TaskType::tryFrom($data['type']) ?? TaskType::Unknown;
+        $error = null;
+
+        if (\array_key_exists('error', $data) && null !== $data['error']) {
+            /** @phpstan-var array{message: non-empty-string, code: non-empty-string, type: non-empty-string, link: non-empty-string} $errorData */
+            $errorData = $data['error'];
+            $error = TaskError::fromArray($errorData);
+        }
 
         return new self(
             $data['taskUid'] ?? $data['uid'],
@@ -195,7 +202,7 @@ final class Task implements \ArrayAccess
             $data['canceledBy'] ?? null,
             $data['batchUid'] ?? null,
             self::detailsFromArray($type, $details),
-            \array_key_exists('error', $data) && null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
+            $error,
             $data,
             $await,
         );
