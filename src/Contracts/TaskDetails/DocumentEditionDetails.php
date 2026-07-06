@@ -7,13 +7,15 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawDocumentEditionDetails array{
  *     context: array<non-empty-string, scalar|null>,
  *     deletedDocuments: non-negative-int|null,
  *     editedDocuments: non-negative-int|null,
  *     function: string|null,
  *     originalFilter: string|null
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawDocumentEditionDetails>
  */
 final class DocumentEditionDetails implements TaskDetails
 {
@@ -38,5 +40,15 @@ final class DocumentEditionDetails implements TaskDetails
             $data['function'],
             $data['originalFilter'],
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawDocumentEditionDetails $data */
+        return self::fromArray($data);
     }
 }

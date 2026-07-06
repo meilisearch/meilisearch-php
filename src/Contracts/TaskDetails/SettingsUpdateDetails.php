@@ -7,7 +7,7 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawSettingsUpdateDetails array{
  *     dictionary?: list<string>,
  *     displayedAttributes?: list<string>,
  *     distinctAttribute?: string,
@@ -50,7 +50,9 @@ use Meilisearch\Contracts\TaskDetails;
  *         disableOnAttributes: list<string>,
  *         disableOnNumbers: bool
  *     }
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawSettingsUpdateDetails>
  */
 final class SettingsUpdateDetails implements TaskDetails
 {
@@ -144,5 +146,15 @@ final class SettingsUpdateDetails implements TaskDetails
             $data['synonyms'] ?? null,
             $data['typoTolerance'] ?? null,
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawSettingsUpdateDetails $data */
+        return self::fromArray($data);
     }
 }

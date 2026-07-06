@@ -7,9 +7,11 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawIndexCreationDetails array{
  *     primaryKey: non-empty-string|null
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawIndexCreationDetails>
  */
 final class IndexCreationDetails implements TaskDetails
 {
@@ -26,5 +28,15 @@ final class IndexCreationDetails implements TaskDetails
         return new self(
             $data['primaryKey'],
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawIndexCreationDetails $data */
+        return self::fromArray($data);
     }
 }

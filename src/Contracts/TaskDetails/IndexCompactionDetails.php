@@ -7,10 +7,12 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawIndexCompactionDetails array{
  *     preCompactionSize: non-empty-string,
  *     postCompactionSize: non-empty-string
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawIndexCompactionDetails>
  */
 final class IndexCompactionDetails implements TaskDetails
 {
@@ -30,5 +32,15 @@ final class IndexCompactionDetails implements TaskDetails
             $data['preCompactionSize'],
             $data['postCompactionSize'],
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawIndexCompactionDetails $data */
+        return self::fromArray($data);
     }
 }
