@@ -20,6 +20,9 @@ use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Exceptions\LogicException;
 
 /**
+ * Raw detail shapes are imported here so Task can choose the concrete detail
+ * class while keeping shape validation at this boundary.
+ *
  * @phpstan-import-type RawDocumentAdditionOrUpdateDetails from DocumentAdditionOrUpdateDetails
  * @phpstan-import-type RawDocumentDeletionDetails from DocumentDeletionDetails
  * @phpstan-import-type RawDocumentEditionDetails from DocumentEditionDetails
@@ -227,56 +230,66 @@ final class Task implements \ArrayAccess
      */
     private static function detailsFromArray(TaskType $type, ?array $details): ?TaskDetails
     {
+        // Unknown task types are forward-compatible: preserve whatever payload we got.
         if (TaskType::Unknown === $type) {
             return UnknownTaskDetails::fromArray($details ?? []);
         }
 
+        // For known task types, null/empty details should map to "no details object".
         if (null === $details || [] === $details) {
             return null;
         }
 
+        // The generic helper keeps switch arms readable while still enforcing each raw shape.
         switch ($type) {
             case TaskType::IndexCreation:
-                /* @var RawIndexCreationDetails $details */
-                return IndexCreationDetails::fromArray($details);
+                return self::detailFromArray($details, IndexCreationDetails::fromArray(...));
             case TaskType::IndexUpdate:
-                /* @var RawIndexUpdateDetails $details */
-                return IndexUpdateDetails::fromArray($details);
+                return self::detailFromArray($details, IndexUpdateDetails::fromArray(...));
             case TaskType::IndexDeletion:
-                /* @var RawIndexDeletionDetails $details */
-                return IndexDeletionDetails::fromArray($details);
+                return self::detailFromArray($details, IndexDeletionDetails::fromArray(...));
             case TaskType::IndexSwap:
-                /* @var RawIndexSwapDetails $details */
-                return IndexSwapDetails::fromArray($details);
+                return self::detailFromArray($details, IndexSwapDetails::fromArray(...));
             case TaskType::DocumentAdditionOrUpdate:
-                /* @var RawDocumentAdditionOrUpdateDetails $details */
-                return DocumentAdditionOrUpdateDetails::fromArray($details);
+                return self::detailFromArray($details, DocumentAdditionOrUpdateDetails::fromArray(...));
             case TaskType::DocumentDeletion:
-                /* @var RawDocumentDeletionDetails $details */
-                return DocumentDeletionDetails::fromArray($details);
+                return self::detailFromArray($details, DocumentDeletionDetails::fromArray(...));
             case TaskType::DocumentEdition:
-                /* @var RawDocumentEditionDetails $details */
-                return DocumentEditionDetails::fromArray($details);
+                return self::detailFromArray($details, DocumentEditionDetails::fromArray(...));
             case TaskType::SettingsUpdate:
-                /* @var RawSettingsUpdateDetails $details */
-                return SettingsUpdateDetails::fromArray($details);
+                return self::detailFromArray($details, SettingsUpdateDetails::fromArray(...));
             case TaskType::DumpCreation:
-                /* @var RawDumpCreationDetails $details */
-                return DumpCreationDetails::fromArray($details);
+                return self::detailFromArray($details, DumpCreationDetails::fromArray(...));
             case TaskType::TaskCancelation:
-                /* @var RawTaskCancelationDetails $details */
-                return TaskCancelationDetails::fromArray($details);
+                return self::detailFromArray($details, TaskCancelationDetails::fromArray(...));
             case TaskType::TaskDeletion:
-                /* @var RawTaskDeletionDetails $details */
-                return TaskDeletionDetails::fromArray($details);
+                return self::detailFromArray($details, TaskDeletionDetails::fromArray(...));
                 // It’s intentional that SnapshotCreation tasks don’t have a details object
                 // (no SnapshotCreationDetails exists and tests don’t exercise any details)
             case TaskType::SnapshotCreation:
             case TaskType::NetworkTopologyChange:
                 return null;
             case TaskType::IndexCompaction:
-                /* @var RawIndexCompactionDetails $details */
-                return IndexCompactionDetails::fromArray($details);
+                return self::detailFromArray($details, IndexCompactionDetails::fromArray(...));
         }
+    }
+
+    /**
+     * @template TShape of array
+     * @template TDetails of TaskDetails
+     *
+     * @param array<mixed>               $details
+     * @param callable(TShape): TDetails $factory
+     *
+     * @return TDetails
+     */
+    private static function detailFromArray(array $details, callable $factory): TaskDetails
+    {
+        // PHPStan cannot infer the precise shape from TaskType in this switch.
+        // We cast once here, then delegate to the concrete fromArray() factory.
+        /** @var TShape $typedDetails */
+        $typedDetails = $details;
+
+        return $factory($typedDetails);
     }
 }
