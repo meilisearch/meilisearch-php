@@ -29,16 +29,4 @@ final class IndexUpdateDetails implements TaskDetails
             $data['primaryKey'],
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawIndexUpdateDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }

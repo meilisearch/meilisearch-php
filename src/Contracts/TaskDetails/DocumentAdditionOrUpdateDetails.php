@@ -33,16 +33,4 @@ final class DocumentAdditionOrUpdateDetails implements TaskDetails
             $data['indexedDocuments'] ?? null,
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawDocumentAdditionOrUpdateDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }

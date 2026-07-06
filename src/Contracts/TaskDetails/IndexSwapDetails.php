@@ -29,16 +29,4 @@ final class IndexSwapDetails implements TaskDetails
             $data['swaps'],
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawIndexSwapDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }
