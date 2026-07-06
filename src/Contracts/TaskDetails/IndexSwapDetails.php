@@ -7,9 +7,11 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawIndexSwapDetails array{
  *     swaps: array<array{indexes: mixed, rename: bool}>
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawIndexSwapDetails>
  */
 final class IndexSwapDetails implements TaskDetails
 {
@@ -26,5 +28,15 @@ final class IndexSwapDetails implements TaskDetails
         return new self(
             $data['swaps'],
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawIndexSwapDetails $data */
+        return self::fromArray($data);
     }
 }

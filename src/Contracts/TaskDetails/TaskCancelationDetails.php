@@ -7,11 +7,13 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawTaskCancelationDetails array{
  *     matchedTasks: non-negative-int|null,
  *     canceledTasks: non-negative-int|null,
  *     originalFilter: string|null
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawTaskCancelationDetails>
  */
 final class TaskCancelationDetails implements TaskDetails
 {
@@ -34,5 +36,15 @@ final class TaskCancelationDetails implements TaskDetails
             $data['canceledTasks'],
             $data['originalFilter'],
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawTaskCancelationDetails $data */
+        return self::fromArray($data);
     }
 }

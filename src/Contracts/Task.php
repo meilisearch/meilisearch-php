@@ -207,222 +207,23 @@ final class Task implements \ArrayAccess
     private static function detailsFromArray(TaskType $type, ?array $details): ?TaskDetails
     {
         return match ($type) {
-            TaskType::IndexCreation => self::indexCreationDetails($details),
-            TaskType::IndexUpdate => self::indexUpdateDetails($details),
-            TaskType::IndexDeletion => self::indexDeletionDetails($details),
-            TaskType::IndexSwap => self::indexSwapDetails($details),
-            TaskType::DocumentAdditionOrUpdate => self::documentAdditionOrUpdateDetails($details),
-            TaskType::DocumentDeletion => self::documentDeletionDetails($details),
-            TaskType::DocumentEdition => self::documentEditionDetails($details),
-            TaskType::SettingsUpdate => self::settingsUpdateDetails($details),
-            TaskType::DumpCreation => self::dumpCreationDetails($details),
-            TaskType::TaskCancelation => self::taskCancelationDetails($details),
-            TaskType::TaskDeletion => self::taskDeletionDetails($details),
+            TaskType::IndexCreation => IndexCreationDetails::fromNullableArray($details),
+            TaskType::IndexUpdate => IndexUpdateDetails::fromNullableArray($details),
+            TaskType::IndexDeletion => IndexDeletionDetails::fromNullableArray($details),
+            TaskType::IndexSwap => IndexSwapDetails::fromNullableArray($details),
+            TaskType::DocumentAdditionOrUpdate => DocumentAdditionOrUpdateDetails::fromNullableArray($details),
+            TaskType::DocumentDeletion => DocumentDeletionDetails::fromNullableArray($details),
+            TaskType::DocumentEdition => DocumentEditionDetails::fromNullableArray($details),
+            TaskType::SettingsUpdate => SettingsUpdateDetails::fromNullableArray($details),
+            TaskType::DumpCreation => DumpCreationDetails::fromNullableArray($details),
+            TaskType::TaskCancelation => TaskCancelationDetails::fromNullableArray($details),
+            TaskType::TaskDeletion => TaskDeletionDetails::fromNullableArray($details),
             // It’s intentional that SnapshotCreation tasks don’t have a details object
             // (no SnapshotCreationDetails exists and tests don’t exercise any details)
             TaskType::SnapshotCreation => null,
             TaskType::NetworkTopologyChange => null,
-            TaskType::IndexCompaction => self::indexCompactionDetails($details),
+            TaskType::IndexCompaction => IndexCompactionDetails::fromNullableArray($details),
             TaskType::Unknown => UnknownTaskDetails::fromArray($details ?? []),
         };
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function indexCreationDetails(?array $details): ?IndexCreationDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{primaryKey: non-empty-string|null} $details */
-        return IndexCreationDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function indexUpdateDetails(?array $details): ?IndexUpdateDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{primaryKey: non-empty-string|null} $details */
-        return IndexUpdateDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function indexDeletionDetails(?array $details): ?IndexDeletionDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{deletedDocuments: non-negative-int|null} $details */
-        return IndexDeletionDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function indexSwapDetails(?array $details): ?IndexSwapDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{swaps: array<array{indexes: mixed, rename: bool}>} $details */
-        return IndexSwapDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function documentAdditionOrUpdateDetails(?array $details): ?DocumentAdditionOrUpdateDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{receivedDocuments: non-negative-int, indexedDocuments: non-negative-int|null} $details */
-        return DocumentAdditionOrUpdateDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function documentDeletionDetails(?array $details): ?DocumentDeletionDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{providedIds?: non-negative-int, originalFilter?: string|null, deletedDocuments?: non-negative-int|null} $details */
-        return DocumentDeletionDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function documentEditionDetails(?array $details): ?DocumentEditionDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{context: array<non-empty-string, scalar|null>, deletedDocuments: non-negative-int|null, editedDocuments: non-negative-int|null, function: string|null, originalFilter: string|null} $details */
-        return DocumentEditionDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function settingsUpdateDetails(?array $details): ?SettingsUpdateDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{
-         *     dictionary?: list<string>,
-         *     displayedAttributes?: list<string>,
-         *     distinctAttribute?: string,
-         *     embedders?: non-empty-array<non-empty-string, array{
-         *         apiKey?: string,
-         *         binaryQuantized?: bool,
-         *         dimensions?: int,
-         *         distribution?: array{mean: float, sigma: float},
-         *         documentTemplate?: string,
-         *         documentTemplateMaxBytes?: int,
-         *         indexingEmbedder?: array{model: string, source: string},
-         *         model?: string,
-         *         pooling?: string,
-         *         request?: array<string, mixed>,
-         *         response?: array<string, mixed>,
-         *         revision?: string,
-         *         searchEmbedder?: array{model: string, source: string},
-         *         source?: string,
-         *         url?: string
-         *     }>,
-         *     faceting?: array{maxValuesPerFacet: non-negative-int, sortFacetValuesBy: array<string, 'alpha'|'count'>}|null,
-         *     facetSearch?: bool,
-         *     filterableAttributes?: list<string|array{attributePatterns: list<string>, features: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}}>|null,
-         *     localizedAttributes?: list<array{locales: list<non-empty-string>, attributePatterns: list<string>}>,
-         *     nonSeparatorTokens?: list<string>,
-         *     pagination?: array{maxTotalHits: non-negative-int},
-         *     prefixSearch?: non-empty-string|null,
-         *     proximityPrecision?: 'byWord'|'byAttribute',
-         *     rankingRules?: list<non-empty-string>,
-         *     searchableAttributes?: list<non-empty-string>,
-         *     searchCutoffMs?: non-negative-int,
-         *     separatorTokens?: list<string>,
-         *     sortableAttributes?: list<non-empty-string>,
-         *     stopWords?: list<string>,
-         *     synonyms?: array<string, list<string>>,
-         *     typoTolerance?: array{
-         *         enabled: bool,
-         *         minWordSizeForTypos: array{oneTypo: int, twoTypos: int},
-         *         disableOnWords: list<string>,
-         *         disableOnAttributes: list<string>,
-         *         disableOnNumbers: bool
-         *     }
-         * } $details */
-        return SettingsUpdateDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function dumpCreationDetails(?array $details): ?DumpCreationDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{dumpUid: non-empty-string|null} $details */
-        return DumpCreationDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function taskCancelationDetails(?array $details): ?TaskCancelationDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{matchedTasks: non-negative-int|null, canceledTasks: non-negative-int|null, originalFilter: string|null} $details */
-        return TaskCancelationDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function taskDeletionDetails(?array $details): ?TaskDeletionDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{matchedTasks: non-negative-int|null, deletedTasks: non-negative-int|null, originalFilter: string|null} $details */
-        return TaskDeletionDetails::fromArray($details);
-    }
-
-    /**
-     * @param array<mixed>|null $details
-     */
-    private static function indexCompactionDetails(?array $details): ?IndexCompactionDetails
-    {
-        if (null === $details || [] === $details) {
-            return null;
-        }
-
-        /* @var array{preCompactionSize: non-empty-string, postCompactionSize: non-empty-string} $details */
-        return IndexCompactionDetails::fromArray($details);
     }
 }

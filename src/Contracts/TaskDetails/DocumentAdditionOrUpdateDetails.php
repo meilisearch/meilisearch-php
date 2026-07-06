@@ -7,10 +7,12 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawDocumentAdditionOrUpdateDetails array{
  *     receivedDocuments: non-negative-int,
  *     indexedDocuments: non-negative-int|null
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawDocumentAdditionOrUpdateDetails>
  */
 final class DocumentAdditionOrUpdateDetails implements TaskDetails
 {
@@ -30,5 +32,15 @@ final class DocumentAdditionOrUpdateDetails implements TaskDetails
             $data['receivedDocuments'],
             $data['indexedDocuments'] ?? null,
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawDocumentAdditionOrUpdateDetails $data */
+        return self::fromArray($data);
     }
 }

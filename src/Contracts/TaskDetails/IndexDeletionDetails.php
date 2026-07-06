@@ -7,9 +7,11 @@ namespace Meilisearch\Contracts\TaskDetails;
 use Meilisearch\Contracts\TaskDetails;
 
 /**
- * @implements TaskDetails<array{
+ * @phpstan-type RawIndexDeletionDetails array{
  *     deletedDocuments: non-negative-int|null
- * }>
+ * }
+ *
+ * @implements TaskDetails<RawIndexDeletionDetails>
  */
 final class IndexDeletionDetails implements TaskDetails
 {
@@ -26,5 +28,15 @@ final class IndexDeletionDetails implements TaskDetails
         return new self(
             $data['deletedDocuments'],
         );
+    }
+
+    public static function fromNullableArray(?array $data): ?self
+    {
+        if (null === $data || [] === $data) {
+            return null;
+        }
+
+        /* @var RawIndexDeletionDetails $data */
+        return self::fromArray($data);
     }
 }
