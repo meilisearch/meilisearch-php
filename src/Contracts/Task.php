@@ -237,45 +237,45 @@ final class Task implements \ArrayAccess
 
         switch ($type) {
             case TaskType::IndexCreation:
-                /** @var RawIndexCreationDetails $details */
+                /* @var RawIndexCreationDetails $details */
                 return IndexCreationDetails::fromArray($details);
             case TaskType::IndexUpdate:
-                /** @var RawIndexUpdateDetails $details */
+                /* @var RawIndexUpdateDetails $details */
                 return IndexUpdateDetails::fromArray($details);
             case TaskType::IndexDeletion:
-                /** @var RawIndexDeletionDetails $details */
+                /* @var RawIndexDeletionDetails $details */
                 return IndexDeletionDetails::fromArray($details);
             case TaskType::IndexSwap:
-                /** @var RawIndexSwapDetails $details */
+                /* @var RawIndexSwapDetails $details */
                 return IndexSwapDetails::fromArray($details);
             case TaskType::DocumentAdditionOrUpdate:
-                /** @var RawDocumentAdditionOrUpdateDetails $details */
+                /* @var RawDocumentAdditionOrUpdateDetails $details */
                 return DocumentAdditionOrUpdateDetails::fromArray($details);
             case TaskType::DocumentDeletion:
-                /** @var RawDocumentDeletionDetails $details */
+                /* @var RawDocumentDeletionDetails $details */
                 return DocumentDeletionDetails::fromArray($details);
             case TaskType::DocumentEdition:
-                /** @var RawDocumentEditionDetails $details */
+                /* @var RawDocumentEditionDetails $details */
                 return DocumentEditionDetails::fromArray($details);
             case TaskType::SettingsUpdate:
-                /** @var RawSettingsUpdateDetails $details */
+                /* @var RawSettingsUpdateDetails $details */
                 return SettingsUpdateDetails::fromArray($details);
             case TaskType::DumpCreation:
-                /** @var RawDumpCreationDetails $details */
+                /* @var RawDumpCreationDetails $details */
                 return DumpCreationDetails::fromArray($details);
             case TaskType::TaskCancelation:
-                /** @var RawTaskCancelationDetails $details */
+                /* @var RawTaskCancelationDetails $details */
                 return TaskCancelationDetails::fromArray($details);
             case TaskType::TaskDeletion:
-                /** @var RawTaskDeletionDetails $details */
+                /* @var RawTaskDeletionDetails $details */
                 return TaskDeletionDetails::fromArray($details);
-            // It’s intentional that SnapshotCreation tasks don’t have a details object
-            // (no SnapshotCreationDetails exists and tests don’t exercise any details)
+                // It’s intentional that SnapshotCreation tasks don’t have a details object
+                // (no SnapshotCreationDetails exists and tests don’t exercise any details)
             case TaskType::SnapshotCreation:
             case TaskType::NetworkTopologyChange:
                 return null;
             case TaskType::IndexCompaction:
-                /** @var RawIndexCompactionDetails $details */
+                /* @var RawIndexCompactionDetails $details */
                 return IndexCompactionDetails::fromArray($details);
         }
     }
