@@ -4,6 +4,17 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @phpstan-type RawIndexStats array{
+ *     numberOfDocuments: non-negative-int,
+ *     rawDocumentDbSize: non-negative-int,
+ *     avgDocumentSize: non-negative-int,
+ *     isIndexing: bool,
+ *     numberOfEmbeddings: non-negative-int,
+ *     numberOfEmbeddedDocuments: non-negative-int,
+ *     fieldDistribution: array<non-empty-string, non-negative-int>
+ * }
+ */
 final class IndexStats
 {
     /**
@@ -79,15 +90,7 @@ final class IndexStats
     }
 
     /**
-     * @param array{
-     *     numberOfDocuments: non-negative-int,
-     *     rawDocumentDbSize: non-negative-int,
-     *     avgDocumentSize: non-negative-int,
-     *     isIndexing: bool,
-     *     numberOfEmbeddings: non-negative-int,
-     *     numberOfEmbeddedDocuments: non-negative-int,
-     *     fieldDistribution: array<non-empty-string, non-negative-int>
-     * } $data
+     * @param RawIndexStats $data
      */
     public static function fromArray(array $data): self
     {
