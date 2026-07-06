@@ -29,16 +29,4 @@ final class IndexDeletionDetails implements TaskDetails
             $data['deletedDocuments'],
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawIndexDeletionDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }

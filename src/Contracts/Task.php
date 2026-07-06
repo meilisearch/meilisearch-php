@@ -19,6 +19,20 @@ use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Exceptions\LogicException;
 
+/**
+ * @phpstan-import-type RawDocumentAdditionOrUpdateDetails from DocumentAdditionOrUpdateDetails
+ * @phpstan-import-type RawDocumentDeletionDetails from DocumentDeletionDetails
+ * @phpstan-import-type RawDocumentEditionDetails from DocumentEditionDetails
+ * @phpstan-import-type RawDumpCreationDetails from DumpCreationDetails
+ * @phpstan-import-type RawIndexCompactionDetails from IndexCompactionDetails
+ * @phpstan-import-type RawIndexCreationDetails from IndexCreationDetails
+ * @phpstan-import-type RawIndexDeletionDetails from IndexDeletionDetails
+ * @phpstan-import-type RawIndexSwapDetails from IndexSwapDetails
+ * @phpstan-import-type RawIndexUpdateDetails from IndexUpdateDetails
+ * @phpstan-import-type RawSettingsUpdateDetails from SettingsUpdateDetails
+ * @phpstan-import-type RawTaskCancelationDetails from TaskCancelationDetails
+ * @phpstan-import-type RawTaskDeletionDetails from TaskDeletionDetails
+ */
 final class Task implements \ArrayAccess
 {
     /**
@@ -213,24 +227,56 @@ final class Task implements \ArrayAccess
      */
     private static function detailsFromArray(TaskType $type, ?array $details): ?TaskDetails
     {
-        return match ($type) {
-            TaskType::IndexCreation => IndexCreationDetails::fromNullableArray($details),
-            TaskType::IndexUpdate => IndexUpdateDetails::fromNullableArray($details),
-            TaskType::IndexDeletion => IndexDeletionDetails::fromNullableArray($details),
-            TaskType::IndexSwap => IndexSwapDetails::fromNullableArray($details),
-            TaskType::DocumentAdditionOrUpdate => DocumentAdditionOrUpdateDetails::fromNullableArray($details),
-            TaskType::DocumentDeletion => DocumentDeletionDetails::fromNullableArray($details),
-            TaskType::DocumentEdition => DocumentEditionDetails::fromNullableArray($details),
-            TaskType::SettingsUpdate => SettingsUpdateDetails::fromNullableArray($details),
-            TaskType::DumpCreation => DumpCreationDetails::fromNullableArray($details),
-            TaskType::TaskCancelation => TaskCancelationDetails::fromNullableArray($details),
-            TaskType::TaskDeletion => TaskDeletionDetails::fromNullableArray($details),
+        if (TaskType::Unknown === $type) {
+            return UnknownTaskDetails::fromArray($details ?? []);
+        }
+
+        if (null === $details || [] === $details) {
+            return null;
+        }
+
+        switch ($type) {
+            case TaskType::IndexCreation:
+                /** @var RawIndexCreationDetails $details */
+                return IndexCreationDetails::fromArray($details);
+            case TaskType::IndexUpdate:
+                /** @var RawIndexUpdateDetails $details */
+                return IndexUpdateDetails::fromArray($details);
+            case TaskType::IndexDeletion:
+                /** @var RawIndexDeletionDetails $details */
+                return IndexDeletionDetails::fromArray($details);
+            case TaskType::IndexSwap:
+                /** @var RawIndexSwapDetails $details */
+                return IndexSwapDetails::fromArray($details);
+            case TaskType::DocumentAdditionOrUpdate:
+                /** @var RawDocumentAdditionOrUpdateDetails $details */
+                return DocumentAdditionOrUpdateDetails::fromArray($details);
+            case TaskType::DocumentDeletion:
+                /** @var RawDocumentDeletionDetails $details */
+                return DocumentDeletionDetails::fromArray($details);
+            case TaskType::DocumentEdition:
+                /** @var RawDocumentEditionDetails $details */
+                return DocumentEditionDetails::fromArray($details);
+            case TaskType::SettingsUpdate:
+                /** @var RawSettingsUpdateDetails $details */
+                return SettingsUpdateDetails::fromArray($details);
+            case TaskType::DumpCreation:
+                /** @var RawDumpCreationDetails $details */
+                return DumpCreationDetails::fromArray($details);
+            case TaskType::TaskCancelation:
+                /** @var RawTaskCancelationDetails $details */
+                return TaskCancelationDetails::fromArray($details);
+            case TaskType::TaskDeletion:
+                /** @var RawTaskDeletionDetails $details */
+                return TaskDeletionDetails::fromArray($details);
             // It’s intentional that SnapshotCreation tasks don’t have a details object
             // (no SnapshotCreationDetails exists and tests don’t exercise any details)
-            TaskType::SnapshotCreation => null,
-            TaskType::NetworkTopologyChange => null,
-            TaskType::IndexCompaction => IndexCompactionDetails::fromNullableArray($details),
-            TaskType::Unknown => UnknownTaskDetails::fromArray($details ?? []),
-        };
+            case TaskType::SnapshotCreation:
+            case TaskType::NetworkTopologyChange:
+                return null;
+            case TaskType::IndexCompaction:
+                /** @var RawIndexCompactionDetails $details */
+                return IndexCompactionDetails::fromArray($details);
+        }
     }
 }

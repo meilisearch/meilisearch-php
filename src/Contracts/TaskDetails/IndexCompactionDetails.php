@@ -33,16 +33,4 @@ final class IndexCompactionDetails implements TaskDetails
             $data['postCompactionSize'],
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawIndexCompactionDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }

@@ -147,16 +147,4 @@ final class SettingsUpdateDetails implements TaskDetails
             $data['typoTolerance'] ?? null,
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawSettingsUpdateDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }

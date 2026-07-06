@@ -41,16 +41,4 @@ final class DocumentEditionDetails implements TaskDetails
             $data['originalFilter'],
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawDocumentEditionDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }

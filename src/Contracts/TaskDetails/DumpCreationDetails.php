@@ -29,16 +29,4 @@ final class DumpCreationDetails implements TaskDetails
             $data['dumpUid'],
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawDumpCreationDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }

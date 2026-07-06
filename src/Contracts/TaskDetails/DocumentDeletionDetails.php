@@ -37,16 +37,4 @@ final class DocumentDeletionDetails implements TaskDetails
             $data['deletedDocuments'] ?? null,
         );
     }
-
-    public static function fromNullableArray(?array $data): ?self
-    {
-        if (null === $data || [] === $data) {
-            return null;
-        }
-
-        /** @var RawDocumentDeletionDetails $rawData */
-        $rawData = $data;
-
-        return self::fromArray($rawData);
-    }
 }
