@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Tests\Contracts;
 
 use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
+use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Contracts\TaskError;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Exceptions\LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Tests\MockTask;
@@ -136,5 +139,101 @@ final class TaskTest extends TestCase
         $this->expectExceptionMessage('The Task object is immutable.');
 
         unset($task['taskUid']);
+    }
+
+    public function testFromArrayWithoutDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 42,
+            'indexUid' => 'movies',
+            'status' => 'enqueued',
+            'type' => 'indexCreation',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+        ]);
+
+        self::assertSame(42, $task->getTaskUid());
+        self::assertSame('movies', $task->getIndexUid());
+        self::assertSame(TaskStatus::Enqueued, $task->getStatus());
+        self::assertSame(TaskType::IndexCreation, $task->getType());
+        self::assertNull($task->getDetails());
+    }
+
+    public function testFromArrayWithIndexCreationDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 1,
+            'status' => 'succeeded',
+            'type' => 'indexCreation',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => ['primaryKey' => 'custom_id'],
+        ]);
+
+        self::assertEquals(new IndexCreationDetails('custom_id'), $task->getDetails());
+    }
+
+    public function testFromArrayWithDocumentAdditionOrUpdateDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 2,
+            'status' => 'succeeded',
+            'type' => 'documentAdditionOrUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => ['receivedDocuments' => 10, 'indexedDocuments' => 8],
+        ]);
+
+        self::assertEquals(new DocumentAdditionOrUpdateDetails(10, 8), $task->getDetails());
+    }
+
+    #[TestWith([TaskType::SnapshotCreation, 'snapshotCreation'])]
+    #[TestWith([TaskType::NetworkTopologyChange, 'networkTopologyChange'])]
+    public function testFromArrayWithNoDetailsObjectForTaskType(TaskType $expectedType, string $type): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 3,
+            'status' => 'succeeded',
+            'type' => $type,
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => ['ignored' => true],
+        ]);
+
+        self::assertSame($expectedType, $task->getType());
+        self::assertNull($task->getDetails());
+    }
+
+    public function testFromArrayWithUnknownTypeWrapsDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 4,
+            'status' => 'succeeded',
+            'type' => 'futureTaskType',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => ['foo' => 'bar'],
+        ]);
+
+        self::assertSame(TaskType::Unknown, $task->getType());
+        self::assertEquals(new UnknownTaskDetails(['foo' => 'bar']), $task->getDetails());
+    }
+
+    #[DataProvider('emptyDetailsProvider')]
+    public function testFromArrayWithEmptyDetailsReturnsNullDetails(string $type): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 5,
+            'status' => 'succeeded',
+            'type' => $type,
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => [],
+        ]);
+
+        self::assertNull($task->getDetails());
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function emptyDetailsProvider(): iterable
+    {
+        yield 'indexCreation' => ['indexCreation'];
+        yield 'settingsUpdate' => ['settingsUpdate'];
     }
 }

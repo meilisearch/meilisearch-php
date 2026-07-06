@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @phpstan-import-type RawIndexStats from IndexStats
+ */
 final class Stats
 {
     /**
@@ -53,7 +56,7 @@ final class Stats
      *     databaseSize: non-negative-int,
      *     usedDatabaseSize: non-negative-int,
      *     lastUpdate: non-empty-string|null,
-     *     indexes: array<non-empty-string, mixed>
+     *     indexes: array<non-empty-string, RawIndexStats>
      * } $data
      */
     public static function fromArray(array $data): self
