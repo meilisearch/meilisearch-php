@@ -20,6 +20,28 @@ use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Exceptions\LogicException;
 
 /**
+ * @phpstan-type RawTaskError array{
+ *     message: non-empty-string,
+ *     code: non-empty-string,
+ *     type: non-empty-string,
+ *     link: non-empty-string
+ * }
+ * @phpstan-type RawTask array{
+ *     taskUid?: non-negative-int,
+ *     uid?: non-negative-int,
+ *     indexUid?: non-empty-string,
+ *     status: non-empty-string,
+ *     type: non-empty-string,
+ *     enqueuedAt: non-empty-string,
+ *     startedAt?: non-empty-string|null,
+ *     finishedAt?: non-empty-string|null,
+ *     duration?: non-empty-string|null,
+ *     canceledBy?: non-negative-int,
+ *     batchUid?: non-negative-int,
+ *     details?: array<mixed>|null,
+ *     error?: RawTaskError|null
+ * }
+ *
  * Raw detail shapes are imported here so Task can choose the concrete detail
  * class while keeping shape validation at this boundary.
  *
@@ -178,21 +200,7 @@ final class Task implements \ArrayAccess
     }
 
     /**
-     * @param array{
-     *     taskUid?: int,
-     *     uid?: int,
-     *     indexUid?: non-empty-string,
-     *     status: non-empty-string,
-     *     type: non-empty-string,
-     *     enqueuedAt: non-empty-string,
-     *     startedAt?: non-empty-string|null,
-     *     finishedAt?: non-empty-string|null,
-     *     duration?: non-empty-string|null,
-     *     canceledBy?: int,
-     *     batchUid?: int,
-     *     details?: array<mixed>|null,
-     *     error?: array<mixed>|null
-     * } $data
+     * @param RawTask                            $data
      * @param \Closure(int, int, int): Task|null $await
      */
     public static function fromArray(array $data, ?\Closure $await = null): Task
@@ -202,7 +210,7 @@ final class Task implements \ArrayAccess
         $error = null;
 
         if (\array_key_exists('error', $data) && null !== $data['error']) {
-            /** @phpstan-var array{message: non-empty-string, code: non-empty-string, type: non-empty-string, link: non-empty-string} $errorData */
+            /** @phpstan-var RawTaskError $errorData */
             $errorData = $data['error'];
             $error = TaskError::fromArray($errorData);
         }
@@ -240,38 +248,24 @@ final class Task implements \ArrayAccess
             return null;
         }
 
-        // The generic helper keeps switch arms readable while still enforcing each raw shape.
-        switch ($type) {
-            case TaskType::IndexCreation:
-                return self::detailFromArray($details, IndexCreationDetails::fromArray(...));
-            case TaskType::IndexUpdate:
-                return self::detailFromArray($details, IndexUpdateDetails::fromArray(...));
-            case TaskType::IndexDeletion:
-                return self::detailFromArray($details, IndexDeletionDetails::fromArray(...));
-            case TaskType::IndexSwap:
-                return self::detailFromArray($details, IndexSwapDetails::fromArray(...));
-            case TaskType::DocumentAdditionOrUpdate:
-                return self::detailFromArray($details, DocumentAdditionOrUpdateDetails::fromArray(...));
-            case TaskType::DocumentDeletion:
-                return self::detailFromArray($details, DocumentDeletionDetails::fromArray(...));
-            case TaskType::DocumentEdition:
-                return self::detailFromArray($details, DocumentEditionDetails::fromArray(...));
-            case TaskType::SettingsUpdate:
-                return self::detailFromArray($details, SettingsUpdateDetails::fromArray(...));
-            case TaskType::DumpCreation:
-                return self::detailFromArray($details, DumpCreationDetails::fromArray(...));
-            case TaskType::TaskCancelation:
-                return self::detailFromArray($details, TaskCancelationDetails::fromArray(...));
-            case TaskType::TaskDeletion:
-                return self::detailFromArray($details, TaskDeletionDetails::fromArray(...));
-                // It’s intentional that SnapshotCreation tasks don’t have a details object
-                // (no SnapshotCreationDetails exists and tests don’t exercise any details)
-            case TaskType::SnapshotCreation:
-            case TaskType::NetworkTopologyChange:
-                return null;
-            case TaskType::IndexCompaction:
-                return self::detailFromArray($details, IndexCompactionDetails::fromArray(...));
-        }
+        // match keeps the dispatch exhaustive and lets PHPStan flag missing enum cases.
+        return match ($type) {
+            TaskType::IndexCreation => self::detailFromArray($details, IndexCreationDetails::fromArray(...)),
+            TaskType::IndexUpdate => self::detailFromArray($details, IndexUpdateDetails::fromArray(...)),
+            TaskType::IndexDeletion => self::detailFromArray($details, IndexDeletionDetails::fromArray(...)),
+            TaskType::IndexSwap => self::detailFromArray($details, IndexSwapDetails::fromArray(...)),
+            TaskType::DocumentAdditionOrUpdate => self::detailFromArray($details, DocumentAdditionOrUpdateDetails::fromArray(...)),
+            TaskType::DocumentDeletion => self::detailFromArray($details, DocumentDeletionDetails::fromArray(...)),
+            TaskType::DocumentEdition => self::detailFromArray($details, DocumentEditionDetails::fromArray(...)),
+            TaskType::SettingsUpdate => self::detailFromArray($details, SettingsUpdateDetails::fromArray(...)),
+            TaskType::DumpCreation => self::detailFromArray($details, DumpCreationDetails::fromArray(...)),
+            TaskType::TaskCancelation => self::detailFromArray($details, TaskCancelationDetails::fromArray(...)),
+            TaskType::TaskDeletion => self::detailFromArray($details, TaskDeletionDetails::fromArray(...)),
+            // It’s intentional that SnapshotCreation tasks don’t have a details object
+            // (no SnapshotCreationDetails exists and tests don’t exercise any details)
+            TaskType::SnapshotCreation, TaskType::NetworkTopologyChange => null,
+            TaskType::IndexCompaction => self::detailFromArray($details, IndexCompactionDetails::fromArray(...)),
+        };
     }
 
     /**
