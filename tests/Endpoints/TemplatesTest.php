@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Endpoints;
+
+use Meilisearch\Contracts\TemplateRenderQuery;
+use Meilisearch\Http\Client;
+use Tests\TestCase;
+
+final class TemplatesTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['renderRoute' => true]);
+    }
+
+    protected function tearDown(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['renderRoute' => false]);
+
+        parent::tearDown();
+    }
+
+    public function testCanRenderInlineTemplate(): void
+    {
+        $query = new TemplateRenderQuery(
+            ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'],
+            ['kind' => 'inlineDocument', 'inline' => ['breed' => 'Jack Russell', 'name' => 'Iko']],
+        );
+
+        $response = $this->client->renderTemplate($query);
+
+        self::assertSame('{{ doc.breed }} called {{ doc.name }}', $response->getTemplate());
+        self::assertSame('Jack Russell called Iko', $response->getRendered());
+    }
+
+    public function testCanRenderTemplateWithNullInput(): void
+    {
+        $query = new TemplateRenderQuery(
+            ['kind' => 'inlineDocumentTemplate', 'inline' => '{{ doc.breed }} called {{ doc.name }}'],
+            null,
+        );
+
+        $response = $this->client->renderTemplate($query);
+
+        self::assertSame('{{ doc.breed }} called {{ doc.name }}', $response->getTemplate());
+        self::assertNull($response->getRendered());
+    }
+}
