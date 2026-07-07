@@ -25,6 +25,9 @@ use Meilisearch\Search\SimilarDocumentsSearchResult;
 use function Meilisearch\partial;
 
 /**
+ * @phpstan-import-type RawTasks from Tasks
+ * @phpstan-import-type TasksResponse from Tasks
+ *
  * @phpstan-type RawSearchResult array{
  *     hits: array<int, array<string, mixed>>,
  *     processingTimeMs: non-negative-int,
@@ -203,10 +206,20 @@ class Indexes extends Endpoint
             $options->setIndexUids([$this->uid]);
         }
 
-        $response = $this->http->get('/tasks', $options->toArray());
-        $response['results'] = array_map(fn ($task) => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
+        $rawResponse = $this->http->get('/tasks', $options->toArray());
+        /** @var RawTasks $response */
+        $response = $rawResponse;
+        $results = array_map(fn (array $task): Task => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
+        /** @var TasksResponse $tasksResponse */
+        $tasksResponse = [
+            'results' => $results,
+            'from' => $response['from'],
+            'limit' => $response['limit'],
+            'next' => $response['next'],
+            'total' => $response['total'],
+        ];
 
-        return new TasksResults($response);
+        return new TasksResults($tasksResponse);
     }
 
     // Search

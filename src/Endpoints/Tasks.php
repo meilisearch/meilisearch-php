@@ -13,6 +13,24 @@ use Meilisearch\Exceptions\TimeOutException;
 
 use function Meilisearch\partial;
 
+/**
+ * @phpstan-import-type RawTask from Task
+ *
+ * @phpstan-type RawTasks array{
+ *     results: array<int, RawTask>,
+ *     from: non-negative-int|null,
+ *     limit: non-negative-int,
+ *     next: non-negative-int|null,
+ *     total: non-negative-int
+ * }
+ * @phpstan-type TasksResponse array{
+ *     results: array<int, Task>,
+ *     from: non-negative-int|null,
+ *     limit: non-negative-int,
+ *     next: non-negative-int|null,
+ *     total: non-negative-int
+ * }
+ */
 class Tasks extends Endpoint
 {
     protected const PATH = '/tasks';
@@ -22,12 +40,23 @@ class Tasks extends Endpoint
         return Task::fromArray($this->http->get(self::PATH.'/'.$taskUid), partial(self::waitTask(...), $this->http));
     }
 
+    /**
+     * @return TasksResponse
+     */
     public function all(array $query = []): array
     {
-        $data = $this->http->get(self::PATH.'/', $query);
-        $data['results'] = array_map(fn ($task) => Task::fromArray($task, partial(self::waitTask(...), $this->http)), $data['results']);
+        $rawData = $this->http->get(self::PATH.'/', $query);
+        /** @var RawTasks $rawTasks */
+        $rawTasks = $rawData;
+        $results = array_map(fn (array $task): Task => Task::fromArray($task, partial(self::waitTask(...), $this->http)), $rawTasks['results']);
 
-        return $data;
+        return [
+            'results' => $results,
+            'from' => $rawTasks['from'],
+            'limit' => $rawTasks['limit'],
+            'next' => $rawTasks['next'],
+            'total' => $rawTasks['total'],
+        ];
     }
 
     public function cancelTasks(?CancelTasksQuery $options): Task
