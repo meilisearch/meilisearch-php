@@ -54,17 +54,74 @@ final class TasksTest extends TestCase
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
         $http->patch('/experimental-features', ['getTaskDocumentsRoute' => true]);
 
+        // The task documents route only exposes documents while the task is
+        // still enqueued or processing. Enqueue a large batch first so the task
+        // we inspect stays queued behind it instead of completing immediately.
+        $this->index->updateDocuments(array_map(
+            static fn (int $id): array => ['id' => $id],
+            range(1_000_000, 1_010_000)
+        ));
         $task = $this->index->updateDocuments(self::DOCUMENTS);
-        $task->wait();
 
-        $stream = $this->client->getTaskDocuments($task->getTaskUid());
+        $stream = (string) $this->client->getTaskDocuments($task->getTaskUid());
 
-        // Parse NDJSON: each line is a separate JSON document
-        $lines = array_filter(explode("\n", (string) $stream), fn (string $line) => '' !== trim($line));
-        self::assertNotEmpty($lines, 'Stream should contain at least one NDJSON line');
+        // Meilisearch streams the documents as consecutive JSON objects. Despite
+        // the application/x-ndjson content type they are not newline-delimited,
+        // so decode them as a sequence of concatenated JSON values.
+        $documents = self::decodeJsonObjectStream($stream);
 
-        $documents = array_map(fn (string $line) => json_decode($line, true, 512, \JSON_THROW_ON_ERROR), $lines);
+        self::assertCount(\count(self::DOCUMENTS), $documents);
         self::assertArrayHasKey('id', $documents[0], 'Each document should have an id field');
+    }
+
+    /**
+     * Decodes a stream of concatenated JSON objects (e.g. {"id":1}{"id":2}) into
+     * a list of associative arrays, tracking string/escape state so object
+     * boundaries inside string values are ignored.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private static function decodeJsonObjectStream(string $payload): array
+    {
+        $documents = [];
+        $depth = 0;
+        $start = null;
+        $inString = false;
+        $escaped = false;
+        $length = \strlen($payload);
+
+        for ($i = 0; $i < $length; ++$i) {
+            $char = $payload[$i];
+
+            if ($inString) {
+                if ($escaped) {
+                    $escaped = false;
+                } elseif ('\\' === $char) {
+                    $escaped = true;
+                } elseif ('"' === $char) {
+                    $inString = false;
+                }
+
+                continue;
+            }
+
+            if ('"' === $char) {
+                $inString = true;
+            } elseif ('{' === $char) {
+                if (0 === $depth) {
+                    $start = $i;
+                }
+                ++$depth;
+            } elseif ('}' === $char) {
+                --$depth;
+                if (0 === $depth && null !== $start) {
+                    $documents[] = json_decode(substr($payload, $start, $i - $start + 1), true, 512, \JSON_THROW_ON_ERROR);
+                    $start = null;
+                }
+            }
+        }
+
+        return $documents;
     }
 
     public function testGetAllTasksClient(): void
