@@ -681,6 +681,22 @@ final class DocumentsTest extends TestCase
         self::assertCount(5, $response);
     }
 
+    public function testGetDocumentWithVector(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+
+        $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]])->wait();
+        $index->updateDocuments(self::VECTOR_MOVIES)->wait();
+
+        $documentId = self::VECTOR_MOVIES[0]['id'];
+
+        $response = $index->getDocument($documentId);
+        self::assertArrayNotHasKey('_vectors', $response);
+
+        $response = $index->getDocument($documentId, null, true);
+        self::assertArrayHasKey('_vectors', $response);
+    }
+
     public function testGetDocumentsMessageHintException(): void
     {
         $responseMock = $this->createMock(ResponseInterface::class);

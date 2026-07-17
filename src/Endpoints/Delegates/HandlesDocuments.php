@@ -17,10 +17,17 @@ trait HandlesDocuments
 {
     /**
      * @param non-empty-string|int $documentId
+     * @param list<non-empty-string>|null $fields
      */
-    public function getDocument(string|int $documentId, ?array $fields = null): array
+    public function getDocument(string|int $documentId, ?array $fields = null, bool $retrieveVectors = false): array
     {
-        $query = isset($fields) ? ['fields' => implode(',', $fields)] : [];
+        $query = [];
+        if (isset($fields)) {
+            $query['fields'] = implode(',', $fields);
+        }
+        if ($retrieveVectors) {
+            $query['retrieveVectors'] = true;
+        }
 
         return $this->http->get(self::PATH.'/'.$this->uid.'/documents/'.$documentId, $query);
     }
