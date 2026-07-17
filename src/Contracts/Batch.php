@@ -129,7 +129,7 @@ final class Batch implements \ArrayAccess
     }
 
     /**
-     * @return array<mixed>
+     * @return RawBatch
      */
     public function toArray(): array
     {
