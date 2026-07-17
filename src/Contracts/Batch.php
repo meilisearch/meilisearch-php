@@ -50,7 +50,7 @@ final class Batch implements \ArrayAccess
      * @param non-empty-string|null $duration
      * @param RawBatchProgress|null $progress
      * @param non-empty-string      $batchStrategy
-     * @param array<mixed>          $raw
+     * @param RawBatch              $raw
      */
     public function __construct(
         private readonly int $uid,
@@ -61,7 +61,7 @@ final class Batch implements \ArrayAccess
         private readonly ?\DateTimeImmutable $finishedAt,
         private readonly ?array $progress,
         private readonly string $batchStrategy,
-        private readonly array $raw = [],
+        private readonly array $raw,
     ) {
     }
 
