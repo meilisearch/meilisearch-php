@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Client;
+use Meilisearch\Contracts\HealthStatus;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
@@ -197,7 +198,7 @@ final class ClientTest extends TestCase
     {
         $response = $this->client->health();
 
-        self::assertSame('available', $response['status']);
+        self::assertSame(HealthStatus::Available, $response->getStatus());
     }
 
     public function testIsHealthyIsTrue(): void
@@ -256,7 +257,7 @@ final class ClientTest extends TestCase
         $client = new Client($this->host);
         $response = $client->health();
 
-        self::assertSame('available', $response['status']);
+        self::assertSame(HealthStatus::Available, $response->getStatus());
 
         $this->expectException(ApiException::class);
 

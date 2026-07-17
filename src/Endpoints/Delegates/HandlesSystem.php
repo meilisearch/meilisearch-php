@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Endpoints\Delegates;
 
+use Meilisearch\Contracts\Health as HealthContract;
 use Meilisearch\Contracts\IndexStats;
 use Meilisearch\Contracts\Stats as StatsContract;
 use Meilisearch\Contracts\Task;
@@ -24,9 +25,18 @@ trait HandlesSystem
     protected TenantToken $tenantToken;
     protected Stats $stats;
 
-    public function health(): ?array
+    public function health(): HealthContract
     {
-        return $this->health->show();
+        $health = $this->health->show();
+
+        if (!\is_array($health)) {
+            throw new LogicException('Health did not respond with valid data.');
+        }
+
+        /** @var array{status: non-empty-string} $rawHealth */
+        $rawHealth = $health;
+
+        return HealthContract::fromArray($rawHealth);
     }
 
     public function isHealthy(): bool
