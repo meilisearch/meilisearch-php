@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Exceptions\LogicException;
 
 /**
@@ -13,7 +14,7 @@ use Meilisearch\Exceptions\LogicException;
  *     types: array<non-empty-string, non-negative-int>,
  *     indexUids: array<non-empty-string, non-negative-int>,
  *     progressTrace?: array<string, mixed>,
- *     writeChannelCongestion?: array<string, mixed>|null,
+ *     writeChannelCongestion?: array<string, mixed>,
  *     internalDatabaseSizes?: array<string, mixed>,
  *     embedderRequests?: array{
  *         total: non-negative-int,
@@ -34,33 +35,32 @@ use Meilisearch\Exceptions\LogicException;
  *     uid: non-negative-int,
  *     details: array<mixed>,
  *     stats: RawBatchStats,
- *     duration?: non-empty-string|null,
+ *     duration: non-empty-string|null,
  *     startedAt: non-empty-string,
- *     finishedAt?: non-empty-string|null,
- *     progress?: RawBatchProgress|null,
- *     batchStrategy?: non-empty-string
+ *     finishedAt: non-empty-string|null,
+ *     progress: RawBatchProgress|null,
+ *     batchStrategy?: non-empty-string|null
  * }
  */
 final class Batch implements \ArrayAccess
 {
     /**
      * @param non-negative-int      $uid
-     * @param array<mixed>          $details
      * @param RawBatchStats         $stats
      * @param non-empty-string|null $duration
      * @param RawBatchProgress|null $progress
-     * @param non-empty-string      $batchStrategy
+     * @param non-empty-string|null $batchStrategy
      * @param RawBatch              $raw
      */
     public function __construct(
         private readonly int $uid,
-        private readonly array $details,
+        private readonly TaskDetails $details,
         private readonly array $stats,
         private readonly ?string $duration,
         private readonly \DateTimeImmutable $startedAt,
         private readonly ?\DateTimeImmutable $finishedAt,
         private readonly ?array $progress,
-        private readonly string $batchStrategy,
+        private readonly ?string $batchStrategy,
         private readonly array $raw,
     ) {
     }
@@ -73,10 +73,7 @@ final class Batch implements \ArrayAccess
         return $this->uid;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function getDetails(): array
+    public function getDetails(): TaskDetails
     {
         return $this->details;
     }
@@ -121,9 +118,9 @@ final class Batch implements \ArrayAccess
     /**
      * Free-form reason why the batch stopped accepting tasks (not a closed enum).
      *
-     * @return non-empty-string
+     * @return non-empty-string|null
      */
-    public function getBatchStrategy(): string
+    public function getBatchStrategy(): ?string
     {
         return $this->batchStrategy;
     }
@@ -163,14 +160,14 @@ final class Batch implements \ArrayAccess
     {
         return new self(
             $data['uid'],
-            $data['details'],
+            UnknownTaskDetails::fromArray($data['details']),
             $data['stats'],
             $data['duration'] ?? null,
             new \DateTimeImmutable($data['startedAt']),
-            \array_key_exists('finishedAt', $data) && null !== $data['finishedAt']
+            null !== $data['finishedAt']
                 ? new \DateTimeImmutable($data['finishedAt']) : null,
             $data['progress'] ?? null,
-            $data['batchStrategy'] ?? 'unspecified',
+            $data['batchStrategy'] ?? null,
             $data,
         );
     }

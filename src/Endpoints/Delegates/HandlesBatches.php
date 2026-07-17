@@ -24,16 +24,6 @@ trait HandlesBatches
 
         $response = $this->batches->all($query);
 
-        /** @var array{
-         *     results: array<int, Batch>,
-         *     from: non-negative-int|null,
-         *     limit: non-negative-int,
-         *     next: non-negative-int|null,
-         *     total: non-negative-int
-         * } $rawResponse
-         */
-        $rawResponse = $response;
-
-        return new BatchesResults($rawResponse);
+        return new BatchesResults($response);
     }
 }
