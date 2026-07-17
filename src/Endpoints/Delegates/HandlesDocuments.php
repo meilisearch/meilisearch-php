@@ -17,6 +17,8 @@ trait HandlesDocuments
 {
     /**
      * @param non-empty-string|int $documentId
+     *
+     * @return array<string, mixed>
      */
     public function getDocument(string|int $documentId, ?array $fields = null): array
     {
