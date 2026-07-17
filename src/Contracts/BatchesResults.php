@@ -28,7 +28,7 @@ final class BatchesResults extends Data
 
     /**
      * @param array{
-     *     results: array<int, Batch>,
+     *     results: list<Batch>,
      *     from: non-negative-int|null,
      *     limit: non-negative-int,
      *     next: non-negative-int|null,
@@ -46,7 +46,7 @@ final class BatchesResults extends Data
     }
 
     /**
-     * @return array<int, Batch>
+     * @return list<Batch>
      */
     public function getResults(): array
     {
@@ -87,7 +87,7 @@ final class BatchesResults extends Data
 
     /**
      * @return array{
-     *     results: array<int, Batch>,
+     *     results: list<Batch>,
      *     from: non-negative-int,
      *     limit: non-negative-int,
      *     next: non-negative-int,

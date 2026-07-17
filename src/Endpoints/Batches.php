@@ -11,14 +11,14 @@ use Meilisearch\Contracts\Endpoint;
  * @phpstan-import-type RawBatch from Batch
  *
  * @phpstan-type RawBatches array{
- *     results: array<int, RawBatch>,
+ *     results: list<RawBatch>,
  *     from: non-negative-int|null,
  *     limit: non-negative-int,
  *     next: non-negative-int|null,
  *     total: non-negative-int
  * }
  * @phpstan-type BatchesResponse array{
- *     results: array<int, Batch>,
+ *     results: list<Batch>,
  *     from: non-negative-int|null,
  *     limit: non-negative-int,
  *     next: non-negative-int|null,

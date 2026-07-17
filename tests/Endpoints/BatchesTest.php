@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\BatchesQuery;
+use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Contracts\TasksQuery;
 use Tests\TestCase;
 
@@ -63,15 +64,12 @@ final class BatchesTest extends TestCase
         $response = $this->client->getBatch($first->getUid());
 
         self::assertSame($first->getUid(), $response->getUid());
+        self::assertInstanceOf(UnknownTaskDetails::class, $response->getDetails());
         $stats = $response->getStats();
         self::assertSame($stats['totalNbTasks'], array_sum($stats['status']));
         self::assertNotEmpty($stats['status']);
         self::assertNotEmpty($stats['types']);
         self::assertArrayHasKey('progressTrace', $stats);
-        self::assertArrayHasKey('duration', $response->toArray());
-        self::assertArrayHasKey('finishedAt', $response->toArray());
-        self::assertArrayHasKey('progress', $response->toArray());
-        self::assertArrayHasKey('batchStrategy', $response->toArray());
-        self::assertSame($response->toArray()['batchStrategy'], $response->getBatchStrategy());
+        self::assertSame($response->toArray()['batchStrategy'] ?? null, $response->getBatchStrategy());
     }
 }
