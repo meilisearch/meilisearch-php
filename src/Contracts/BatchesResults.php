@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @phpstan-import-type RawBatch from Batch
+ */
 final class BatchesResults extends Data
 {
     /**
@@ -87,7 +90,7 @@ final class BatchesResults extends Data
 
     /**
      * @return array{
-     *     results: list<Batch>,
+     *     results: list<RawBatch>,
      *     from: non-negative-int,
      *     limit: non-negative-int,
      *     next: non-negative-int,
@@ -97,7 +100,7 @@ final class BatchesResults extends Data
     public function toArray(): array
     {
         return [
-            'results' => $this->data,
+            'results' => array_map(static fn (Batch $batch) => $batch->toArray(), $this->data),
             'next' => $this->next,
             'limit' => $this->limit,
             'from' => $this->from,
