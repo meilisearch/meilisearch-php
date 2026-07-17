@@ -29,7 +29,7 @@ final class BatchesTest extends TestCase
     {
         $response = $this->client->getBatches((new BatchesQuery())->setIndexUids([$this->indexName]));
         foreach ($response->getResults() as $result) {
-            self::assertArrayHasKey($this->indexName, $result['stats']['indexUids']);
+            self::assertArrayHasKey($this->indexName, $result->getStats()['indexUids']);
         }
     }
 
@@ -51,24 +51,27 @@ final class BatchesTest extends TestCase
                 ->setAfterEnqueuedAt($startDate)
                 ->setReverse(true)
         );
-        self::assertSame($batches->getResults(), array_reverse($reversedBatches->getResults()));
+        $batchUids = array_map(static fn ($b) => $b->getUid(), $batches->getResults());
+        $reversedUids = array_map(static fn ($b) => $b->getUid(), $reversedBatches->getResults());
+        self::assertSame($batchUids, array_reverse($reversedUids));
     }
 
     public function testGetOneBatch(): void
     {
         $batches = $this->client->getBatches();
-        $response = $this->client->getBatch($batches->getResults()[0]['uid']);
+        $first = $batches->getResults()[0];
+        $response = $this->client->getBatch($first->getUid());
 
-        self::assertSame($batches->getResults()[0]['uid'], $response['uid']);
-        self::assertArrayHasKey('details', $response);
-        self::assertArrayHasKey('totalNbTasks', $response['stats']);
-        self::assertArrayHasKey('status', $response['stats']);
-        self::assertArrayHasKey('types', $response['stats']);
-        self::assertArrayHasKey('indexUids', $response['stats']);
-        self::assertArrayHasKey('progressTrace', $response['stats']);
-        self::assertArrayHasKey('duration', $response);
-        self::assertArrayHasKey('startedAt', $response);
-        self::assertArrayHasKey('finishedAt', $response);
-        self::assertArrayHasKey('progress', $response);
+        self::assertSame($first->getUid(), $response->getUid());
+        $stats = $response->getStats();
+        self::assertSame($stats['totalNbTasks'], array_sum($stats['status']));
+        self::assertNotEmpty($stats['status']);
+        self::assertNotEmpty($stats['types']);
+        self::assertArrayHasKey('progressTrace', $stats);
+        self::assertArrayHasKey('duration', $response->toArray());
+        self::assertArrayHasKey('finishedAt', $response->toArray());
+        self::assertArrayHasKey('progress', $response->toArray());
+        self::assertArrayHasKey('batchStrategy', $response->toArray());
+        self::assertSame($response->toArray()['batchStrategy'], $response->getBatchStrategy());
     }
 }
