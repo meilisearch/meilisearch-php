@@ -62,6 +62,8 @@ class Client implements Http
     }
 
     /**
+     * @param array<string, scalar|list<scalar>> $query
+     *
      * @throws ClientExceptionInterface
      * @throws ApiException
      * @throws CommunicationException
@@ -77,7 +79,8 @@ class Client implements Http
     }
 
     /**
-     * @param non-empty-string|null $contentType
+     * @param non-empty-string|null              $contentType
+     * @param array<string, scalar|list<scalar>> $query
      *
      * @throws ApiException
      * @throws ClientExceptionInterface
@@ -98,7 +101,8 @@ class Client implements Http
     }
 
     /**
-     * @param non-empty-string|null $contentType
+     * @param non-empty-string|null              $contentType
+     * @param array<string, scalar|list<scalar>> $query
      *
      * @throws ApiException
      * @throws ClientExceptionInterface
@@ -118,6 +122,9 @@ class Client implements Http
         return $this->execute($request, ['Content-type' => $contentType ?? 'application/json']);
     }
 
+    /**
+     * @param array<string, scalar|list<scalar>> $query
+     */
     public function patch(string $path, mixed $body = null, array $query = []): mixed
     {
         $request = $this->requestFactory->createRequest(
@@ -128,6 +135,9 @@ class Client implements Http
         return $this->execute($request, ['Content-type' => 'application/json']);
     }
 
+    /**
+     * @param array<string, scalar|list<scalar>> $query
+     */
     public function delete(string $path, array $query = []): mixed
     {
         $request = $this->requestFactory->createRequest(
@@ -139,6 +149,8 @@ class Client implements Http
     }
 
     /**
+     * @param array<string, scalar|list<scalar>> $query
+     *
      * @throws ApiException
      * @throws ClientExceptionInterface
      * @throws CommunicationException
@@ -154,6 +166,9 @@ class Client implements Http
         return $this->executeStream($request, ['Content-type' => 'application/json']);
     }
 
+    /**
+     * @param array<string, scalar|list<scalar>> $query
+     */
     public function getStream(string $path, array $query = []): StreamInterface
     {
         $request = $this->requestFactory->createRequest(
@@ -171,7 +186,7 @@ class Client implements Http
      * @throws ClientExceptionInterface
      * @throws CommunicationException
      */
-    private function execute(RequestInterface $request, array $headers = [])
+    private function execute(RequestInterface $request, array $headers = []): mixed
     {
         foreach (array_merge($this->headers, $headers) as $header => $value) {
             $request = $request->withAddedHeader($header, $value);
@@ -223,6 +238,9 @@ class Client implements Http
         }
     }
 
+    /**
+     * @param array<string, mixed> $queryParams
+     */
     private function buildQueryString(array $queryParams = []): string
     {
         foreach ($queryParams as $key => $value) {
@@ -242,7 +260,7 @@ class Client implements Http
      * @throws InvalidResponseBodyException
      * @throws \JsonException
      */
-    private function parseResponse(ResponseInterface $response)
+    private function parseResponse(ResponseInterface $response): mixed
     {
         if (204 === $response->getStatusCode()) {
             return null;
