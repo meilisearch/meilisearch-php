@@ -8,29 +8,9 @@ use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Exceptions\LogicException;
 
 /**
- * @phpstan-type RawBatchStats array{
- *     totalNbTasks: non-negative-int,
- *     status: array<non-empty-string, non-negative-int>,
- *     types: array<non-empty-string, non-negative-int>,
- *     indexUids: array<non-empty-string, non-negative-int>,
- *     progressTrace?: array<string, mixed>,
- *     writeChannelCongestion?: array<string, mixed>,
- *     internalDatabaseSizes?: array<string, mixed>,
- *     embedderRequests?: array{
- *         total: non-negative-int,
- *         failed: non-negative-int,
- *         lastError?: non-empty-string|null
- *     }
- * }
- * @phpstan-type RawBatchProgressStep array{
- *     currentStep: non-empty-string,
- *     finished: non-negative-int,
- *     total: non-negative-int
- * }
- * @phpstan-type RawBatchProgress array{
- *     steps: list<RawBatchProgressStep>,
- *     percentage: float
- * }
+ * @phpstan-import-type RawBatchStats from BatchStats
+ * @phpstan-import-type RawBatchProgress from BatchProgress
+ *
  * @phpstan-type RawBatch array{
  *     uid: non-negative-int,
  *     details: array<mixed>,
@@ -46,20 +26,18 @@ final class Batch implements \ArrayAccess
 {
     /**
      * @param non-negative-int      $uid
-     * @param RawBatchStats         $stats
      * @param non-empty-string|null $duration
-     * @param RawBatchProgress|null $progress
      * @param non-empty-string|null $batchStrategy
      * @param RawBatch              $raw
      */
     public function __construct(
         private readonly int $uid,
         private readonly TaskDetails $details,
-        private readonly array $stats,
+        private readonly BatchStats $stats,
         private readonly ?string $duration,
         private readonly \DateTimeImmutable $startedAt,
         private readonly ?\DateTimeImmutable $finishedAt,
-        private readonly ?array $progress,
+        private readonly ?BatchProgress $progress,
         private readonly ?string $batchStrategy,
         private readonly array $raw,
     ) {
@@ -78,10 +56,7 @@ final class Batch implements \ArrayAccess
         return $this->details;
     }
 
-    /**
-     * @return RawBatchStats
-     */
-    public function getStats(): array
+    public function getStats(): BatchStats
     {
         return $this->stats;
     }
@@ -107,10 +82,8 @@ final class Batch implements \ArrayAccess
     /**
      * Real-time progress while the batch is processing; null when finished.
      * When present, `percentage` is documented by Meilisearch as 0.0–100.0.
-     *
-     * @return RawBatchProgress|null
      */
-    public function getProgress(): ?array
+    public function getProgress(): ?BatchProgress
     {
         return $this->progress;
     }
@@ -161,12 +134,12 @@ final class Batch implements \ArrayAccess
         return new self(
             $data['uid'],
             UnknownTaskDetails::fromArray($data['details']),
-            $data['stats'],
+            BatchStats::fromArray($data['stats']),
             $data['duration'] ?? null,
             new \DateTimeImmutable($data['startedAt']),
             null !== $data['finishedAt']
                 ? new \DateTimeImmutable($data['finishedAt']) : null,
-            $data['progress'] ?? null,
+            null !== ($data['progress'] ?? null) ? BatchProgress::fromArray($data['progress']) : null,
             $data['batchStrategy'] ?? null,
             $data,
         );
