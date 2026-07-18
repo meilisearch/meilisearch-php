@@ -109,11 +109,17 @@ class Settings extends Data implements \JsonSerializable
     {
         $rawData = $data;
 
-        $data['synonyms'] = new Synonyms($rawData['synonyms'] ?? []);
-        $data['typoTolerance'] = new TypoTolerance($rawData['typoTolerance'] ?? []);
-        $data['faceting'] = new Faceting($rawData['faceting'] ?? []);
+        if (\array_key_exists('synonyms', $rawData)) {
+            $data['synonyms'] = null === $rawData['synonyms'] ? null : new Synonyms($rawData['synonyms']);
+        }
+        if (\array_key_exists('typoTolerance', $rawData)) {
+            $data['typoTolerance'] = null === $rawData['typoTolerance'] ? null : new TypoTolerance($rawData['typoTolerance']);
+        }
+        if (\array_key_exists('faceting', $rawData)) {
+            $data['faceting'] = null === $rawData['faceting'] ? null : new Faceting($rawData['faceting']);
+        }
         if (\array_key_exists('embedders', $rawData)) {
-            $data['embedders'] = new Embedders($rawData['embedders'] ?? []);
+            $data['embedders'] = null === $rawData['embedders'] ? null : new Embedders($rawData['embedders']);
         }
 
         parent::__construct($data);

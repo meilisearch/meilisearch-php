@@ -68,6 +68,36 @@ use function Meilisearch\partial;
  *     hitsPerPage?: non-negative-int,
  *     nbHits?: non-negative-int
  * }
+ * @phpstan-type IndexSearchParameters array{
+ *     q?: string,
+ *     filter?: non-empty-string|list<non-empty-string|list<non-empty-string>>,
+ *     locales?: list<non-empty-string>,
+ *     attributesToRetrieve?: list<non-empty-string>,
+ *     attributesToCrop?: list<non-empty-string>,
+ *     cropLength?: positive-int,
+ *     attributesToHighlight?: list<non-empty-string>,
+ *     cropMarker?: string,
+ *     highlightPreTag?: string,
+ *     highlightPostTag?: string,
+ *     facets?: list<non-empty-string>,
+ *     showMatchesPosition?: bool,
+ *     sort?: list<non-empty-string>,
+ *     matchingStrategy?: 'last'|'all'|'frequency',
+ *     offset?: non-negative-int,
+ *     limit?: non-negative-int,
+ *     hitsPerPage?: non-negative-int,
+ *     page?: non-negative-int,
+ *     vector?: non-empty-list<float|non-empty-list<float>>,
+ *     hybrid?: array<mixed>,
+ *     attributesToSearchOn?: non-empty-list<non-empty-string>,
+ *     showRankingScore?: bool,
+ *     showRankingScoreDetails?: bool,
+ *     showPerformanceDetails?: bool,
+ *     rankingScoreThreshold?: float,
+ *     distinct?: non-empty-string,
+ *     retrieveVectors?: bool,
+ *     media?: array<string, mixed>
+ * }
  * @phpstan-type SearchResultOptions array{
  *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
  *     transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>
@@ -265,6 +295,8 @@ class Indexes extends Endpoint
     // Search
 
     /**
+     * @phpstan-param IndexSearchParameters $searchParams
+     *
      * @phpstan-return ($options is array{raw: true|non-falsy-string|positive-int, ...} ? array : SearchResult)
      */
     public function search(?string $query, array $searchParams = [], array $options = []): SearchResult|array
@@ -288,7 +320,7 @@ class Indexes extends Endpoint
     }
 
     /**
-     * @param array<string, mixed> $searchParams
+     * @phpstan-param IndexSearchParameters $searchParams
      *
      * @phpstan-return RawSearchResultWithNbHits
      */
