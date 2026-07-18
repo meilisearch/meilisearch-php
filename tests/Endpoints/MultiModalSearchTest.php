@@ -93,6 +93,18 @@ final class MultiModalSearchTest extends TestCase
         self::assertSame('Star Wars', $response->getHits()[0]['title']);
     }
 
+    /**
+     * @return array{
+     *     source: 'rest',
+     *     url: non-empty-string,
+     *     apiKey: string,
+     *     dimensions: 1024,
+     *     indexingFragments: array<string, mixed>,
+     *     searchFragments: array<string, mixed>,
+     *     request: array<string, mixed>,
+     *     response: array<string, mixed>
+     * }
+     */
     private static function getVoyageEmbedderConfig(string $voyageApiKey): array
     {
         return [

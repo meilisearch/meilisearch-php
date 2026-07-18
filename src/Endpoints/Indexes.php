@@ -10,6 +10,7 @@ use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\IndexesResults;
+use Meilisearch\Contracts\IndexStats;
 use Meilisearch\Contracts\SimilarDocumentsQuery;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TasksQuery;
@@ -25,9 +26,17 @@ use Meilisearch\Search\SimilarDocumentsSearchResult;
 use function Meilisearch\partial;
 
 /**
+ * @phpstan-import-type RawIndexStats from IndexStats
+ * @phpstan-import-type SettingsArray from Settings
  * @phpstan-import-type RawTasks from Tasks
  * @phpstan-import-type TasksResponse from Tasks
  *
+ * @phpstan-type RawIndex array{
+ *     uid: non-empty-string,
+ *     primaryKey: non-empty-string|null,
+ *     createdAt: non-empty-string|null,
+ *     updatedAt: non-empty-string|null
+ * }
  * @phpstan-type RawSearchResult array{
  *     hits: array<int, array<string, mixed>>,
  *     processingTimeMs: non-negative-int,
@@ -42,6 +51,22 @@ use function Meilisearch\partial;
  *     totalHits?: non-negative-int,
  *     estimatedTotalHits?: non-negative-int,
  *     hitsPerPage?: non-negative-int
+ * }
+ * @phpstan-type RawSearchResultWithNbHits array{
+ *     hits: array<int, array<string, mixed>>,
+ *     processingTimeMs: non-negative-int,
+ *     query: string,
+ *     facetDistribution?: array<string, mixed>,
+ *     facetStats?: array<string, mixed>,
+ *     offset?: non-negative-int,
+ *     limit?: non-negative-int,
+ *     semanticHitCount?: non-negative-int,
+ *     page?: non-negative-int,
+ *     totalPages?: non-negative-int,
+ *     totalHits?: non-negative-int,
+ *     estimatedTotalHits?: non-negative-int,
+ *     hitsPerPage?: non-negative-int,
+ *     nbHits?: non-negative-int
  * }
  * @phpstan-type SearchResultOptions array{
  *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
@@ -72,6 +97,9 @@ class Indexes extends Endpoint
         parent::__construct($http);
     }
 
+    /**
+     * @param RawIndex $attributes
+     */
     protected function newInstance(array $attributes): self
     {
         return new self(
@@ -84,6 +112,8 @@ class Indexes extends Endpoint
     }
 
     /**
+     * @param RawIndex $attributes
+     *
      * @return $this
      */
     protected function fill(array $attributes): self
@@ -97,6 +127,8 @@ class Indexes extends Endpoint
     }
 
     /**
+     * @param array{primaryKey?: non-empty-string} $options
+     *
      * @throws \Exception|ApiException
      */
     public function create(string $uid, array $options = []): Task
@@ -113,7 +145,9 @@ class Indexes extends Endpoint
         $response = $this->allRaw($query);
 
         foreach ($response['results'] as $index) {
-            $indexes[] = $this->newInstance($index);
+            /** @var RawIndex $rawIndex */
+            $rawIndex = $index;
+            $indexes[] = $this->newInstance($rawIndex);
         }
 
         $response['results'] = $indexes;
@@ -159,10 +193,16 @@ class Indexes extends Endpoint
     public function fetchInfo(): self
     {
         $response = $this->fetchRawInfo();
+        \assert(null !== $response);
+        /** @var RawIndex $typedResponse */
+        $typedResponse = $response;
 
-        return $this->fill($response);
+        return $this->fill($typedResponse);
     }
 
+    /**
+     * @param array{primaryKey?: non-empty-string} $body
+     */
     public function update(array $body): Task
     {
         return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid, $body), partial(Tasks::waitTask(...), $this->http));
@@ -247,6 +287,11 @@ class Indexes extends Endpoint
         return $searchResult;
     }
 
+    /**
+     * @param array<string, mixed> $searchParams
+     *
+     * @phpstan-return RawSearchResultWithNbHits
+     */
     public function rawSearch(?string $query, array $searchParams = []): array
     {
         $parameters = array_merge(
@@ -262,7 +307,10 @@ class Indexes extends Endpoint
             $result['nbHits'] = $result['estimatedTotalHits'];
         }
 
-        return $result;
+        /** @var RawSearchResultWithNbHits $typedResult */
+        $typedResult = $result;
+
+        return $typedResult;
     }
 
     public function searchSimilarDocuments(SimilarDocumentsQuery $parameters): SimilarDocumentsSearchResult
@@ -283,22 +331,29 @@ class Indexes extends Endpoint
 
     // Stats
 
-    public function stats(): array
+    public function stats(): IndexStats
     {
-        return $this->http->get(self::PATH.'/'.$this->uid.'/stats');
+        /** @var RawIndexStats $raw */
+        $raw = $this->http->get(self::PATH.'/'.$this->uid.'/stats');
+
+        return IndexStats::fromArray($raw);
     }
 
     // Settings - Global
 
-    public function getSettings(): array
+    public function getSettings(): Settings
     {
-        return (new Settings($this->http->get(self::PATH.'/'.$this->uid.'/settings')))
-            ->getIterator()->getArrayCopy();
+        return new Settings($this->http->get(self::PATH.'/'.$this->uid.'/settings'));
     }
 
-    public function updateSettings($settings): Task
+    /**
+     * @param SettingsArray|Settings $settings
+     */
+    public function updateSettings(array|Settings $settings): Task
     {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings), partial(Tasks::waitTask(...), $this->http));
+        $body = $settings instanceof Settings ? $settings->toArray() : $settings;
+
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $body), partial(Tasks::waitTask(...), $this->http));
     }
 
     public function resetSettings(): Task
