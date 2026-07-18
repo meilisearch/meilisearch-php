@@ -30,7 +30,7 @@ final class BatchesTest extends TestCase
     {
         $response = $this->client->getBatches((new BatchesQuery())->setIndexUids([$this->indexName]));
         foreach ($response->getResults() as $result) {
-            self::assertArrayHasKey($this->indexName, $result->getStats()['indexUids']);
+            self::assertArrayHasKey($this->indexName, $result->getStats()->getIndexUids());
         }
     }
 
@@ -66,10 +66,10 @@ final class BatchesTest extends TestCase
         self::assertSame($first->getUid(), $response->getUid());
         self::assertInstanceOf(UnknownTaskDetails::class, $response->getDetails());
         $stats = $response->getStats();
-        self::assertSame($stats['totalNbTasks'], array_sum($stats['status']));
-        self::assertNotEmpty($stats['status']);
-        self::assertNotEmpty($stats['types']);
-        self::assertArrayHasKey('progressTrace', $stats);
+        self::assertSame($stats->getTotalNbTasks(), array_sum($stats->getStatus()));
+        self::assertNotEmpty($stats->getStatus());
+        self::assertNotEmpty($stats->getTypes());
+        self::assertNotNull($stats->getProgressTrace());
         self::assertSame($response->toArray()['batchStrategy'] ?? null, $response->getBatchStrategy());
     }
 }
