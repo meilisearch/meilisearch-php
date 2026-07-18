@@ -23,9 +23,13 @@ final class BatchStatsTest extends TestCase
             status: ['succeeded' => 1],
             types: ['documentAdditionOrUpdate' => 1],
             indexUids: ['movies' => 1],
-            progressTrace: ['indexingDocuments' => '100%'],
-            writeChannelCongestion: ['attempts' => 0],
-            internalDatabaseSizes: ['documents' => '4.0 KiB'],
+            progressTrace: ['processing tasks > indexing' => '2.40s'],
+            writeChannelCongestion: [
+                'attempts' => 2608482,
+                'blocking_attempts' => 0,
+                'blocking_ratio' => 0.0,
+            ],
+            internalDatabaseSizes: ['documents' => '25.41 MiB (+25.41 MiB)'],
             embedderRequests: $embedderRequests,
         );
 
@@ -33,9 +37,13 @@ final class BatchStatsTest extends TestCase
         self::assertSame(['succeeded' => 1], $stats->getStatus());
         self::assertSame(['documentAdditionOrUpdate' => 1], $stats->getTypes());
         self::assertSame(['movies' => 1], $stats->getIndexUids());
-        self::assertSame(['indexingDocuments' => '100%'], $stats->getProgressTrace());
-        self::assertSame(['attempts' => 0], $stats->getWriteChannelCongestion());
-        self::assertSame(['documents' => '4.0 KiB'], $stats->getInternalDatabaseSizes());
+        self::assertSame(['processing tasks > indexing' => '2.40s'], $stats->getProgressTrace());
+        self::assertSame([
+            'attempts' => 2608482,
+            'blocking_attempts' => 0,
+            'blocking_ratio' => 0.0,
+        ], $stats->getWriteChannelCongestion());
+        self::assertSame(['documents' => '25.41 MiB (+25.41 MiB)'], $stats->getInternalDatabaseSizes());
         self::assertSame($embedderRequests, $stats->getEmbedderRequests());
     }
 
@@ -65,9 +73,13 @@ final class BatchStatsTest extends TestCase
             'status' => ['succeeded' => 1],
             'types' => ['documentAdditionOrUpdate' => 1],
             'indexUids' => ['movies' => 1],
-            'progressTrace' => ['indexingDocuments' => '100%'],
-            'writeChannelCongestion' => ['attempts' => 0],
-            'internalDatabaseSizes' => ['documents' => '4.0 KiB'],
+            'progressTrace' => ['processing tasks > indexing' => '2.40s'],
+            'writeChannelCongestion' => [
+                'attempts' => 2608482,
+                'blocking_attempts' => 0,
+                'blocking_ratio' => 0.0,
+            ],
+            'internalDatabaseSizes' => ['documents' => '25.41 MiB (+25.41 MiB)'],
             'embedderRequests' => [
                 'total' => 10,
                 'failed' => 2,
@@ -79,9 +91,13 @@ final class BatchStatsTest extends TestCase
         self::assertSame(['succeeded' => 1], $stats->getStatus());
         self::assertSame(['documentAdditionOrUpdate' => 1], $stats->getTypes());
         self::assertSame(['movies' => 1], $stats->getIndexUids());
-        self::assertSame(['indexingDocuments' => '100%'], $stats->getProgressTrace());
-        self::assertSame(['attempts' => 0], $stats->getWriteChannelCongestion());
-        self::assertSame(['documents' => '4.0 KiB'], $stats->getInternalDatabaseSizes());
+        self::assertSame(['processing tasks > indexing' => '2.40s'], $stats->getProgressTrace());
+        self::assertSame([
+            'attempts' => 2608482,
+            'blocking_attempts' => 0,
+            'blocking_ratio' => 0.0,
+        ], $stats->getWriteChannelCongestion());
+        self::assertSame(['documents' => '25.41 MiB (+25.41 MiB)'], $stats->getInternalDatabaseSizes());
         self::assertEquals(new BatchEmbedderRequests(
             total: 10,
             failed: 2,
