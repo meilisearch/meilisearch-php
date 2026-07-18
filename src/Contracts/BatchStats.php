@@ -7,27 +7,35 @@ namespace Meilisearch\Contracts;
 /**
  * @phpstan-import-type RawBatchEmbedderRequests from BatchEmbedderRequests
  *
+ * Keys in progressTrace and internalDatabaseSizes are intentionally open-ended
+ * (engine-defined step/db names that can change); values are duration/size strings.
+ *
+ * @phpstan-type RawWriteChannelCongestion array{
+ *     attempts: non-negative-int,
+ *     blocking_attempts: non-negative-int,
+ *     blocking_ratio: float
+ * }
  * @phpstan-type RawBatchStats array{
  *     totalNbTasks: non-negative-int,
  *     status: array<non-empty-string, non-negative-int>,
  *     types: array<non-empty-string, non-negative-int>,
  *     indexUids: array<non-empty-string, non-negative-int>,
- *     progressTrace?: array<string, mixed>,
- *     writeChannelCongestion?: array<string, mixed>,
- *     internalDatabaseSizes?: array<string, mixed>,
+ *     progressTrace?: array<non-empty-string, non-empty-string>,
+ *     writeChannelCongestion?: RawWriteChannelCongestion|null,
+ *     internalDatabaseSizes?: array<non-empty-string, non-empty-string>,
  *     embedderRequests?: RawBatchEmbedderRequests
  * }
  */
 final class BatchStats
 {
     /**
-     * @param non-negative-int                          $totalNbTasks
-     * @param array<non-empty-string, non-negative-int> $status
-     * @param array<non-empty-string, non-negative-int> $types
-     * @param array<non-empty-string, non-negative-int> $indexUids
-     * @param array<string, mixed>|null                 $progressTrace
-     * @param array<string, mixed>|null                 $writeChannelCongestion
-     * @param array<string, mixed>|null                 $internalDatabaseSizes
+     * @param non-negative-int                               $totalNbTasks
+     * @param array<non-empty-string, non-negative-int>      $status
+     * @param array<non-empty-string, non-negative-int>      $types
+     * @param array<non-empty-string, non-negative-int>      $indexUids
+     * @param array<non-empty-string, non-empty-string>|null $progressTrace
+     * @param RawWriteChannelCongestion|null                 $writeChannelCongestion
+     * @param array<non-empty-string, non-empty-string>|null $internalDatabaseSizes
      */
     public function __construct(
         private readonly int $totalNbTasks,
@@ -74,7 +82,7 @@ final class BatchStats
     }
 
     /**
-     * @return array<string, mixed>|null
+     * @return array<non-empty-string, non-empty-string>|null
      */
     public function getProgressTrace(): ?array
     {
@@ -82,7 +90,7 @@ final class BatchStats
     }
 
     /**
-     * @return array<string, mixed>|null
+     * @return RawWriteChannelCongestion|null
      */
     public function getWriteChannelCongestion(): ?array
     {
@@ -90,7 +98,7 @@ final class BatchStats
     }
 
     /**
-     * @return array<string, mixed>|null
+     * @return array<non-empty-string, non-empty-string>|null
      */
     public function getInternalDatabaseSizes(): ?array
     {
