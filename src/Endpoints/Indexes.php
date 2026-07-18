@@ -373,17 +373,20 @@ class Indexes extends Endpoint
 
     // Settings - Global
 
-    public function getSettings(): Settings
+    /**
+     * @return SettingsArray
+     */
+    public function getSettings(): array
     {
-        return new Settings($this->http->get(self::PATH.'/'.$this->uid.'/settings'));
+        return (new Settings($this->http->get(self::PATH.'/'.$this->uid.'/settings')))->toArray();
     }
 
     /**
-     * @param SettingsArray|Settings $settings
+     * @param SettingsArray $settings
      */
-    public function updateSettings(array|Settings $settings): Task
+    public function updateSettings(array $settings): Task
     {
-        $body = $settings instanceof Settings ? $settings->toArray() : $settings;
+        $body = (new Settings($settings))->toArray();
 
         return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $body), partial(Tasks::waitTask(...), $this->http));
     }
