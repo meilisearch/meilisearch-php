@@ -263,7 +263,7 @@ final class Task implements \ArrayAccess
             TaskType::TaskDeletion => self::detailFromArray($details, TaskDeletionDetails::fromArray(...)),
             // It’s intentional that SnapshotCreation tasks don’t have a details object
             // (no SnapshotCreationDetails exists and tests don’t exercise any details)
-            TaskType::SnapshotCreation, TaskType::NetworkTopologyChange => null,
+            TaskType::SnapshotCreation, TaskType::NetworkTopologyChange, TaskType::DsrUpdate, TaskType::DsrClear => null,
             TaskType::IndexCompaction => self::detailFromArray($details, IndexCompactionDetails::fromArray(...)),
         };
     }

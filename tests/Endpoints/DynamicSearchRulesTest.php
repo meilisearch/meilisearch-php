@@ -6,6 +6,8 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DynamicSearchRulesFilter;
 use Meilisearch\Contracts\DynamicSearchRulesQuery;
+use Meilisearch\Contracts\TaskStatus;
+use Meilisearch\Contracts\TaskType;
 use Meilisearch\Contracts\UpdateDynamicSearchRuleQuery;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
@@ -13,6 +15,7 @@ use Tests\TestCase;
 final class DynamicSearchRulesTest extends TestCase
 {
     private const SEARCH_RULE_UID = 'movie-rule';
+    private const SEARCH_RULE_DESCRIPTION = 'Movie promotion rule';
     private const SEARCH_RULE_PATCH = [
         'actions' => [
             [
@@ -38,11 +41,7 @@ final class DynamicSearchRulesTest extends TestCase
 
     protected function tearDown(): void
     {
-        $response = $this->client->getDynamicSearchRules();
-
-        foreach ($response as $rule) {
-            $this->client->deleteDynamicSearchRule($rule->getUid());
-        }
+        $this->client->deleteAllDynamicSearchRules()->wait();
 
         parent::tearDown();
     }
@@ -50,14 +49,16 @@ final class DynamicSearchRulesTest extends TestCase
     public function testCanListDynamicSearchRules(): void
     {
         $this->client->updateDynamicSearchRule(
-            (new UpdateDynamicSearchRuleQuery(self::SEARCH_RULE_UID))->setActions(self::SEARCH_RULE_PATCH['actions'])
-        );
+            (new UpdateDynamicSearchRuleQuery(self::SEARCH_RULE_UID))
+                ->setDescription(self::SEARCH_RULE_DESCRIPTION)
+                ->setActions(self::SEARCH_RULE_PATCH['actions'])
+        )->wait();
 
         $response = $this->client->getDynamicSearchRules(
             (new DynamicSearchRulesQuery())
                 ->setOffset(0)
                 ->setLimit(20)
-                ->setFilter((new DynamicSearchRulesFilter())->setAttributePatterns([self::SEARCH_RULE_UID]))
+                ->setFilter((new DynamicSearchRulesFilter())->setQuery('Movie promotion'))
         );
 
         self::assertCount(1, $response);
@@ -66,9 +67,15 @@ final class DynamicSearchRulesTest extends TestCase
 
     public function testCanCreateOrUpdateDynamicSearchRule(): void
     {
-        $response = $this->client->updateDynamicSearchRule(
+        $task = $this->client->updateDynamicSearchRule(
             (new UpdateDynamicSearchRuleQuery(self::SEARCH_RULE_UID))->setActions(self::SEARCH_RULE_PATCH['actions'])
         );
+
+        self::assertSame(TaskStatus::Enqueued, $task->getStatus());
+
+        $task->wait();
+
+        $response = $this->client->getDynamicSearchRule(self::SEARCH_RULE_UID);
 
         self::assertSame(self::SEARCH_RULE_UID, $response->getUid());
         self::assertSame(self::SEARCH_RULE_PATCH['actions'], $response->getActions());
@@ -78,7 +85,7 @@ final class DynamicSearchRulesTest extends TestCase
     {
         $this->client->updateDynamicSearchRule(
             (new UpdateDynamicSearchRuleQuery(self::SEARCH_RULE_UID))->setActions(self::SEARCH_RULE_PATCH['actions'])
-        );
+        )->wait();
 
         $response = $this->client->getDynamicSearchRule(self::SEARCH_RULE_UID);
 
@@ -89,11 +96,43 @@ final class DynamicSearchRulesTest extends TestCase
     public function testCanDeleteDynamicSearchRule(): void
     {
         $this->client->updateDynamicSearchRule(
-            (new UpdateDynamicSearchRuleQuery(self::SEARCH_RULE_UID))->setActions(self::SEARCH_RULE_PATCH['actions'])
+            (new UpdateDynamicSearchRuleQuery(self::SEARCH_RULE_UID))
+                ->setDescription(self::SEARCH_RULE_DESCRIPTION)
+                ->setActions(self::SEARCH_RULE_PATCH['actions'])
+        )->wait();
+
+        $task = $this->client->deleteDynamicSearchRule(self::SEARCH_RULE_UID);
+
+        $task->wait();
+
+        $response = $this->client->getDynamicSearchRules(
+            (new DynamicSearchRulesQuery())
+                ->setFilter((new DynamicSearchRulesFilter())->setQuery('promotion'))
         );
 
-        $response = $this->client->deleteDynamicSearchRule(self::SEARCH_RULE_UID);
+        self::assertCount(0, $response);
+    }
 
-        self::assertNull($response);
+    public function testCanDeleteAllDynamicSearchRules(): void
+    {
+        $this->client->updateDynamicSearchRule(
+            (new UpdateDynamicSearchRuleQuery(self::SEARCH_RULE_UID))
+                ->setDescription(self::SEARCH_RULE_DESCRIPTION)
+                ->setActions(self::SEARCH_RULE_PATCH['actions'])
+        )->wait();
+        $this->client->updateDynamicSearchRule(
+            (new UpdateDynamicSearchRuleQuery('promo-rule'))
+                ->setDescription('Promo rule')
+                ->setActions(self::SEARCH_RULE_PATCH['actions'])
+        )->wait();
+
+        $task = $this->client->deleteAllDynamicSearchRules();
+
+        self::assertSame(TaskStatus::Enqueued, $task->getStatus());
+        self::assertSame(TaskType::DsrClear, $task->getType());
+
+        $task->wait();
+
+        self::assertCount(0, $this->client->getDynamicSearchRules());
     }
 }

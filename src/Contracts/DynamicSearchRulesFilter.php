@@ -6,21 +6,16 @@ namespace Meilisearch\Contracts;
 
 final class DynamicSearchRulesFilter
 {
-    /**
-     * @var list<non-empty-string>|null
-     */
-    private ?array $attributePatterns = null;
+    private ?string $query = null;
 
     private ?bool $active = null;
 
     /**
-     * @param list<non-empty-string> $patterns
-     *
      * @return $this
      */
-    public function setAttributePatterns(array $patterns): self
+    public function setQuery(string $query): self
     {
-        $this->attributePatterns = $patterns;
+        $this->query = $query;
 
         return $this;
     }
@@ -37,14 +32,14 @@ final class DynamicSearchRulesFilter
 
     /**
      * @return array{
-     *     attributePatterns?: list<non-empty-string>,
+     *     query?: string,
      *     active?: bool
      * }
      */
     public function toArray(): array
     {
         return array_filter([
-            'attributePatterns' => $this->attributePatterns,
+            'query' => $this->query,
             'active' => $this->active,
         ], static function ($item) { return null !== $item; });
     }

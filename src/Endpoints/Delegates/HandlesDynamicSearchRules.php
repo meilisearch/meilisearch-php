@@ -7,6 +7,7 @@ namespace Meilisearch\Endpoints\Delegates;
 use Meilisearch\Contracts\DynamicSearchRule;
 use Meilisearch\Contracts\DynamicSearchRulesQuery;
 use Meilisearch\Contracts\DynamicSearchRulesResults;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\UpdateDynamicSearchRuleQuery;
 use Meilisearch\Endpoints\DynamicSearchRules;
 
@@ -27,7 +28,7 @@ trait HandlesDynamicSearchRules
         return $this->dynamicSearchRules->get($uid);
     }
 
-    public function updateDynamicSearchRule(UpdateDynamicSearchRuleQuery $request): DynamicSearchRule
+    public function updateDynamicSearchRule(UpdateDynamicSearchRuleQuery $request): Task
     {
         return $this->dynamicSearchRules->update($request);
     }
@@ -35,8 +36,13 @@ trait HandlesDynamicSearchRules
     /**
      * @param non-empty-string $uid
      */
-    public function deleteDynamicSearchRule(string $uid): ?array
+    public function deleteDynamicSearchRule(string $uid): Task
     {
         return $this->dynamicSearchRules->delete($uid);
+    }
+
+    public function deleteAllDynamicSearchRules(): Task
+    {
+        return $this->dynamicSearchRules->deleteAll();
     }
 }

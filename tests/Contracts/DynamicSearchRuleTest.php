@@ -14,16 +14,14 @@ final class DynamicSearchRuleTest extends TestCase
         $raw = [
             'uid' => 'movie-rule',
             'description' => 'Movie promotion',
-            'priority' => 1,
+            'precedence' => 1,
             'active' => true,
             'conditions' => [
-                [
-                    'scope' => 'query',
+                'query' => [
                     'isEmpty' => false,
-                    'contains' => 'movie',
+                    'words' => 'movie',
                 ],
-                [
-                    'scope' => 'time',
+                'time' => [
                     'start' => '2026-01-01T00:00:00Z',
                     'end' => null,
                 ],
@@ -32,7 +30,7 @@ final class DynamicSearchRuleTest extends TestCase
                 [
                     'selector' => [
                         'indexUid' => 'movies',
-                        'id' => null,
+                        'id' => '1',
                     ],
                     'action' => [
                         'type' => 'pin',
@@ -46,7 +44,7 @@ final class DynamicSearchRuleTest extends TestCase
 
         self::assertSame('movie-rule', $rule->getUid());
         self::assertSame('Movie promotion', $rule->getDescription());
-        self::assertSame(1, $rule->getPriority());
+        self::assertSame(1, $rule->getPrecedence());
         self::assertTrue($rule->isActive());
         self::assertSame($raw['conditions'], $rule->getConditions());
         self::assertSame($raw['actions'], $rule->getActions());
