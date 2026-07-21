@@ -186,6 +186,8 @@ final class TaskTest extends TestCase
 
     #[TestWith([TaskType::SnapshotCreation, 'snapshotCreation'])]
     #[TestWith([TaskType::NetworkTopologyChange, 'networkTopologyChange'])]
+    #[TestWith([TaskType::DsrUpdate, 'dsrUpdate'])]
+    #[TestWith([TaskType::DsrClear, 'dsrClear'])]
     public function testFromArrayWithNoDetailsObjectForTaskType(TaskType $expectedType, string $type): void
     {
         $task = Task::fromArray([

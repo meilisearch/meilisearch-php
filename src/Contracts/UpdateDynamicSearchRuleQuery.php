@@ -6,12 +6,12 @@ namespace Meilisearch\Contracts;
 
 /**
  * @phpstan-import-type SearchRuleAction from DynamicSearchRule
- * @phpstan-import-type SearchRuleCondition from DynamicSearchRule
+ * @phpstan-import-type SearchRuleConditions from DynamicSearchRule
  */
 final class UpdateDynamicSearchRuleQuery
 {
     private bool $hasDescription = false;
-    private bool $hasPriority = false;
+    private bool $hasPrecedence = false;
     private bool $hasActive = false;
     private bool $hasConditions = false;
     private bool $hasActions = false;
@@ -21,12 +21,12 @@ final class UpdateDynamicSearchRuleQuery
     /**
      * @var non-negative-int|null
      */
-    private ?int $priority = null;
+    private ?int $precedence = null;
 
     private ?bool $active = null;
 
     /**
-     * @var list<SearchRuleCondition>|null
+     * @var SearchRuleConditions|null
      */
     private ?array $conditions = null;
 
@@ -54,14 +54,14 @@ final class UpdateDynamicSearchRuleQuery
     }
 
     /**
-     * @param non-negative-int|null $priority
+     * @param non-negative-int|null $precedence
      *
      * @return $this
      */
-    public function setPriority(?int $priority): self
+    public function setPrecedence(?int $precedence): self
     {
-        $this->priority = $priority;
-        $this->hasPriority = true;
+        $this->precedence = $precedence;
+        $this->hasPrecedence = true;
 
         return $this;
     }
@@ -78,7 +78,7 @@ final class UpdateDynamicSearchRuleQuery
     }
 
     /**
-     * @param list<SearchRuleCondition>|null $conditions
+     * @param SearchRuleConditions|null $conditions
      *
      * @return $this
      */
@@ -106,9 +106,9 @@ final class UpdateDynamicSearchRuleQuery
     /**
      * @return array{
      *     description?: string|null,
-     *     priority?: non-negative-int|null,
+     *     precedence?: non-negative-int|null,
      *     active?: bool,
-     *     conditions?: list<SearchRuleCondition>|null,
+     *     conditions?: SearchRuleConditions|null,
      *     actions?: list<SearchRuleAction>|null
      * }
      */
@@ -120,8 +120,8 @@ final class UpdateDynamicSearchRuleQuery
             $payload['description'] = $this->description;
         }
 
-        if ($this->hasPriority) {
-            $payload['priority'] = $this->priority;
+        if ($this->hasPrecedence) {
+            $payload['precedence'] = $this->precedence;
         }
 
         if ($this->hasActive) {

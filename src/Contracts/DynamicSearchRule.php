@@ -7,7 +7,7 @@ namespace Meilisearch\Contracts;
 /**
  * @phpstan-type SearchRuleSelector array{
  *     indexUid?: non-empty-string|null,
- *     id?: non-empty-string|null
+ *     id: non-empty-string
  * }
  * @phpstan-type SearchRulePinAction array{
  *     type: 'pin',
@@ -17,23 +17,24 @@ namespace Meilisearch\Contracts;
  *     selector: SearchRuleSelector,
  *     action: SearchRulePinAction
  * }
- * @phpstan-type SearchRuleQueryCondition array{
- *     scope: 'query',
+ * @phpstan-type QueryCondition array{
  *     isEmpty?: bool|null,
- *     contains?: non-empty-string|null
+ *     words?: non-empty-string|null
  * }
- * @phpstan-type SearchRuleTimeCondition array{
- *     scope: 'time',
+ * @phpstan-type TimeCondition array{
  *     start?: non-empty-string|null,
  *     end?: non-empty-string|null
  * }
- * @phpstan-type SearchRuleCondition SearchRuleQueryCondition|SearchRuleTimeCondition
+ * @phpstan-type SearchRuleConditions array{
+ *     query?: QueryCondition|null,
+ *     time?: TimeCondition|null
+ * }
  * @phpstan-type RawDynamicSearchRule array{
  *     uid: non-empty-string,
  *     description?: string|null,
- *     priority?: non-negative-int|null,
+ *     precedence?: non-negative-int|null,
  *     active?: bool,
- *     conditions?: list<SearchRuleCondition>,
+ *     conditions?: SearchRuleConditions|null,
  *     actions: list<SearchRuleAction>
  * }
  */
@@ -54,12 +55,12 @@ final class DynamicSearchRule
     /**
      * @var non-negative-int|null
      */
-    private readonly ?int $priority;
+    private readonly ?int $precedence;
 
     private readonly ?bool $active;
 
     /**
-     * @var list<SearchRuleCondition>|null
+     * @var SearchRuleConditions|null
      */
     private readonly ?array $conditions;
 
@@ -72,7 +73,7 @@ final class DynamicSearchRule
         $this->uid = $raw['uid'];
         $this->actions = $raw['actions'];
         $this->description = $raw['description'] ?? null;
-        $this->priority = $raw['priority'] ?? null;
+        $this->precedence = $raw['precedence'] ?? null;
         $this->active = $raw['active'] ?? null;
         $this->conditions = $raw['conditions'] ?? null;
     }
@@ -95,9 +96,9 @@ final class DynamicSearchRule
         return $this->description;
     }
 
-    public function getPriority(): ?int
+    public function getPrecedence(): ?int
     {
-        return $this->priority;
+        return $this->precedence;
     }
 
     public function isActive(): ?bool
@@ -106,7 +107,7 @@ final class DynamicSearchRule
     }
 
     /**
-     * @return list<SearchRuleCondition>|null
+     * @return SearchRuleConditions|null
      */
     public function getConditions(): ?array
     {

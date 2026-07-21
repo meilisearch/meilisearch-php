@@ -8,7 +8,10 @@ use Meilisearch\Contracts\DynamicSearchRule;
 use Meilisearch\Contracts\DynamicSearchRulesQuery;
 use Meilisearch\Contracts\DynamicSearchRulesResults;
 use Meilisearch\Contracts\Endpoint;
+use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\UpdateDynamicSearchRuleQuery;
+
+use function Meilisearch\partial;
 
 /**
  * @phpstan-import-type RawDynamicSearchRule from DynamicSearchRule
@@ -50,18 +53,30 @@ final class DynamicSearchRules extends Endpoint
         return DynamicSearchRule::fromArray($response);
     }
 
-    public function update(UpdateDynamicSearchRuleQuery $request): DynamicSearchRule
+    public function update(UpdateDynamicSearchRuleQuery $request): Task
     {
-        $response = $this->http->patch(self::PATH.'/'.$request->uid, $request->toArray());
-
-        return DynamicSearchRule::fromArray($response);
+        return Task::fromArray(
+            $this->http->patch(self::PATH.'/'.$request->uid, $request->toArray()),
+            partial(Tasks::waitTask(...), $this->http)
+        );
     }
 
     /**
      * @param non-empty-string $uid
      */
-    public function delete(string $uid): ?array
+    public function delete(string $uid): Task
     {
-        return $this->http->delete(self::PATH.'/'.$uid);
+        $response = $this->http->delete(self::PATH.'/'.$uid);
+        \assert(null !== $response);
+
+        return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
+    }
+
+    public function deleteAll(): Task
+    {
+        $response = $this->http->delete(self::PATH);
+        \assert(null !== $response);
+
+        return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
     }
 }

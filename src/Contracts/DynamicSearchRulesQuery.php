@@ -57,7 +57,7 @@ final class DynamicSearchRulesQuery
      *     offset?: non-negative-int,
      *     limit?: non-negative-int,
      *     filter?: array{
-     *         attributePatterns?: list<non-empty-string>,
+     *         query?: string,
      *         active?: bool
      *     }
      * }

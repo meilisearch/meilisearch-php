@@ -598,19 +598,22 @@ list_dynamic_search_rules_1: |-
 get_dynamic_search_rule_1: |-
   $client->getDynamicSearchRule('RULE_UID');
 patch_dynamic_search_rule_1: |-
-  $client->updateDynamicSearchRule('RULE_UID', [
-    'actions' => [
-      [
-        'selector' => [
-          'indexUid' => 'movies',
-          'id' => '299537'
-        ],
-        'action' => [
-          'type' => 'pin',
-          'position' => 0
+  $client->updateDynamicSearchRule(
+    (new \Meilisearch\Contracts\UpdateDynamicSearchRuleQuery('RULE_UID'))
+      ->setActions([
+        [
+          'selector' => [
+            'indexUid' => 'movies',
+            'id' => '299537'
+          ],
+          'action' => [
+            'type' => 'pin',
+            'position' => 0
+          ]
         ]
-      ]
-    ]
-  ]);
+      ])
+  );
 delete_dynamic_search_rule_1: |-
   $client->deleteDynamicSearchRule('RULE_UID');
+delete_all_dynamic_search_rules_1: |-
+  $client->deleteAllDynamicSearchRules();

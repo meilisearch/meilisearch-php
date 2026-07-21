@@ -46,11 +46,11 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
     {
         $data = (new UpdateDynamicSearchRuleQuery('movie-rule'))
             ->setDescription(null)
-            ->setPriority(null);
+            ->setPrecedence(null);
 
         self::assertSame([
             'description' => null,
-            'priority' => null,
+            'precedence' => null,
         ], $data->toArray());
     }
 
@@ -70,16 +70,14 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
     {
         $data = (new UpdateDynamicSearchRuleQuery('movie-rule'))
             ->setDescription('Movie promotion')
-            ->setPriority(2)
+            ->setPrecedence(2)
             ->setActive(true)
             ->setConditions([
-                [
-                    'scope' => 'query',
+                'query' => [
                     'isEmpty' => false,
-                    'contains' => 'movie',
+                    'words' => 'movie',
                 ],
-                [
-                    'scope' => 'time',
+                'time' => [
                     'start' => '2026-01-01T00:00:00Z',
                     'end' => null,
                 ],
@@ -88,7 +86,7 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
                 [
                     'selector' => [
                         'indexUid' => 'movies',
-                        'id' => null,
+                        'id' => '1',
                     ],
                     'action' => [
                         'type' => 'pin',
@@ -99,16 +97,14 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
 
         self::assertSame([
             'description' => 'Movie promotion',
-            'priority' => 2,
+            'precedence' => 2,
             'active' => true,
             'conditions' => [
-                [
-                    'scope' => 'query',
+                'query' => [
                     'isEmpty' => false,
-                    'contains' => 'movie',
+                    'words' => 'movie',
                 ],
-                [
-                    'scope' => 'time',
+                'time' => [
                     'start' => '2026-01-01T00:00:00Z',
                     'end' => null,
                 ],
@@ -117,7 +113,7 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
                 [
                     'selector' => [
                         'indexUid' => 'movies',
-                        'id' => null,
+                        'id' => '1',
                     ],
                     'action' => [
                         'type' => 'pin',

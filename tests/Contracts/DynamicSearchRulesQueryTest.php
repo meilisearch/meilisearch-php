@@ -34,13 +34,13 @@ final class DynamicSearchRulesQueryTest extends TestCase
         $data = (new DynamicSearchRulesQuery())
             ->setFilter(
                 (new DynamicSearchRulesFilter())
-                    ->setAttributePatterns(['movie-rule', 'promo*'])
+                    ->setQuery('movie')
                     ->setActive(true)
             );
 
         self::assertSame([
             'filter' => [
-                'attributePatterns' => ['movie-rule', 'promo*'],
+                'query' => 'movie',
                 'active' => true,
             ],
         ], $data->toArray());

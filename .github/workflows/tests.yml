@@ -67,7 +67,7 @@ jobs:
     name: integration-tests (PHP ${{ matrix.php-version }})
     services:
       meilisearch:
-        image: getmeili/meilisearch-enterprise:latest
+        image: getmeili/meilisearch-enterprise:v1.50.0
         ports:
           - "7700:7700"
         env:

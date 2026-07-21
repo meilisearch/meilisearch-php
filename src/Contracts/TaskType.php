@@ -20,5 +20,7 @@ enum TaskType: string
     case SnapshotCreation = 'snapshotCreation';
     case NetworkTopologyChange = 'networkTopologyChange';
     case IndexCompaction = 'indexCompaction';
+    case DsrUpdate = 'dsrUpdate';
+    case DsrClear = 'dsrClear';
     case Unknown = 'unknown';
 }
