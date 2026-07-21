@@ -27,6 +27,14 @@ final class DynamicSearchRules extends Endpoint
 {
     protected const PATH = '/dynamic-search-rules';
 
+    /**
+     * List dynamic search rules.
+     *
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     *
+     * @since Meilisearch v1.41.0
+     * @see https://www.meilisearch.com/docs/reference/api/search-rules/list-search-rules
+     */
     public function all(?DynamicSearchRulesQuery $options = null): DynamicSearchRulesResults
     {
         $query = $options?->toArray() ?? [];
@@ -44,7 +52,14 @@ final class DynamicSearchRules extends Endpoint
     }
 
     /**
-     * @param non-empty-string $uid
+     * Get a dynamic search rule.
+     *
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     *
+     * @param non-empty-string $uid Dynamic search rule UID
+     *
+     * @since Meilisearch v1.41.0
+     * @see https://www.meilisearch.com/docs/reference/api/search-rules/get-a-search-rule
      */
     public function get(string $uid): DynamicSearchRule
     {
@@ -53,6 +68,14 @@ final class DynamicSearchRules extends Endpoint
         return DynamicSearchRule::fromArray($response);
     }
 
+    /**
+     * Create or update a dynamic search rule.
+     *
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     *
+     * @since Meilisearch v1.41.0
+     * @see https://www.meilisearch.com/docs/reference/api/search-rules/create-or-update-a-search-rule
+     */
     public function update(UpdateDynamicSearchRuleQuery $request): Task
     {
         return Task::fromArray(
@@ -62,7 +85,14 @@ final class DynamicSearchRules extends Endpoint
     }
 
     /**
-     * @param non-empty-string $uid
+     * Delete a dynamic search rule.
+     *
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     *
+     * @param non-empty-string $uid Dynamic search rule UID
+     *
+     * @since Meilisearch v1.41.0
+     * @see https://www.meilisearch.com/docs/reference/api/search-rules/delete-a-search-rule
      */
     public function delete(string $uid): Task
     {
@@ -72,6 +102,14 @@ final class DynamicSearchRules extends Endpoint
         return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
     }
 
+    /**
+     * Delete all dynamic search rules.
+     *
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     *
+     * @since Meilisearch v1.50.0
+     * @see https://www.meilisearch.com/docs/reference/api/search-rules/delete-a-search-rule
+     */
     public function deleteAll(): Task
     {
         $response = $this->http->delete(self::PATH);
