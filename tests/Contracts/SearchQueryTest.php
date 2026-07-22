@@ -232,4 +232,28 @@ final class SearchQueryTest extends TestCase
 
         self::assertSame(['distinct' => 'genre'], $data->toArray());
     }
+
+    public function testFromArray(): void
+    {
+        $data = SearchQuery::fromArray([
+            'q' => 'shifu',
+            'filter' => ['rating > 3'],
+            'limit' => 10,
+            'hybrid' => ['semanticRatio' => 0.5],
+        ]);
+
+        self::assertSame([
+            'q' => 'shifu',
+            'filter' => ['rating > 3'],
+            'limit' => 10,
+            'hybrid' => ['semanticRatio' => 0.5],
+        ], $data->toArray());
+    }
+
+    public function testFluentSettersChainOnSearchQuery(): void
+    {
+        $data = (new SearchQuery())->setQuery('shifu')->setLimit(5);
+
+        self::assertSame(['q' => 'shifu', 'limit' => 5], $data->toArray());
+    }
 }

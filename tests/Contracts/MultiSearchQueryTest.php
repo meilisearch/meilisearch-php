@@ -247,4 +247,34 @@ final class MultiSearchQueryTest extends TestCase
 
         self::assertSame(['federationOptions' => ['weight' => 0.5]], $data->toArray());
     }
+
+    public function testFromArray(): void
+    {
+        $data = MultiSearchQuery::fromArray([
+            'indexUid' => 'movies',
+            'q' => 'shifu',
+            'filter' => ['rating > 3'],
+            'limit' => 10,
+            'federationOptions' => ['weight' => 0.5],
+        ]);
+
+        self::assertSame([
+            'indexUid' => 'movies',
+            'q' => 'shifu',
+            'filter' => ['rating > 3'],
+            'limit' => 10,
+            'federationOptions' => ['weight' => 0.5],
+        ], $data->toArray());
+    }
+
+    public function testFluentSettersChainOnMultiSearchQuery(): void
+    {
+        $data = (new MultiSearchQuery())->setIndexUid('movies')->setQuery('shifu')->setLimit(5);
+
+        self::assertSame([
+            'indexUid' => 'movies',
+            'q' => 'shifu',
+            'limit' => 5,
+        ], $data->toArray());
+    }
 }
