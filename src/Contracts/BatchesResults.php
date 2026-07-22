@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class BatchesResults extends Data
+/**
+ * @phpstan-import-type RawBatch from Batch
+ */
+final class BatchesResults extends Data
 {
     /**
      * @var non-negative-int
@@ -26,18 +29,27 @@ class BatchesResults extends Data
      */
     private int $total;
 
+    /**
+     * @param array{
+     *     results: list<Batch>,
+     *     from: non-negative-int|null,
+     *     limit: non-negative-int,
+     *     next: non-negative-int|null,
+     *     total: non-negative-int
+     * } $params
+     */
     public function __construct(array $params)
     {
         parent::__construct($params['results']);
 
         $this->from = $params['from'] ?? 0;
-        $this->limit = $params['limit'] ?? 0;
+        $this->limit = $params['limit'];
         $this->next = $params['next'] ?? 0;
-        $this->total = $params['total'] ?? 0;
+        $this->total = $params['total'];
     }
 
     /**
-     * @return array<int, array>
+     * @return list<Batch>
      */
     public function getResults(): array
     {
@@ -76,10 +88,19 @@ class BatchesResults extends Data
         return $this->total;
     }
 
+    /**
+     * @return array{
+     *     results: list<RawBatch>,
+     *     from: non-negative-int,
+     *     limit: non-negative-int,
+     *     next: non-negative-int,
+     *     total: non-negative-int
+     * }
+     */
     public function toArray(): array
     {
         return [
-            'results' => $this->data,
+            'results' => array_map(static fn (Batch $batch) => $batch->toArray(), $this->data),
             'next' => $this->next,
             'limit' => $this->limit,
             'from' => $this->from,
