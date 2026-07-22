@@ -9,7 +9,7 @@ use Meilisearch\Contracts\HealthStatus;
 use Meilisearch\Contracts\IndexesQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
-use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Endpoints\Index;
 use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
@@ -24,13 +24,13 @@ final class ClientTest extends TestCase
         self::assertIsArray($this->client->getRawIndex($index->getUid()));
     }
 
-    public function testClientIndexMethodsAlwaysReturnsIndexesInstance(): void
+    public function testClientIndexMethodsAlwaysReturnsIndexInstance(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
         /* @phpstan-ignore-next-line */
-        self::assertInstanceOf(Indexes::class, $this->client->getIndex($index->getUid()));
+        self::assertInstanceOf(Index::class, $this->client->getIndex($index->getUid()));
         /* @phpstan-ignore-next-line */
-        self::assertInstanceOf(Indexes::class, $this->client->index($index->getUid()));
+        self::assertInstanceOf(Index::class, $this->client->index($index->getUid()));
     }
 
     public function testgetIndexesWhenEmpty(): void
@@ -110,7 +110,7 @@ final class ClientTest extends TestCase
 
         $res = $this->client->getRawIndex('books-1');
 
-        self::assertArrayHasKey('uid', $res);
+        self::assertSame('books-1', $res['uid']);
     }
 
     public function testUpdateIndex(): void
@@ -135,12 +135,7 @@ final class ClientTest extends TestCase
         $this->client->deleteIndex('index')->wait();
 
         $this->expectException(ApiException::class);
-        $index = $this->client->getIndex('index');
-
-        self::assertEmpty($index);
-        $indexes = $this->client->getIndexes();
-
-        self::assertCount(0, $indexes);
+        $this->client->getIndex('index')->getPrimaryKey();
     }
 
     public function testGetIndex(): void
@@ -155,11 +150,8 @@ final class ClientTest extends TestCase
 
     public function testIndex(): void
     {
-        $this->createEmptyIndex($this->safeIndexName());
-
         $index = $this->client->index('index');
         self::assertSame('index', $index->getUid());
-        self::assertNull($index->getPrimaryKey());
     }
 
     public function testCompactIndex(): void
@@ -191,7 +183,7 @@ final class ClientTest extends TestCase
     public function testExceptionIfNoIndexWhenShowing(): void
     {
         $this->expectException(ApiException::class);
-        $this->client->getIndex('a-non-existing-index');
+        $this->client->getIndex('a-non-existing-index')->getPrimaryKey();
     }
 
     public function testHealth(): void
