@@ -1,7 +1,6 @@
 ---
 name: write-meilisearch-php-phpdoc
 description: Write PHPDoc for meilisearch-php public APIs. Use when documenting client, endpoint, or delegate methods, adding @since or @see tags, or updating PHPDoc on SDK public methods.
-disable-model-invocation: true
 ---
 
 # Write meilisearch-php PHPDoc
