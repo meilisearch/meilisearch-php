@@ -51,7 +51,8 @@ trait HandlesIndex
     }
 
     /**
-     * @param non-empty-string $uid
+     * @param non-empty-string                     $uid
+     * @param array{primaryKey?: non-empty-string} $options
      */
     public function createIndex(string $uid, array $options = []): Task
     {
@@ -59,7 +60,8 @@ trait HandlesIndex
     }
 
     /**
-     * @param non-empty-string $uid
+     * @param non-empty-string                     $uid
+     * @param array{primaryKey?: non-empty-string} $options
      */
     public function updateIndex(string $uid, array $options = []): Task
     {
