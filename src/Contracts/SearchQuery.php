@@ -25,7 +25,7 @@ namespace Meilisearch\Contracts;
  *     hitsPerPage?: non-negative-int,
  *     page?: non-negative-int,
  *     vector?: non-empty-list<float|non-empty-list<float>>,
- *     hybrid?: array<mixed>,
+ *     hybrid?: array{semanticRatio?: float, embedder?: non-empty-string},
  *     attributesToSearchOn?: non-empty-list<non-empty-string>,
  *     showRankingScore?: bool,
  *     showRankingScoreDetails?: bool,

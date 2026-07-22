@@ -26,7 +26,7 @@ namespace Meilisearch\Contracts;
  *     hitsPerPage?: non-negative-int,
  *     page?: non-negative-int,
  *     vector?: non-empty-list<float|non-empty-list<float>>,
- *     hybrid?: array<mixed>,
+ *     hybrid?: array{semanticRatio?: float, embedder?: non-empty-string},
  *     attributesToSearchOn?: non-empty-list<non-empty-string>,
  *     showRankingScore?: bool,
  *     showRankingScoreDetails?: bool,
@@ -35,7 +35,7 @@ namespace Meilisearch\Contracts;
  *     distinct?: non-empty-string,
  *     retrieveVectors?: bool,
  *     media?: array<mixed>,
- *     federationOptions?: array<mixed>
+ *     federationOptions?: array{weight?: float, remote?: non-empty-string}
  * }
  */
 class MultiSearchQuery

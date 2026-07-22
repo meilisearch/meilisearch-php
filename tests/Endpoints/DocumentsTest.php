@@ -6,16 +6,13 @@ namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\DocumentsQuery;
 use Meilisearch\Contracts\Http;
-use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
 use Meilisearch\Contracts\TaskStatus;
-use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Index;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Http\Client;
 use Psr\Http\Message\ResponseInterface;
-use Tests\MockTask;
 use Tests\TestCase;
 
 final class DocumentsTest extends TestCase

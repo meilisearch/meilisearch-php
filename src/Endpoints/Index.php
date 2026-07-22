@@ -24,6 +24,29 @@ use function Meilisearch\partial;
 
 /**
  * @phpstan-import-type SearchQueryArray from SearchQuery
+ * @phpstan-import-type RawTasks from Tasks
+ * @phpstan-import-type TasksResponse from Tasks
+ *
+ * @phpstan-type RawSearchResult array{
+ *     hits: array<int, array<string, mixed>>,
+ *     processingTimeMs: non-negative-int,
+ *     query: string,
+ *     facetDistribution?: array<string, mixed>,
+ *     facetStats?: array<string, mixed>,
+ *     offset?: non-negative-int,
+ *     limit?: non-negative-int,
+ *     semanticHitCount?: non-negative-int,
+ *     page?: non-negative-int,
+ *     totalPages?: non-negative-int,
+ *     totalHits?: non-negative-int,
+ *     estimatedTotalHits?: non-negative-int,
+ *     hitsPerPage?: non-negative-int
+ * }
+ * @phpstan-type SearchResultOptions array{
+ *     raw?: bool,
+ *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
+ *     transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>
+ * }
  */
 final class Index extends Endpoint
 {
@@ -152,15 +175,25 @@ final class Index extends Endpoint
             $options->setIndexUids([$this->uid]);
         }
 
-        $response = $this->http->get('/tasks', $options->toArray());
-        $response['results'] = array_map(fn (array $task) => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
+        $rawResponse = $this->http->get('/tasks', $options->toArray());
+        /** @var RawTasks $response */
+        $response = $rawResponse;
+        $results = array_map(fn (array $task): Task => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
+        /** @var TasksResponse $tasksResponse */
+        $tasksResponse = [
+            'results' => $results,
+            'from' => $response['from'],
+            'limit' => $response['limit'],
+            'next' => $response['next'],
+            'total' => $response['total'],
+        ];
 
-        return new TasksResults($response);
+        return new TasksResults($tasksResponse);
     }
 
     /**
-     * @param string|SearchQuery|null           $query
-     * @param SearchQuery|SearchQueryArray|array{raw?: bool, transformFacetDistribution?: callable}|null $searchQuery
+     * @param SearchQuery|SearchQueryArray|SearchResultOptions|null $searchQuery
+     * @param SearchResultOptions                                   $options
      *
      * @phpstan-return SearchResult|array
      */
@@ -174,19 +207,24 @@ final class Index extends Endpoint
         }
 
         $result = $this->rawSearch($resolvedQuery);
+        /** @var RawSearchResult $rawResult */
+        $rawResult = $result;
 
         if (\array_key_exists('raw', $options) && $options['raw']) {
-            return $result;
+            return $rawResult;
         }
 
-        $searchResult = new SearchResult($result);
-        $searchResult->applyOptions($options);
+        $searchResultOptions = $options;
+        unset($searchResultOptions['raw']);
+        /** @var array{transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>, transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>} $typedSearchResultOptions */
+        $typedSearchResultOptions = $searchResultOptions;
+        $searchResult = new SearchResult($rawResult);
+        $searchResult->applyOptions($typedSearchResultOptions);
 
         return $searchResult;
     }
 
     /**
-     * @param string|SearchQuery|null           $query
      * @param SearchQuery|SearchQueryArray|null $searchQuery
      */
     public function rawSearch(string|SearchQuery|null $query, SearchQuery|array|null $searchQuery = null): array
@@ -246,7 +284,6 @@ final class Index extends Endpoint
     }
 
     /**
-     * @param string|SearchQuery|null           $query
      * @param SearchQuery|SearchQueryArray|null $searchQuery
      */
     private function resolveSearchQuery(string|SearchQuery|null $query, SearchQuery|array|null $searchQuery = null): SearchQuery

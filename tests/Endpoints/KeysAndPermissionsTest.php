@@ -9,8 +9,8 @@ use Meilisearch\Contracts\CreateKeyQuery;
 use Meilisearch\Contracts\Key;
 use Meilisearch\Contracts\KeyAction;
 use Meilisearch\Contracts\KeysQuery;
-use Meilisearch\Contracts\UpdateKeyQuery;
 use Meilisearch\Contracts\SearchQuery;
+use Meilisearch\Contracts\UpdateKeyQuery;
 use Meilisearch\Exceptions\ApiException;
 use Tests\TestCase;
 
