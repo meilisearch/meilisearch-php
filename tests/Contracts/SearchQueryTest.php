@@ -198,6 +198,17 @@ final class SearchQueryTest extends TestCase
      * @testWith [true]
      *           [false]
      */
+    public function testSetRetrieveVectors(?bool $value): void
+    {
+        $data = (new SearchQuery())->setRetrieveVectors($value);
+
+        self::assertSame(['retrieveVectors' => $value], $data->toArray());
+    }
+
+    /**
+     * @testWith [true]
+     *           [false]
+     */
     public function testSetShowRankingScore(?bool $value): void
     {
         $data = (new SearchQuery())->setShowRankingScore($value);

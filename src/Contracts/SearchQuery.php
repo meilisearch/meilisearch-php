@@ -91,6 +91,8 @@ class SearchQuery
      */
     private ?array $vector = null;
 
+    private ?bool $retrieveVectors = null;
+
     private ?HybridSearchOptions $hybrid = null;
 
     /**
@@ -413,6 +415,19 @@ class SearchQuery
     }
 
     /**
+     * Whether the vector data of the matching documents is returned in the
+     * search response (the `_vectors` field).
+     *
+     * @return $this
+     */
+    public function setRetrieveVectors(?bool $retrieveVectors): self
+    {
+        $this->retrieveVectors = $retrieveVectors;
+
+        return $this;
+    }
+
+    /**
      * This is an EXPERIMENTAL feature, which may break without a major version.
      *
      * Set hybrid search options
@@ -463,6 +478,7 @@ class SearchQuery
      *     hitsPerPage?: non-negative-int,
      *     page?: non-negative-int,
      *     vector?: non-empty-list<float|non-empty-list<float>>,
+     *     retrieveVectors?: bool,
      *     hybrid?: array<mixed>,
      *     attributesToSearchOn?: non-empty-list<non-empty-string>,
      *     showRankingScore?: bool,
@@ -496,6 +512,7 @@ class SearchQuery
             'hitsPerPage' => $this->hitsPerPage,
             'page' => $this->page,
             'vector' => $this->vector,
+            'retrieveVectors' => $this->retrieveVectors,
             'hybrid' => null !== $this->hybrid ? $this->hybrid->toArray() : null,
             'attributesToSearchOn' => $this->attributesToSearchOn,
             'showRankingScore' => $this->showRankingScore,
