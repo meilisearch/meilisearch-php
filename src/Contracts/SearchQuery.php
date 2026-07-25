@@ -113,6 +113,13 @@ class SearchQuery
 
     private ?FederationOptions $federationOptions = null;
 
+    private ?bool $retrieveVectors = null;
+
+    /**
+     * @var array<string, mixed>|null
+     */
+    private ?array $media = null;
+
     /**
      * @return $this
      */
@@ -441,6 +448,29 @@ class SearchQuery
         return $this;
     }
 
+    public function setRetrieveVectors(?bool $retrieveVectors): self
+    {
+        $this->retrieveVectors = $retrieveVectors;
+
+        return $this;
+    }
+
+    /**
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     * It's available from Meilisearch v1.16.
+     * To enable it properly and use multimodal search, it's required to activate it through the /experimental-features route.
+     *
+     *  More info: https://www.meilisearch.com/docs/reference/api/experimental-features
+     *
+     * @param array<string, mixed>|null $media
+     */
+    public function setMedia(?array $media): self
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
     /**
      * @return array{
      *     indexUid?: non-empty-string,
@@ -470,7 +500,9 @@ class SearchQuery
      *     showPerformanceDetails?: bool,
      *     rankingScoreThreshold?: float,
      *     distinct?: non-empty-string,
-     *     federationOptions?: array<mixed>
+     *     federationOptions?: array<mixed>,
+     *     retrieveVectors?: bool,
+     *     media?: array<string, mixed>,
      * }
      */
     public function toArray(): array
@@ -504,6 +536,8 @@ class SearchQuery
             'rankingScoreThreshold' => $this->rankingScoreThreshold,
             'distinct' => $this->distinct,
             'federationOptions' => null !== $this->federationOptions ? $this->federationOptions->toArray() : null,
+            'retrieveVectors' => $this->retrieveVectors,
+            'media' => $this->media,
         ], static function ($item) { return null !== $item; });
     }
 }
