@@ -6,6 +6,7 @@ namespace Tests\Contracts;
 
 use Meilisearch\Contracts\FederationOptions;
 use Meilisearch\Contracts\HybridSearchOptions;
+use Meilisearch\Contracts\PersonalizeOptions;
 use Meilisearch\Contracts\SearchQuery;
 use PHPUnit\Framework\TestCase;
 
@@ -185,6 +186,13 @@ final class SearchQueryTest extends TestCase
         $data = (new SearchQuery())->setHybrid((new HybridSearchOptions())->setSemanticRatio(0.5));
 
         self::assertSame(['hybrid' => ['semanticRatio' => 0.5]], $data->toArray());
+    }
+
+    public function testSetPersonalize(): void
+    {
+        $data = (new SearchQuery())->setPersonalize((new PersonalizeOptions())->setUserContext('loves science fiction'));
+
+        self::assertSame(['personalize' => ['userContext' => 'loves science fiction']], $data->toArray());
     }
 
     public function testSetAttributesToSearchOn(): void
