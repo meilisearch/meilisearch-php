@@ -30,7 +30,7 @@ final class DocumentAdditionOrUpdateDetails implements TaskDetails
     {
         return new self(
             $data['receivedDocuments'],
-            $data['indexedDocuments'] ?? null,
+            $data['indexedDocuments'],
         );
     }
 }
