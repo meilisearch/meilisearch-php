@@ -23,7 +23,7 @@ use Meilisearch\Search\SimilarDocumentsSearchResult;
 use function Meilisearch\partial;
 
 /**
- * @phpstan-import-type SearchQueryArray from SearchQuery
+ * @phpstan-import-type RawSearchQuery from SearchQuery
  * @phpstan-import-type RawTasks from Tasks
  * @phpstan-import-type TasksResponse from Tasks
  *
@@ -193,8 +193,8 @@ final class Index extends Endpoint
     }
 
     /**
-     * @param SearchQuery|SearchQueryArray|SearchResultOptions|null $searchQuery
-     * @param SearchResultOptions                                   $options
+     * @param SearchQuery|RawSearchQuery|SearchResultOptions|null $searchQuery
+     * @param SearchResultOptions                                 $options
      *
      * @phpstan-return SearchResult|array
      */
@@ -226,7 +226,7 @@ final class Index extends Endpoint
     }
 
     /**
-     * @param SearchQuery|SearchQueryArray|null $searchQuery
+     * @param SearchQuery|RawSearchQuery|null $searchQuery
      */
     public function rawSearch(string|SearchQuery|null $query, SearchQuery|array|null $searchQuery = null): array
     {
@@ -285,7 +285,7 @@ final class Index extends Endpoint
     }
 
     /**
-     * @param SearchQuery|SearchQueryArray|null $searchQuery
+     * @param SearchQuery|RawSearchQuery|null $searchQuery
      */
     private function resolveSearchQuery(string|SearchQuery|null $query, SearchQuery|array|null $searchQuery = null): SearchQuery
     {

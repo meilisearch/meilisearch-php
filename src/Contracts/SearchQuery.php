@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
- * @phpstan-import-type BaseSearchQueryArray from AbstractSearchQuery
+ * @phpstan-import-type RawBaseSearchQuery from AbstractSearchQuery
  *
- * @phpstan-type SearchQueryArray BaseSearchQueryArray
+ * @phpstan-type RawSearchQuery RawBaseSearchQuery
  */
 class SearchQuery extends AbstractSearchQuery
 {
     /**
-     * @param SearchQueryArray $data
+     * @param RawSearchQuery $data
      */
     public static function fromArray(array $data): self
     {
@@ -20,7 +20,7 @@ class SearchQuery extends AbstractSearchQuery
     }
 
     /**
-     * @return SearchQueryArray
+     * @return RawSearchQuery
      */
     public function toArray(): array
     {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
- * @phpstan-type BaseSearchQueryArray array{
+ * @phpstan-type RawBaseSearchQuery array{
  *     q?: string,
  *     filter?: string|list<non-empty-string|list<non-empty-string>>,
  *     locales?: list<non-empty-string>,
@@ -143,7 +143,7 @@ abstract class AbstractSearchQuery
     private ?array $media = null;
 
     /**
-     * @param BaseSearchQueryArray $data
+     * @param RawBaseSearchQuery $data
      */
     protected function hydrateFromArray(array $data): static
     {
@@ -500,7 +500,7 @@ abstract class AbstractSearchQuery
     }
 
     /**
-     * @return BaseSearchQueryArray
+     * @return RawBaseSearchQuery
      */
     protected function baseArray(): array
     {
