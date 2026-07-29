@@ -62,7 +62,7 @@ use Meilisearch\Contracts\Data;
  *     distinct?: non-empty-string,
  *     federationOptions?: array<mixed>
  * }
- * @phpstan-type SettingsArray array{
+ * @phpstan-type RawSettings array{
  *     dictionary?: list<string>,
  *     displayedAttributes?: list<string>,
  *     distinctAttribute?: string|null,
@@ -103,7 +103,7 @@ use Meilisearch\Contracts\Data;
 class Settings extends Data implements \JsonSerializable
 {
     /**
-     * @param SettingsArray $data
+     * @param RawSettings $data
      */
     public function __construct(array $data = [])
     {
@@ -131,7 +131,7 @@ class Settings extends Data implements \JsonSerializable
     }
 
     /**
-     * @return SettingsArray
+     * @return RawSettings
      */
     public function toArray(): array
     {
@@ -149,7 +149,7 @@ class Settings extends Data implements \JsonSerializable
             }
         }
 
-        /** @var SettingsArray $typedSettings */
+        /** @var RawSettings $typedSettings */
         $typedSettings = $settings;
 
         return $typedSettings;

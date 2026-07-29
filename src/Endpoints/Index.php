@@ -26,7 +26,7 @@ use function Meilisearch\partial;
 /**
  * @phpstan-import-type RawIndexStats from IndexStats
  * @phpstan-import-type RawSearchQuery from SearchQuery
- * @phpstan-import-type SettingsArray from Settings
+ * @phpstan-import-type RawSettings from Settings
  * @phpstan-import-type RawTasks from Tasks
  * @phpstan-import-type TasksResponse from Tasks
  *
@@ -296,7 +296,7 @@ final class Index extends Endpoint
     // Settings - Global
 
     /**
-     * @return SettingsArray
+     * @return RawSettings
      */
     public function getSettings(): array
     {
@@ -305,7 +305,7 @@ final class Index extends Endpoint
     }
 
     /**
-     * @param SettingsArray $settings
+     * @param RawSettings $settings
      */
     public function updateSettings(array $settings): Task
     {
