@@ -66,6 +66,7 @@ final class Index extends Endpoint
         parent::__construct($http, $apiKey);
 
         $this->uid = $uid;
+        $this->tasks = new Tasks($http);
     }
 
     /**

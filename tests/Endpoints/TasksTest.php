@@ -199,6 +199,17 @@ final class TasksTest extends TestCase
         self::assertSame('?'.$query, $details->originalFilter);
     }
 
+    public function testCancelTasksFromIndex(): void
+    {
+        $date = new \DateTimeImmutable('today');
+        $task = $this->index->cancelTasks(
+            (new CancelTasksQuery())->setAfterEnqueuedAt($date)
+        )->wait();
+
+        self::assertSame(TaskType::TaskCancelation, $task->getType());
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+    }
+
     public function testGetAllTasksInReverseOrder(): void
     {
         $sampleTasks = $this->client->getTasks(new TasksQuery());
