@@ -124,6 +124,18 @@ final class SearchTest extends TestCase
         self::assertCount(1, $response['hits']);
     }
 
+    public function testLegacyStringSearchAndRawSearch(): void
+    {
+        $response = $this->index->search('prince', ['limit' => 1]);
+        self::assertCount(1, $response->getHits());
+
+        $response = $this->index->search('prince', (new SearchQuery())->setLimit(1));
+        self::assertCount(1, $response->getHits());
+
+        $raw = $this->index->rawSearch('prince', ['limit' => 1]);
+        self::assertCount(1, $raw['hits']);
+    }
+
     public function testBasicSearchIfNoPrimaryKeyAndDocumentProvided(): void
     {
         $emptyIndex = $this->createEmptyIndex($this->safeIndexName('empty'));

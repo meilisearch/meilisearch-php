@@ -239,14 +239,20 @@ final class SearchQueryTest extends TestCase
             'q' => 'shifu',
             'filter' => ['rating > 3'],
             'limit' => 10,
-            'hybrid' => ['semanticRatio' => 0.5],
+            'showPerformanceDetails' => true,
+            'retrieveVectors' => true,
+            'media' => ['poster' => ['url' => 'https://example.com/p.jpg']],
+            'hybrid' => ['semanticRatio' => 0.5, 'embedder' => 'default'],
         ]);
 
         self::assertSame([
             'q' => 'shifu',
             'filter' => ['rating > 3'],
             'limit' => 10,
-            'hybrid' => ['semanticRatio' => 0.5],
+            'hybrid' => ['semanticRatio' => 0.5, 'embedder' => 'default'],
+            'showPerformanceDetails' => true,
+            'retrieveVectors' => true,
+            'media' => ['poster' => ['url' => 'https://example.com/p.jpg']],
         ], $data->toArray());
     }
 

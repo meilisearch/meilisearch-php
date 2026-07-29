@@ -255,7 +255,7 @@ final class MultiSearchQueryTest extends TestCase
             'q' => 'shifu',
             'filter' => ['rating > 3'],
             'limit' => 10,
-            'federationOptions' => ['weight' => 0.5],
+            'federationOptions' => ['weight' => 0.5, 'remote' => 'ms-00'],
         ]);
 
         self::assertSame([
@@ -263,7 +263,7 @@ final class MultiSearchQueryTest extends TestCase
             'q' => 'shifu',
             'filter' => ['rating > 3'],
             'limit' => 10,
-            'federationOptions' => ['weight' => 0.5],
+            'federationOptions' => ['weight' => 0.5, 'remote' => 'ms-00'],
         ], $data->toArray());
     }
 

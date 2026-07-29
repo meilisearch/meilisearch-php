@@ -29,4 +29,17 @@ final class HybridSearchOptionsTest extends TestCase
 
         self::assertSame(['embedder' => 'default'], $data->toArray());
     }
+
+    public function testFromArray(): void
+    {
+        $data = HybridSearchOptions::fromArray([
+            'semanticRatio' => 0.5,
+            'embedder' => 'default',
+        ]);
+
+        self::assertSame([
+            'semanticRatio' => 0.5,
+            'embedder' => 'default',
+        ], $data->toArray());
+    }
 }

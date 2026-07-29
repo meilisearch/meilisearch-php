@@ -29,4 +29,17 @@ final class FederationOptionsTest extends TestCase
 
         self::assertSame(['remote' => 'ms-00'], $data->toArray());
     }
+
+    public function testFromArray(): void
+    {
+        $data = FederationOptions::fromArray([
+            'weight' => 0.5,
+            'remote' => 'ms-00',
+        ]);
+
+        self::assertSame([
+            'weight' => 0.5,
+            'remote' => 'ms-00',
+        ], $data->toArray());
+    }
 }
