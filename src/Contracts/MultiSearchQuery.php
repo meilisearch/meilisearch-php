@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
+ * @phpstan-import-type BaseSearchQueryArray from AbstractSearchQuery
+ *
  * @phpstan-type MultiSearchQueryArray array{
  *     indexUid?: non-empty-string,
  *     q?: string,
@@ -52,13 +54,18 @@ class MultiSearchQuery extends AbstractSearchQuery
      */
     public static function fromArray(array $data): self
     {
+        $indexUid = $data['indexUid'] ?? null;
+        $federationOptions = $data['federationOptions'] ?? null;
+        unset($data['indexUid'], $data['federationOptions']);
+
+        /** @var BaseSearchQueryArray $data */
         $query = (new self())->hydrateFromArray($data);
 
-        if (\array_key_exists('indexUid', $data)) {
-            $query->setIndexUid($data['indexUid']);
+        if (isset($indexUid)) {
+            $query->setIndexUid($indexUid);
         }
-        if (\array_key_exists('federationOptions', $data)) {
-            $query->setFederationOptions(FederationOptions::fromArray($data['federationOptions']));
+        if (isset($federationOptions)) {
+            $query->setFederationOptions(FederationOptions::fromArray($federationOptions));
         }
 
         return $query;

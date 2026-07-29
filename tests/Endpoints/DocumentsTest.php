@@ -375,7 +375,8 @@ final class DocumentsTest extends TestCase
             });
 
         $index = new Index($http, 'index');
-        $index->addDocumentsCsvInBatches($documentCsv, 1, null, ';');
+        $tasks = $index->addDocumentsCsvInBatches($documentCsv, 1, null, ';');
+        self::assertCount(2, $tasks);
     }
 
     public function testAddDocumentsNdjsonInBatches(): void
@@ -830,7 +831,7 @@ final class DocumentsTest extends TestCase
         $replacement .= '235115704;Mister Klein'.PHP_EOL;
 
         $http = $this->createMock(Http::class);
-        $http->expects(self::atLeastOnce())
+        $http->expects(self::exactly(2))
             ->method('put')
             ->willReturnCallback(function (string $path, $documents, $query, $contentType): array {
                 static $invocation = 0;
@@ -849,7 +850,8 @@ final class DocumentsTest extends TestCase
             });
 
         $index = new Index($http, 'index');
-        $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
+        $tasks = $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
+        self::assertCount(2, $tasks);
     }
 
     public function testUpdateDocumentsNdjsonInBatches(): void

@@ -273,7 +273,7 @@ final class Index extends Endpoint
             ->getIterator()->getArrayCopy();
     }
 
-    public function updateSettings($settings): Task
+    public function updateSettings(array $settings): Task
     {
         return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $settings), partial(Tasks::waitTask(...), $this->http));
     }

@@ -143,7 +143,7 @@ abstract class AbstractSearchQuery
     private ?array $media = null;
 
     /**
-     * @param array<string, mixed> $data
+     * @param BaseSearchQueryArray $data
      */
     protected function hydrateFromArray(array $data): static
     {
@@ -153,40 +153,40 @@ abstract class AbstractSearchQuery
         if (\array_key_exists('filter', $data)) {
             $this->setFilter($data['filter']);
         }
-        if (\array_key_exists('locales', $data)) {
+        if (isset($data['locales'])) {
             $this->setLocales($data['locales']);
         }
-        if (\array_key_exists('attributesToRetrieve', $data)) {
+        if (isset($data['attributesToRetrieve'])) {
             $this->setAttributesToRetrieve($data['attributesToRetrieve']);
         }
-        if (\array_key_exists('attributesToCrop', $data)) {
+        if (isset($data['attributesToCrop'])) {
             $this->setAttributesToCrop($data['attributesToCrop']);
         }
         if (\array_key_exists('cropLength', $data)) {
             $this->setCropLength($data['cropLength']);
         }
-        if (\array_key_exists('attributesToHighlight', $data)) {
+        if (isset($data['attributesToHighlight'])) {
             $this->setAttributesToHighlight($data['attributesToHighlight']);
         }
-        if (\array_key_exists('cropMarker', $data)) {
+        if (isset($data['cropMarker'])) {
             $this->setCropMarker($data['cropMarker']);
         }
-        if (\array_key_exists('highlightPreTag', $data)) {
+        if (isset($data['highlightPreTag'])) {
             $this->setHighlightPreTag($data['highlightPreTag']);
         }
-        if (\array_key_exists('highlightPostTag', $data)) {
+        if (isset($data['highlightPostTag'])) {
             $this->setHighlightPostTag($data['highlightPostTag']);
         }
-        if (\array_key_exists('facets', $data)) {
+        if (isset($data['facets'])) {
             $this->setFacets($data['facets']);
         }
         if (\array_key_exists('showMatchesPosition', $data)) {
             $this->setShowMatchesPosition($data['showMatchesPosition']);
         }
-        if (\array_key_exists('sort', $data)) {
+        if (isset($data['sort'])) {
             $this->setSort($data['sort']);
         }
-        if (\array_key_exists('matchingStrategy', $data)) {
+        if (isset($data['matchingStrategy'])) {
             $this->setMatchingStrategy($data['matchingStrategy']);
         }
         if (\array_key_exists('offset', $data)) {
@@ -201,13 +201,13 @@ abstract class AbstractSearchQuery
         if (\array_key_exists('page', $data)) {
             $this->setPage($data['page']);
         }
-        if (\array_key_exists('vector', $data)) {
+        if (isset($data['vector'])) {
             $this->setVector($data['vector']);
         }
-        if (\array_key_exists('hybrid', $data)) {
+        if (isset($data['hybrid'])) {
             $this->setHybrid(HybridSearchOptions::fromArray($data['hybrid']));
         }
-        if (\array_key_exists('attributesToSearchOn', $data)) {
+        if (isset($data['attributesToSearchOn'])) {
             $this->setAttributesToSearchOn($data['attributesToSearchOn']);
         }
         if (\array_key_exists('showRankingScore', $data)) {
@@ -262,6 +262,9 @@ abstract class AbstractSearchQuery
         return $this;
     }
 
+    /**
+     * @param list<non-empty-string> $attributesToRetrieve
+     */
     public function setAttributesToRetrieve(array $attributesToRetrieve): static
     {
         $this->attributesToRetrieve = $attributesToRetrieve;
@@ -269,6 +272,9 @@ abstract class AbstractSearchQuery
         return $this;
     }
 
+    /**
+     * @param list<non-empty-string> $attributesToCrop
+     */
     public function setAttributesToCrop(array $attributesToCrop): static
     {
         $this->attributesToCrop = $attributesToCrop;
@@ -381,6 +387,9 @@ abstract class AbstractSearchQuery
         return $this;
     }
 
+    /**
+     * @param list<non-empty-string> $sort
+     */
     public function setSort(array $sort): static
     {
         $this->sort = $sort;

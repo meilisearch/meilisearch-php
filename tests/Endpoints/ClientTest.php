@@ -127,15 +127,16 @@ final class ClientTest extends TestCase
 
     public function testDeleteIndex(): void
     {
-        $this->createEmptyIndex($this->safeIndexName());
+        $indexName = $this->safeIndexName();
+        $this->createEmptyIndex($indexName);
 
         $response = $this->client->getIndexes();
         self::assertCount(1, $response);
 
-        $this->client->deleteIndex('index')->wait();
+        $this->client->deleteIndex($indexName)->wait();
 
         $this->expectException(ApiException::class);
-        $this->client->getIndex('index')->getPrimaryKey();
+        $this->client->getIndex($indexName)->getPrimaryKey();
     }
 
     public function testGetIndex(): void
