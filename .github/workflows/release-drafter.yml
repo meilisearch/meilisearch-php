@@ -22,7 +22,7 @@ jobs:
     if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@v7
         with:
           config-name: release-draft-template-v2-stable.yml
           commitish: main
@@ -33,7 +33,7 @@ jobs:
     if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@v7
         with:
           config-name: release-draft-template-v2-beta.yml
           commitish: main
