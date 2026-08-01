@@ -56,7 +56,7 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
 
       - name: Run test suite
         run: sh scripts/tests.sh
