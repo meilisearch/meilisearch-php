@@ -25,7 +25,7 @@ jobs:
         uses: actions/configure-pages@v6
       - name: Cache phpDocumentor build files
         id: phpdocumentor-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: .phpdoc/cache
           key: ${{ runner.os }}-phpdocumentor-${{ github.sha }}
