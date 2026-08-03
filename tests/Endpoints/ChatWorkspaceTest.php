@@ -10,6 +10,23 @@ use Tests\TestCase;
 
 final class ChatWorkspaceTest extends TestCase
 {
+    /**
+     * @var array{
+     *     source: 'openAi'|'azureOpenAi'|'mistral'|'gemini'|'vLlm',
+     *     orgId: string,
+     *     projectId: string,
+     *     apiVersion: string,
+     *     deploymentId: string,
+     *     baseUrl: string,
+     *     apiKey: string,
+     *     prompts: array{
+     *         system: string,
+     *         searchDescription: string,
+     *         searchQParam: string,
+     *         searchIndexUidParam: string
+     *     }
+     * }
+     */
     private array $workspaceSettings = [
         'source' => 'mistral',
         'orgId' => 'some-org-id',
