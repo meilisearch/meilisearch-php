@@ -42,6 +42,9 @@ trait HandlesSystem
         return $this->stats->show();
     }
 
+    /**
+     * @param array{apiKey?: ?string, expiresAt?: ?\DateTimeInterface} $options
+     */
     public function generateTenantToken(string $apiKeyUid, $searchRules, array $options = []): string
     {
         return $this->tenantToken->generateTenantToken($apiKeyUid, $searchRules, $options);

@@ -22,8 +22,8 @@ class TimeOutException extends \Exception implements ExceptionInterface
         $base = 'Meilisearch TimeOutException: Code: '.$this->code;
         if ('' !== $this->message) {
             return $base.' - Message: '.$this->message;
-        } else {
-            return $base;
         }
+
+        return $base;
     }
 }

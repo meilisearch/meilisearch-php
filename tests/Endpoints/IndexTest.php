@@ -29,7 +29,7 @@ final class IndexTest extends TestCase
         self::assertSame([], $this->index->getSortableAttributes());
         self::assertSame(['*'], $this->index->getSearchableAttributes());
         self::assertSame(
-            ['words', 'typo', 'proximity', 'attribute', 'sort', 'exactness'],
+            ['words', 'typo', 'proximity', 'attributeRank', 'sort', 'wordPosition', 'exactness'],
             $this->index->getRankingRules()
         );
         self::assertSame([], $this->index->getFilterableAttributes());

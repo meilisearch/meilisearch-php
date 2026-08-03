@@ -14,7 +14,7 @@ trait HandlesIndex
 
     public function getIndexes(?IndexesQuery $options = null): IndexesResults
     {
-        return $this->index->all($options ?? null);
+        return $this->index->all($options);
     }
 
     public function getRawIndex(string $uid): array
