@@ -135,11 +135,11 @@ final class Batch implements \ArrayAccess
             $data['uid'],
             UnknownTaskDetails::fromArray($data['details']),
             BatchStats::fromArray($data['stats']),
-            $data['duration'] ?? null,
+            $data['duration'],
             new \DateTimeImmutable($data['startedAt']),
             null !== $data['finishedAt']
                 ? new \DateTimeImmutable($data['finishedAt']) : null,
-            null !== ($data['progress'] ?? null) ? BatchProgress::fromArray($data['progress']) : null,
+            null !== $data['progress'] ? BatchProgress::fromArray($data['progress']) : null,
             $data['batchStrategy'] ?? null,
             $data,
         );
