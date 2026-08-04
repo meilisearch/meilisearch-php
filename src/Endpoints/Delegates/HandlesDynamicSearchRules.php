@@ -83,7 +83,7 @@ trait HandlesDynamicSearchRules
      * This is an EXPERIMENTAL feature, which may break without a major version.
      *
      * @since Meilisearch v1.50.0
-     * @see https://www.meilisearch.com/docs/reference/api/search-rules/delete-a-search-rule
+     * @see https://www.meilisearch.com/docs/reference/api/search-rules/delete-all-search-rules
      *
      * @return RawDynamicSearchRuleTask
      */
