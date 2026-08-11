@@ -12,7 +12,9 @@ namespace Meilisearch\Contracts;
  *     isIndexing: bool,
  *     numberOfEmbeddings: non-negative-int,
  *     numberOfEmbeddedDocuments: non-negative-int,
- *     fieldDistribution: array<non-empty-string, non-negative-int>
+ *     fieldDistribution: array<non-empty-string, non-negative-int>,
+ *     indexSize: non-negative-int,
+ *     usedIndexSize: non-negative-int
  * }
  */
 final class IndexStats
@@ -24,6 +26,8 @@ final class IndexStats
      * @param non-negative-int                          $numberOfEmbeddings
      * @param non-negative-int                          $numberOfEmbeddedDocuments
      * @param array<non-empty-string, non-negative-int> $fieldDistribution
+     * @param non-negative-int                          $indexSize
+     * @param non-negative-int                          $usedIndexSize
      */
     public function __construct(
         private readonly int $numberOfDocuments,
@@ -33,6 +37,8 @@ final class IndexStats
         private readonly int $numberOfEmbeddings,
         private readonly int $numberOfEmbeddedDocuments,
         private readonly array $fieldDistribution,
+        private readonly int $indexSize,
+        private readonly int $usedIndexSize,
     ) {
     }
 
@@ -90,6 +96,22 @@ final class IndexStats
     }
 
     /**
+     * @return non-negative-int
+     */
+    public function getIndexSize(): int
+    {
+        return $this->indexSize;
+    }
+
+    /**
+     * @return non-negative-int
+     */
+    public function getUsedIndexSize(): int
+    {
+        return $this->usedIndexSize;
+    }
+
+    /**
      * @param RawIndexStats $data
      */
     public static function fromArray(array $data): self
@@ -102,6 +124,8 @@ final class IndexStats
             $data['numberOfEmbeddings'],
             $data['numberOfEmbeddedDocuments'],
             $data['fieldDistribution'],
+            $data['indexSize'],
+            $data['usedIndexSize'],
         );
     }
 }

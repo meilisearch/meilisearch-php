@@ -25,6 +25,8 @@ final class StatsTest extends TestCase
                     numberOfEmbeddings: 0,
                     numberOfEmbeddedDocuments: 0,
                     fieldDistribution: ['objectID' => 2, 'type' => 1],
+                    indexSize: 4096,
+                    usedIndexSize: 2048,
                 ),
             ],
         );
@@ -50,6 +52,8 @@ final class StatsTest extends TestCase
                     'numberOfEmbeddings' => 0,
                     'numberOfEmbeddedDocuments' => 0,
                     'fieldDistribution' => ['objectID' => 2, 'type' => 1],
+                    'indexSize' => 4096,
+                    'usedIndexSize' => 2048,
                 ],
             ],
         ]);
@@ -66,6 +70,8 @@ final class StatsTest extends TestCase
                 numberOfEmbeddings: 0,
                 numberOfEmbeddedDocuments: 0,
                 fieldDistribution: ['objectID' => 2, 'type' => 1],
+                indexSize: 4096,
+                usedIndexSize: 2048,
             ),
         ], $stats->getIndexes());
     }
