@@ -174,28 +174,6 @@ final class IndexTest extends TestCase
         self::assertNotNull($task->getFinishedAt());
     }
 
-    public function testWaitForTaskWithTimeoutAndInterval(): void
-    {
-        $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']])->wait(750, 20);
-
-        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
-        self::assertSame(TaskType::DocumentAdditionOrUpdate, $task->getType());
-        self::assertNotNull($task->getDuration());
-        self::assertNotNull($task->getStartedAt());
-        self::assertNotNull($task->getFinishedAt());
-    }
-
-    public function testWaitForTaskWithTimeout(): void
-    {
-        $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']])->wait(1000);
-
-        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
-        self::assertSame(TaskType::DocumentAdditionOrUpdate, $task->getType());
-        self::assertNotNull($task->getDuration());
-        self::assertNotNull($task->getStartedAt());
-        self::assertNotNull($task->getFinishedAt());
-    }
-
     public function testExceptionWhenTaskTimeOut(): void
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);

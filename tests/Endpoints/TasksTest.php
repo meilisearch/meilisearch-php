@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\CancelTasksQuery;
+use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\TaskCancelationDetails;
@@ -12,7 +13,9 @@ use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Index;
+use Meilisearch\Endpoints\Tasks;
 use Meilisearch\Exceptions\ApiException;
+use Meilisearch\Exceptions\TimeOutException;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
@@ -47,6 +50,30 @@ final class TasksTest extends TestCase
         self::assertSame(TaskType::DocumentAdditionOrUpdate, $task->getType());
         self::assertSame($this->indexName, $task->getIndexUid());
         self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $task->getDetails());
+    }
+
+    public function testWaitReturnsFinishedTaskAfterPolling(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->method('get')->willReturnOnConsecutiveCalls(
+            $this->taskPayload('enqueued'),
+            $this->taskPayload('processing'),
+            $this->taskPayload('succeeded'),
+        );
+
+        $task = (new Tasks($http))->get(1)->wait(200, 10);
+
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+    }
+
+    public function testWaitThrowsWhenTaskDoesNotFinishBeforeTimeout(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->method('get')->willReturn($this->taskPayload('enqueued'));
+
+        $this->expectException(TimeOutException::class);
+
+        (new Tasks($http))->get(1)->wait(30, 10);
     }
 
     public function testGetTaskDocumentsClient(): void
@@ -241,5 +268,36 @@ final class TasksTest extends TestCase
         $task = $this->index->updateDocuments(self::DOCUMENTS);
 
         return [$task, $task->wait()];
+    }
+
+    /**
+     * @return array{
+     *     taskUid: int,
+     *     indexUid: string,
+     *     status: string,
+     *     type: string,
+     *     enqueuedAt: string,
+     *     duration?: string,
+     *     startedAt?: string,
+     *     finishedAt?: string
+     * }
+     */
+    private function taskPayload(string $status): array
+    {
+        $payload = [
+            'taskUid' => 1,
+            'indexUid' => 'movies',
+            'status' => $status,
+            'type' => 'documentAdditionOrUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789Z',
+        ];
+
+        if ('succeeded' === $status) {
+            $payload['duration'] = 'PT0.1S';
+            $payload['startedAt'] = '2025-04-09T10:28:12.300000Z';
+            $payload['finishedAt'] = '2025-04-09T10:28:12.400000Z';
+        }
+
+        return $payload;
     }
 }
