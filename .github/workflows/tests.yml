@@ -35,7 +35,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
 
       - name: Run linter
         run: composer lint
@@ -54,7 +54,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
 
       - name: Run types tests with PHPStan
         run: composer phpstan
@@ -91,7 +91,7 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
 
       - name: Run test suite
         run: sh scripts/tests.sh --coverage-clover coverage-${{ matrix.php-version }}.xml
