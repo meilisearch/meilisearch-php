@@ -65,6 +65,9 @@ final class BatchesTest extends TestCase
 
         self::assertSame($first->getUid(), $response->getUid());
         self::assertInstanceOf(UnknownTaskDetails::class, $response->getDetails());
+        self::assertEquals($first->getStartedAt(), $response->getStartedAt());
+        self::assertNotNull($response->getDuration());
+        self::assertInstanceOf(\DateTimeImmutable::class, $response->getFinishedAt());
         $stats = $response->getStats();
         self::assertSame($stats->getTotalNbTasks(), array_sum($stats->getStatus()));
         self::assertNotEmpty($stats->getStatus());
