@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
- * @phpstan-type SearchRuleSelector array{
- *     indexUid?: non-empty-string|null,
- *     id: non-empty-string
- * }
  * @phpstan-type SearchRulePinAction array{
- *     type: 'pin',
- *     position: int
+ *     id: non-empty-string,
+ *     position: int<0, max>,
+ *     indexUid?: non-empty-string|null
  * }
- * @phpstan-type SearchRuleAction array{
- *     selector: SearchRuleSelector,
- *     action: SearchRulePinAction
+ * @phpstan-type SearchRuleScaleAction array{
+ *     weight: float,
+ *     ids?: list<non-empty-string>|null,
+ *     filter?: string|list<list<string>>|null,
+ *     indexUid?: non-empty-string|null
+ * }
+ * @phpstan-type SearchRuleActions array{
+ *     pin?: list<SearchRulePinAction>,
+ *     scale?: list<SearchRuleScaleAction>
  * }
  * @phpstan-type QueryCondition array{
  *     isEmpty?: bool|null,
@@ -35,8 +38,10 @@ namespace Meilisearch\Contracts;
  *     precedence?: non-negative-int|null,
  *     active?: bool,
  *     conditions?: SearchRuleConditions|null,
- *     actions: list<SearchRuleAction>
+ *     actions: SearchRuleActions
  * }
+ *
+ * @since Meilisearch v1.54.0
  */
 final class DynamicSearchRule
 {
@@ -46,7 +51,7 @@ final class DynamicSearchRule
     private readonly string $uid;
 
     /**
-     * @var list<SearchRuleAction>
+     * @var SearchRuleActions
      */
     private readonly array $actions;
 
@@ -84,7 +89,9 @@ final class DynamicSearchRule
     }
 
     /**
-     * @return list<SearchRuleAction>
+     * @return SearchRuleActions pin and scale actions
+     *
+     * @since Meilisearch v1.54.0
      */
     public function getActions(): array
     {
