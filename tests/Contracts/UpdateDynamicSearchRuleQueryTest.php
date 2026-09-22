@@ -13,14 +13,11 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
     {
         $data = (new UpdateDynamicSearchRuleQuery('movie-rule'))
             ->setActions([
-                [
-                    'selector' => [
-                        'indexUid' => 'movies',
+                'pin' => [
+                    [
                         'id' => '1',
-                    ],
-                    'action' => [
-                        'type' => 'pin',
                         'position' => 1,
+                        'indexUid' => 'movies',
                     ],
                 ],
             ]);
@@ -28,14 +25,11 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
         self::assertSame('movie-rule', $data->uid);
         self::assertSame([
             'actions' => [
-                [
-                    'selector' => [
-                        'indexUid' => 'movies',
+                'pin' => [
+                    [
                         'id' => '1',
-                    ],
-                    'action' => [
-                        'type' => 'pin',
                         'position' => 1,
+                        'indexUid' => 'movies',
                     ],
                 ],
             ],
@@ -83,14 +77,11 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
                 ],
             ])
             ->setActions([
-                [
-                    'selector' => [
-                        'indexUid' => 'movies',
+                'pin' => [
+                    [
                         'id' => '1',
-                    ],
-                    'action' => [
-                        'type' => 'pin',
                         'position' => 1,
+                        'indexUid' => 'movies',
                     ],
                 ],
             ]);
@@ -110,14 +101,11 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
                 ],
             ],
             'actions' => [
-                [
-                    'selector' => [
-                        'indexUid' => 'movies',
+                'pin' => [
+                    [
                         'id' => '1',
-                    ],
-                    'action' => [
-                        'type' => 'pin',
                         'position' => 1,
+                        'indexUid' => 'movies',
                     ],
                 ],
             ],

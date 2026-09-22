@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+/**
+ * @since Meilisearch v1.54.0
+ */
 final class DynamicSearchRulesFilter
 {
     private ?string $query = null;

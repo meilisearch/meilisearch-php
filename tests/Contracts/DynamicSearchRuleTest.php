@@ -27,14 +27,11 @@ final class DynamicSearchRuleTest extends TestCase
                 ],
             ],
             'actions' => [
-                [
-                    'selector' => [
-                        'indexUid' => 'movies',
+                'pin' => [
+                    [
                         'id' => '1',
-                    ],
-                    'action' => [
-                        'type' => 'pin',
                         'position' => 1,
+                        'indexUid' => 'movies',
                     ],
                 ],
             ],

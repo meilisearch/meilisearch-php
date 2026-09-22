@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
- * @phpstan-import-type SearchRuleAction from DynamicSearchRule
+ * @phpstan-import-type SearchRuleActions from DynamicSearchRule
  * @phpstan-import-type SearchRuleConditions from DynamicSearchRule
+ *
+ * @since Meilisearch v1.54.0
  */
 final class UpdateDynamicSearchRuleQuery
 {
@@ -31,7 +33,7 @@ final class UpdateDynamicSearchRuleQuery
     private ?array $conditions = null;
 
     /**
-     * @var list<SearchRuleAction>|null
+     * @var SearchRuleActions|null
      */
     private ?array $actions = null;
 
@@ -91,9 +93,11 @@ final class UpdateDynamicSearchRuleQuery
     }
 
     /**
-     * @param list<SearchRuleAction>|null $actions
+     * @param SearchRuleActions|null $actions pin and scale actions, or null to clear
      *
      * @return $this
+     *
+     * @since Meilisearch v1.54.0
      */
     public function setActions(?array $actions): self
     {
@@ -109,7 +113,7 @@ final class UpdateDynamicSearchRuleQuery
      *     precedence?: non-negative-int|null,
      *     active?: bool,
      *     conditions?: SearchRuleConditions|null,
-     *     actions?: list<SearchRuleAction>|null
+     *     actions?: SearchRuleActions|null
      * }
      */
     public function toArray(): array

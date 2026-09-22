@@ -20,7 +20,7 @@ trait HandlesDynamicSearchRules
      *
      * This is an EXPERIMENTAL feature, which may break without a major version.
      *
-     * @since Meilisearch v1.41.0
+     * @since Meilisearch v1.54.0
      * @see https://www.meilisearch.com/docs/reference/api/search-rules/list-search-rules
      */
     public function getDynamicSearchRules(?DynamicSearchRulesQuery $options = null): DynamicSearchRulesResults
@@ -35,7 +35,7 @@ trait HandlesDynamicSearchRules
      *
      * @param non-empty-string $uid Dynamic search rule UID
      *
-     * @since Meilisearch v1.41.0
+     * @since Meilisearch v1.54.0
      * @see https://www.meilisearch.com/docs/reference/api/search-rules/get-a-search-rule
      */
     public function getDynamicSearchRule(string $uid): DynamicSearchRule
@@ -48,7 +48,9 @@ trait HandlesDynamicSearchRules
      *
      * This is an EXPERIMENTAL feature, which may break without a major version.
      *
-     * @since Meilisearch v1.41.0
+     * @param UpdateDynamicSearchRuleQuery $request Partial search rule with pin and scale actions
+     *
+     * @since Meilisearch v1.54.0
      * @see https://www.meilisearch.com/docs/reference/api/search-rules/create-or-update-a-search-rule
      */
     public function updateDynamicSearchRule(UpdateDynamicSearchRuleQuery $request): Task
@@ -63,7 +65,7 @@ trait HandlesDynamicSearchRules
      *
      * @param non-empty-string $uid Dynamic search rule UID
      *
-     * @since Meilisearch v1.41.0
+     * @since Meilisearch v1.54.0
      * @see https://www.meilisearch.com/docs/reference/api/search-rules/delete-a-search-rule
      */
     public function deleteDynamicSearchRule(string $uid): Task
@@ -76,8 +78,8 @@ trait HandlesDynamicSearchRules
      *
      * This is an EXPERIMENTAL feature, which may break without a major version.
      *
-     * @since Meilisearch v1.50.0
-     * @see https://www.meilisearch.com/docs/reference/api/search-rules/delete-a-search-rule
+     * @since Meilisearch v1.54.0
+     * @see https://www.meilisearch.com/docs/reference/api/search-rules/delete-all-search-rules
      */
     public function deleteAllDynamicSearchRules(): Task
     {

@@ -18,13 +18,10 @@ final class DynamicSearchRulesTest extends TestCase
     private const SEARCH_RULE_DESCRIPTION = 'Movie promotion rule';
     private const SEARCH_RULE_PATCH = [
         'actions' => [
-            [
-                'selector' => [
+            'pin' => [
+                [
                     'indexUid' => 'movies',
                     'id' => '1',
-                ],
-                'action' => [
-                    'type' => 'pin',
                     'position' => 1,
                 ],
             ],
@@ -79,6 +76,27 @@ final class DynamicSearchRulesTest extends TestCase
 
         self::assertSame(self::SEARCH_RULE_UID, $response->getUid());
         self::assertSame(self::SEARCH_RULE_PATCH['actions'], $response->getActions());
+    }
+
+    public function testCanCreateOrUpdateDynamicSearchRuleWithScaleFilter(): void
+    {
+        $actions = [
+            'scale' => [
+                [
+                    'filter' => 'series = batman',
+                    'weight' => 4.0,
+                ],
+            ],
+        ];
+
+        $this->client->updateDynamicSearchRule(
+            (new UpdateDynamicSearchRuleQuery('batman-festival'))->setActions($actions)
+        )->wait();
+
+        $response = $this->client->getDynamicSearchRule('batman-festival');
+
+        self::assertSame('batman-festival', $response->getUid());
+        self::assertSame($actions, $response->getActions());
     }
 
     public function testCanFetchDynamicSearchRule(): void

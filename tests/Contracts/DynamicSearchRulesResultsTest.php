@@ -15,18 +15,16 @@ final class DynamicSearchRulesResultsTest extends TestCase
         $firstRule = DynamicSearchRule::fromArray([
             'uid' => 'movie-rule',
             'actions' => [
-                [
-                    'selector' => ['indexUid' => 'movies', 'id' => '1'],
-                    'action' => ['type' => 'pin', 'position' => 1],
+                'pin' => [
+                    ['id' => '1', 'position' => 1, 'indexUid' => 'movies'],
                 ],
             ],
         ]);
         $secondRule = DynamicSearchRule::fromArray([
             'uid' => 'book-rule',
             'actions' => [
-                [
-                    'selector' => ['indexUid' => 'books', 'id' => '2'],
-                    'action' => ['type' => 'pin', 'position' => 2],
+                'pin' => [
+                    ['id' => '2', 'position' => 2, 'indexUid' => 'books'],
                 ],
             ],
         ]);
