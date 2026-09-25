@@ -12,7 +12,9 @@ namespace Meilisearch\Contracts;
  *     isIndexing: bool,
  *     numberOfEmbeddings: non-negative-int,
  *     numberOfEmbeddedDocuments: non-negative-int,
- *     fieldDistribution: array<non-empty-string, non-negative-int>
+ *     fieldDistribution: array<non-empty-string, non-negative-int>,
+ *     indexSize?: non-negative-int,
+ *     usedIndexSize?: non-negative-int
  * }
  */
 final class IndexStats
@@ -24,6 +26,8 @@ final class IndexStats
      * @param non-negative-int                          $numberOfEmbeddings
      * @param non-negative-int                          $numberOfEmbeddedDocuments
      * @param array<non-empty-string, non-negative-int> $fieldDistribution
+     * @param non-negative-int|null                     $indexSize
+     * @param non-negative-int|null                     $usedIndexSize
      */
     public function __construct(
         private readonly int $numberOfDocuments,
@@ -33,6 +37,8 @@ final class IndexStats
         private readonly int $numberOfEmbeddings,
         private readonly int $numberOfEmbeddedDocuments,
         private readonly array $fieldDistribution,
+        private readonly ?int $indexSize = null,
+        private readonly ?int $usedIndexSize = null,
     ) {
     }
 
@@ -90,6 +96,30 @@ final class IndexStats
     }
 
     /**
+     * Size of the index database, in bytes.
+     *
+     * Returns `null` when the Meilisearch instance is older than v1.53.0 and does not report it.
+     *
+     * @return non-negative-int|null
+     */
+    public function getIndexSize(): ?int
+    {
+        return $this->indexSize;
+    }
+
+    /**
+     * Size of the used pages of the index database, in bytes.
+     *
+     * Returns `null` when the Meilisearch instance is older than v1.53.0 and does not report it.
+     *
+     * @return non-negative-int|null
+     */
+    public function getUsedIndexSize(): ?int
+    {
+        return $this->usedIndexSize;
+    }
+
+    /**
      * @param RawIndexStats $data
      */
     public static function fromArray(array $data): self
@@ -102,6 +132,8 @@ final class IndexStats
             $data['numberOfEmbeddings'],
             $data['numberOfEmbeddedDocuments'],
             $data['fieldDistribution'],
+            $data['indexSize'] ?? null,
+            $data['usedIndexSize'] ?? null,
         );
     }
 }
