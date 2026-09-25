@@ -75,6 +75,12 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
                     'start' => '2026-01-01T00:00:00Z',
                     'end' => null,
                 ],
+                'filter' => [
+                    'values' => [
+                        'color' => 'red',
+                        'category' => 'shirt',
+                    ],
+                ],
             ])
             ->setActions([
                 'pin' => [
@@ -98,6 +104,12 @@ final class UpdateDynamicSearchRuleQueryTest extends TestCase
                 'time' => [
                     'start' => '2026-01-01T00:00:00Z',
                     'end' => null,
+                ],
+                'filter' => [
+                    'values' => [
+                        'color' => 'red',
+                        'category' => 'shirt',
+                    ],
                 ],
             ],
             'actions' => [

@@ -28,13 +28,18 @@ namespace Meilisearch\Contracts;
  *     start?: non-empty-string|null,
  *     end?: non-empty-string|null
  * }
+ * @phpstan-type FilterCondition array{
+ *     values: array<string, mixed>
+ * }
  * @phpstan-type SearchRuleConditions array{
  *     query?: QueryCondition|null,
- *     time?: TimeCondition|null
+ *     time?: TimeCondition|null,
+ *     filter?: FilterCondition|null
  * }
  * @phpstan-type RawDynamicSearchRule array{
  *     uid: non-empty-string,
  *     description?: string|null,
+ *     lastUpdatedAt?: non-empty-string,
  *     precedence?: non-negative-int|null,
  *     active?: bool,
  *     conditions?: SearchRuleConditions|null,
@@ -57,6 +62,8 @@ final class DynamicSearchRule
 
     private readonly ?string $description;
 
+    private readonly ?\DateTimeImmutable $lastUpdatedAt;
+
     /**
      * @var non-negative-int|null
      */
@@ -78,6 +85,7 @@ final class DynamicSearchRule
         $this->uid = $raw['uid'];
         $this->actions = $raw['actions'];
         $this->description = $raw['description'] ?? null;
+        $this->lastUpdatedAt = isset($raw['lastUpdatedAt']) ? new \DateTimeImmutable($raw['lastUpdatedAt']) : null;
         $this->precedence = $raw['precedence'] ?? null;
         $this->active = $raw['active'] ?? null;
         $this->conditions = $raw['conditions'] ?? null;
@@ -101,6 +109,11 @@ final class DynamicSearchRule
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function getLastUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->lastUpdatedAt;
     }
 
     public function getPrecedence(): ?int
