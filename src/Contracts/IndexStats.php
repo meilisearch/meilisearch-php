@@ -96,7 +96,12 @@ final class IndexStats
     }
 
     /**
+     * Size of the index database, in bytes.
+     *
      * @return non-negative-int
+     *
+     * @since Meilisearch v1.53.0
+     * @see https://www.meilisearch.com/docs/reference/api/indexes/get-stats-of-index
      */
     public function getIndexSize(): int
     {
@@ -104,7 +109,12 @@ final class IndexStats
     }
 
     /**
+     * Size of the used pages of the index database, in bytes.
+     *
      * @return non-negative-int
+     *
+     * @since Meilisearch v1.53.0
+     * @see https://www.meilisearch.com/docs/reference/api/indexes/get-stats-of-index
      */
     public function getUsedIndexSize(): int
     {

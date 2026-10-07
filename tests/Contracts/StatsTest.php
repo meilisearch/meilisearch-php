@@ -35,6 +35,10 @@ final class StatsTest extends TestCase
         self::assertSame(925696, $stats->getUsedDatabaseSize());
         self::assertSame($date, $stats->getLastUpdate());
         self::assertSame($indexes, $stats->getIndexes());
+
+        $indexStats = $stats->getIndexes()['stats_a902635d92481c0925e3a801bbc60c3e'];
+        self::assertSame(4096, $indexStats->getIndexSize());
+        self::assertSame(2048, $indexStats->getUsedIndexSize());
     }
 
     public function testFromArray(): void
@@ -74,5 +78,9 @@ final class StatsTest extends TestCase
                 usedIndexSize: 2048,
             ),
         ], $stats->getIndexes());
+
+        $indexStats = $stats->getIndexes()['stats_a902635d92481c0925e3a801bbc60c3e'];
+        self::assertSame(4096, $indexStats->getIndexSize());
+        self::assertSame(2048, $indexStats->getUsedIndexSize());
     }
 }

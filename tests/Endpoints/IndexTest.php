@@ -134,6 +134,8 @@ final class IndexTest extends TestCase
         self::assertSame(0, $stats->getNumberOfDocuments());
         self::assertFalse($stats->isIndexing());
         self::assertSame([], $stats->getFieldDistribution());
+        self::assertGreaterThanOrEqual(0, $stats->getIndexSize());
+        self::assertGreaterThanOrEqual(0, $stats->getUsedIndexSize());
     }
 
     public function testGetAndFetchPrimaryKey(): void

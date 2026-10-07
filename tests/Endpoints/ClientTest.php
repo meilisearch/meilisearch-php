@@ -234,6 +234,8 @@ final class ClientTest extends TestCase
 
         self::assertSame(2, $statsIndex->getNumberOfDocuments());
         self::assertSame(['objectID' => 2, 'type' => 1], $statsIndex->getFieldDistribution());
+        self::assertGreaterThanOrEqual(0, $statsIndex->getIndexSize());
+        self::assertGreaterThanOrEqual(0, $statsIndex->getUsedIndexSize());
     }
 
     public function testBadClientUrl(): void
