@@ -50,12 +50,12 @@ final class SettingsTest extends TestCase
         self::assertNull($settingA['distinctAttribute']);
         self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingA['searchableAttributes']);
         self::assertSame(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingA['displayedAttributes']);
-        self::assertEmpty($settingA['stopWords']);
+        self::assertCount(0, $settingA['stopWords']);
         self::assertIsArray($settingA['synonyms']);
-        self::assertEmpty($settingA['synonyms']);
+        self::assertCount(0, $settingA['synonyms']);
         self::assertIsArray($settingA['filterableAttributes']);
-        self::assertEmpty($settingA['filterableAttributes']);
-        self::assertEmpty($settingA['sortableAttributes']);
+        self::assertCount(0, $settingA['filterableAttributes']);
+        self::assertCount(0, $settingA['sortableAttributes']);
         self::assertIsArray($settingA['typoTolerance']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settingA['typoTolerance']);
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settingA['facetSearch']);
@@ -64,12 +64,12 @@ final class SettingsTest extends TestCase
         self::assertNull($settingB['distinctAttribute']);
         self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingB['searchableAttributes']);
         self::assertSame(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settingB['displayedAttributes']);
-        self::assertEmpty($settingB['stopWords']);
+        self::assertCount(0, $settingB['stopWords']);
         self::assertIsArray($settingB['synonyms']);
-        self::assertEmpty($settingB['synonyms']);
+        self::assertCount(0, $settingB['synonyms']);
         self::assertIsArray($settingB['filterableAttributes']);
-        self::assertEmpty($settingB['filterableAttributes']);
-        self::assertEmpty($settingB['sortableAttributes']);
+        self::assertCount(0, $settingB['filterableAttributes']);
+        self::assertCount(0, $settingB['sortableAttributes']);
         self::assertIsArray($settingB['typoTolerance']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settingB['typoTolerance']);
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settingB['facetSearch']);
@@ -96,10 +96,10 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_DISPLAYED_ATTRIBUTES, $settings['displayedAttributes']);
         self::assertSame(['the'], $settings['stopWords']);
         self::assertIsArray($settings['synonyms']);
-        self::assertEmpty($settings['synonyms']);
+        self::assertCount(0, $settings['synonyms']);
         self::assertIsArray($settings['filterableAttributes']);
-        self::assertEmpty($settings['filterableAttributes']);
-        self::assertEmpty($settings['sortableAttributes']);
+        self::assertCount(0, $settings['filterableAttributes']);
+        self::assertCount(0, $settings['sortableAttributes']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settings['typoTolerance']);
         self::assertFalse($settings['facetSearch']);
         self::assertSame('disabled', $settings['prefixSearch']);
@@ -139,10 +139,10 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
         self::assertSame(['the'], $settings['stopWords']);
         self::assertIsArray($settings['synonyms']);
-        self::assertEmpty($settings['synonyms']);
+        self::assertCount(0, $settings['synonyms']);
         self::assertIsArray($settings['filterableAttributes']);
-        self::assertEmpty($settings['filterableAttributes']);
-        self::assertEmpty($settings['sortableAttributes']);
+        self::assertCount(0, $settings['filterableAttributes']);
+        self::assertCount(0, $settings['sortableAttributes']);
         self::assertSame($new_typo_tolerance, $settings['typoTolerance']);
     }
 
@@ -164,12 +164,12 @@ final class SettingsTest extends TestCase
         self::assertNull($settings['distinctAttribute']);
         self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['searchableAttributes']);
         self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settings['displayedAttributes']);
-        self::assertEmpty($settings['stopWords']);
+        self::assertCount(0, $settings['stopWords']);
         self::assertIsArray($settings['synonyms']);
-        self::assertEmpty($settings['synonyms']);
+        self::assertCount(0, $settings['synonyms']);
         self::assertIsArray($settings['filterableAttributes']);
-        self::assertEmpty($settings['filterableAttributes']);
-        self::assertEmpty($settings['sortableAttributes']);
+        self::assertCount(0, $settings['filterableAttributes']);
+        self::assertCount(0, $settings['sortableAttributes']);
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settings['typoTolerance']);
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settings['facetSearch']);
         self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settings['prefixSearch']);

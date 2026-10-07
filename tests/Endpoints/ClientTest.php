@@ -37,14 +37,14 @@ final class ClientTest extends TestCase
     {
         $response = $this->client->getIndexes();
 
-        self::assertEmpty($response);
+        self::assertCount(0, $response);
     }
 
     public function testgetIndexesWithPagination(): void
     {
         $response = $this->client->getIndexes((new IndexesQuery())->setLimit(1)->setOffset(99999));
 
-        self::assertEmpty($response);
+        self::assertCount(0, $response);
     }
 
     public function testExceptionIsThrownOnGetRawIndexWhenIndexDoesNotExist(): void

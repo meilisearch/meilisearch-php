@@ -12,7 +12,7 @@ final class SortableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        self::assertEmpty($index->getSortableAttributes());
+        self::assertCount(0, $index->getSortableAttributes());
     }
 
     public function testUpdateSortableAttributes(): void
@@ -33,6 +33,6 @@ final class SortableAttributesTest extends TestCase
         $index->updateSortableAttributes($newAttributes)->wait();
         $index->resetSortableAttributes()->wait();
 
-        self::assertEmpty($index->getSortableAttributes());
+        self::assertCount(0, $index->getSortableAttributes());
     }
 }

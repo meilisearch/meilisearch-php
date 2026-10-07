@@ -12,7 +12,7 @@ final class FilterableAttributesTest extends TestCase
     {
         $index = $this->createEmptyIndex($this->safeIndexName());
 
-        self::assertEmpty($index->getFilterableAttributes());
+        self::assertCount(0, $index->getFilterableAttributes());
     }
 
     public function testUpdateFilterableAttributes(): void
@@ -33,7 +33,7 @@ final class FilterableAttributesTest extends TestCase
         $index->updateFilterableAttributes($newAttributes)->wait();
         $index->resetFilterableAttributes()->wait();
 
-        self::assertEmpty($index->getFilterableAttributes());
+        self::assertCount(0, $index->getFilterableAttributes());
     }
 
     public function testUpdateGranularFilterableAttributes(): void

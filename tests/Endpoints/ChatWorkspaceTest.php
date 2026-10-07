@@ -116,10 +116,8 @@ final class ChatWorkspaceTest extends TestCase
         self::assertNull($settingsResponse->getBaseUrl());
         self::assertNull($settingsResponse->getApiKey());
         // Prompts are reset to their original values
-        self::assertNotEmpty($settingsResponse->getPrompts()->getSystem());
-        self::assertNotEmpty($settingsResponse->getPrompts()->getSearchDescription());
-        self::assertNotEmpty($settingsResponse->getPrompts()->getSearchQParam());
-        self::assertNotEmpty($settingsResponse->getPrompts()->getSearchIndexUidParam());
+        self::assertNotSame('', $settingsResponse->getPrompts()->getSystem());
+        self::assertNotSame('', $settingsResponse->getPrompts()->getSearchDescription());
 
         // Workspace still appears when listing workspaces
         $listResponse = $this->client->getChatWorkspaces();

@@ -70,8 +70,8 @@ final class BatchesTest extends TestCase
         self::assertInstanceOf(\DateTimeImmutable::class, $response->getFinishedAt());
         $stats = $response->getStats();
         self::assertSame($stats->getTotalNbTasks(), array_sum($stats->getStatus()));
-        self::assertNotEmpty($stats->getStatus());
-        self::assertNotEmpty($stats->getTypes());
+        self::assertNotCount(0, $stats->getStatus());
+        self::assertNotCount(0, $stats->getTypes());
         self::assertNotNull($stats->getProgressTrace());
         self::assertSame($response->toArray()['batchStrategy'] ?? null, $response->getBatchStrategy());
     }
