@@ -21,7 +21,7 @@ final class StopWordsTest extends TestCase
     {
         $response = $this->index->getStopWords();
 
-        self::assertEmpty($response);
+        self::assertCount(0, $response);
     }
 
     public function testUpdateStopWords(): void
@@ -37,6 +37,6 @@ final class StopWordsTest extends TestCase
         $this->index->updateStopWords(['the'])->wait();
         $this->index->resetStopWords()->wait();
 
-        self::assertEmpty($this->index->getStopWords());
+        self::assertCount(0, $this->index->getStopWords());
     }
 }

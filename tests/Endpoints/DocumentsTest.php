@@ -467,7 +467,7 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
 
-        self::assertEmpty($response);
+        self::assertCount(0, $response);
     }
 
     public function testDeleteMultipleDocumentsWithDocumentIdAsInteger(): void
@@ -497,7 +497,7 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
 
-        self::assertEmpty($response);
+        self::assertCount(0, $response);
     }
 
     public function testMessageHintException(): void

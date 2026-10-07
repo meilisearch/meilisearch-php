@@ -19,7 +19,7 @@ final class SynonymsTest extends TestCase
 
     public function testGetDefaultSynonyms(): void
     {
-        self::assertEmpty($this->index->getSynonyms());
+        self::assertCount(0, $this->index->getSynonyms());
     }
 
     public function testUpdateSynonyms(): void
@@ -47,6 +47,6 @@ final class SynonymsTest extends TestCase
         $this->index->updateSynonyms(['hp' => ['harry potter']])->wait();
         $this->index->resetSynonyms()->wait();
 
-        self::assertEmpty($this->index->getSynonyms());
+        self::assertCount(0, $this->index->getSynonyms());
     }
 }

@@ -8,7 +8,6 @@ use Meilisearch\Contracts\HybridSearchOptions;
 use Meilisearch\Contracts\SearchQuery;
 use Meilisearch\Endpoints\Index;
 use Meilisearch\Exceptions\ApiException;
-use Meilisearch\Http\Client;
 use Tests\TestCase;
 
 final class SearchTest extends TestCase
@@ -577,7 +576,7 @@ final class SearchTest extends TestCase
             );
         };
 
-        $response = $this->index->search((new SearchQuery())->setQuery('prince'), $options = ['transformHits' => $keepLePetitPrinceFunc]);
+        $response = $this->index->search((new SearchQuery())->setQuery('prince'), ['transformHits' => $keepLePetitPrinceFunc]);
 
         $this->assertEstimatedPagination($response->toArray());
         self::assertSame('Le Petit Prince', $response->getHit(0)['title']);
@@ -710,8 +709,6 @@ final class SearchTest extends TestCase
 
     public function testShowRankingScoreDetails(): void
     {
-        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
-
         $response = $this->index->search((new SearchQuery())->setQuery('the')->setShowRankingScoreDetails(true));
         $hit = $response->getHits()[0];
 

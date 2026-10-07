@@ -80,7 +80,7 @@ final class SearchResultTest extends TestCase
     public function testResultCanBeBuilt(): void
     {
         self::assertCount(2, $this->basicResult);
-        self::assertNotEmpty($this->basicResult->getHits());
+        self::assertNotCount(0, $this->basicResult->getHits());
 
         self::assertSame([
             'id' => '1',
@@ -103,8 +103,8 @@ final class SearchResultTest extends TestCase
         self::assertSame(976, $this->basicResult->getEstimatedTotalHits());
         self::assertSame(35, $this->basicResult->getProcessingTimeMs());
         self::assertSame('american', $this->basicResult->getQuery());
-        self::assertEmpty($this->basicResult->getFacetDistribution());
-        self::assertEmpty($this->basicResult->getFacetStats());
+        self::assertCount(0, $this->basicResult->getFacetDistribution());
+        self::assertCount(0, $this->basicResult->getFacetStats());
         self::assertCount(2, $this->basicResult);
     }
 
