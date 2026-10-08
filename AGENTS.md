@@ -6,11 +6,24 @@
 
 ## Commands
 
-Cloud Agents have PHP 8.5, Composer, and Meilisearch Enterprise 1.54. Meilisearch is started on boot at `http://127.0.0.1:7700` with master key `masterKey`, which matches `phpunit.xml.dist`.
+Cloud Agents have PHP 8.5, Composer, and Meilisearch Enterprise 1.54. The environment start command runs Meilisearch at `http://127.0.0.1:7700` with master key `masterKey`, which matches `phpunit.xml.dist`.
 
 - Install dependencies: `composer install`
 - Tests: `composer test`
 - Lint: `composer lint && composer phpstan`
+
+If `curl -sf http://127.0.0.1:7700/health` fails, start Meilisearch before tests:
+
+```bash
+mkdir -p "$HOME/.local/share/meilisearch/dumps" "$HOME/.local/share/meilisearch/snapshots"
+meilisearch --master-key=masterKey --no-analytics \
+  --db-path "$HOME/.local/share/meilisearch" \
+  --dump-dir "$HOME/.local/share/meilisearch/dumps" \
+  --snapshot-dir "$HOME/.local/share/meilisearch/snapshots" \
+  --http-addr 127.0.0.1:7700 \
+  --experimental-allowed-ip-networks any \
+  --env development
+```
 
 `composer install` is idempotent. This library does not commit `composer.lock`.
 
