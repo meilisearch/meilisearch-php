@@ -20,7 +20,7 @@ jobs:
       DOCUMENTATION_TITLE: "Meilisearch PHP | Documentation"
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
       - name: Cache phpDocumentor build files
