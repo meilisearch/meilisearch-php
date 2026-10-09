@@ -14,6 +14,7 @@ final class DynamicSearchRuleTest extends TestCase
         $raw = [
             'uid' => 'movie-rule',
             'description' => 'Movie promotion',
+            'lastUpdatedAt' => '2026-07-27T06:47:12.123456789Z',
             'precedence' => 1,
             'active' => true,
             'conditions' => [
@@ -24,6 +25,12 @@ final class DynamicSearchRuleTest extends TestCase
                 'time' => [
                     'start' => '2026-01-01T00:00:00Z',
                     'end' => null,
+                ],
+                'filter' => [
+                    'values' => [
+                        'color' => 'red',
+                        'category' => 'shirt',
+                    ],
                 ],
             ],
             'actions' => [
@@ -41,11 +48,25 @@ final class DynamicSearchRuleTest extends TestCase
 
         self::assertSame('movie-rule', $rule->getUid());
         self::assertSame('Movie promotion', $rule->getDescription());
+        self::assertSame(
+            '2026-07-27T06:47:12.123456+00:00',
+            $rule->getLastUpdatedAt()?->format('Y-m-d\TH:i:s.uP')
+        );
         self::assertSame(1, $rule->getPrecedence());
         self::assertTrue($rule->isActive());
         self::assertSame($raw['conditions'], $rule->getConditions());
         self::assertSame($raw['actions'], $rule->getActions());
         self::assertSame($raw, $rule->getRaw());
         self::assertSame($raw, $rule->toArray());
+    }
+
+    public function testLastUpdatedAtIsOptionalForOlderResponses(): void
+    {
+        $rule = DynamicSearchRule::fromArray([
+            'uid' => 'movie-rule',
+            'actions' => [],
+        ]);
+
+        self::assertNull($rule->getLastUpdatedAt());
     }
 }
