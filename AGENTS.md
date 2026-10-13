@@ -1,4 +1,8 @@
-# [AGENTS.md](http://AGENTS.md)
+# AGENTS.md
+
+## Workflow
+
+Lint when the task is finished.
 
 ## Commands
 
