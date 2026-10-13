@@ -134,12 +134,11 @@ final class DocumentsTest extends TestCase
 
     public function testCannotAddDocumentWhenJsonEncodingFails(): void
     {
-        $this->expectException(\JsonException::class);
-        $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
-
         $documents = ["\xB1\x31"];
 
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $this->expectException(\JsonException::class);
+        $this->expectExceptionMessage('Malformed UTF-8 characters, possibly incorrectly encoded');
         // The argument type is wrong on purpose. addDocuments expects a list of
         // documents; this malformed string is what makes JSON encoding throw.
         $index->addDocuments($documents); // @phpstan-ignore argument.type
