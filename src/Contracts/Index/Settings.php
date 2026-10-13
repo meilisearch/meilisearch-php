@@ -7,25 +7,120 @@ namespace Meilisearch\Contracts\Index;
 use Meilisearch\Contracts\Data;
 
 /**
- * @phpstan-type SettingsEmbedders array<non-empty-string, array{
+ * @phpstan-type EmbedderDistribution array{mean: float, sigma: float}
+ * @phpstan-type EmbedderFragments array<string, mixed>
+ * @phpstan-type EmbedderHeaders array<string, string>
+ * @phpstan-type EmbedderTemplate array<string, mixed>
+ * @phpstan-type SearchEmbedderConfig array{
  *     apiKey?: string,
  *     binaryQuantized?: bool,
  *     dimensions?: int,
- *     distribution?: array{mean: float, sigma: float},
- *     documentTemplate?: string,
- *     documentTemplateMaxBytes?: int,
- *     indexingFragments?: array<string, mixed>,
- *     indexingEmbedder?: array{model: string, source: string},
+ *     distribution?: EmbedderDistribution,
+ *     headers?: EmbedderHeaders,
+ *     indexingFragments?: EmbedderFragments,
  *     model?: string,
  *     pooling?: string,
- *     request?: array<string, mixed>,
- *     response?: array<string, mixed>,
+ *     request?: EmbedderTemplate,
+ *     response?: EmbedderTemplate,
  *     revision?: string,
- *     searchFragments?: array<string, mixed>,
- *     searchEmbedder?: array{model: string, source: string},
+ *     searchFragments?: EmbedderFragments,
  *     source?: string,
  *     url?: string
- * }>
+ * }
+ * @phpstan-type IndexingEmbedderConfig array{
+ *     apiKey?: string,
+ *     binaryQuantized?: bool,
+ *     dimensions?: int,
+ *     distribution?: EmbedderDistribution,
+ *     documentTemplate?: string,
+ *     documentTemplateMaxBytes?: int,
+ *     headers?: EmbedderHeaders,
+ *     indexingFragments?: EmbedderFragments,
+ *     model?: string,
+ *     pooling?: string,
+ *     request?: EmbedderTemplate,
+ *     response?: EmbedderTemplate,
+ *     revision?: string,
+ *     searchFragments?: EmbedderFragments,
+ *     source?: string,
+ *     url?: string
+ * }
+ * @phpstan-type EmbedderConfig array{
+ *     apiKey?: string,
+ *     binaryQuantized?: bool,
+ *     dimensions?: int,
+ *     distribution?: EmbedderDistribution,
+ *     documentTemplate?: string,
+ *     documentTemplateMaxBytes?: int,
+ *     headers?: EmbedderHeaders,
+ *     indexingFragments?: EmbedderFragments,
+ *     indexingEmbedder?: IndexingEmbedderConfig,
+ *     model?: string,
+ *     pooling?: string,
+ *     request?: EmbedderTemplate,
+ *     response?: EmbedderTemplate,
+ *     revision?: string,
+ *     searchFragments?: EmbedderFragments,
+ *     searchEmbedder?: SearchEmbedderConfig,
+ *     source?: string,
+ *     url?: string
+ * }
+ * @phpstan-type SearchEmbedderConfigUpdate array{
+ *     apiKey?: string|null,
+ *     binaryQuantized?: bool|null,
+ *     dimensions?: int|null,
+ *     distribution?: EmbedderDistribution|null,
+ *     headers?: EmbedderHeaders|null,
+ *     indexingFragments?: EmbedderFragments|null,
+ *     model?: string|null,
+ *     pooling?: string|null,
+ *     request?: EmbedderTemplate|null,
+ *     response?: EmbedderTemplate|null,
+ *     revision?: string|null,
+ *     searchFragments?: EmbedderFragments|null,
+ *     source?: string|null,
+ *     url?: string|null
+ * }
+ * @phpstan-type IndexingEmbedderConfigUpdate array{
+ *     apiKey?: string|null,
+ *     binaryQuantized?: bool|null,
+ *     dimensions?: int|null,
+ *     distribution?: EmbedderDistribution|null,
+ *     documentTemplate?: string|null,
+ *     documentTemplateMaxBytes?: int|null,
+ *     headers?: EmbedderHeaders|null,
+ *     indexingFragments?: EmbedderFragments|null,
+ *     model?: string|null,
+ *     pooling?: string|null,
+ *     request?: EmbedderTemplate|null,
+ *     response?: EmbedderTemplate|null,
+ *     revision?: string|null,
+ *     searchFragments?: EmbedderFragments|null,
+ *     source?: string|null,
+ *     url?: string|null
+ * }
+ * @phpstan-type EmbedderConfigUpdate array{
+ *     apiKey?: string|null,
+ *     binaryQuantized?: bool|null,
+ *     dimensions?: int|null,
+ *     distribution?: EmbedderDistribution|null,
+ *     documentTemplate?: string|null,
+ *     documentTemplateMaxBytes?: int|null,
+ *     headers?: EmbedderHeaders|null,
+ *     indexingFragments?: EmbedderFragments|null,
+ *     indexingEmbedder?: IndexingEmbedderConfigUpdate|null,
+ *     model?: string|null,
+ *     pooling?: string|null,
+ *     request?: EmbedderTemplate|null,
+ *     response?: EmbedderTemplate|null,
+ *     revision?: string|null,
+ *     searchFragments?: EmbedderFragments|null,
+ *     searchEmbedder?: SearchEmbedderConfigUpdate|null,
+ *     source?: string|null,
+ *     url?: string|null
+ * }
+ * @phpstan-type SettingsEmbedders array<non-empty-string, EmbedderConfig>
+ * @phpstan-type SettingsEmbeddersUpdate array<non-empty-string, EmbedderConfigUpdate|null>
  * @phpstan-type SettingsTypoTolerance array{
  *     enabled?: bool,
  *     minWordSizeForTypos?: array{oneTypo?: int, twoTypos?: int},

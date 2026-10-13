@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints\Delegates;
 
 use Meilisearch\Contracts\Index\Faceting;
+use Meilisearch\Contracts\Index\Settings;
 use Meilisearch\Contracts\Index\Synonyms;
 use Meilisearch\Contracts\Index\TypoTolerance;
 use Meilisearch\Contracts\Task;
@@ -12,6 +13,10 @@ use Meilisearch\Endpoints\Tasks;
 
 use function Meilisearch\partial;
 
+/**
+ * @phpstan-import-type SettingsEmbedders from Settings
+ * @phpstan-import-type SettingsEmbeddersUpdate from Settings
+ */
 trait HandlesSettings
 {
     // Settings - Ranking rules
@@ -358,6 +363,9 @@ trait HandlesSettings
 
     // Settings - Separator tokens
 
+    /**
+     * @return list<non-empty-string>
+     */
     public function getSeparatorTokens(): array
     {
         return $this->http->get(self::PATH.'/'.$this->uid.'/settings/separator-tokens');
@@ -448,6 +456,8 @@ trait HandlesSettings
     // Settings - Embedders
 
     /**
+     * @return SettingsEmbedders|null
+     *
      * @since Meilisearch v1.13.0
      */
     public function getEmbedders(): ?array
@@ -456,6 +466,8 @@ trait HandlesSettings
     }
 
     /**
+     * @param SettingsEmbeddersUpdate $embedders
+     *
      * @since Meilisearch v1.13.0
      */
     public function updateEmbedders(array $embedders): Task

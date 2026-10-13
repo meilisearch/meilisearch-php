@@ -87,11 +87,14 @@ trait HandlesSystem
     /**
      * @param array{apiKey?: string|null, expiresAt?: \DateTimeInterface|null} $options
      */
-    public function generateTenantToken(string $apiKeyUid, $searchRules, array $options = []): string
+    public function generateTenantToken(string $apiKeyUid, array|object $searchRules, array $options = []): string
     {
         return $this->tenantToken->generateTenantToken($apiKeyUid, $searchRules, $options);
     }
 
+    /**
+     * @param list<array{non-empty-string, non-empty-string}> $indexes
+     */
     public function swapIndexes(array $indexes): Task
     {
         $options = array_map(static fn ($data) => ['indexes' => $data], $indexes);
