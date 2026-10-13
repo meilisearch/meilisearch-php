@@ -9,6 +9,7 @@ use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Task;
+use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Exceptions\TimeOutException;
 use Psr\Http\Message\StreamInterface;
 
@@ -46,23 +47,20 @@ class Tasks extends Endpoint
         return $this->http->getStream(self::PATH.'/'.$taskUid.'/documents');
     }
 
-    /**
-     * @return TasksResponse
-     */
-    public function all(array $query = []): array
+    public function all(array $query = []): TasksResults
     {
         $rawData = $this->http->get(self::PATH.'/', $query);
         /** @var RawTasks $rawTasks */
         $rawTasks = $rawData;
         $results = array_map(fn (array $task): Task => Task::fromArray($task, partial(self::waitTask(...), $this->http)), $rawTasks['results']);
 
-        return [
+        return new TasksResults([
             'results' => $results,
             'from' => $rawTasks['from'],
             'limit' => $rawTasks['limit'],
             'next' => $rawTasks['next'],
             'total' => $rawTasks['total'],
-        ];
+        ]);
     }
 
     public function cancelTasks(?CancelTasksQuery $options): Task
