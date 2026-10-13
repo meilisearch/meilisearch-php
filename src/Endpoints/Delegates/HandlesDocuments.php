@@ -221,7 +221,7 @@ trait HandlesDocuments
     public function deleteDocuments(array $options): Task
     {
         try {
-            if (\array_key_exists('filter', $options) && $options['filter']) {
+            if (\array_key_exists('filter', $options) && (bool) $options['filter']) {
                 return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', $options), partial(Tasks::waitTask(...), $this->http));
             }
 
