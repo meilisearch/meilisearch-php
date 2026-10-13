@@ -1,18 +1,17 @@
-# AGENTS.md
-
-## Workflow
-
-Lint when the task is finished.
+# [AGENTS.md](http://AGENTS.md)
 
 ## Commands
 
-Run checks with Docker Compose:
+This repository comes with a Docker configuration to run commands in Docker.
 
-- Tests: `docker compose run --rm package bash -c "composer install && composer test"`
-- Lint: `docker compose run --rm package bash -c "composer lint && composer phpstan"`
+Run commands using Docker Compose with `docker compose run --rm package bash -c <command>`.
 
-Multimodal search tests skip unless `VOYAGE_API_KEY` is set.
+Commands:
+
+- Install dependencies (required): `composer install`
+- Run tests: `composer test`
+- Lint: `composer lint && composer phpstan`
 
 ## Cursor Cloud specific instructions
 
-On a Cloud Agent, install, test, and lint with `.cursor/CLOUD.md`.
+Docker is not available in Cursor Cloud Agents. See instructions in `.cursor/CLOUD.md`.
