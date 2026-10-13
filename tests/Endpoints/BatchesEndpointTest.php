@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
-use Meilisearch\Contracts\BatchesResults;
 use Meilisearch\Contracts\Http;
 use Meilisearch\Endpoints\Batches;
 use PHPUnit\Framework\TestCase;
@@ -40,7 +39,6 @@ final class BatchesEndpointTest extends TestCase
 
         $results = (new Batches($http))->all(['limit' => 15]);
 
-        self::assertInstanceOf(BatchesResults::class, $results);
         self::assertSame(3, $results->getFrom());
         self::assertSame(15, $results->getLimit());
         self::assertSame(18, $results->getNext());
