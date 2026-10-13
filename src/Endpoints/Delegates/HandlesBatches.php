@@ -22,8 +22,6 @@ trait HandlesBatches
     {
         $query = null !== $options ? $options->toArray() : [];
 
-        $response = $this->batches->all($query);
-
-        return new BatchesResults($response);
+        return $this->batches->all($query);
     }
 }
