@@ -45,6 +45,11 @@ trait HandlesDocuments
         }
     }
 
+    /**
+     * @param list<array<string, mixed>> $documents
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-replace-documents
+     */
     public function addDocuments(array $documents, ?string $primaryKey = null): Task
     {
         return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(Tasks::waitTask(...), $this->http));
@@ -66,7 +71,11 @@ trait HandlesDocuments
     }
 
     /**
+     * @param list<array<string, mixed>> $documents
+     *
      * @return list<Task>
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-replace-documents
      */
     public function addDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null): array
     {
@@ -107,6 +116,11 @@ trait HandlesDocuments
         return $promises;
     }
 
+    /**
+     * @param list<array<string, mixed>> $documents
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-update-documents
+     */
     public function updateDocuments(array $documents, ?string $primaryKey = null): Task
     {
         return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(Tasks::waitTask(...), $this->http));
@@ -128,7 +142,11 @@ trait HandlesDocuments
     }
 
     /**
+     * @param list<array<string, mixed>> $documents
+     *
      * @return list<Task>
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-update-documents
      */
     public function updateDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null): array
     {
@@ -194,6 +212,12 @@ trait HandlesDocuments
         return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId), partial(Tasks::waitTask(...), $this->http));
     }
 
+    /**
+     * @param list<non-empty-string|int>|array{filter: non-empty-string|list<non-empty-string|list<non-empty-string>>} $options
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/documents/delete-documents-by-batch
+     * @see https://www.meilisearch.com/docs/reference/api/documents/delete-documents-by-filter
+     */
     public function deleteDocuments(array $options): Task
     {
         try {
@@ -238,6 +262,11 @@ trait HandlesDocuments
         }
     }
 
+    /**
+     * @param list<array<string, mixed>> $documents
+     *
+     * @return \Generator<int, list<array<string, mixed>>>
+     */
     private static function batch(array $documents, int $batchSize): \Generator
     {
         $batches = array_chunk($documents, $batchSize);

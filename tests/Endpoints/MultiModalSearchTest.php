@@ -11,6 +11,10 @@ use Tests\TestCase;
 final class MultiModalSearchTest extends TestCase
 {
     private Index $index;
+
+    /**
+     * @var list<array<string, mixed>>
+     */
     private array $documents;
 
     protected function setUp(): void
@@ -35,7 +39,9 @@ final class MultiModalSearchTest extends TestCase
 
         // Load the movies.json dataset
         $documentsJson = file_get_contents('./tests/datasets/movies.json');
-        $this->documents = json_decode($documentsJson, true, 512, JSON_THROW_ON_ERROR);
+        /** @var list<array<string, mixed>> $documents */
+        $documents = json_decode($documentsJson, true, 512, JSON_THROW_ON_ERROR);
+        $this->documents = $documents;
         $this->index->addDocuments($this->documents)->wait();
     }
 

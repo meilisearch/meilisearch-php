@@ -140,7 +140,7 @@ final class DocumentsTest extends TestCase
         $documents = ["\xB1\x31"];
 
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
-        $index->addDocuments($documents);
+        $index->addDocuments($documents); // @phpstan-ignore argument.type
     }
 
     public function testGetSingleDocumentWithIntegerDocumentId(): void
