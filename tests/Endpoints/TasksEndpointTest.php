@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\Http;
-use Meilisearch\Contracts\TasksResults;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Endpoints\Tasks;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +33,6 @@ final class TasksEndpointTest extends TestCase
 
         $results = (new Tasks($http))->all(['limit' => 20]);
 
-        self::assertInstanceOf(TasksResults::class, $results);
         self::assertSame(2, $results->getFrom());
         self::assertSame(20, $results->getLimit());
         self::assertSame(22, $results->getNext());
