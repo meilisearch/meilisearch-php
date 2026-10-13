@@ -140,6 +140,8 @@ final class DocumentsTest extends TestCase
         $documents = ["\xB1\x31"];
 
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        // The argument type is wrong on purpose. addDocuments expects a list of
+        // documents; this malformed string is what makes JSON encoding throw.
         $index->addDocuments($documents); // @phpstan-ignore argument.type
     }
 
