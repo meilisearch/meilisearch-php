@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Exceptions;
 
-use Meilisearch\Exceptions\TimeOutException;
+use Meilisearch\Exceptions\TimeoutException;
 use Tests\TestCase;
 
 final class TimeOutExceptionTest extends TestCase
@@ -15,13 +15,13 @@ final class TimeOutExceptionTest extends TestCase
         $code = 502;
 
         try {
-            throw new TimeOutException($message, $code);
-        } catch (TimeOutException $timeOutException) {
-            self::assertSame($message, $timeOutException->getMessage());
-            self::assertSame($code, $timeOutException->getCode());
+            throw new TimeoutException($message, $code);
+        } catch (TimeoutException $timeoutException) {
+            self::assertSame($message, $timeoutException->getMessage());
+            self::assertSame($code, $timeoutException->getCode());
 
-            $expectedExceptionToString = "Meilisearch TimeOutException: Code: {$code} - Message: {$message}";
-            self::assertSame($expectedExceptionToString, (string) $timeOutException);
+            $expectedExceptionToString = "Meilisearch TimeoutException: Code: {$code} - Message: {$message}";
+            self::assertSame($expectedExceptionToString, (string) $timeoutException);
         }
     }
 
@@ -31,25 +31,25 @@ final class TimeOutExceptionTest extends TestCase
         $code = 408;
 
         try {
-            throw new TimeOutException();
-        } catch (TimeOutException $timeOutException) {
-            self::assertSame($message, $timeOutException->getMessage());
-            self::assertSame($code, $timeOutException->getCode());
+            throw new TimeoutException();
+        } catch (TimeoutException $timeoutException) {
+            self::assertSame($message, $timeoutException->getMessage());
+            self::assertSame($code, $timeoutException->getCode());
 
-            $expectedExceptionToString = "Meilisearch TimeOutException: Code: {$code} - Message: {$message}";
-            self::assertSame($expectedExceptionToString, (string) $timeOutException);
+            $expectedExceptionToString = "Meilisearch TimeoutException: Code: {$code} - Message: {$message}";
+            self::assertSame($expectedExceptionToString, (string) $timeoutException);
         }
     }
 
     public function testExceptionWithEmptyMessage(): void
     {
         try {
-            throw new TimeOutException('');
-        } catch (TimeOutException $timeOutException) {
-            self::assertSame('', $timeOutException->getMessage());
+            throw new TimeoutException('');
+        } catch (TimeoutException $timeoutException) {
+            self::assertSame('', $timeoutException->getMessage());
 
-            $expectedExceptionToString = 'Meilisearch TimeOutException: Code: 408';
-            self::assertSame($expectedExceptionToString, (string) $timeOutException);
+            $expectedExceptionToString = 'Meilisearch TimeoutException: Code: 408';
+            self::assertSame($expectedExceptionToString, (string) $timeoutException);
         }
     }
 }

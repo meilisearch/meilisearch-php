@@ -60,8 +60,6 @@ final class TaskTest extends TestCase
             'https://docs.meilisearch.com/errors#index_not_found',
         ), $task->getError());
 
-        self::assertTrue(isset($task['taskUid']));
-        self::assertSame(1, $task['taskUid']);
         self::assertSame(['taskUid' => 1], $task->toArray());
     }
 
@@ -119,26 +117,6 @@ final class TaskTest extends TestCase
         $this->expectExceptionMessage('Cannot wait for task because wait function is not provided.');
 
         $task->wait();
-    }
-
-    public function testOffsetSetThrows(): void
-    {
-        $task = MockTask::create(TaskType::DocumentAdditionOrUpdate);
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The Task object is immutable.');
-
-        $task['taskUid'] = 2;
-    }
-
-    public function testOffsetUnsetThrows(): void
-    {
-        $task = MockTask::create(TaskType::DocumentAdditionOrUpdate);
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The Task object is immutable.');
-
-        unset($task['taskUid']);
     }
 
     public function testFromArrayWithoutDetails(): void

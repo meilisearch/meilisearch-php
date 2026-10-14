@@ -41,7 +41,7 @@ final class DynamicSearchRulesResultsTest extends TestCase
         self::assertSame(2, $results->getLimit());
         self::assertSame(5, $results->getTotal());
         self::assertSame('movie-rule', $results->getResults()[0]->getUid());
-        self::assertSame('book-rule', $results[1]->getUid());
+        self::assertSame('book-rule', $results->getResults()[1]->getUid());
 
         $array = $results->toArray();
         self::assertSame(1, $array['offset']);

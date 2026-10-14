@@ -12,6 +12,7 @@ use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\UpdateDynamicSearchRuleQuery;
 
 use function Meilisearch\partial;
+use function Meilisearch\waitForTask;
 
 /**
  * @phpstan-import-type RawDynamicSearchRule from DynamicSearchRule
@@ -82,7 +83,7 @@ final class DynamicSearchRules extends Endpoint
     {
         return Task::fromArray(
             $this->http->patch(self::PATH.'/'.$request->uid, $request->toArray()),
-            partial(Tasks::waitTask(...), $this->http)
+            partial(waitForTask(...), $this->http)
         );
     }
 
@@ -101,7 +102,7 @@ final class DynamicSearchRules extends Endpoint
         $response = $this->http->delete(self::PATH.'/'.$uid);
         \assert(null !== $response);
 
-        return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($response, partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -117,6 +118,6 @@ final class DynamicSearchRules extends Endpoint
         $response = $this->http->delete(self::PATH);
         \assert(null !== $response);
 
-        return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($response, partial(waitForTask(...), $this->http));
     }
 }

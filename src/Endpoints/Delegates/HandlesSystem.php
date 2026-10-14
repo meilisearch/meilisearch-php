@@ -43,7 +43,7 @@ trait HandlesSystem
     {
         try {
             $this->health->show();
-        } catch (\Exception $e) {
+        } catch (\Throwable) {
             return false;
         }
 
@@ -97,8 +97,6 @@ trait HandlesSystem
      */
     public function swapIndexes(array $indexes): Task
     {
-        $options = array_map(static fn ($data) => ['indexes' => $data], $indexes);
-
-        return $this->index->swapIndexes($options);
+        return $this->index->swapIndexes($indexes);
     }
 }

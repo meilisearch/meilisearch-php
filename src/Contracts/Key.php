@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
+use function Meilisearch\formatRfc3339Micro;
+
 final class Key
 {
     /**
@@ -76,6 +78,34 @@ final class Key
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return array{
+     *     uid: non-empty-string,
+     *     key: non-empty-string,
+     *     actions: list<non-empty-string>,
+     *     indexes: list<non-empty-string>,
+     *     name: non-empty-string|null,
+     *     description: non-empty-string|null,
+     *     expiresAt: non-empty-string|null,
+     *     createdAt: non-empty-string|null,
+     *     updatedAt: non-empty-string|null
+     * }
+     */
+    public function toArray(): array
+    {
+        return [
+            'uid' => $this->uid,
+            'key' => $this->key,
+            'actions' => array_map(static fn (KeyAction $action): string => $action->value, $this->actions),
+            'indexes' => $this->indexes,
+            'name' => $this->name,
+            'description' => $this->description,
+            'expiresAt' => null !== $this->expiresAt ? formatRfc3339Micro($this->expiresAt) : null,
+            'createdAt' => null !== $this->createdAt ? formatRfc3339Micro($this->createdAt) : null,
+            'updatedAt' => null !== $this->updatedAt ? formatRfc3339Micro($this->updatedAt) : null,
+        ];
     }
 
     /**

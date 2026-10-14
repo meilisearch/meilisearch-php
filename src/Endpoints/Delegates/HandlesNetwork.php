@@ -18,9 +18,7 @@ trait HandlesNetwork
 
     public function getNetwork(): NetworkResults
     {
-        $response = $this->network->get();
-
-        return new NetworkResults($response);
+        return $this->network->get();
     }
 
     /**

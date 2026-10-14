@@ -10,6 +10,7 @@ use Meilisearch\Contracts\IndexesResults;
 use Meilisearch\Contracts\Task;
 
 use function Meilisearch\partial;
+use function Meilisearch\waitForTask;
 
 final class Indexes extends Endpoint
 {
@@ -26,7 +27,7 @@ final class Indexes extends Endpoint
     {
         $options['uid'] = $uid;
 
-        return Task::fromArray($this->http->post(self::PATH, $options), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH, $options), partial(waitForTask(...), $this->http));
     }
 
     public function all(?IndexesQuery $options = null): IndexesResults
@@ -68,10 +69,12 @@ final class Indexes extends Endpoint
     }
 
     /**
-     * @param array<array{indexes: mixed}> $indexes
+     * @param list<array{non-empty-string, non-empty-string}> $indexes
      */
     public function swapIndexes(array $indexes): Task
     {
-        return Task::fromArray($this->http->post('/swap-indexes', $indexes), partial(Tasks::waitTask(...), $this->http));
+        $payload = array_map(static fn (array $pair): array => ['indexes' => $pair], $indexes);
+
+        return Task::fromArray($this->http->post('/swap-indexes', $payload), partial(waitForTask(...), $this->http));
     }
 }

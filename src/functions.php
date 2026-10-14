@@ -21,3 +21,38 @@ function partial(callable $func, ...$boundArgs): \Closure
         return $func(...array_merge($boundArgs, $remainingArgs));
     };
 }
+
+/**
+ * @internal
+ *
+ * @throws Exceptions\TimeoutException
+ */
+function waitForTask(Contracts\Http $http, int $taskUid, int $timeoutInMs, int $intervalInMs): Contracts\Task
+{
+    $timeoutTemp = 0;
+
+    while ($timeoutInMs > $timeoutTemp) {
+        $task = Contracts\Task::fromArray($http->get('/tasks/'.$taskUid), partial(waitForTask(...), $http));
+
+        if ($task->isFinished()) {
+            return $task;
+        }
+
+        $timeoutTemp += $intervalInMs;
+        usleep(1000 * $intervalInMs);
+    }
+
+    throw new Exceptions\TimeoutException();
+}
+
+/**
+ * @internal
+ *
+ * RFC 3339 timestamp in UTC with microsecond precision
+ */
+function formatRfc3339Micro(\DateTimeInterface $date): string
+{
+    return \DateTimeImmutable::createFromInterface($date)
+        ->setTimezone(new \DateTimeZone('UTC'))
+        ->format('Y-m-d\TH:i:s.u\Z');
+}

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Contracts;
 
-class Data implements \ArrayAccess, \Countable, \IteratorAggregate
+class Data implements \Countable, \IteratorAggregate
 {
     /**
      * @var array<mixed>
@@ -19,24 +19,12 @@ class Data implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->data = $data;
     }
 
-    public function offsetSet(mixed $offset, mixed $value): void
+    /**
+     * @return array<mixed>
+     */
+    public function toArray(): array
     {
-        $this->data[$offset] = $value;
-    }
-
-    public function offsetExists(mixed $offset): bool
-    {
-        return isset($this->data[$offset]) || \array_key_exists($offset, $this->data);
-    }
-
-    public function offsetUnset(mixed $offset): void
-    {
-        unset($this->data[$offset]);
-    }
-
-    public function offsetGet(mixed $offset): mixed
-    {
-        return $this->data[$offset] ?? null;
+        return $this->getIterator()->getArrayCopy();
     }
 
     public function count(): int

@@ -72,7 +72,7 @@ final class KeysResults extends Data
 
     /**
      * @return array{
-     *     results: array<int, Key>,
+     *     results: list<array<string, mixed>>,
      *     offset: non-negative-int,
      *     limit: non-negative-int,
      *     total: non-negative-int
@@ -81,7 +81,7 @@ final class KeysResults extends Data
     public function toArray(): array
     {
         return [
-            'results' => $this->data,
+            'results' => array_map(static fn (Key $key): array => $key->toArray(), $this->data),
             'offset' => $this->offset,
             'limit' => $this->limit,
             'total' => $this->total,

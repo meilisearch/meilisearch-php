@@ -74,7 +74,12 @@ class IndexesResults extends Data
 
     /**
      * @return array{
-     *     results: list<Index>,
+     *     results: list<array{
+     *         uid: non-empty-string,
+     *         primaryKey: string|null,
+     *         createdAt: non-empty-string,
+     *         updatedAt: non-empty-string
+     *     }>,
      *     offset: non-negative-int,
      *     limit: non-negative-int,
      *     total: non-negative-int
@@ -83,7 +88,7 @@ class IndexesResults extends Data
     public function toArray(): array
     {
         return [
-            'results' => $this->data,
+            'results' => array_map(static fn (Index $index): array => $index->toArray(), $this->data),
             'offset' => $this->offset,
             'limit' => $this->limit,
             'total' => $this->total,

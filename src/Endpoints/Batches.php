@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\Batch;
+use Meilisearch\Contracts\BatchesQuery;
 use Meilisearch\Contracts\BatchesResults;
 use Meilisearch\Contracts\Endpoint;
 
@@ -38,9 +39,9 @@ class Batches extends Endpoint
         return Batch::fromArray($rawBatch);
     }
 
-    public function all(array $query = []): BatchesResults
+    public function all(?BatchesQuery $query = null): BatchesResults
     {
-        $rawData = $this->http->get(self::PATH.'/', $query);
+        $rawData = $this->http->get(self::PATH.'/', $query?->toArray() ?? []);
         /** @var RawBatches $rawBatches */
         $rawBatches = $rawData;
         $results = array_map(

@@ -75,7 +75,7 @@ final class DynamicSearchRulesResults extends Data
 
     /**
      * @return array{
-     *     results: list<DynamicSearchRule>,
+     *     results: list<array<string, mixed>>,
      *     offset: non-negative-int,
      *     limit: non-negative-int,
      *     total: non-negative-int
@@ -84,7 +84,7 @@ final class DynamicSearchRulesResults extends Data
     public function toArray(): array
     {
         return [
-            'results' => $this->data,
+            'results' => array_map(static fn (DynamicSearchRule $rule): array => $rule->toArray(), $this->data),
             'offset' => $this->offset,
             'limit' => $this->limit,
             'total' => $this->total,

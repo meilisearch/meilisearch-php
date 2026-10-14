@@ -54,8 +54,8 @@ trait HandlesKeys
         return $this->keys->update($request);
     }
 
-    public function deleteKey(string $keyOrUid): array
+    public function deleteKey(string $keyOrUid): void
     {
-        return $this->keys->delete($keyOrUid);
+        $this->keys->delete($keyOrUid);
     }
 }

@@ -7,9 +7,9 @@ namespace Meilisearch\Contracts;
 final class TasksResults extends Data
 {
     /**
-     * @var non-negative-int
+     * @var non-negative-int|null
      */
-    private int $next;
+    private ?int $next;
 
     /**
      * @var non-negative-int
@@ -17,9 +17,9 @@ final class TasksResults extends Data
     private int $limit;
 
     /**
-     * @var non-negative-int
+     * @var non-negative-int|null
      */
-    private int $from;
+    private ?int $from;
 
     /**
      * @var non-negative-int
@@ -39,9 +39,9 @@ final class TasksResults extends Data
     {
         parent::__construct($params['results']);
 
-        $this->from = $params['from'] ?? 0;
+        $this->from = $params['from'];
         $this->limit = $params['limit'];
-        $this->next = $params['next'] ?? 0;
+        $this->next = $params['next'];
         $this->total = $params['total'];
     }
 
@@ -54,9 +54,9 @@ final class TasksResults extends Data
     }
 
     /**
-     * @return non-negative-int
+     * @return non-negative-int|null
      */
-    public function getNext(): int
+    public function getNext(): ?int
     {
         return $this->next;
     }
@@ -70,9 +70,9 @@ final class TasksResults extends Data
     }
 
     /**
-     * @return non-negative-int
+     * @return non-negative-int|null
      */
-    public function getFrom(): int
+    public function getFrom(): ?int
     {
         return $this->from;
     }
@@ -87,17 +87,17 @@ final class TasksResults extends Data
 
     /**
      * @return array{
-     *     results: array<int, Task>,
-     *     from: non-negative-int,
+     *     results: list<array<mixed>>,
+     *     from: non-negative-int|null,
      *     limit: non-negative-int,
-     *     next: non-negative-int,
+     *     next: non-negative-int|null,
      *     total: non-negative-int
      * }
      */
     public function toArray(): array
     {
         return [
-            'results' => $this->data,
+            'results' => array_map(static fn (Task $task): array => $task->toArray(), $this->data),
             'next' => $this->next,
             'limit' => $this->limit,
             'from' => $this->from,

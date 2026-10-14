@@ -39,12 +39,13 @@ final class SettingsTest extends TestCase
         $primaryKey = 'ObjectID';
         $settingA = $this
             ->createEmptyIndex($this->safeIndexName('books-1'))
-            ->getSettings();
+            ->getSettings()
+            ->toArray();
         $settingB = $this
             ->createEmptyIndex(
                 $this->safeIndexName('books-1'),
                 ['primaryKey' => $primaryKey]
-            )->getSettings();
+            )->getSettings()->toArray();
 
         self::assertSame(self::DEFAULT_RANKING_RULES, $settingA['rankingRules']);
         self::assertNull($settingA['distinctAttribute']);
@@ -88,7 +89,7 @@ final class SettingsTest extends TestCase
             'prefixSearch' => 'disabled',
         ])->wait();
 
-        $settings = $index->getSettings();
+        $settings = $index->getSettings()->toArray();
 
         self::assertSame(['title:asc', 'typo'], $settings['rankingRules']);
         self::assertSame('title', $settings['distinctAttribute']);
@@ -131,7 +132,7 @@ final class SettingsTest extends TestCase
             'searchableAttributes' => ['title'],
         ])->wait();
 
-        $settings = $index->getSettings();
+        $settings = $index->getSettings()->toArray();
 
         self::assertSame(['title:asc', 'typo'], $settings['rankingRules']);
         self::assertSame('title', $settings['distinctAttribute']);
@@ -158,7 +159,7 @@ final class SettingsTest extends TestCase
 
         $index->resetSettings()->wait();
 
-        $settings = $index->getSettings();
+        $settings = $index->getSettings()->toArray();
 
         self::assertSame(self::DEFAULT_RANKING_RULES, $settings['rankingRules']);
         self::assertNull($settings['distinctAttribute']);

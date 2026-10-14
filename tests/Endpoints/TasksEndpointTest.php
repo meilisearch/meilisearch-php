@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\Http;
+use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Endpoints\Tasks;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,7 @@ final class TasksEndpointTest extends TestCase
                 'total' => 40,
             ]);
 
-        $results = (new Tasks($http))->all(['limit' => 20]);
+        $results = (new Tasks($http))->all((new TasksQuery())->setLimit(20));
 
         self::assertSame(2, $results->getFrom());
         self::assertSame(20, $results->getLimit());

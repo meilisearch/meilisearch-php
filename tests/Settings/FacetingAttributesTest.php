@@ -17,7 +17,7 @@ final class FacetingAttributesTest extends TestCase
             'sortFacetValuesBy' => [
                 '*' => 'alpha',
             ],
-        ], $index->getFaceting());
+        ], $index->getFaceting()->toArray());
     }
 
     public function testUpdateFacetingAttributes(): void
@@ -30,7 +30,7 @@ final class FacetingAttributesTest extends TestCase
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'count'],
-        ], $index->getFaceting());
+        ], $index->getFaceting()->toArray());
     }
 
     public function testResetFaceting(): void
@@ -44,6 +44,6 @@ final class FacetingAttributesTest extends TestCase
         self::assertSame([
             'maxValuesPerFacet' => 100,
             'sortFacetValuesBy' => ['*' => 'alpha'],
-        ], $index->getFaceting());
+        ], $index->getFaceting()->toArray());
     }
 }

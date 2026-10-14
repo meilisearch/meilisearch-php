@@ -58,7 +58,7 @@ use Meilisearch\Exceptions\LogicException;
  * @phpstan-import-type RawTaskCancelationDetails from TaskCancelationDetails
  * @phpstan-import-type RawTaskDeletionDetails from TaskDeletionDetails
  */
-final class Task implements \ArrayAccess
+final class Task
 {
     /**
      * @param non-negative-int                   $taskUid
@@ -177,26 +177,6 @@ final class Task implements \ArrayAccess
     public function toArray(): array
     {
         return $this->raw;
-    }
-
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        throw new LogicException('The Task object is immutable.');
-    }
-
-    public function offsetExists(mixed $offset): bool
-    {
-        return \array_key_exists($offset, $this->raw);
-    }
-
-    public function offsetUnset(mixed $offset): void
-    {
-        throw new LogicException('The Task object is immutable.');
-    }
-
-    public function offsetGet(mixed $offset): mixed
-    {
-        return $this->raw[$offset] ?? null;
     }
 
     /**
