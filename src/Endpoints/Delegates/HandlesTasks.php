@@ -28,7 +28,7 @@ trait HandlesTasks
 
     public function getTasks(?TasksQuery $options = null): TasksResults
     {
-        return $this->tasks->all($options?->toArray() ?? []);
+        return $this->tasks->all($options);
     }
 
     public function deleteTasks(?DeleteTasksQuery $options = null): Task

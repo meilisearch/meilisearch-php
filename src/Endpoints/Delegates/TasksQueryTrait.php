@@ -171,7 +171,7 @@ trait TasksQueryTrait
 
     private function formatDate(?\DateTimeInterface $date): ?string
     {
-        return $date?->format(\DateTimeInterface::RFC3339);
+        return null !== $date ? \Meilisearch\formatRfc3339Micro($date) : null;
     }
 
     private function formatArray(?array $array): ?string

@@ -81,9 +81,9 @@ final class FacetSearchResult implements \Countable, \IteratorAggregate
         ];
     }
 
-    public function toJSON(): string
+    public function toJson(): string
     {
-        return json_encode($this->toArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
     public function getIterator(): \ArrayIterator

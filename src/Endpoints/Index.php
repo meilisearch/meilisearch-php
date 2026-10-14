@@ -22,13 +22,12 @@ use Meilisearch\Search\SearchResult;
 use Meilisearch\Search\SimilarDocumentsSearchResult;
 
 use function Meilisearch\partial;
+use function Meilisearch\waitForTask;
 
 /**
  * @phpstan-import-type RawIndexStats from IndexStats
  * @phpstan-import-type RawSearchQuery from SearchQuery
  * @phpstan-import-type RawSettings from Settings
- * @phpstan-import-type RawTasks from Tasks
- * @phpstan-import-type TasksResponse from Tasks
  *
  * @phpstan-type RawSearchResult array{
  *     hits: array<int, array<string, mixed>>,
@@ -45,24 +44,7 @@ use function Meilisearch\partial;
  *     estimatedTotalHits?: non-negative-int,
  *     hitsPerPage?: non-negative-int
  * }
- * @phpstan-type RawSearchResultWithNbHits array{
- *     hits: array<int, array<string, mixed>>,
- *     processingTimeMs: non-negative-int,
- *     query: string,
- *     facetDistribution?: array<string, mixed>,
- *     facetStats?: array<string, mixed>,
- *     offset?: non-negative-int,
- *     limit?: non-negative-int,
- *     semanticHitCount?: non-negative-int,
- *     page?: non-negative-int,
- *     totalPages?: non-negative-int,
- *     totalHits?: non-negative-int,
- *     estimatedTotalHits?: non-negative-int,
- *     hitsPerPage?: non-negative-int,
- *     nbHits?: non-negative-int
- * }
  * @phpstan-type SearchResultOptions array{
- *     raw?: bool,
  *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
  *     transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>
  * }
@@ -76,13 +58,13 @@ final class Index extends Endpoint
     protected const PATH = '/indexes';
 
     protected string $uid;
-    protected ?string $primaryKey;
-    protected \DateTimeInterface $createdAt;
-    protected \DateTimeInterface $updatedAt;
+    protected ?string $primaryKey = null;
+    protected ?\DateTimeInterface $createdAt = null;
+    protected ?\DateTimeInterface $updatedAt = null;
 
-    public function __construct(Http $http, string $uid, ?string $apiKey = null)
+    public function __construct(Http $http, string $uid)
     {
-        parent::__construct($http, $apiKey);
+        parent::__construct($http);
 
         $this->uid = $uid;
         $this->tasks = new Tasks($http);
@@ -123,11 +105,31 @@ final class Index extends Endpoint
         return $this->uid;
     }
 
+    /**
+     * @return array{
+     *     uid: non-empty-string,
+     *     primaryKey: string|null,
+     *     createdAt: non-empty-string,
+     *     updatedAt: non-empty-string
+     * }
+     */
+    public function toArray(): array
+    {
+        return [
+            'uid' => $this->getUid(),
+            'primaryKey' => $this->getPrimaryKey(),
+            'createdAt' => \Meilisearch\formatRfc3339Micro($this->getCreatedAt()),
+            'updatedAt' => \Meilisearch\formatRfc3339Micro($this->getUpdatedAt()),
+        ];
+    }
+
     public function getCreatedAt(): \DateTimeInterface
     {
         if (!isset($this->createdAt)) {
             $this->load();
         }
+
+        \assert($this->createdAt instanceof \DateTimeInterface);
 
         return $this->createdAt;
     }
@@ -137,6 +139,8 @@ final class Index extends Endpoint
         if (!isset($this->updatedAt)) {
             $this->load();
         }
+
+        \assert($this->updatedAt instanceof \DateTimeInterface);
 
         return $this->updatedAt;
     }
@@ -162,7 +166,7 @@ final class Index extends Endpoint
      */
     public function update(array $body): Task
     {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid, $body), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid, $body), partial(waitForTask(...), $this->http));
     }
 
     public function delete(): Task
@@ -170,101 +174,57 @@ final class Index extends Endpoint
         $response = $this->http->delete(self::PATH.'/'.$this->uid);
         \assert(null !== $response);
 
-        return Task::fromArray($response, partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($response, partial(waitForTask(...), $this->http));
     }
 
     public function compact(): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/compact'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/compact'), partial(waitForTask(...), $this->http));
     }
 
     // Tasks
 
-    public function getTask(int $uid): Task
-    {
-        return Task::fromArray($this->http->get('/tasks/'.$uid), partial(Tasks::waitTask(...), $this->http));
-    }
-
     public function getTasks(?TasksQuery $options = null): TasksResults
     {
-        $options = $options ?? new TasksQuery();
+        $options = clone ($options ?? new TasksQuery());
+        $options->setIndexUids([$this->uid, ...$options->getIndexUids()]);
 
-        if ([] !== $options->getIndexUids()) {
-            $options->setIndexUids([$this->uid, ...$options->getIndexUids()]);
-        } else {
-            $options->setIndexUids([$this->uid]);
-        }
-
-        $rawResponse = $this->http->get('/tasks', $options->toArray());
-        /** @var RawTasks $response */
-        $response = $rawResponse;
-        $results = array_map(fn (array $task): Task => Task::fromArray($task, partial(Tasks::waitTask(...), $this->http)), $response['results']);
-        /** @var TasksResponse $tasksResponse */
-        $tasksResponse = [
-            'results' => $results,
-            'from' => $response['from'],
-            'limit' => $response['limit'],
-            'next' => $response['next'],
-            'total' => $response['total'],
-        ];
-
-        return new TasksResults($tasksResponse);
+        return $this->tasks->all($options);
     }
 
     /**
-     * @param SearchQuery|RawSearchQuery|SearchResultOptions|null $searchQuery
+     * @param SearchQuery|RawSearchQuery|SearchResultOptions|null $searchParams
      * @param SearchResultOptions                                 $options
-     *
-     * @phpstan-return SearchResult|array
      */
-    public function search(string|SearchQuery|null $query, SearchQuery|array|null $searchQuery = null, array $options = []): SearchResult|array
+    public function search(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null, array $options = []): SearchResult
     {
         if ($query instanceof SearchQuery) {
             $resolvedQuery = $query;
-            $options = \is_array($searchQuery) ? $searchQuery : $options;
+            $options = \is_array($searchParams) ? $searchParams : $options;
         } else {
-            $resolvedQuery = $this->resolveSearchQuery($query, $searchQuery);
+            $resolvedQuery = $this->resolveSearchQuery($query, $searchParams);
         }
 
-        $result = $this->rawSearch($resolvedQuery);
         /** @var RawSearchResult $rawResult */
-        $rawResult = $result;
-
-        if (\array_key_exists('raw', $options) && $options['raw']) {
-            return $rawResult;
-        }
-
-        $searchResultOptions = $options;
-        unset($searchResultOptions['raw']);
-        /** @var array{transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>, transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>} $typedSearchResultOptions */
-        $typedSearchResultOptions = $searchResultOptions;
+        $rawResult = $this->rawSearch($resolvedQuery);
         $searchResult = new SearchResult($rawResult);
-        $searchResult->applyOptions($typedSearchResultOptions);
 
-        return $searchResult;
+        return $searchResult->applyOptions($options);
     }
 
     /**
-     * @param SearchQuery|RawSearchQuery|null $searchQuery
+     * @param SearchQuery|RawSearchQuery|null $searchParams
      *
-     * @phpstan-return RawSearchResultWithNbHits
+     * @return RawSearchResult
      */
-    public function rawSearch(string|SearchQuery|null $query, SearchQuery|array|null $searchQuery = null): array
+    public function rawSearch(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null): array
     {
-        $resolvedQuery = $this->resolveSearchQuery($query, $searchQuery);
+        $resolvedQuery = $this->resolveSearchQuery($query, $searchParams);
 
+        /** @var RawSearchResult $result */
         $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', (object) $resolvedQuery->toArray());
 
-        // patch to prevent breaking in laravel/scout getTotalCount method,
-        // affects only Meilisearch >= v0.28.0.
-        if (isset($result['estimatedTotalHits'])) {
-            $result['nbHits'] = $result['estimatedTotalHits'];
-        }
-
-        /** @var RawSearchResultWithNbHits $typedResult */
-        $typedResult = $result;
-
-        return $typedResult;
+        return $result;
     }
 
     public function searchSimilarDocuments(SimilarDocumentsQuery $parameters): SimilarDocumentsSearchResult
@@ -295,28 +255,27 @@ final class Index extends Endpoint
 
     // Settings - Global
 
-    /**
-     * @return RawSettings
-     */
-    public function getSettings(): array
+    public function getSettings(): Settings
     {
-        return (new Settings($this->http->get(self::PATH.'/'.$this->uid.'/settings')))
-            ->toArray();
+        /** @var RawSettings $raw */
+        $raw = $this->http->get(self::PATH.'/'.$this->uid.'/settings');
+
+        return new Settings($raw);
     }
 
     /**
-     * @param RawSettings $settings
+     * @param RawSettings|Settings $settings
      */
-    public function updateSettings(array $settings): Task
+    public function updateSettings(array|Settings $settings): Task
     {
-        $body = (new Settings($settings))->toArray();
+        $body = $settings instanceof Settings ? $settings->toArray() : (new Settings($settings))->toArray();
 
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $body), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $body), partial(waitForTask(...), $this->http));
     }
 
     public function resetSettings(): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings'), partial(waitForTask(...), $this->http));
     }
 
     /**

@@ -8,6 +8,7 @@ use Meilisearch\Contracts\Endpoint;
 use Meilisearch\Contracts\Task;
 
 use function Meilisearch\partial;
+use function Meilisearch\waitForTask;
 
 class Dumps extends Endpoint
 {
@@ -15,6 +16,6 @@ class Dumps extends Endpoint
 
     public function create(): Task
     {
-        return Task::fromArray($this->http->post(self::PATH), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH), partial(waitForTask(...), $this->http));
     }
 }

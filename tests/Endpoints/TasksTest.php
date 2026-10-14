@@ -15,7 +15,7 @@ use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Index;
 use Meilisearch\Endpoints\Tasks;
 use Meilisearch\Exceptions\ApiException;
-use Meilisearch\Exceptions\TimeOutException;
+use Meilisearch\Exceptions\TimeoutException;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
 
@@ -71,7 +71,7 @@ final class TasksTest extends TestCase
         $http = $this->createMock(Http::class);
         $http->method('get')->willReturn($this->taskPayload('enqueued'));
 
-        $this->expectException(TimeOutException::class);
+        $this->expectException(TimeoutException::class);
 
         (new Tasks($http))->get(1)->wait(30, 10);
     }
@@ -218,7 +218,7 @@ final class TasksTest extends TestCase
     public function testCancelTasksWithFilter(): void
     {
         $date = new \DateTime('yesterday');
-        $query = http_build_query(['afterEnqueuedAt' => $date->format(\DateTime::RFC3339)]);
+        $query = http_build_query(['afterEnqueuedAt' => self::rfc3339Micro($date)]);
         $task = $this->client->cancelTasks((new CancelTasksQuery())->setAfterEnqueuedAt($date))->wait();
 
         self::assertSame(TaskStatus::Succeeded, $task->getStatus());

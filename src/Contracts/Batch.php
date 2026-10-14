@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
-use Meilisearch\Exceptions\LogicException;
 
 /**
  * @phpstan-import-type RawBatchStats from BatchStats
@@ -22,7 +21,7 @@ use Meilisearch\Exceptions\LogicException;
  *     batchStrategy?: non-empty-string|null
  * }
  */
-final class Batch implements \ArrayAccess
+final class Batch
 {
     /**
      * @param non-negative-int      $uid
@@ -104,26 +103,6 @@ final class Batch implements \ArrayAccess
     public function toArray(): array
     {
         return $this->raw;
-    }
-
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        throw new LogicException('The Batch object is immutable.');
-    }
-
-    public function offsetExists(mixed $offset): bool
-    {
-        return \array_key_exists($offset, $this->raw);
-    }
-
-    public function offsetUnset(mixed $offset): void
-    {
-        throw new LogicException('The Batch object is immutable.');
-    }
-
-    public function offsetGet(mixed $offset): mixed
-    {
-        return $this->raw[$offset] ?? null;
     }
 
     /**

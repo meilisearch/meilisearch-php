@@ -9,4 +9,9 @@ use Meilisearch\Contracts\Endpoint;
 class Stats extends Endpoint
 {
     protected const PATH = '/stats';
+
+    public function show(): ?array
+    {
+        return $this->http->get(self::PATH);
+    }
 }

@@ -8,16 +8,9 @@ abstract class Endpoint
 {
     protected const PATH = '';
     protected Http $http;
-    protected ?string $apiKey;
 
-    public function __construct(Http $http, ?string $apiKey = null)
+    public function __construct(Http $http)
     {
         $this->http = $http;
-        $this->apiKey = $apiKey;
-    }
-
-    public function show(): ?array
-    {
-        return $this->http->get(static::PATH);
     }
 }

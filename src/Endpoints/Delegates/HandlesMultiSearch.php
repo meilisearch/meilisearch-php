@@ -14,8 +14,19 @@ trait HandlesMultiSearch
 
     /**
      * @param list<MultiSearchQuery> $queries
+     *
+     * @return array{
+     *     results?: list<array<string, mixed>>,
+     *     hits?: list<array<string, mixed>>,
+     *     processingTimeMs?: non-negative-int,
+     *     limit?: non-negative-int,
+     *     offset?: non-negative-int,
+     *     estimatedTotalHits?: non-negative-int,
+     *     facetDistribution?: array<string, mixed>,
+     *     facetStats?: array<string, mixed>
+     * }
      */
-    public function multiSearch(array $queries = [], ?MultiSearchFederation $federation = null)
+    public function multiSearch(array $queries = [], ?MultiSearchFederation $federation = null): array
     {
         $body = [];
 
@@ -28,6 +39,19 @@ trait HandlesMultiSearch
             $payload['federation'] = (object) $federation->toArray();
         }
 
-        return $this->http->post('/multi-search', $payload);
+        /** @var array{
+         *     results?: list<array<string, mixed>>,
+         *     hits?: list<array<string, mixed>>,
+         *     processingTimeMs?: non-negative-int,
+         *     limit?: non-negative-int,
+         *     offset?: non-negative-int,
+         *     estimatedTotalHits?: non-negative-int,
+         *     facetDistribution?: array<string, mixed>,
+         *     facetStats?: array<string, mixed>
+         * } $result
+         */
+        $result = $this->http->post('/multi-search', $payload);
+
+        return $result;
     }
 }

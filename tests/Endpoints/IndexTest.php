@@ -13,7 +13,7 @@ use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Index;
-use Meilisearch\Exceptions\TimeOutException;
+use Meilisearch\Exceptions\TimeoutException;
 use Tests\TestCase;
 
 final class IndexTest extends TestCase
@@ -30,7 +30,7 @@ final class IndexTest extends TestCase
 
     public function testIndexGetSettings(): void
     {
-        self::assertSame([], $this->index->getSynonyms());
+        self::assertSame([], $this->index->getSynonyms()->toArray());
         self::assertSame([], $this->index->getStopWords());
         self::assertSame([], $this->index->getSortableAttributes());
         self::assertSame(['*'], $this->index->getSearchableAttributes());
@@ -53,7 +53,7 @@ final class IndexTest extends TestCase
             'sortFacetValuesBy' => [
                 '*' => 'alpha',
             ],
-        ], $this->index->getFaceting());
+        ], $this->index->getFaceting()->toArray());
         self::assertSame(['maxTotalHits' => 1000], $this->index->getPagination());
         self::assertSame(
             [
@@ -63,7 +63,7 @@ final class IndexTest extends TestCase
                 'disableOnAttributes' => [],
                 'disableOnNumbers' => false,
             ],
-            $this->index->getTypoTolerance(),
+            $this->index->getTypoTolerance()->toArray(),
         );
         self::assertSame([], $this->index->getDictionary());
     }
@@ -180,7 +180,7 @@ final class IndexTest extends TestCase
     {
         $task = $this->index->addDocuments([['id' => 1, 'title' => 'Pride and Prejudice']]);
 
-        $this->expectException(TimeOutException::class);
+        $this->expectException(TimeoutException::class);
 
         $task->wait(0, 20);
     }

@@ -123,16 +123,25 @@ class Client implements Http
     }
 
     /**
+     * @param non-empty-string|null              $contentType
      * @param array<string, scalar|list<scalar>> $query
+     *
+     * @throws ApiException
+     * @throws ClientExceptionInterface
+     * @throws CommunicationException
+     * @throws \JsonException
      */
-    public function patch(string $path, mixed $body = null, array $query = []): mixed
+    public function patch(string $path, mixed $body = null, array $query = [], ?string $contentType = null): mixed
     {
+        if (null === $contentType) {
+            $body = $this->json->serialize($body);
+        }
         $request = $this->requestFactory->createRequest(
             'PATCH',
             $this->baseUrl.$path.$this->buildQueryString($query)
-        )->withBody($this->streamFactory->createStream($this->json->serialize($body)));
+        )->withBody($this->streamFactory->createStream($body));
 
-        return $this->execute($request, ['Content-type' => 'application/json']);
+        return $this->execute($request, ['Content-type' => $contentType ?? 'application/json']);
     }
 
     /**

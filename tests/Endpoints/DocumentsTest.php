@@ -55,9 +55,10 @@ final class DocumentsTest extends TestCase
         $response = $index->getDocuments();
         self::assertCount(\count($documents), $response);
 
+        $results = $response->getResults();
         foreach ($documents as $k => $document) {
-            self::assertSame($document['title'], $response[$k]['title']);
-            self::assertSame($document['comment'], $response[$k]['comment']);
+            self::assertSame($document['title'], $results[$k]['title']);
+            self::assertSame($document['comment'], $results[$k]['comment']);
         }
     }
 
@@ -478,7 +479,7 @@ final class DocumentsTest extends TestCase
         $index->addDocuments(self::DOCUMENTS)->wait();
 
         $documentIds = [1, 2];
-        $index->deleteDocuments($documentIds)->wait();
+        $index->deleteDocumentsByIds($documentIds)->wait();
 
         $response = $index->getDocuments();
 
@@ -493,8 +494,7 @@ final class DocumentsTest extends TestCase
         $index->addDocuments(self::DOCUMENTS);
         $index->updateFilterableAttributes(['id']);
 
-        $filter = ['filter' => ['id > 0']];
-        $index->deleteDocuments($filter)->wait();
+        $index->deleteDocumentsByFilter(['id > 0'])->wait();
 
         $response = $index->getDocuments();
 
@@ -514,9 +514,9 @@ final class DocumentsTest extends TestCase
                 ->willThrowException($mockedException);
 
             $indexMock = new Index($httpMock, 'uid');
-            $indexMock->deleteDocuments(['filter' => ['id > 0']]);
+            $indexMock->deleteDocumentsByFilter(['id > 0']);
         } catch (\Exception $ex) {
-            $rethrowed = ApiException::rethrowWithHint($mockedException, 'deleteDocuments');
+            $rethrowed = ApiException::rethrowWithHint($mockedException, 'deleteDocumentsByFilter');
 
             self::assertSame('Invalid response', $ex->getPrevious()->getMessage());
             self::assertSame($rethrowed->getMessage(), $ex->getMessage());
@@ -534,7 +534,7 @@ final class DocumentsTest extends TestCase
 
         $index->addDocuments($documents)->wait();
 
-        $index->deleteDocuments(['myUniqueId1', 'myUniqueId3'])->wait();
+        $index->deleteDocumentsByIds(['myUniqueId1', 'myUniqueId3'])->wait();
 
         $response = $index->getDocuments();
         self::assertCount(1, $response);
@@ -625,10 +625,10 @@ final class DocumentsTest extends TestCase
         $index->addDocuments(self::DOCUMENTS)->wait();
 
         $response = $index->getDocuments((new DocumentsQuery())->setSort(['genre:desc', 'id:asc']));
-        self::assertSame(2, $response[0]['id']);
+        self::assertSame(2, $response->getResults()[0]['id']);
 
         $response = $index->getDocuments((new DocumentsQuery())->setSort(['genre:desc', 'id:desc']));
-        self::assertSame(1344, $response[0]['id']);
+        self::assertSame(1344, $response->getResults()[0]['id']);
     }
 
     public function testGetDocumentsWithFiltersFieldsAndSort(): void
@@ -643,8 +643,8 @@ final class DocumentsTest extends TestCase
             ->setFields(['id', 'title'])
             ->setFilter(['id > 2']);
         $response = $index->getDocuments($query);
-        self::assertSame(123, $response[0]['id']);
-        self::assertSame(['id', 'title'], array_keys($response[0]));
+        self::assertSame(123, $response->getResults()[0]['id']);
+        self::assertSame(['id', 'title'], array_keys($response->getResults()[0]));
     }
 
     public function testGetDocumentsWithFilterCorrectFieldFormat(): void
