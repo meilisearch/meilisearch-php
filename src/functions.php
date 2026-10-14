@@ -30,6 +30,7 @@ function partial(callable $func, ...$boundArgs): \Closure
 function waitForTask(Contracts\Http $http, int $taskUid, int $timeoutInMs, int $intervalInMs): Contracts\Task
 {
     $timeoutTemp = 0;
+    $deadlineNs = hrtime(true) + ($timeoutInMs * 1_000_000);
 
     while ($timeoutInMs > $timeoutTemp) {
         $task = Contracts\Task::fromArray($http->get('/tasks/'.$taskUid), partial(waitForTask(...), $http));
@@ -38,8 +39,16 @@ function waitForTask(Contracts\Http $http, int $taskUid, int $timeoutInMs, int $
             return $task;
         }
 
-        $timeoutTemp += $intervalInMs;
-        usleep(1000 * $intervalInMs);
+        if ($intervalInMs > 0) {
+            $timeoutTemp += $intervalInMs;
+            usleep(1000 * $intervalInMs);
+
+            continue;
+        }
+
+        if (hrtime(true) >= $deadlineNs) {
+            break;
+        }
     }
 
     throw new Exceptions\TimeoutException();

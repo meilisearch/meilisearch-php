@@ -76,6 +76,16 @@ final class TasksTest extends TestCase
         (new Tasks($http))->get(1)->wait(30, 10);
     }
 
+    public function testWaitThrowsWhenIntervalIsZero(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->method('get')->willReturn($this->taskPayload('enqueued'));
+
+        $this->expectException(TimeoutException::class);
+
+        (new Tasks($http))->get(1)->wait(20, 0);
+    }
+
     public function testGetTaskDocumentsClient(): void
     {
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
