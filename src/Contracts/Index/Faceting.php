@@ -13,6 +13,12 @@ class Faceting extends Data implements \ArrayAccess, \JsonSerializable
 
     public function jsonSerialize(): object
     {
-        return (object) $this->getIterator()->getArrayCopy();
+        $data = $this->getIterator()->getArrayCopy();
+
+        if (\array_key_exists('sortFacetValuesBy', $data) && \is_array($data['sortFacetValuesBy'])) {
+            $data['sortFacetValuesBy'] = (object) $data['sortFacetValuesBy'];
+        }
+
+        return (object) $data;
     }
 }

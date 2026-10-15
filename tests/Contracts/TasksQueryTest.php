@@ -8,6 +8,7 @@ namespace Tests\Contracts;
 
 use Meilisearch\Contracts\TasksQuery;
 use PHPUnit\Framework\TestCase;
+use Tests\TestCase as IntegrationTestCase;
 
 final class TasksQueryTest extends TestCase
 {
@@ -51,7 +52,7 @@ final class TasksQueryTest extends TestCase
         $date = new \DateTimeImmutable();
         $data = (new TasksQuery())->setBeforeEnqueuedAt($date);
 
-        self::assertSame(['beforeEnqueuedAt' => self::rfc3339Micro($date)], $data->toArray());
+        self::assertSame(['beforeEnqueuedAt' => IntegrationTestCase::rfc3339Micro($date)], $data->toArray());
     }
 
     public function testSetAfterEnqueuedAt(): void
@@ -59,7 +60,7 @@ final class TasksQueryTest extends TestCase
         $date = new \DateTimeImmutable();
         $data = (new TasksQuery())->setAfterEnqueuedAt($date);
 
-        self::assertSame(['afterEnqueuedAt' => self::rfc3339Micro($date)], $data->toArray());
+        self::assertSame(['afterEnqueuedAt' => IntegrationTestCase::rfc3339Micro($date)], $data->toArray());
     }
 
     public function testSetBeforeStartedAt(): void
@@ -67,7 +68,7 @@ final class TasksQueryTest extends TestCase
         $date = new \DateTimeImmutable();
         $data = (new TasksQuery())->setBeforeStartedAt($date);
 
-        self::assertSame(['beforeStartedAt' => self::rfc3339Micro($date)], $data->toArray());
+        self::assertSame(['beforeStartedAt' => IntegrationTestCase::rfc3339Micro($date)], $data->toArray());
     }
 
     public function testSetAfterStartedAt(): void
@@ -75,7 +76,7 @@ final class TasksQueryTest extends TestCase
         $date = new \DateTimeImmutable();
         $data = (new TasksQuery())->setAfterStartedAt($date);
 
-        self::assertSame(['afterStartedAt' => self::rfc3339Micro($date)], $data->toArray());
+        self::assertSame(['afterStartedAt' => IntegrationTestCase::rfc3339Micro($date)], $data->toArray());
     }
 
     public function testSetBeforeFinishedAt(): void
@@ -83,7 +84,7 @@ final class TasksQueryTest extends TestCase
         $date = new \DateTimeImmutable();
         $data = (new TasksQuery())->setBeforeFinishedAt($date);
 
-        self::assertSame(['beforeFinishedAt' => self::rfc3339Micro($date)], $data->toArray());
+        self::assertSame(['beforeFinishedAt' => IntegrationTestCase::rfc3339Micro($date)], $data->toArray());
     }
 
     public function testSetAfterFinishedAt(): void
@@ -91,7 +92,7 @@ final class TasksQueryTest extends TestCase
         $date = new \DateTimeImmutable();
         $data = (new TasksQuery())->setAfterFinishedAt($date);
 
-        self::assertSame(['afterFinishedAt' => self::rfc3339Micro($date)], $data->toArray());
+        self::assertSame(['afterFinishedAt' => IntegrationTestCase::rfc3339Micro($date)], $data->toArray());
     }
 
     /**
@@ -121,12 +122,5 @@ final class TasksQueryTest extends TestCase
         $data = (new TasksQuery())->setReverse($reverse);
 
         self::assertSame(['reverse' => $expected], $data->toArray());
-    }
-
-    private static function rfc3339Micro(\DateTimeInterface $date): string
-    {
-        return \DateTimeImmutable::createFromInterface($date)
-            ->setTimezone(new \DateTimeZone('UTC'))
-            ->format('Y-m-d\TH:i:s.u\Z');
     }
 }

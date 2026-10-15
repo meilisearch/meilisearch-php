@@ -175,4 +175,14 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settings['facetSearch']);
         self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settings['prefixSearch']);
     }
+
+    public function testUpdateSettingsWithSettingsObject(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $settings = $index->getSettings();
+        $index->updateSettings($settings)->wait();
+
+        self::assertSame($settings->toArray(), $index->getSettings()->toArray());
+    }
 }

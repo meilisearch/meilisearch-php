@@ -15,7 +15,7 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected static function rfc3339Micro(\DateTimeInterface $date): string
+    public static function rfc3339Micro(\DateTimeInterface $date): string
     {
         return \DateTimeImmutable::createFromInterface($date)
             ->setTimezone(new \DateTimeZone('UTC'))

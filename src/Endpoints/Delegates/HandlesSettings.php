@@ -147,7 +147,7 @@ trait HandlesSettings
      */
     public function updateFaceting(array|Faceting $faceting): Task
     {
-        $body = $faceting instanceof Faceting ? $faceting->toArray() : $faceting;
+        $body = $faceting instanceof Faceting ? $faceting : new Faceting($faceting);
 
         return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/faceting', $body), partial(waitForTask(...), $this->http));
     }
@@ -448,7 +448,7 @@ trait HandlesSettings
      */
     public function updateEmbedders(array|Embedders $embedders): Task
     {
-        $body = $embedders instanceof Embedders ? $embedders->toArray() : $embedders;
+        $body = $embedders instanceof Embedders ? $embedders : new Embedders($embedders);
 
         return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/embedders', $body), partial(waitForTask(...), $this->http));
     }
@@ -566,10 +566,10 @@ trait HandlesSettings
      * @since Meilisearch v1.15.1
      *
      * @param array{
-     *     description: string,
-     *     documentTemplate: string,
-     *     documentTemplateMaxBytes: int,
-     *     searchParameters: array{
+     *     description?: string,
+     *     documentTemplate?: string,
+     *     documentTemplateMaxBytes?: int,
+     *     searchParameters?: array{
      *         indexUid?: non-empty-string,
      *         q?: string,
      *         filter?: list<non-empty-string|list<non-empty-string>>,
@@ -602,6 +602,11 @@ trait HandlesSettings
      */
     public function updateChat(array $chatSettings): Task
     {
-        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', $chatSettings), partial(waitForTask(...), $this->http));
+        $body = $chatSettings;
+        if (\array_key_exists('searchParameters', $body)) {
+            $body['searchParameters'] = (object) $body['searchParameters'];
+        }
+
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/chat', (object) $body), partial(waitForTask(...), $this->http));
     }
 }

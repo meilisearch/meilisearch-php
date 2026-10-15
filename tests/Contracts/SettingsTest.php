@@ -103,4 +103,20 @@ final class SettingsTest extends TestCase
             ],
         ], $settingsArray['embedders']);
     }
+
+    public function testJsonEncodeSerializesEmptyNestedMapsAsObjects(): void
+    {
+        $settings = new Settings([
+            'synonyms' => [],
+            'typoTolerance' => [],
+            'faceting' => [],
+            'embedders' => [],
+        ]);
+
+        self::assertSame(
+            '{"synonyms":{},"typoTolerance":{},"faceting":{},"embedders":{}}',
+            json_encode($settings, \JSON_THROW_ON_ERROR)
+        );
+        self::assertSame('{}', json_encode(new Settings(), \JSON_THROW_ON_ERROR));
+    }
 }
