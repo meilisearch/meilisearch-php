@@ -212,6 +212,20 @@ final class IndexTest extends TestCase
         self::assertFalse($details->swaps[1]['rename']);
     }
 
+    public function testRenameIndex(): void
+    {
+        $fromUid = $this->safeIndexName('rename-from');
+        $toUid = $this->safeIndexName('rename-to');
+        $this->createEmptyIndex($fromUid);
+
+        $task = $this->client->renameIndex($fromUid, $toUid)->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+        self::assertInstanceOf(IndexSwapDetails::class, $details = $task->getDetails());
+        self::assertSame([$fromUid, $toUid], $details->swaps[0]['indexes']);
+        self::assertTrue($details->swaps[0]['rename']);
+    }
+
     public function testCompact(): void
     {
         $task = $this->index->compact()->wait();

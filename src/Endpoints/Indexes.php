@@ -70,10 +70,27 @@ final class Indexes extends Endpoint
 
     /**
      * @param list<array{non-empty-string, non-empty-string}> $indexes
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/indexes/swap-indexes
      */
     public function swapIndexes(array $indexes): Task
     {
         $payload = array_map(static fn (array $pair): array => ['indexes' => $pair], $indexes);
+
+        return Task::fromArray($this->http->post('/swap-indexes', $payload), partial(waitForTask(...), $this->http));
+    }
+
+    /**
+     * Rename an index instead of swapping it.
+     *
+     * @param non-empty-string $fromUid
+     * @param non-empty-string $toUid
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/indexes/swap-indexes
+     */
+    public function renameIndex(string $fromUid, string $toUid): Task
+    {
+        $payload = [['indexes' => [$fromUid, $toUid], 'rename' => true]];
 
         return Task::fromArray($this->http->post('/swap-indexes', $payload), partial(waitForTask(...), $this->http));
     }

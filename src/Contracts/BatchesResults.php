@@ -32,9 +32,9 @@ final class BatchesResults extends Data
     /**
      * @param array{
      *     results: list<Batch>,
-     *     from: non-negative-int|null,
+     *     from?: non-negative-int|null,
      *     limit: non-negative-int,
-     *     next: non-negative-int|null,
+     *     next?: non-negative-int|null,
      *     total: non-negative-int
      * } $params
      */
@@ -42,9 +42,9 @@ final class BatchesResults extends Data
     {
         parent::__construct($params['results']);
 
-        $this->from = $params['from'];
+        $this->from = $params['from'] ?? null;
         $this->limit = $params['limit'];
-        $this->next = $params['next'];
+        $this->next = $params['next'] ?? null;
         $this->total = $params['total'];
     }
 

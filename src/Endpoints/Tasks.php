@@ -20,9 +20,9 @@ use function Meilisearch\waitForTask;
  *
  * @phpstan-type RawTasks array{
  *     results: array<int, RawTask>,
- *     from: non-negative-int|null,
+ *     from?: non-negative-int|null,
  *     limit: non-negative-int,
- *     next: non-negative-int|null,
+ *     next?: non-negative-int|null,
  *     total: non-negative-int
  * }
  */
@@ -49,9 +49,9 @@ class Tasks extends Endpoint
 
         return new TasksResults([
             'results' => $results,
-            'from' => $rawTasks['from'],
+            'from' => $rawTasks['from'] ?? null,
             'limit' => $rawTasks['limit'],
-            'next' => $rawTasks['next'],
+            'next' => $rawTasks['next'] ?? null,
             'total' => $rawTasks['total'],
         ]);
     }

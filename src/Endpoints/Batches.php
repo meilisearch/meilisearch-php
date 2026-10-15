@@ -14,9 +14,9 @@ use Meilisearch\Contracts\Endpoint;
  *
  * @phpstan-type RawBatches array{
  *     results: list<RawBatch>,
- *     from: non-negative-int|null,
+ *     from?: non-negative-int|null,
  *     limit: non-negative-int,
- *     next: non-negative-int|null,
+ *     next?: non-negative-int|null,
  *     total: non-negative-int
  * }
  * @phpstan-type BatchesResponse array{
@@ -51,9 +51,9 @@ class Batches extends Endpoint
 
         return new BatchesResults([
             'results' => $results,
-            'from' => $rawBatches['from'],
+            'from' => $rawBatches['from'] ?? null,
             'limit' => $rawBatches['limit'],
-            'next' => $rawBatches['next'],
+            'next' => $rawBatches['next'] ?? null,
             'total' => $rawBatches['total'],
         ]);
     }

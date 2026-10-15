@@ -41,4 +41,23 @@ final class TasksEndpointTest extends TestCase
         self::assertSame(7, $results->getResults()[0]->getTaskUid());
         self::assertSame(TaskStatus::Succeeded, $results->getResults()[0]->getStatus());
     }
+
+    public function testAllWithoutPaginationCursors(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->expects(self::once())
+            ->method('get')
+            ->willReturn([
+                'results' => [],
+                'limit' => 20,
+                'total' => 0,
+            ]);
+
+        $results = (new Tasks($http))->all();
+
+        self::assertNull($results->getFrom());
+        self::assertSame(20, $results->getLimit());
+        self::assertNull($results->getNext());
+        self::assertSame(0, $results->getTotal());
+    }
 }
