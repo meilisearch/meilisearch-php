@@ -274,7 +274,7 @@ final class Index extends Endpoint
      */
     public function updateSettings(array|Settings $settings): Task
     {
-        $body = $settings instanceof Settings ? $settings->toArray() : (new Settings($settings))->toArray();
+        $body = $settings instanceof Settings ? $settings : new Settings($settings);
 
         return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings', $body), partial(waitForTask(...), $this->http));
     }
