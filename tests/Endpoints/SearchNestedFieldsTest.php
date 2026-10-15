@@ -25,11 +25,8 @@ final class SearchNestedFieldsTest extends TestCase
 
         self::assertCount(1, $response->getHits());
 
-        $response = $this->index->search('An awesome', [], [
-            'raw' => true,
-        ]);
+        $response = $this->index->rawSearch('An awesome', []);
 
-        self::assertArrayHasKey('hits', $response);
         self::assertSame(1, $response['estimatedTotalHits']);
         self::assertSame(5, $response['hits'][0]['id']);
     }
@@ -40,11 +37,8 @@ final class SearchNestedFieldsTest extends TestCase
 
         self::assertCount(6, $response->getHits());
 
-        $response = $this->index->search('book', [], [
-            'raw' => true,
-        ]);
+        $response = $this->index->rawSearch('book', []);
 
-        self::assertArrayHasKey('hits', $response);
         self::assertSame(6, $response['estimatedTotalHits']);
         self::assertSame(1, $response['hits'][0]['id']);
     }
@@ -55,9 +49,7 @@ final class SearchNestedFieldsTest extends TestCase
 
         self::assertCount(1, $response->getHits());
 
-        $response = $this->index->search('book', ['limit' => 1], [
-            'raw' => true,
-        ]);
+        $response = $this->index->rawSearch('book', ['limit' => 1]);
 
         self::assertCount(1, $response['hits']);
         self::assertSame(1, $response['hits'][0]['id']);
@@ -71,11 +63,8 @@ final class SearchNestedFieldsTest extends TestCase
 
         self::assertCount(1, $response->getHits());
 
-        $response = $this->index->search('An awesome', [], [
-            'raw' => true,
-        ]);
+        $response = $this->index->rawSearch('An awesome', []);
 
-        self::assertArrayHasKey('hits', $response);
         self::assertSame(1, $response['estimatedTotalHits']);
         self::assertSame(5, $response['hits'][0]['id']);
     }
@@ -88,13 +77,10 @@ final class SearchNestedFieldsTest extends TestCase
 
         self::assertCount(1, $response->getHits());
 
-        $response = $this->index->search('An awesome', [
+        $response = $this->index->rawSearch('An awesome', [
             'sort' => ['info.reviewNb:desc'],
-        ], [
-            'raw' => true,
         ]);
 
-        self::assertArrayHasKey('hits', $response);
         self::assertSame(1, $response['estimatedTotalHits']);
         self::assertSame(5, $response['hits'][0]['id']);
     }
@@ -110,13 +96,10 @@ final class SearchNestedFieldsTest extends TestCase
 
         self::assertCount(1, $response->getHits());
 
-        $response = $this->index->search('An awesome', [
+        $response = $this->index->rawSearch('An awesome', [
             'sort' => ['info.reviewNb:desc'],
-        ], [
-            'raw' => true,
         ]);
 
-        self::assertArrayHasKey('hits', $response);
         self::assertSame(1, $response['estimatedTotalHits']);
         self::assertSame(5, $response['hits'][0]['id']);
     }

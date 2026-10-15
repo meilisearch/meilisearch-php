@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts\Index;
 
 use Meilisearch\Contracts\Data;
+use Meilisearch\Contracts\ReadOnlyArrayAccess;
 
 /**
  * @phpstan-type EmbedderDistribution array{mean: float, sigma: float}
@@ -195,8 +196,10 @@ use Meilisearch\Contracts\Data;
  *     }
  * }
  */
-class Settings extends Data implements \JsonSerializable
+class Settings extends Data implements \ArrayAccess, \JsonSerializable
 {
+    use ReadOnlyArrayAccess;
+
     /**
      * @param RawSettings $data
      */
@@ -220,9 +223,18 @@ class Settings extends Data implements \JsonSerializable
         parent::__construct($data);
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(): object
     {
-        return $this->getIterator()->getArrayCopy();
+        $data = $this->getIterator()->getArrayCopy();
+
+        if (\array_key_exists('chat', $data) && \is_array($data['chat'])) {
+            if (\array_key_exists('searchParameters', $data['chat']) && \is_array($data['chat']['searchParameters'])) {
+                $data['chat']['searchParameters'] = (object) $data['chat']['searchParameters'];
+            }
+            $data['chat'] = (object) $data['chat'];
+        }
+
+        return (object) $data;
     }
 
     /**

@@ -36,12 +36,13 @@ interface Http
     public function put(string $path, mixed $body = null, array $query = [], ?string $contentType = null): mixed;
 
     /**
+     * @param non-empty-string|null              $contentType
      * @param array<string, scalar|list<scalar>> $query
      *
      * @throws ApiException
      * @throws \JsonException
      */
-    public function patch(string $path, mixed $body = null, array $query = []): mixed;
+    public function patch(string $path, mixed $body = null, array $query = [], ?string $contentType = null): mixed;
 
     /**
      * @param array<string, scalar|list<scalar>> $query

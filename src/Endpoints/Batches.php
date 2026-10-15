@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\Batch;
+use Meilisearch\Contracts\BatchesQuery;
 use Meilisearch\Contracts\BatchesResults;
 use Meilisearch\Contracts\Endpoint;
 
@@ -13,9 +14,9 @@ use Meilisearch\Contracts\Endpoint;
  *
  * @phpstan-type RawBatches array{
  *     results: list<RawBatch>,
- *     from: non-negative-int|null,
+ *     from?: non-negative-int|null,
  *     limit: non-negative-int,
- *     next: non-negative-int|null,
+ *     next?: non-negative-int|null,
  *     total: non-negative-int
  * }
  * @phpstan-type BatchesResponse array{
@@ -38,9 +39,9 @@ class Batches extends Endpoint
         return Batch::fromArray($rawBatch);
     }
 
-    public function all(array $query = []): BatchesResults
+    public function all(?BatchesQuery $query = null): BatchesResults
     {
-        $rawData = $this->http->get(self::PATH.'/', $query);
+        $rawData = $this->http->get(self::PATH.'/', $query?->toArray() ?? []);
         /** @var RawBatches $rawBatches */
         $rawBatches = $rawData;
         $results = array_map(
@@ -50,9 +51,9 @@ class Batches extends Endpoint
 
         return new BatchesResults([
             'results' => $results,
-            'from' => $rawBatches['from'],
+            'from' => $rawBatches['from'] ?? null,
             'limit' => $rawBatches['limit'],
-            'next' => $rawBatches['next'],
+            'next' => $rawBatches['next'] ?? null,
             'total' => $rawBatches['total'],
         ]);
     }

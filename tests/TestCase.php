@@ -15,6 +15,13 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends BaseTestCase
 {
+    public static function rfc3339Micro(\DateTimeInterface $date): string
+    {
+        return \DateTimeImmutable::createFromInterface($date)
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format('Y-m-d\TH:i:s.u\Z');
+    }
+
     protected const VECTOR_MOVIES = [
         [
             'title' => 'Shazam!',

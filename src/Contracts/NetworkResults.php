@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
- * @phpstan-type RemoteConfig array{url: non-empty-string, searchApiKey: non-empty-string, writeApiKey: non-empty-string}
- * @phpstan-type ShardConfig array{remotes: list<non-empty-string>}
+ * @phpstan-type RemoteConfig array{url: non-empty-string|null, searchApiKey: non-empty-string|null, writeApiKey: non-empty-string|null}
+ * @phpstan-type ShardConfig array{remotes: list<non-empty-string>|null}
  */
 class NetworkResults extends Data
 {
@@ -19,11 +19,6 @@ class NetworkResults extends Data
      * @var non-empty-string|null the identifier for the leader node
      */
     private ?string $leader;
-
-    /**
-     * @var non-empty-string|null the version of the network configuration
-     */
-    private ?string $version;
 
     /**
      * @var array<non-empty-string, RemoteConfig|null> a mapping of remote node IDs to their connection details
@@ -39,7 +34,6 @@ class NetworkResults extends Data
      * @param array{
      *     self?: non-empty-string|null,
      *     leader?: non-empty-string|null,
-     *     version?: non-empty-string|null,
      *     remotes?: array<non-empty-string, RemoteConfig|null>,
      *     shards?: array<non-empty-string, ShardConfig>
      * } $params
@@ -50,7 +44,6 @@ class NetworkResults extends Data
 
         $this->self = $params['self'] ?? null;
         $this->leader = $params['leader'] ?? null;
-        $this->version = $params['version'] ?? null;
         $this->remotes = $params['remotes'] ?? [];
         $this->shards = $params['shards'] ?? [];
     }
@@ -69,14 +62,6 @@ class NetworkResults extends Data
     public function getLeader(): ?string
     {
         return $this->leader;
-    }
-
-    /**
-     * @return non-empty-string|null the version of the network configuration
-     */
-    public function getVersion(): ?string
-    {
-        return $this->version;
     }
 
     /**

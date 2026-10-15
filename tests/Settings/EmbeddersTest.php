@@ -26,7 +26,7 @@ final class EmbeddersTest extends TestCase
     {
         $response = $this->index->getEmbedders();
 
-        self::assertSame(self::DEFAULT_EMBEDDER, $response);
+        self::assertSame(self::DEFAULT_EMBEDDER, $response->toArray());
     }
 
     public function testUpdateEmbedders(): void
@@ -35,7 +35,7 @@ final class EmbeddersTest extends TestCase
 
         $this->index->updateEmbedders($newEmbedders)->wait();
 
-        self::assertSame($newEmbedders, $this->index->getEmbedders());
+        self::assertSame($newEmbedders, $this->index->getEmbedders()->toArray());
     }
 
     public function testResetEmbedders(): void
@@ -43,7 +43,7 @@ final class EmbeddersTest extends TestCase
         $this->index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3, 'binaryQuantized' => true]])->wait();
         $this->index->resetEmbedders()->wait();
 
-        self::assertSame(self::DEFAULT_EMBEDDER, $this->index->getEmbedders());
+        self::assertSame(self::DEFAULT_EMBEDDER, $this->index->getEmbedders()->toArray());
     }
 
     public function testHuggingFacePooling(): void

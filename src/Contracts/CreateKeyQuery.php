@@ -44,7 +44,7 @@ final class CreateKeyQuery
             'indexes' => $this->indexes,
             'description' => $this->description,
             'name' => $this->name,
-            'expiresAt' => $this->expiresAt?->format('Y-m-d\TH:i:s.vu\Z'),
+            'expiresAt' => null !== $this->expiresAt ? \Meilisearch\formatRfc3339Micro($this->expiresAt) : null,
         ];
         if (null !== $this->uid) {
             $payload['uid'] = $this->uid;

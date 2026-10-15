@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Meilisearch\Exceptions;
 
-final class TimeOutException extends \Exception implements \Stringable, ExceptionInterface
+final class TimeoutException extends \Exception implements \Stringable, ExceptionInterface
 {
     public function __construct(?string $message = null, ?int $code = null, ?\Throwable $previous = null)
     {
@@ -13,7 +13,7 @@ final class TimeOutException extends \Exception implements \Stringable, Exceptio
 
     public function __toString(): string
     {
-        $base = 'Meilisearch TimeOutException: Code: '.$this->code;
+        $base = 'Meilisearch TimeoutException: Code: '.$this->code;
         if ('' !== $this->message) {
             return $base.' - Message: '.$this->message;
         }

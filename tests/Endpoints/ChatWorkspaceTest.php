@@ -62,7 +62,7 @@ final class ChatWorkspaceTest extends TestCase
         self::assertSame($this->workspaceSettings['apiVersion'], $response->getApiVersion());
         self::assertSame($this->workspaceSettings['deploymentId'], $response->getDeploymentId());
         self::assertSame($this->workspaceSettings['baseUrl'], $response->getBaseUrl());
-        self::assertSame($this->workspaceSettings['prompts']['system'], $response->getPrompts()['system']);
+        self::assertSame($this->workspaceSettings['prompts']['system'], $response->getPrompts()->getSystem());
         // Meilisearch will mask the API key in the response
         self::assertSame('XXX...', $response->getApiKey());
     }

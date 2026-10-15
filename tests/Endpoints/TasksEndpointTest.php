@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Contracts\Http;
+use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Endpoints\Tasks;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,7 @@ final class TasksEndpointTest extends TestCase
                 'total' => 40,
             ]);
 
-        $results = (new Tasks($http))->all(['limit' => 20]);
+        $results = (new Tasks($http))->all((new TasksQuery())->setLimit(20));
 
         self::assertSame(2, $results->getFrom());
         self::assertSame(20, $results->getLimit());
@@ -39,5 +40,24 @@ final class TasksEndpointTest extends TestCase
         self::assertSame(40, $results->getTotal());
         self::assertSame(7, $results->getResults()[0]->getTaskUid());
         self::assertSame(TaskStatus::Succeeded, $results->getResults()[0]->getStatus());
+    }
+
+    public function testAllWithoutPaginationCursors(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->expects(self::once())
+            ->method('get')
+            ->willReturn([
+                'results' => [],
+                'limit' => 20,
+                'total' => 0,
+            ]);
+
+        $results = (new Tasks($http))->all();
+
+        self::assertNull($results->getFrom());
+        self::assertSame(20, $results->getLimit());
+        self::assertNull($results->getNext());
+        self::assertSame(0, $results->getTotal());
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use Meilisearch\Contracts\BatchesQuery;
 use Meilisearch\Contracts\Http;
 use Meilisearch\Endpoints\Batches;
 use PHPUnit\Framework\TestCase;
@@ -37,12 +38,31 @@ final class BatchesEndpointTest extends TestCase
                 'total' => 50,
             ]);
 
-        $results = (new Batches($http))->all(['limit' => 15]);
+        $results = (new Batches($http))->all((new BatchesQuery())->setLimit(15));
 
         self::assertSame(3, $results->getFrom());
         self::assertSame(15, $results->getLimit());
         self::assertSame(18, $results->getNext());
         self::assertSame(50, $results->getTotal());
         self::assertSame(9, $results->getResults()[0]->getUid());
+    }
+
+    public function testAllWithoutPaginationCursors(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->expects(self::once())
+            ->method('get')
+            ->willReturn([
+                'results' => [],
+                'limit' => 20,
+                'total' => 0,
+            ]);
+
+        $results = (new Batches($http))->all();
+
+        self::assertNull($results->getFrom());
+        self::assertSame(20, $results->getLimit());
+        self::assertNull($results->getNext());
+        self::assertSame(0, $results->getTotal());
     }
 }

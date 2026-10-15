@@ -9,6 +9,7 @@ use Meilisearch\Contracts\NetworkResults;
 use Meilisearch\Contracts\Task;
 
 use function Meilisearch\partial;
+use function Meilisearch\waitForTask;
 
 /**
  * @phpstan-import-type RemoteConfig from NetworkResults
@@ -23,18 +24,18 @@ class Network extends Endpoint
 {
     protected const PATH = '/network';
 
-    /**
-     * @return array{
-     *     self?: non-empty-string|null,
-     *     leader?: non-empty-string|null,
-     *     version?: non-empty-string|null,
-     *     remotes?: array<non-empty-string, RemoteConfig|null>,
-     *     shards?: array<non-empty-string, array{remotes: list<non-empty-string>}>
-     * }
-     */
-    public function get(): array
+    public function get(): NetworkResults
     {
-        return $this->http->get(self::PATH);
+        /** @var array{
+         *     self?: non-empty-string|null,
+         *     leader?: non-empty-string|null,
+         *     remotes?: array<non-empty-string, RemoteConfig|null>,
+         *     shards?: array<non-empty-string, array{remotes: list<non-empty-string>|null}>
+         * } $response
+         */
+        $response = $this->http->get(self::PATH);
+
+        return new NetworkResults($response);
     }
 
     /**
@@ -125,6 +126,6 @@ class Network extends Endpoint
      */
     private function dispatchPatch(array $body): Task
     {
-        return Task::fromArray($this->http->patch(self::PATH, $body), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->patch(self::PATH, $body), partial(waitForTask(...), $this->http));
     }
 }

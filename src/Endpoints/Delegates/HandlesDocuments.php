@@ -7,11 +7,11 @@ namespace Meilisearch\Endpoints\Delegates;
 use Meilisearch\Contracts\DocumentsQuery;
 use Meilisearch\Contracts\DocumentsResults;
 use Meilisearch\Contracts\Task;
-use Meilisearch\Endpoints\Tasks;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 
 use function Meilisearch\partial;
+use function Meilisearch\waitForTask;
 
 trait HandlesDocuments
 {
@@ -52,22 +52,22 @@ trait HandlesDocuments
      */
     public function addDocuments(array $documents, ?string $primaryKey = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(waitForTask(...), $this->http));
     }
 
     public function addDocumentsJson(string $documents, ?string $primaryKey = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json'), partial(waitForTask(...), $this->http));
     }
 
     public function addDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv'), partial(waitForTask(...), $this->http));
     }
 
     public function addDocumentsNdjson(string $documents, ?string $primaryKey = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -77,7 +77,7 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-replace-documents
      */
-    public function addDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null): array
+    public function addDocumentsInBatches(array $documents, int $batchSize = 1000, ?string $primaryKey = null): array
     {
         $promises = [];
 
@@ -91,7 +91,7 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function addDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null): array
+    public function addDocumentsCsvInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null): array
     {
         $promises = [];
 
@@ -105,7 +105,7 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function addDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null): array
+    public function addDocumentsNdjsonInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null): array
     {
         $promises = [];
 
@@ -123,22 +123,22 @@ trait HandlesDocuments
      */
     public function updateDocuments(array $documents, ?string $primaryKey = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(waitForTask(...), $this->http));
     }
 
     public function updateDocumentsJson(string $documents, ?string $primaryKey = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json'), partial(waitForTask(...), $this->http));
     }
 
     public function updateDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv'), partial(waitForTask(...), $this->http));
     }
 
     public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -148,7 +148,7 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-update-documents
      */
-    public function updateDocumentsInBatches(array $documents, ?int $batchSize = 1000, ?string $primaryKey = null): array
+    public function updateDocumentsInBatches(array $documents, int $batchSize = 1000, ?string $primaryKey = null): array
     {
         $promises = [];
 
@@ -162,7 +162,7 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function updateDocumentsCsvInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null): array
+    public function updateDocumentsCsvInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null): array
     {
         $promises = [];
 
@@ -176,7 +176,7 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function updateDocumentsNdjsonInBatches(string $documents, ?int $batchSize = 1000, ?string $primaryKey = null): array
+    public function updateDocumentsNdjsonInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null): array
     {
         $promises = [];
 
@@ -199,35 +199,42 @@ trait HandlesDocuments
      */
     public function updateDocumentsByFunction(string $function, array $options = []): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', array_merge(['function' => $function], $options)), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', array_merge(['function' => $function], $options)), partial(waitForTask(...), $this->http));
     }
 
     public function deleteAllDocuments(): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents'), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents'), partial(waitForTask(...), $this->http));
     }
 
     public function deleteDocument(string|int $documentId): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId), partial(Tasks::waitTask(...), $this->http));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId), partial(waitForTask(...), $this->http));
     }
 
     /**
-     * @param list<non-empty-string|int>|array{filter: non-empty-string|list<non-empty-string|list<non-empty-string>>} $options
+     * @param list<non-empty-string|int> $documentIds
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/delete-documents-by-batch
-     * @see https://www.meilisearch.com/docs/reference/api/documents/delete-documents-by-filter
      */
-    public function deleteDocuments(array $options): Task
+    public function deleteDocumentsByIds(array $documentIds): Task
     {
         try {
-            if (\array_key_exists('filter', $options) && (bool) $options['filter']) {
-                return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', $options), partial(Tasks::waitTask(...), $this->http));
-            }
+            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documentIds), partial(waitForTask(...), $this->http));
+        } catch (InvalidResponseBodyException $e) {
+            throw ApiException::rethrowWithHint($e, __FUNCTION__);
+        }
+    }
 
-            // backwards compatibility:
-            // expect to be a array to send alongside as $documents_ids.
-            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $options), partial(Tasks::waitTask(...), $this->http));
+    /**
+     * @param non-empty-string|list<non-empty-string|list<non-empty-string>> $filter
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/documents/delete-documents-by-filter
+     */
+    public function deleteDocumentsByFilter(string|array $filter): Task
+    {
+        try {
+            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', ['filter' => $filter]), partial(waitForTask(...), $this->http));
         } catch (InvalidResponseBodyException $e) {
             throw ApiException::rethrowWithHint($e, __FUNCTION__);
         }

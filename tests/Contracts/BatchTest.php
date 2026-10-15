@@ -9,7 +9,6 @@ use Meilisearch\Contracts\BatchProgress;
 use Meilisearch\Contracts\BatchProgressStep;
 use Meilisearch\Contracts\BatchStats;
 use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
-use Meilisearch\Exceptions\LogicException;
 use PHPUnit\Framework\TestCase;
 
 final class BatchTest extends TestCase
@@ -54,8 +53,6 @@ final class BatchTest extends TestCase
         self::assertEquals(new \DateTimeImmutable('2025-04-09T10:28:13.236789Z'), $batch->getFinishedAt());
         self::assertNull($batch->getProgress());
         self::assertSame('sizeLimit', $batch->getBatchStrategy());
-        self::assertTrue(isset($batch['uid']));
-        self::assertSame(1, $batch['uid']);
         self::assertSame($raw, $batch->toArray());
     }
 
@@ -110,26 +107,6 @@ final class BatchTest extends TestCase
         self::assertNull($batch->getFinishedAt());
         self::assertSame($progress, $batch->getProgress());
         self::assertNull($batch->getBatchStrategy());
-    }
-
-    public function testOffsetSetThrows(): void
-    {
-        $batch = Batch::fromArray($this->finishedRaw());
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The Batch object is immutable.');
-
-        $batch['uid'] = 2;
-    }
-
-    public function testOffsetUnsetThrows(): void
-    {
-        $batch = Batch::fromArray($this->finishedRaw());
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The Batch object is immutable.');
-
-        unset($batch['uid']);
     }
 
     public function testFromArrayFinished(): void

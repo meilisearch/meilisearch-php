@@ -30,7 +30,7 @@ final class SynonymsTest extends TestCase
 
         $this->index->updateSynonyms($newSynonyms)->wait();
 
-        self::assertSame($newSynonyms, $this->index->getSynonyms());
+        self::assertSame($newSynonyms, $this->index->getSynonyms()->toArray());
     }
 
     public function testUpdateSynonymsWithEmptyArray(): void
@@ -39,7 +39,7 @@ final class SynonymsTest extends TestCase
 
         $this->index->updateSynonyms($newSynonyms)->wait();
 
-        self::assertSame($newSynonyms, $this->index->getSynonyms());
+        self::assertSame($newSynonyms, $this->index->getSynonyms()->toArray());
     }
 
     public function testResetSynonyms(): void

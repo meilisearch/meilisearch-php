@@ -6,7 +6,6 @@ namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\CreateKeyQuery;
 use Meilisearch\Contracts\Endpoint;
-use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\Key;
 use Meilisearch\Contracts\KeysQuery;
 use Meilisearch\Contracts\KeysResults;
@@ -34,8 +33,6 @@ use Meilisearch\Contracts\UpdateKeyQuery;
 class Keys extends Endpoint
 {
     protected const PATH = '/keys';
-
-    protected Http $http;
 
     /**
      * @param non-empty-string $keyOrUid
@@ -87,8 +84,8 @@ class Keys extends Endpoint
     /**
      * @param non-empty-string $keyOrUid
      */
-    public function delete(string $keyOrUid): array
+    public function delete(string $keyOrUid): void
     {
-        return $this->http->delete(self::PATH.'/'.$keyOrUid) ?? [];
+        $this->http->delete(self::PATH.'/'.$keyOrUid);
     }
 }

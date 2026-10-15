@@ -10,9 +10,9 @@ namespace Meilisearch\Contracts;
 final class BatchesResults extends Data
 {
     /**
-     * @var non-negative-int
+     * @var non-negative-int|null
      */
-    private int $next;
+    private ?int $next;
 
     /**
      * @var non-negative-int
@@ -20,9 +20,9 @@ final class BatchesResults extends Data
     private int $limit;
 
     /**
-     * @var non-negative-int
+     * @var non-negative-int|null
      */
-    private int $from;
+    private ?int $from;
 
     /**
      * @var non-negative-int
@@ -32,9 +32,9 @@ final class BatchesResults extends Data
     /**
      * @param array{
      *     results: list<Batch>,
-     *     from: non-negative-int|null,
+     *     from?: non-negative-int|null,
      *     limit: non-negative-int,
-     *     next: non-negative-int|null,
+     *     next?: non-negative-int|null,
      *     total: non-negative-int
      * } $params
      */
@@ -42,9 +42,9 @@ final class BatchesResults extends Data
     {
         parent::__construct($params['results']);
 
-        $this->from = $params['from'] ?? 0;
+        $this->from = $params['from'] ?? null;
         $this->limit = $params['limit'];
-        $this->next = $params['next'] ?? 0;
+        $this->next = $params['next'] ?? null;
         $this->total = $params['total'];
     }
 
@@ -57,9 +57,9 @@ final class BatchesResults extends Data
     }
 
     /**
-     * @return non-negative-int
+     * @return non-negative-int|null
      */
-    public function getNext(): int
+    public function getNext(): ?int
     {
         return $this->next;
     }
@@ -73,9 +73,9 @@ final class BatchesResults extends Data
     }
 
     /**
-     * @return non-negative-int
+     * @return non-negative-int|null
      */
-    public function getFrom(): int
+    public function getFrom(): ?int
     {
         return $this->from;
     }
@@ -91,9 +91,9 @@ final class BatchesResults extends Data
     /**
      * @return array{
      *     results: list<RawBatch>,
-     *     from: non-negative-int,
+     *     from: non-negative-int|null,
      *     limit: non-negative-int,
-     *     next: non-negative-int,
+     *     next: non-negative-int|null,
      *     total: non-negative-int
      * }
      */

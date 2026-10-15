@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace Meilisearch\Endpoints;
 
 use Meilisearch\Contracts\Endpoint;
+use Meilisearch\Contracts\Http;
 use Meilisearch\Exceptions\InvalidArgumentException;
 use Meilisearch\Http\Serialize\Json;
 
 class TenantToken extends Endpoint
 {
+    public function __construct(Http $http, private readonly ?string $apiKey = null)
+    {
+        parent::__construct($http);
+    }
+
     private function base64url_encode(string $data): string
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');

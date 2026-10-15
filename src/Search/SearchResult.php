@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Meilisearch\Search;
 
+use Meilisearch\Exceptions\InvalidArgumentException;
+
 /**
  * @implements \IteratorAggregate<int, array<string, mixed>>
  */
@@ -144,9 +146,15 @@ final class SearchResult implements \Countable, \IteratorAggregate
      *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
      *     transformFacetDistribution?: callable(array<string, mixed>): array<string, mixed>
      * } $options
+     *
+     * @throws InvalidArgumentException if an unknown option is provided
      */
     public function applyOptions(array $options): self
     {
+        if ([] !== $unknown = array_diff(array_keys($options), ['transformHits', 'transformFacetDistribution'])) {
+            throw new InvalidArgumentException(\sprintf('Unknown search result option(s): "%s". Valid options are "transformHits" and "transformFacetDistribution".', implode('", "', $unknown)), 400);
+        }
+
         if (\array_key_exists('transformHits', $options)) {
             $this->transformHits($options['transformHits']);
         }
@@ -363,9 +371,9 @@ final class SearchResult implements \Countable, \IteratorAggregate
         return $arr;
     }
 
-    public function toJSON(): string
+    public function toJson(): string
     {
-        return json_encode($this->toArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
     }
 
     public function getIterator(): \ArrayIterator
