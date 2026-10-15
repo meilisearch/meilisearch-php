@@ -106,12 +106,16 @@ final class Index extends Endpoint
     }
 
     /**
+     * Lazily loads the index metadata on first call.
+     *
      * @return array{
      *     uid: non-empty-string,
      *     primaryKey: string|null,
      *     createdAt: non-empty-string,
      *     updatedAt: non-empty-string
      * }
+     *
+     * @throws \Meilisearch\Exceptions\ApiException if the index cannot be fetched
      */
     public function toArray(): array
     {
@@ -193,8 +197,10 @@ final class Index extends Endpoint
     }
 
     /**
+     * When $query is a SearchQuery instance, an array $searchParams is treated as SearchResultOptions.
+     *
      * @param SearchQuery|RawSearchQuery|SearchResultOptions|null $searchParams
-     * @param SearchResultOptions                                 $options
+     * @param SearchResultOptions                                 $options      ignored when $query is a SearchQuery and $searchParams is an array
      */
     public function search(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null, array $options = []): SearchResult
     {

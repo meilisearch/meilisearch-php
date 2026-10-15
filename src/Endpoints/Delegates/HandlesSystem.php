@@ -94,9 +94,24 @@ trait HandlesSystem
 
     /**
      * @param list<array{non-empty-string, non-empty-string}> $indexes
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/indexes/swap-indexes
      */
     public function swapIndexes(array $indexes): Task
     {
         return $this->index->swapIndexes($indexes);
+    }
+
+    /**
+     * Rename an index instead of swapping it.
+     *
+     * @param non-empty-string $fromUid
+     * @param non-empty-string $toUid
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/indexes/swap-indexes
+     */
+    public function renameIndex(string $fromUid, string $toUid): Task
+    {
+        return $this->index->renameIndex($fromUid, $toUid);
     }
 }

@@ -46,4 +46,23 @@ final class BatchesEndpointTest extends TestCase
         self::assertSame(50, $results->getTotal());
         self::assertSame(9, $results->getResults()[0]->getUid());
     }
+
+    public function testAllWithoutPaginationCursors(): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->expects(self::once())
+            ->method('get')
+            ->willReturn([
+                'results' => [],
+                'limit' => 20,
+                'total' => 0,
+            ]);
+
+        $results = (new Batches($http))->all();
+
+        self::assertNull($results->getFrom());
+        self::assertSame(20, $results->getLimit());
+        self::assertNull($results->getNext());
+        self::assertSame(0, $results->getTotal());
+    }
 }

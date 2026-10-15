@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Search;
 
+use Meilisearch\Exceptions\InvalidArgumentException;
 use Meilisearch\Search\SearchResult;
 use PHPUnit\Framework\TestCase;
 
@@ -213,5 +214,15 @@ final class SearchResultTest extends TestCase
         self::assertSame(0, $response->getFacetDistribution()['genre']['ROMANCE']);
         self::assertSame(1, $response->getFacetDistribution()['genre']['FANTASY']);
         self::assertSame(1, $response->getFacetDistribution()['genre']['ADVENTURE']);
+    }
+
+    public function testApplyOptionsRejectsUnknownKeys(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown search result option(s): "limit".');
+
+        // The argument type is wrong on purpose. applyOptions only accepts
+        // transform callables; 'limit' is what makes the validation throw.
+        $this->basicResult->applyOptions(['limit' => 1]); // @phpstan-ignore argument.type
     }
 }

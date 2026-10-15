@@ -29,9 +29,8 @@ class Network extends Endpoint
         /** @var array{
          *     self?: non-empty-string|null,
          *     leader?: non-empty-string|null,
-         *     version?: non-empty-string|null,
          *     remotes?: array<non-empty-string, RemoteConfig|null>,
-         *     shards?: array<non-empty-string, array{remotes: list<non-empty-string>}>
+         *     shards?: array<non-empty-string, array{remotes: list<non-empty-string>|null}>
          * } $response
          */
         $response = $this->http->get(self::PATH);
