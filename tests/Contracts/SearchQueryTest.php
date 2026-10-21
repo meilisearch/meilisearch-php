@@ -17,6 +17,15 @@ final class SearchQueryTest extends TestCase
         self::assertSame([], $data->toArray());
     }
 
+    public function testSetInlineRule(): void
+    {
+        $rule = ['uid' => 'batman', 'actions' => ['scale' => [['filter' => 'hero = batman', 'weight' => 1.2]]]];
+        $data = (new SearchQuery())->setInlineRule($rule);
+
+        self::assertSame(['inlineRule' => $rule], $data->toArray());
+        self::assertSame(['inlineRule' => $rule], SearchQuery::fromArray(['inlineRule' => $rule])->toArray());
+    }
+
     public function testSetQuery(): void
     {
         $data = (new SearchQuery())->setQuery('shifu');
