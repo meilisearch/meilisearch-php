@@ -14,6 +14,7 @@ trait HandlesMultiSearch
 
     /**
      * @param list<MultiSearchQuery> $queries
+     * @param bool                   $includeMetadata sends `Meili-Include-Metadata: true`, so each result has a `metadata` key
      *
      * @return array{
      *     results?: list<array<string, mixed>>,
@@ -26,7 +27,7 @@ trait HandlesMultiSearch
      *     facetStats?: array<string, mixed>
      * }
      */
-    public function multiSearch(array $queries = [], ?MultiSearchFederation $federation = null): array
+    public function multiSearch(array $queries = [], ?MultiSearchFederation $federation = null, bool $includeMetadata = false): array
     {
         $body = [];
 
@@ -50,7 +51,11 @@ trait HandlesMultiSearch
          *     facetStats?: array<string, mixed>
          * } $result
          */
-        $result = $this->http->post('/multi-search', $payload);
+        $result = $this->http->post(
+            '/multi-search',
+            $payload,
+            headers: $includeMetadata ? ['Meili-Include-Metadata' => 'true'] : [],
+        );
 
         return $result;
     }

@@ -85,6 +85,11 @@ final class SearchResult implements \Countable, \IteratorAggregate
     private array $facetStats;
 
     /**
+     * @var array<string, mixed>|null
+     */
+    private ?array $metadata;
+
+    /**
      * @var array<string, mixed>
      */
     private array $raw;
@@ -104,6 +109,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
      *     totalHits?: non-negative-int,
      *     estimatedTotalHits?: non-negative-int,
      *     hitsPerPage?: non-negative-int,
+     *     metadata?: array<string, mixed>,
      * } $body
      */
     public function __construct(array $body)
@@ -130,6 +136,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
         $this->query = $body['query'];
         $this->facetDistribution = $body['facetDistribution'] ?? [];
         $this->facetStats = $body['facetStats'] ?? [];
+        $this->metadata = $body['metadata'] ?? null;
         $this->raw = $body;
     }
 
@@ -252,6 +259,17 @@ final class SearchResult implements \Countable, \IteratorAggregate
     public function getEstimatedTotalHits(): ?int
     {
         return $this->estimatedTotalHits;
+    }
+
+    /**
+     * Only present when searching with `includeMetadata`. With an inline rule it holds
+     * `inlineRuleConditionOutcomes`.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function getMetadata(): ?array
+    {
+        return $this->metadata;
     }
 
     /**

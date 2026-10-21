@@ -33,7 +33,8 @@ namespace Meilisearch\Contracts;
  *     rankingScoreThreshold?: float,
  *     distinct?: non-empty-string,
  *     retrieveVectors?: bool,
- *     media?: array<mixed>
+ *     media?: array<mixed>,
+ *     inlineRule?: array<string, mixed>
  * }
  */
 abstract class AbstractSearchQuery
@@ -143,6 +144,11 @@ abstract class AbstractSearchQuery
     private ?array $media = null;
 
     /**
+     * @var array<string, mixed>|null
+     */
+    private ?array $inlineRule = null;
+
+    /**
      * @param RawBaseSearchQuery $data
      */
     protected function hydrateFromArray(array $data): static
@@ -230,6 +236,10 @@ abstract class AbstractSearchQuery
         }
         if (\array_key_exists('media', $data)) {
             $this->setMedia($data['media']);
+        }
+
+        if (\array_key_exists('inlineRule', $data)) {
+            $this->setInlineRule($data['inlineRule']);
         }
 
         return $this;
@@ -500,6 +510,22 @@ abstract class AbstractSearchQuery
     }
 
     /**
+     * Previews a dynamic search rule on this query without saving it. Requires Meilisearch
+     * Enterprise Edition and the `dynamicSearchRules` experimental feature.
+     *
+     * Search with `includeMetadata` to get `metadata.inlineRuleConditionOutcomes`, which tells
+     * whether each condition of the rule matched.
+     *
+     * @param array<string, mixed>|null $inlineRule a dynamic search rule: uid, conditions and actions
+     */
+    public function setInlineRule(?array $inlineRule): static
+    {
+        $this->inlineRule = $inlineRule;
+
+        return $this;
+    }
+
+    /**
      * @return RawBaseSearchQuery
      */
     protected function baseArray(): array
@@ -533,6 +559,7 @@ abstract class AbstractSearchQuery
             'distinct' => $this->distinct,
             'retrieveVectors' => $this->retrieveVectors,
             'media' => $this->media,
+            'inlineRule' => $this->inlineRule,
         ], static function ($item) { return null !== $item; });
     }
 }
