@@ -20,11 +20,12 @@ interface Http
     /**
      * @param non-empty-string|null              $contentType
      * @param array<string, scalar|list<scalar>> $query
+     * @param array<string, string>              $headers     extra request headers
      *
      * @throws ApiException
      * @throws \JsonException
      */
-    public function post(string $path, mixed $body = null, array $query = [], ?string $contentType = null): mixed;
+    public function post(string $path, mixed $body = null, array $query = [], ?string $contentType = null, array $headers = []): mixed;
 
     /**
      * @param non-empty-string|null              $contentType

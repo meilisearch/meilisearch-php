@@ -37,6 +37,7 @@ namespace Meilisearch\Contracts;
  *     distinct?: non-empty-string,
  *     retrieveVectors?: bool,
  *     media?: array<mixed>,
+ *     inlineRule?: array<string, mixed>,
  *     federationOptions?: array{weight?: float, remote?: non-empty-string}
  * }
  */

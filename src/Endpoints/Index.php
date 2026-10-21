@@ -42,7 +42,8 @@ use function Meilisearch\waitForTask;
  *     totalPages?: non-negative-int,
  *     totalHits?: non-negative-int,
  *     estimatedTotalHits?: non-negative-int,
- *     hitsPerPage?: non-negative-int
+ *     hitsPerPage?: non-negative-int,
+ *     metadata?: array<string, mixed>
  * }
  * @phpstan-type SearchResultOptions array{
  *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
@@ -56,6 +57,8 @@ final class Index extends Endpoint
     use HandlesTasks;
 
     protected const PATH = '/indexes';
+
+    private const INCLUDE_METADATA_HEADER = ['Meili-Include-Metadata' => 'true'];
 
     protected string $uid;
     protected ?string $primaryKey = null;
@@ -200,9 +203,10 @@ final class Index extends Endpoint
      * When $query is a SearchQuery instance, an array $searchParams is treated as SearchResultOptions.
      *
      * @param SearchQuery|RawSearchQuery|SearchResultOptions|null $searchParams
-     * @param SearchResultOptions                                 $options      ignored when $query is a SearchQuery and $searchParams is an array
+     * @param SearchResultOptions                                 $options         ignored when $query is a SearchQuery and $searchParams is an array
+     * @param bool                                                $includeMetadata sends `Meili-Include-Metadata: true`, so the result has {@see SearchResult::getMetadata()}
      */
-    public function search(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null, array $options = []): SearchResult
+    public function search(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null, array $options = [], bool $includeMetadata = false): SearchResult
     {
         if ($query instanceof SearchQuery) {
             $resolvedQuery = $query;
@@ -212,7 +216,7 @@ final class Index extends Endpoint
         }
 
         /** @var RawSearchResult $rawResult */
-        $rawResult = $this->rawSearch($resolvedQuery);
+        $rawResult = $this->rawSearch($resolvedQuery, includeMetadata: $includeMetadata);
         $searchResult = new SearchResult($rawResult);
 
         return $searchResult->applyOptions($options);
@@ -220,15 +224,20 @@ final class Index extends Endpoint
 
     /**
      * @param SearchQuery|RawSearchQuery|null $searchParams
+     * @param bool                            $includeMetadata sends `Meili-Include-Metadata: true`, so the result has a `metadata` key
      *
      * @return RawSearchResult
      */
-    public function rawSearch(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null): array
+    public function rawSearch(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null, bool $includeMetadata = false): array
     {
         $resolvedQuery = $this->resolveSearchQuery($query, $searchParams);
 
         /** @var RawSearchResult $result */
-        $result = $this->http->post(self::PATH.'/'.$this->uid.'/search', (object) $resolvedQuery->toArray());
+        $result = $this->http->post(
+            self::PATH.'/'.$this->uid.'/search',
+            (object) $resolvedQuery->toArray(),
+            headers: $includeMetadata ? self::INCLUDE_METADATA_HEADER : [],
+        );
 
         return $result;
     }
