@@ -358,6 +358,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
      *     page?: non-negative-int,
      *     totalPages?: non-negative-int,
      *     totalHits?: non-negative-int,
+     *     metadata?: array<string, mixed>,
      * }
      */
     public function toArray(): array
@@ -384,6 +385,10 @@ final class SearchResult implements \Countable, \IteratorAggregate
                 'totalPages' => $this->totalPages,
                 'totalHits' => $this->totalHits,
             ]);
+        }
+
+        if (null !== $this->metadata) {
+            $arr['metadata'] = $this->metadata;
         }
 
         return $arr;

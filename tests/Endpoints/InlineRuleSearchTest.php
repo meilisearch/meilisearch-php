@@ -53,6 +53,7 @@ final class InlineRuleSearchTest extends TestCase
             ['missingWord' => ['word' => 'wizard']],
             $metadata['inlineRuleConditionOutcomes']['satisfiesQueryWordsCondition'],
         );
+        self::assertSame($metadata, $result->toArray()['metadata']);
     }
 
     public function testSearchWithoutIncludeMetadataHasNoMetadata(): void
@@ -62,6 +63,7 @@ final class InlineRuleSearchTest extends TestCase
         );
 
         self::assertNull($result->getMetadata());
+        self::assertArrayNotHasKey('metadata', $result->toArray());
     }
 
     public function testRawSearchWithInlineRuleReturnsConditionOutcomes(): void
