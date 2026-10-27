@@ -61,7 +61,7 @@ final class InlineRuleSearchTest extends TestCase
             $metadata['inlineRuleConditionOutcomes']['satisfiesQueryWordsCondition'],
         );
         self::assertSame(
-            ['missingConstraintOnField' => ['field' => 'genre']],
+            ['notEnoughFields' => ['fieldCountInFilter' => 0, 'fieldCountInCondition' => 1]],
             $metadata['inlineRuleConditionOutcomes']['satisfiesFilterCondition'],
         );
         self::assertSame($metadata, $result->toArray()['metadata']);
@@ -138,7 +138,7 @@ final class InlineRuleSearchTest extends TestCase
             $response['results'][1]['metadata']['inlineRuleConditionOutcomes']['satisfiesQueryWordsCondition'],
         );
         self::assertSame(
-            ['missingConstraintOnField' => ['field' => 'genre']],
+            ['notEnoughFields' => ['fieldCountInFilter' => 0, 'fieldCountInCondition' => 1]],
             $response['results'][1]['metadata']['inlineRuleConditionOutcomes']['satisfiesFilterCondition'],
         );
     }
