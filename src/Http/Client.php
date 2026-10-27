@@ -98,7 +98,10 @@ class Client implements Http
             $this->baseUrl.$path.$this->buildQueryString($query)
         )->withBody($this->streamFactory->createStream($body));
 
-        return $this->execute($request, ['Content-type' => $contentType ?? 'application/json', ...$headers]);
+        return $this->execute($request, $this->mergeHeaders(
+            ['Content-type' => $contentType ?? 'application/json'],
+            $headers,
+        ));
     }
 
     /**
@@ -190,6 +193,35 @@ class Client implements Http
     }
 
     /**
+     * Later headers replace earlier ones with the same name, ignoring case, so `Content-Type` does not append a second value beside `Content-type`.
+     *
+     * @param array<string, string|string[]> $base
+     * @param array<string, string|string[]> $overrides
+     *
+     * @return array<string, string|string[]>
+     */
+    private function mergeHeaders(array $base, array $overrides): array
+    {
+        /** @var array<string, string> $names */
+        $names = [];
+        /** @var array<string, string|string[]> $merged */
+        $merged = [];
+
+        foreach ([$base, $overrides] as $headers) {
+            foreach ($headers as $name => $value) {
+                $key = strtolower($name);
+                if (\array_key_exists($key, $names)) {
+                    unset($merged[$names[$key]]);
+                }
+                $names[$key] = $name;
+                $merged[$name] = $value;
+            }
+        }
+
+        return $merged;
+    }
+
+    /**
      * @param array<string, string|string[]> $headers
      *
      * @throws ApiException
@@ -198,7 +230,7 @@ class Client implements Http
      */
     private function execute(RequestInterface $request, array $headers = []): mixed
     {
-        foreach (array_merge($this->headers, $headers) as $header => $value) {
+        foreach ($this->mergeHeaders($this->headers, $headers) as $header => $value) {
             $request = $request->withAddedHeader($header, $value);
         }
 
@@ -218,7 +250,7 @@ class Client implements Http
      */
     private function executeStream(RequestInterface $request, array $headers = []): StreamInterface
     {
-        foreach (array_merge($this->headers, $headers) as $header => $value) {
+        foreach ($this->mergeHeaders($this->headers, $headers) as $header => $value) {
             $request = $request->withAddedHeader($header, $value);
         }
 

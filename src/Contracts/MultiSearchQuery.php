@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
+ * @phpstan-import-type InlineRule from DynamicSearchRule
  * @phpstan-import-type RawBaseSearchQuery from AbstractSearchQuery
  *
  * @phpstan-type RawMultiSearchQuery array{
@@ -37,7 +38,7 @@ namespace Meilisearch\Contracts;
  *     distinct?: non-empty-string,
  *     retrieveVectors?: bool,
  *     media?: array<mixed>,
- *     inlineRule?: array<string, mixed>,
+ *     inlineRule?: InlineRule,
  *     federationOptions?: array{weight?: float, remote?: non-empty-string}
  * }
  */

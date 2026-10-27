@@ -28,9 +28,22 @@ namespace Meilisearch\Contracts;
  *     start?: non-empty-string|null,
  *     end?: non-empty-string|null
  * }
+ * @phpstan-type SearchRuleFilterLeaf scalar|null
+ * @phpstan-type SearchRuleFilterValue SearchRuleFilterLeaf|list<SearchRuleFilterLeaf>|array<string, SearchRuleFilterLeaf|list<SearchRuleFilterLeaf>|array<string, SearchRuleFilterLeaf>>
+ * @phpstan-type SearchRuleFilterCondition array{
+ *     values?: array<string, SearchRuleFilterValue>|\stdClass
+ * }
  * @phpstan-type SearchRuleConditions array{
- *     query?: QueryCondition|null,
- *     time?: TimeCondition|null
+ *     query?: QueryCondition|\stdClass|null,
+ *     time?: TimeCondition|\stdClass|null,
+ *     filter?: SearchRuleFilterCondition|\stdClass|null
+ * }
+ * @phpstan-type InlineRule array{
+ *     uid: non-empty-string,
+ *     precedence?: non-negative-int|null,
+ *     active?: bool,
+ *     conditions?: SearchRuleConditions|\stdClass|null,
+ *     actions?: SearchRuleActions|\stdClass|null
  * }
  * @phpstan-type RawDynamicSearchRule array{
  *     uid: non-empty-string,

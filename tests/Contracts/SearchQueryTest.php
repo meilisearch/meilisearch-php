@@ -26,6 +26,30 @@ final class SearchQueryTest extends TestCase
         self::assertSame(['inlineRule' => $rule], SearchQuery::fromArray(['inlineRule' => $rule])->toArray());
     }
 
+    public function testSetInlineRuleNullIsOmitted(): void
+    {
+        $data = (new SearchQuery())->setQuery('prince')->setInlineRule(['uid' => 'batman'])->setInlineRule(null);
+
+        self::assertSame(['q' => 'prince'], $data->toArray());
+    }
+
+    public function testEmptyInlineRuleObjectsEncodeAsJsonObjects(): void
+    {
+        $data = (new SearchQuery())->setInlineRule([
+            'uid' => 'batman',
+            'conditions' => [
+                'query' => [],
+                'filter' => ['values' => []],
+            ],
+            'actions' => [],
+        ]);
+
+        self::assertSame(
+            '{"inlineRule":{"uid":"batman","conditions":{"query":{},"filter":{"values":{}}},"actions":{}}}',
+            json_encode($data->toArray(), \JSON_THROW_ON_ERROR),
+        );
+    }
+
     public function testSetQuery(): void
     {
         $data = (new SearchQuery())->setQuery('shifu');

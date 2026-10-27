@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Meilisearch\Contracts;
 
 /**
+ * @phpstan-import-type InlineRule from DynamicSearchRule
+ *
  * @phpstan-type RawBaseSearchQuery array{
  *     q?: string,
  *     filter?: string|list<non-empty-string|list<non-empty-string>>,
@@ -34,7 +36,7 @@ namespace Meilisearch\Contracts;
  *     distinct?: non-empty-string,
  *     retrieveVectors?: bool,
  *     media?: array<mixed>,
- *     inlineRule?: array<string, mixed>
+ *     inlineRule?: InlineRule
  * }
  */
 abstract class AbstractSearchQuery
@@ -144,7 +146,7 @@ abstract class AbstractSearchQuery
     private ?array $media = null;
 
     /**
-     * @var array<string, mixed>|null
+     * @var InlineRule|null
      */
     private ?array $inlineRule = null;
 
@@ -510,19 +512,56 @@ abstract class AbstractSearchQuery
     }
 
     /**
-     * Previews a dynamic search rule on this query without saving it. Requires Meilisearch
-     * Enterprise Edition and the `dynamicSearchRules` experimental feature.
+     * Preview a dynamic search rule on this query without saving it.
      *
-     * Search with `includeMetadata` to get `metadata.inlineRuleConditionOutcomes`, which tells
-     * whether each condition of the rule matched.
+     * This is an EXPERIMENTAL feature, which may break without a major version.
+     * Requires Meilisearch Enterprise Edition and the `dynamicSearchRules` experimental feature.
+     * Search with `includeMetadata` to read `metadata.inlineRuleConditionOutcomes`.
      *
-     * @param array<string, mixed>|null $inlineRule a dynamic search rule: uid, conditions and actions
+     * @param InlineRule|null $inlineRule
+     *
+     * @since Meilisearch v1.55.0
+     * @see https://www.meilisearch.com/docs/reference/api/search/search-with-post
+     * @see https://www.meilisearch.com/docs/reference/api/multi-search/perform-a-multi-search
      */
     public function setInlineRule(?array $inlineRule): static
     {
         $this->inlineRule = $inlineRule;
 
         return $this;
+    }
+
+    /**
+     * Empty object-shaped fields encode as JSON objects. An empty PHP array would encode as `[]`, which Meilisearch rejects.
+     *
+     * @param InlineRule $rule
+     *
+     * @return InlineRule
+     */
+    private static function normalizeInlineRule(array $rule): array
+    {
+        if (\array_key_exists('conditions', $rule) && \is_array($rule['conditions'])) {
+            $conditions = $rule['conditions'];
+            foreach (['query', 'time'] as $key) {
+                if (\array_key_exists($key, $conditions) && \is_array($conditions[$key]) && [] === $conditions[$key]) {
+                    $conditions[$key] = new \stdClass();
+                }
+            }
+            if (\array_key_exists('filter', $conditions) && \is_array($conditions['filter'])) {
+                $filter = $conditions['filter'];
+                if (\array_key_exists('values', $filter) && \is_array($filter['values']) && [] === $filter['values']) {
+                    $filter['values'] = new \stdClass();
+                }
+                $conditions['filter'] = [] === $filter ? new \stdClass() : $filter;
+            }
+            $rule['conditions'] = [] === $conditions ? new \stdClass() : $conditions;
+        }
+
+        if (\array_key_exists('actions', $rule) && \is_array($rule['actions']) && [] === $rule['actions']) {
+            $rule['actions'] = new \stdClass();
+        }
+
+        return $rule;
     }
 
     /**
@@ -559,7 +598,7 @@ abstract class AbstractSearchQuery
             'distinct' => $this->distinct,
             'retrieveVectors' => $this->retrieveVectors,
             'media' => $this->media,
-            'inlineRule' => $this->inlineRule,
+            'inlineRule' => null !== $this->inlineRule ? self::normalizeInlineRule($this->inlineRule) : null,
         ], static function ($item) { return null !== $item; });
     }
 }
