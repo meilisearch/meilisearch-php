@@ -33,6 +33,46 @@ final class FacetingAttributesTest extends TestCase
         ], $index->getFaceting()->toArray());
     }
 
+    public function testUpdateFacetingAttributesWithSampledCountForAllFacets(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $index->updateFaceting(['sortFacetValuesBy' => ['*' => 'sampledCount']])->wait();
+
+        self::assertSame([
+            'maxValuesPerFacet' => 100,
+            'sortFacetValuesBy' => ['*' => 'sampledCount'],
+        ], $index->getFaceting()->toArray());
+    }
+
+    public function testUpdateFacetingAttributesWithSampledCountForAnAttribute(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $index->updateFaceting([
+            'maxValuesPerFacet' => 2,
+            'sortFacetValuesBy' => ['*' => 'alpha', 'genres' => 'sampledCount'],
+        ])->wait();
+
+        self::assertSame([
+            'maxValuesPerFacet' => 2,
+            'sortFacetValuesBy' => ['*' => 'alpha', 'genres' => 'sampledCount'],
+        ], $index->getFaceting()->toArray());
+    }
+
+    public function testResetFacetingAfterSampledCount(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $index->updateFaceting(['sortFacetValuesBy' => ['*' => 'sampledCount']])->wait();
+        $index->resetFaceting()->wait();
+
+        self::assertSame([
+            'maxValuesPerFacet' => 100,
+            'sortFacetValuesBy' => ['*' => 'alpha'],
+        ], $index->getFaceting()->toArray());
+    }
+
     public function testResetFaceting(): void
     {
         $newAttributes = ['sortFacetValuesBy' => ['*' => 'count']];

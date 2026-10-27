@@ -143,7 +143,7 @@ trait HandlesSettings
     }
 
     /**
-     * @param array{maxValuesPerFacet?: int, sortFacetValuesBy?: array<non-empty-string, 'count'|'alpha'>}|Faceting $faceting
+     * @param array{maxValuesPerFacet?: int, sortFacetValuesBy?: array<non-empty-string, 'count'|'alpha'|'sampledCount'>}|Faceting $faceting
      */
     public function updateFaceting(array|Faceting $faceting): Task
     {

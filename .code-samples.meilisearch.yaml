@@ -483,7 +483,7 @@ get_faceting_settings_1: |-
 update_faceting_settings_1: |-
   $client->index('books')->updateFaceting([
     'maxValuesPerFacet' => 2,
-    'sortFacetValuesBy' => ['*' => 'alpha', 'genres' => 'count']
+    'sortFacetValuesBy' => ['*' => 'alpha', 'genres' => 'count', 'language' => 'sampledCount']
   ]);
 reset_faceting_settings_1: |-
   $client->index('books')->resetFaceting();

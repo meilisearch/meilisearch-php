@@ -165,7 +165,7 @@ use Meilisearch\Contracts\ReadOnlyArrayAccess;
  *     embedders?: SettingsEmbedders|null,
  *     faceting?: array{
  *         maxValuesPerFacet?: non-negative-int,
- *         sortFacetValuesBy?: array<non-empty-string, 'alpha'|'count'>
+ *         sortFacetValuesBy?: array<non-empty-string, 'alpha'|'count'|'sampledCount'>
  *     }|null,
  *     facetSearch?: bool,
  *     filterableAttributes?: list<string|array{
