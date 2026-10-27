@@ -39,6 +39,35 @@ class ClientTest extends TestCase
         self::assertSame([], $result);
     }
 
+    public function testPostExtraHeadersReplaceContentTypeIgnoringCase(): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+        $reqFactory = $this->createMock(RequestFactoryInterface::class);
+        $requestStub = $this->createMock(RequestInterface::class);
+        $headers = [];
+        $requestStub->method('withBody')->willReturnSelf();
+        $requestStub->expects(self::atLeastOnce())
+            ->method('withAddedHeader')
+            ->willReturnCallback(function (string $name, string $value) use ($requestStub, &$headers) {
+                $headers[strtolower($name)][] = $value;
+
+                return $requestStub;
+            });
+        $reqFactory->expects(self::once())
+            ->method('createRequest')
+            ->willReturn($requestStub);
+
+        $client = new Client('https://localhost', 'masterKey', $httpClient, $reqFactory);
+        $client->post('/', ['q' => 'prince'], headers: [
+            'Content-Type' => 'application/merge-patch+json',
+            'Meili-Include-Metadata' => 'true',
+        ]);
+
+        self::assertSame(['application/merge-patch+json'], $headers['content-type']);
+        self::assertSame(['true'], $headers['meili-include-metadata']);
+        self::assertSame(['Bearer masterKey'], $headers['authorization']);
+    }
+
     public function testPostExecutesRequestWithCustomStreamFactory(): void
     {
         $httpClient = $this->createHttpClientMock(200, '{}');

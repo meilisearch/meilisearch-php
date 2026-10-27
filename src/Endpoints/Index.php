@@ -28,6 +28,7 @@ use function Meilisearch\waitForTask;
  * @phpstan-import-type RawIndexStats from IndexStats
  * @phpstan-import-type RawSearchQuery from SearchQuery
  * @phpstan-import-type RawSettings from Settings
+ * @phpstan-import-type SearchMetadata from \Meilisearch\Search\SearchResult
  *
  * @phpstan-type RawSearchResult array{
  *     hits: array<int, array<string, mixed>>,
@@ -43,7 +44,7 @@ use function Meilisearch\waitForTask;
  *     totalHits?: non-negative-int,
  *     estimatedTotalHits?: non-negative-int,
  *     hitsPerPage?: non-negative-int,
- *     metadata?: array<string, mixed>
+ *     metadata?: SearchMetadata
  * }
  * @phpstan-type SearchResultOptions array{
  *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
@@ -202,9 +203,13 @@ final class Index extends Endpoint
     /**
      * When $query is a SearchQuery instance, an array $searchParams is treated as SearchResultOptions.
      *
+     * Pass `$includeMetadata` to send `Meili-Include-Metadata: true`, so {@see SearchResult::getMetadata()} is populated.
+     * Available since Meilisearch v1.55.0.
+     *
      * @param SearchQuery|RawSearchQuery|SearchResultOptions|null $searchParams
-     * @param SearchResultOptions                                 $options         ignored when $query is a SearchQuery and $searchParams is an array
-     * @param bool                                                $includeMetadata sends `Meili-Include-Metadata: true`, so the result has {@see SearchResult::getMetadata()}
+     * @param SearchResultOptions                                 $options      ignored when $query is a SearchQuery and $searchParams is an array
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/search/search-with-post
      */
     public function search(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null, array $options = [], bool $includeMetadata = false): SearchResult
     {
@@ -223,10 +228,14 @@ final class Index extends Endpoint
     }
 
     /**
+     * Pass `$includeMetadata` to send `Meili-Include-Metadata: true`, so the result has a `metadata` key.
+     * Available since Meilisearch v1.55.0.
+     *
      * @param SearchQuery|RawSearchQuery|null $searchParams
-     * @param bool                            $includeMetadata sends `Meili-Include-Metadata: true`, so the result has a `metadata` key
      *
      * @return RawSearchResult
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/search/search-with-post
      */
     public function rawSearch(string|SearchQuery|null $query, SearchQuery|array|null $searchParams = null, bool $includeMetadata = false): array
     {

@@ -8,13 +8,19 @@ use Meilisearch\Contracts\Http;
 use Meilisearch\Contracts\MultiSearchFederation;
 use Meilisearch\Contracts\MultiSearchQuery;
 
+/**
+ * @phpstan-import-type SearchMetadata from \Meilisearch\Search\SearchResult
+ */
 trait HandlesMultiSearch
 {
     protected Http $http;
 
     /**
+     * Pass `$includeMetadata` to send `Meili-Include-Metadata: true`. Available since Meilisearch v1.55.0.
+     * Without federation, each item of `results` then includes `metadata`.
+     * With federation, `metadata` is a top-level list with one entry per query.
+     *
      * @param list<MultiSearchQuery> $queries
-     * @param bool                   $includeMetadata sends `Meili-Include-Metadata: true`, so each result has a `metadata` key
      *
      * @return array{
      *     results?: list<array<string, mixed>>,
@@ -24,8 +30,11 @@ trait HandlesMultiSearch
      *     offset?: non-negative-int,
      *     estimatedTotalHits?: non-negative-int,
      *     facetDistribution?: array<string, mixed>,
-     *     facetStats?: array<string, mixed>
+     *     facetStats?: array<string, mixed>,
+     *     metadata?: list<SearchMetadata>
      * }
+     *
+     * @see https://www.meilisearch.com/docs/reference/api/multi-search/perform-a-multi-search
      */
     public function multiSearch(array $queries = [], ?MultiSearchFederation $federation = null, bool $includeMetadata = false): array
     {
@@ -48,7 +57,8 @@ trait HandlesMultiSearch
          *     offset?: non-negative-int,
          *     estimatedTotalHits?: non-negative-int,
          *     facetDistribution?: array<string, mixed>,
-         *     facetStats?: array<string, mixed>
+         *     facetStats?: array<string, mixed>,
+         *     metadata?: list<SearchMetadata>
          * } $result
          */
         $result = $this->http->post(

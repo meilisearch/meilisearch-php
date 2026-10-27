@@ -7,6 +7,26 @@ namespace Meilisearch\Search;
 use Meilisearch\Exceptions\InvalidArgumentException;
 
 /**
+ * @phpstan-type TimeConditionOutcome 'satisfied'|'tooEarly'|'tooLate'
+ * @phpstan-type QueryEmptyConditionOutcome 'satisfied'|'queryNotEmpty'|'queryEmpty'
+ * @phpstan-type QueryWordsConditionOutcome 'satisfied'|array{missingWord: array{word: string}}
+ * @phpstan-type FilterConditionOutcome 'satisfied'|array{missingConstraintOnField: array{field: string}}|array{unmetConstraintOnField: array{field: string}}|array{notEnoughFields: array{fieldCountInFilter: int<0, max>, fieldCountInCondition: int<0, max>}}
+ * @phpstan-type InlineRuleConditionOutcomes array{
+ *     satisfiesActiveCondition: bool,
+ *     satisfiesTimeCondition?: TimeConditionOutcome,
+ *     satisfiesQueryEmptyCondition?: QueryEmptyConditionOutcome,
+ *     satisfiesQueryWordsCondition?: QueryWordsConditionOutcome,
+ *     satisfiesFilterCondition?: FilterConditionOutcome
+ * }
+ * @phpstan-type SearchMetadata array{
+ *     query?: string,
+ *     queryUid: non-empty-string,
+ *     indexUid: non-empty-string,
+ *     primaryKey?: string,
+ *     remote?: string,
+ *     inlineRuleConditionOutcomes?: InlineRuleConditionOutcomes
+ * }
+ *
  * @implements \IteratorAggregate<int, array<string, mixed>>
  */
 final class SearchResult implements \Countable, \IteratorAggregate
@@ -85,7 +105,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
     private array $facetStats;
 
     /**
-     * @var array<string, mixed>|null
+     * @var SearchMetadata|null
      */
     private ?array $metadata;
 
@@ -109,7 +129,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
      *     totalHits?: non-negative-int,
      *     estimatedTotalHits?: non-negative-int,
      *     hitsPerPage?: non-negative-int,
-     *     metadata?: array<string, mixed>,
+     *     metadata?: SearchMetadata,
      * } $body
      */
     public function __construct(array $body)
@@ -262,10 +282,15 @@ final class SearchResult implements \Countable, \IteratorAggregate
     }
 
     /**
-     * Only present when searching with `includeMetadata`. With an inline rule it holds
-     * `inlineRuleConditionOutcomes`.
+     * Query and index metadata.
      *
-     * @return array<string, mixed>|null
+     * Present when the search was made with `includeMetadata`.
+     * With an inline rule, `inlineRuleConditionOutcomes` says whether each condition matched.
+     *
+     * @return SearchMetadata|null
+     *
+     * @since Meilisearch v1.55.0
+     * @see https://www.meilisearch.com/docs/reference/api/search/search-with-post
      */
     public function getMetadata(): ?array
     {
@@ -358,7 +383,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
      *     page?: non-negative-int,
      *     totalPages?: non-negative-int,
      *     totalHits?: non-negative-int,
-     *     metadata?: array<string, mixed>,
+     *     metadata?: SearchMetadata,
      * }
      */
     public function toArray(): array
