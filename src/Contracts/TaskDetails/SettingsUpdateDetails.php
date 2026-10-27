@@ -28,7 +28,7 @@ use Meilisearch\Contracts\TaskDetails;
  *         source?: string,
  *         url?: string
  *     }>,
- *     faceting?: array{maxValuesPerFacet: non-negative-int, sortFacetValuesBy: array<string, 'alpha'|'count'>}|null,
+ *     faceting?: array{maxValuesPerFacet: non-negative-int, sortFacetValuesBy: array<string, 'alpha'|'count'|'sampledCount'>}|null,
  *     facetSearch?: bool,
  *     filterableAttributes?: list<string|array{attributePatterns: list<string>, features: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}}>|null,
  *     localizedAttributes?: list<array{locales: list<non-empty-string>, attributePatterns: list<string>}>,
@@ -76,7 +76,7 @@ final class SettingsUpdateDetails implements TaskDetails
      *     source?: string,
      *     url?: string
      * }>|null $embedders
-     * @param array{maxValuesPerFacet: non-negative-int, sortFacetValuesBy: array<string, 'alpha'|'count'>}|null                                            $faceting
+     * @param array{maxValuesPerFacet: non-negative-int, sortFacetValuesBy: array<string, 'alpha'|'count'|'sampledCount'>}|null                             $faceting
      * @param list<string|array{attributePatterns: list<string>, features: array{facetSearch: bool, filter: array{equality: bool, comparison: bool}}}>|null $filterableAttributes
      * @param list<array{locales: list<non-empty-string>, attributePatterns: list<string>}>|null                                                            $localizedAttributes
      * @param list<string>|null                                                                                                                             $nonSeparatorTokens

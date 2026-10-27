@@ -1,6 +1,6 @@
 # Cloud Agent
 
-PHP 8.5, Composer, and Meilisearch Enterprise 1.55 are installed. Startup runs Meilisearch at `http://127.0.0.1:7700` with master key `masterKey`.
+PHP 8.5, Composer, and Meilisearch Enterprise 1.56 are installed. Startup runs Meilisearch at `http://127.0.0.1:7700` with master key `masterKey`.
 
 ## Checks
 
