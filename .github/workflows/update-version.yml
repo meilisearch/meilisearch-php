@@ -33,7 +33,7 @@ jobs:
           new_string="VERSION = '$raw_new_version';"
           sed -i "s/VERSION = .*/$new_string/" src/Meilisearch.php
       - name: Commit and push the changes to the ${{ env.NEW_BRANCH }} branch
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v11
         with:
           message: "Update version for the next release (${{ env.NEW_VERSION }}) in Meilisearch.php"
           new_branch: ${{ env.NEW_BRANCH }}
