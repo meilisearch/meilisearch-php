@@ -413,6 +413,34 @@ final class TaskTest extends TestCase
         self::assertEquals(new UnknownTaskNetwork(['futureKey' => ['x' => 1]]), $task->getNetwork());
     }
 
+    /**
+     * @param array<mixed> $network
+     */
+    #[DataProvider('provideMalformedNetworks')]
+    public function testFromArrayWithMalformedNetworkFallsBackToUnknownNetwork(array $network): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 9,
+            'status' => 'succeeded',
+            'type' => 'documentAdditionOrUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'network' => $network,
+        ]);
+
+        self::assertEquals(new UnknownTaskNetwork($network), $task->getNetwork());
+    }
+
+    /**
+     * @return iterable<string, array{array<mixed>}>
+     */
+    public static function provideMalformedNetworks(): iterable
+    {
+        yield 'null remote_tasks' => [['remote_tasks' => null, 'network_version' => '0199a4d4-3a11-7b0e-8a5a-2c7f1e8b9d10']];
+        yield 'null origin' => [['origin' => null]];
+        yield 'null import_from' => [['import_from' => null, 'network_change' => ['remoteName' => 'ms-00', 'taskUid' => 1, 'networkVersion' => '0199a4d4-3a11-7b0e-8a5a-2c7f1e8b9d10']]];
+        yield 'import_from without network_change' => [['import_from' => ['remoteName' => 'ms-01', 'indexName' => 'movies', 'documentCount' => 1]]];
+    }
+
     public function testFromArrayWithoutNetwork(): void
     {
         $task = Task::fromArray([

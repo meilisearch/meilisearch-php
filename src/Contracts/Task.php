@@ -237,22 +237,23 @@ final class Task
             return null;
         }
 
-        // `remote_tasks` is often an empty JSON object, which decodes to [], so test key presence rather than truthiness.
-        if (\array_key_exists('remote_tasks', $network)) {
+        // `remote_tasks` is often an empty JSON object, which decodes to [], so test the type rather than truthiness.
+        // Shapes that do not match a known variant are preserved as UnknownTaskNetwork.
+        if (\is_array($network['remote_tasks'] ?? null)) {
             /** @phpstan-var RawRemoteTasksNetwork $remoteTasksNetwork */
             $remoteTasksNetwork = $network;
 
             return RemoteTasksNetwork::fromArray($remoteTasksNetwork);
         }
 
-        if (\array_key_exists('origin', $network)) {
+        if (\is_array($network['origin'] ?? null)) {
             /** @phpstan-var RawOriginNetwork $originNetwork */
             $originNetwork = $network;
 
             return OriginNetwork::fromArray($originNetwork);
         }
 
-        if (\array_key_exists('import_from', $network)) {
+        if (\is_array($network['import_from'] ?? null) && \is_array($network['network_change'] ?? null)) {
             /** @phpstan-var RawImportNetwork $importNetwork */
             $importNetwork = $network;
 
