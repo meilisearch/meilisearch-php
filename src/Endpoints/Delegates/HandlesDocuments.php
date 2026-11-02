@@ -52,22 +52,22 @@ trait HandlesDocuments
      */
     public function addDocuments(array $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'customMetadata' => $customMetadata]), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)]), partial(waitForTask(...), $this->http));
     }
 
     public function addDocumentsJson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'customMetadata' => $customMetadata], 'application/json'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/json'), partial(waitForTask(...), $this->http));
     }
 
     public function addDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, 'customMetadata' => $customMetadata], 'text/csv'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, ...self::customMetadataQuery($customMetadata)], 'text/csv'), partial(waitForTask(...), $this->http));
     }
 
     public function addDocumentsNdjson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'customMetadata' => $customMetadata], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -123,22 +123,22 @@ trait HandlesDocuments
      */
     public function updateDocuments(array $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'customMetadata' => $customMetadata]), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)]), partial(waitForTask(...), $this->http));
     }
 
     public function updateDocumentsJson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'customMetadata' => $customMetadata], 'application/json'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/json'), partial(waitForTask(...), $this->http));
     }
 
     public function updateDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, 'customMetadata' => $customMetadata], 'text/csv'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, ...self::customMetadataQuery($customMetadata)], 'text/csv'), partial(waitForTask(...), $this->http));
     }
 
     public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'customMetadata' => $customMetadata], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -199,17 +199,17 @@ trait HandlesDocuments
      */
     public function updateDocumentsByFunction(string $function, array $options = [], ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', array_merge(['function' => $function], $options), ['customMetadata' => $customMetadata]), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', array_merge(['function' => $function], $options), self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
     }
 
     public function deleteAllDocuments(?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents', ['customMetadata' => $customMetadata]), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents', self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
     }
 
     public function deleteDocument(string|int $documentId, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId, ['customMetadata' => $customMetadata]), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId, self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -220,7 +220,7 @@ trait HandlesDocuments
     public function deleteDocumentsByIds(array $documentIds, ?string $customMetadata = null): Task
     {
         try {
-            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documentIds, ['customMetadata' => $customMetadata]), partial(waitForTask(...), $this->http));
+            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documentIds, self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
         } catch (InvalidResponseBodyException $e) {
             throw ApiException::rethrowWithHint($e, __FUNCTION__);
         }
@@ -234,10 +234,18 @@ trait HandlesDocuments
     public function deleteDocumentsByFilter(string|array $filter, ?string $customMetadata = null): Task
     {
         try {
-            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', ['filter' => $filter], ['customMetadata' => $customMetadata]), partial(waitForTask(...), $this->http));
+            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', ['filter' => $filter], self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
         } catch (InvalidResponseBodyException $e) {
             throw ApiException::rethrowWithHint($e, __FUNCTION__);
         }
+    }
+
+    /**
+     * @return array{customMetadata?: string}
+     */
+    private static function customMetadataQuery(?string $customMetadata): array
+    {
+        return null !== $customMetadata ? ['customMetadata' => $customMetadata] : [];
     }
 
     private static function batchCsvString(string $documents, int $batchSize): \Generator
