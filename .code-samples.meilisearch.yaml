@@ -614,3 +614,9 @@ delete_dynamic_search_rule_1: |-
   $client->deleteDynamicSearchRule('RULE_UID');
 delete_all_dynamic_search_rules_1: |-
   $client->deleteAllDynamicSearchRules();
+export_post_1: |-
+  $client->export(
+    (new \Meilisearch\Contracts\ExportQuery('TARGET_INSTANCE_URL'))
+      ->setApiKey('TARGET_INSTANCE_API_KEY')
+      ->setIndexes(['*' => (new \Meilisearch\Contracts\ExportIndexOptions())->setOverrideSettings(true)])
+  );

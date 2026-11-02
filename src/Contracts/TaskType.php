@@ -22,5 +22,6 @@ enum TaskType: string
     case IndexCompaction = 'indexCompaction';
     case DsrUpdate = 'dsrUpdate';
     case DsrClear = 'dsrClear';
+    case Export = 'export';
     case Unknown = 'unknown';
 }
