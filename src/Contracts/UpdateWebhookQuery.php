@@ -57,6 +57,9 @@ final class UpdateWebhookQuery
     }
 
     /**
+     * Builds the PATCH body from the fields that were set. An empty headers map is omitted
+     * because it would leave the existing headers unchanged anyway.
+     *
      * @return array{
      *     url?: non-empty-string,
      *     headers?: non-empty-array<non-empty-string, string|null>|null
