@@ -225,4 +225,28 @@ final class SearchResultTest extends TestCase
         // transform callables; 'limit' is what makes the validation throw.
         $this->basicResult->applyOptions(['limit' => 1]); // @phpstan-ignore argument.type
     }
+
+    public function testQueryVectorIsExposed(): void
+    {
+        $result = new SearchResult([
+            'hits' => [],
+            'offset' => 0,
+            'limit' => 20,
+            'estimatedTotalHits' => 0,
+            'semanticHitCount' => 0,
+            'processingTimeMs' => 1,
+            'query' => '',
+            'queryVector' => [-0.5, 0.25, 1.0],
+        ]);
+
+        self::assertSame([-0.5, 0.25, 1.0], $result->getQueryVector());
+        self::assertSame([-0.5, 0.25, 1.0], $result->toArray()['queryVector']);
+        self::assertSame([-0.5, 0.25, 1.0], $result->getRaw()['queryVector']);
+    }
+
+    public function testQueryVectorIsNullWhenAbsent(): void
+    {
+        self::assertNull($this->basicResult->getQueryVector());
+        self::assertArrayNotHasKey('queryVector', $this->basicResult->toArray());
+    }
 }

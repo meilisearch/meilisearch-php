@@ -70,6 +70,10 @@ trait HandlesIndex
     }
 
     /**
+     * Passing `uid` in $options renames the index (since Meilisearch v1.18.0). The rename is
+     * applied asynchronously: once the task has succeeded, use `$client->index($newUid)` to
+     * work with the renamed index, as Index instances created for the old uid keep it.
+     *
      * @param non-empty-string $uid
      * @param array{
      *     primaryKey?: string|null,
