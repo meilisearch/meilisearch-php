@@ -39,7 +39,8 @@ use Meilisearch\Exceptions\LogicException;
  *     canceledBy?: non-negative-int,
  *     batchUid?: non-negative-int,
  *     details?: array<mixed>|null,
- *     error?: RawTaskError|null
+ *     error?: RawTaskError|null,
+ *     customMetadata?: string|null
  * }
  *
  * Raw detail shapes are imported here so Task can choose the concrete detail
@@ -81,6 +82,7 @@ final class Task
         private readonly ?TaskError $error = null,
         private readonly array $raw = [],
         private readonly ?\Closure $await = null,
+        private readonly ?string $customMetadata = null,
     ) {
     }
 
@@ -153,6 +155,11 @@ final class Task
         return $this->error;
     }
 
+    public function getCustomMetadata(): ?string
+    {
+        return $this->customMetadata;
+    }
+
     public function isFinished(): bool
     {
         return TaskStatus::Enqueued !== $this->status && TaskStatus::Processing !== $this->status;
@@ -210,6 +217,7 @@ final class Task
             $error,
             $data,
             $await,
+            $data['customMetadata'] ?? null,
         );
     }
 
