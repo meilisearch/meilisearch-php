@@ -8,6 +8,7 @@ use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Http\Client;
 use Meilisearch\Meilisearch;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
@@ -219,6 +220,32 @@ class ClientTest extends TestCase
         $result = $client->delete('/');
 
         self::assertSame([], $result);
+    }
+
+    /**
+     * @param array<string, mixed> $query
+     */
+    #[TestWith([['customMetadata' => null], 'https://localhost/indexes'])]
+    #[TestWith([['customMetadata' => 'import-42'], 'https://localhost/indexes?customMetadata=import-42'])]
+    public function testRequestUriDropsNullQueryParams(array $query, string $expectedUri): void
+    {
+        $httpClient = $this->createHttpClientMock(200, '{}');
+        $reqFactory = $this->createMock(RequestFactoryInterface::class);
+        $requestStub = $this->createMock(RequestInterface::class);
+        $requestStub->method('withAddedHeader')->willReturnSelf();
+        $requestedUri = null;
+        $reqFactory->expects(self::once())
+            ->method('createRequest')
+            ->willReturnCallback(function (string $method, string $uri) use ($requestStub, &$requestedUri) {
+                $requestedUri = $uri;
+
+                return $requestStub;
+            });
+
+        $client = new Client('https://localhost', null, $httpClient, $reqFactory);
+        $client->delete('/indexes', $query);
+
+        self::assertSame($expectedUri, $requestedUri);
     }
 
     public function testInvalidResponseContentTypeThrowsException(): void

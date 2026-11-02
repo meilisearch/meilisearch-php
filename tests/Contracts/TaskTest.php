@@ -40,6 +40,7 @@ final class TaskTest extends TestCase
                 'https://docs.meilisearch.com/errors#index_not_found',
             ),
             raw: ['taskUid' => 1],
+            customMetadata: 'import-run-2025-04-09',
         );
 
         self::assertSame(1, $task->getTaskUid());
@@ -59,6 +60,7 @@ final class TaskTest extends TestCase
             'invalid_request',
             'https://docs.meilisearch.com/errors#index_not_found',
         ), $task->getError());
+        self::assertSame('import-run-2025-04-09', $task->getCustomMetadata());
 
         self::assertSame(['taskUid' => 1], $task->toArray());
     }
@@ -85,6 +87,7 @@ final class TaskTest extends TestCase
         self::assertNull($task->getBatchUid());
         self::assertNull($task->getDetails());
         self::assertNull($task->getError());
+        self::assertNull($task->getCustomMetadata());
     }
 
     public function testWait(): void
@@ -192,6 +195,44 @@ final class TaskTest extends TestCase
 
         self::assertSame(TaskType::Unknown, $task->getType());
         self::assertEquals(new UnknownTaskDetails(['foo' => 'bar']), $task->getDetails());
+    }
+
+    public function testFromArrayWithCustomMetadata(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 6,
+            'status' => 'enqueued',
+            'type' => 'documentAdditionOrUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'customMetadata' => 'import-42',
+        ]);
+
+        self::assertSame('import-42', $task->getCustomMetadata());
+    }
+
+    public function testFromArrayWithoutCustomMetadataReturnsNull(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 8,
+            'status' => 'enqueued',
+            'type' => 'documentAdditionOrUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+        ]);
+
+        self::assertNull($task->getCustomMetadata());
+    }
+
+    public function testFromArrayWithNullCustomMetadataReturnsNull(): void
+    {
+        $task = Task::fromArray([
+            'uid' => 9,
+            'status' => 'succeeded',
+            'type' => 'documentAdditionOrUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'customMetadata' => null,
+        ]);
+
+        self::assertNull($task->getCustomMetadata());
     }
 
     #[DataProvider('emptyDetailsProvider')]
