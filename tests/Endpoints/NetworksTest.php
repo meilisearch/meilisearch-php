@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Endpoints;
 
+use Meilisearch\Contracts\TaskNetwork\RemoteTasksNetwork;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Http\Client;
 use Tests\TestCase;
@@ -109,5 +110,33 @@ final class NetworksTest extends TestCase
         $shardsAfterAdd = $afterAdd->getShards();
         self::assertArrayHasKey('s-a', $shardsAfterAdd);
         self::assertEqualsCanonicalizing([$leader], $shardsAfterAdd['s-a']['remotes']);
+    }
+
+    public function testTaskExposesRemoteTasksNetwork(): void
+    {
+        $apiKey = getenv('MEILISEARCH_API_KEY');
+        $instanceName = 'ms-00';
+
+        $this->client->initializeNetwork([
+            'self' => $instanceName,
+            'leader' => $instanceName,
+            'remotes' => [
+                $instanceName => [
+                    'url' => $this->host,
+                    'searchApiKey' => $apiKey,
+                    'writeApiKey' => $apiKey,
+                ],
+            ],
+            'shards' => [
+                's-a' => ['remotes' => [$instanceName]],
+            ],
+        ])->wait();
+
+        $task = $this->client->createIndex($this->safeIndexName())->wait();
+
+        $network = $task->getNetwork();
+        self::assertInstanceOf(RemoteTasksNetwork::class, $network);
+        self::assertSame([], $network->remoteTasks);
+        self::assertNotNull($network->networkVersion);
     }
 }
