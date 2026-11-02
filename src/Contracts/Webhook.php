@@ -46,7 +46,9 @@ final class Webhook
     }
 
     /**
-     * Values of the `authorization` header are redacted by Meilisearch.
+     * Header values can contain secrets: treat them as sensitive and do not log them.
+     * Since Meilisearch v1.25.0 the `authorization` header value is partially redacted in responses;
+     * older versions and all other headers return the stored values unchanged.
      *
      * @return array<string, string>
      */
