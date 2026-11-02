@@ -69,13 +69,20 @@ final class Indexes extends Endpoint
     }
 
     /**
-     * @param list<array{non-empty-string, non-empty-string}> $indexes
+     * Each entry is either a pair of index uids to swap, or an array with the pair under `indexes`
+     * and an optional `rename` flag (since Meilisearch v1.18.0) that renames the first index to the
+     * second uid instead of swapping them.
+     *
+     * @param list<array{non-empty-string, non-empty-string}|array{indexes: array{non-empty-string, non-empty-string}, rename?: bool}> $indexes
      *
      * @see https://www.meilisearch.com/docs/reference/api/indexes/swap-indexes
      */
     public function swapIndexes(array $indexes): Task
     {
-        $payload = array_map(static fn (array $pair): array => ['indexes' => $pair], $indexes);
+        $payload = array_map(
+            static fn (array $swap): array => \array_key_exists('indexes', $swap) ? $swap : ['indexes' => $swap],
+            $indexes,
+        );
 
         return Task::fromArray($this->http->post('/swap-indexes', $payload), partial(waitForTask(...), $this->http));
     }
@@ -90,8 +97,6 @@ final class Indexes extends Endpoint
      */
     public function renameIndex(string $fromUid, string $toUid): Task
     {
-        $payload = [['indexes' => [$fromUid, $toUid], 'rename' => true]];
-
-        return Task::fromArray($this->http->post('/swap-indexes', $payload), partial(waitForTask(...), $this->http));
+        return $this->swapIndexes([['indexes' => [$fromUid, $toUid], 'rename' => true]]);
     }
 }

@@ -8,7 +8,7 @@ use Meilisearch\Contracts\TaskDetails;
 
 /**
  * @phpstan-type RawIndexSwapDetails array{
- *     swaps: array<array{indexes: mixed, rename: bool}>
+ *     swaps: list<array{indexes: array{non-empty-string, non-empty-string}, rename: bool}>
  * }
  *
  * @implements TaskDetails<RawIndexSwapDetails>
@@ -16,7 +16,7 @@ use Meilisearch\Contracts\TaskDetails;
 final class IndexSwapDetails implements TaskDetails
 {
     /**
-     * @param array<array{indexes: mixed, rename: bool}> $swaps
+     * @param list<array{indexes: array{non-empty-string, non-empty-string}, rename: bool}> $swaps
      */
     public function __construct(
         public readonly array $swaps,

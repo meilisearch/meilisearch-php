@@ -110,6 +110,11 @@ final class SearchResult implements \Countable, \IteratorAggregate
     private ?array $metadata;
 
     /**
+     * @var list<float>|null
+     */
+    private ?array $queryVector;
+
+    /**
      * @var array<string, mixed>
      */
     private array $raw;
@@ -130,6 +135,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
      *     estimatedTotalHits?: non-negative-int,
      *     hitsPerPage?: non-negative-int,
      *     metadata?: SearchMetadata,
+     *     queryVector?: list<float>,
      * } $body
      */
     public function __construct(array $body)
@@ -157,6 +163,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
         $this->facetDistribution = $body['facetDistribution'] ?? [];
         $this->facetStats = $body['facetStats'] ?? [];
         $this->metadata = $body['metadata'] ?? null;
+        $this->queryVector = $body['queryVector'] ?? null;
         $this->raw = $body;
     }
 
@@ -298,6 +305,23 @@ final class SearchResult implements \Countable, \IteratorAggregate
     }
 
     /**
+     * The vector Meilisearch used for the semantic part of the search.
+     *
+     * Present when the search was made with `retrieveVectors` and its semantic part ran
+     * (`hybrid.semanticRatio` above 0), with either the given `vector` or one the embedder
+     * computed from `q`.
+     *
+     * @return list<float>|null
+     *
+     * @since Meilisearch v1.18.0
+     * @see https://www.meilisearch.com/docs/reference/api/search/search-with-post
+     */
+    public function getQueryVector(): ?array
+    {
+        return $this->queryVector;
+    }
+
+    /**
      * @return non-negative-int
      */
     public function getProcessingTimeMs(): int
@@ -384,6 +408,7 @@ final class SearchResult implements \Countable, \IteratorAggregate
      *     totalPages?: non-negative-int,
      *     totalHits?: non-negative-int,
      *     metadata?: SearchMetadata,
+     *     queryVector?: list<float>,
      * }
      */
     public function toArray(): array
@@ -414,6 +439,10 @@ final class SearchResult implements \Countable, \IteratorAggregate
 
         if (null !== $this->metadata) {
             $arr['metadata'] = $this->metadata;
+        }
+
+        if (null !== $this->queryVector) {
+            $arr['queryVector'] = $this->queryVector;
         }
 
         return $arr;

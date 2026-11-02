@@ -20,6 +20,12 @@ trait HandlesMultiSearch
      * Without federation, each item of `results` then includes `metadata`.
      * With federation, `metadata` is a top-level list with one entry per query.
      *
+     * Since Meilisearch v1.18.0, a query that sets `retrieveVectors` and runs its semantic part
+     * (`semanticRatio` > 0), with either the given `vector` or one the embedder computed from `q`,
+     * returns the vector it searched with. Without federation, the item of
+     * `results` for that query includes `queryVector`. With federation, the top-level `queryVectors`
+     * maps each such query's position to its vector; other queries have no entry.
+     *
      * @param list<MultiSearchQuery> $queries
      *
      * @return array{
@@ -31,7 +37,8 @@ trait HandlesMultiSearch
      *     estimatedTotalHits?: non-negative-int,
      *     facetDistribution?: array<string, mixed>,
      *     facetStats?: array<string, mixed>,
-     *     metadata?: list<SearchMetadata>
+     *     metadata?: list<SearchMetadata>,
+     *     queryVectors?: array<int, list<float>>
      * }
      *
      * @see https://www.meilisearch.com/docs/reference/api/multi-search/perform-a-multi-search
@@ -58,7 +65,8 @@ trait HandlesMultiSearch
          *     estimatedTotalHits?: non-negative-int,
          *     facetDistribution?: array<string, mixed>,
          *     facetStats?: array<string, mixed>,
-         *     metadata?: list<SearchMetadata>
+         *     metadata?: list<SearchMetadata>,
+         *     queryVectors?: array<int, list<float>>
          * } $result
          */
         $result = $this->http->post(
