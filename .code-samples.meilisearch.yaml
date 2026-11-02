@@ -614,3 +614,13 @@ delete_dynamic_search_rule_1: |-
   $client->deleteDynamicSearchRule('RULE_UID');
 delete_all_dynamic_search_rules_1: |-
   $client->deleteAllDynamicSearchRules();
+webhooks_get_1: |-
+  $client->getWebhooks();
+webhooks_get_single_1: |-
+  $client->getWebhook('WEBHOOK_UUID');
+webhooks_post_1: |-
+  $client->createWebhook(new \Meilisearch\Contracts\CreateWebhookQuery('WEBHOOK_TARGET_URL', ['authorization' => 'SECURITY_KEY', 'referer' => 'https://example.com']));
+webhooks_patch_1: |-
+  $client->updateWebhook((new \Meilisearch\Contracts\UpdateWebhookQuery('WEBHOOK_UUID'))->setHeaders(['referer' => null]));
+webhooks_delete_1: |-
+  $client->deleteWebhook('WEBHOOK_UUID');
