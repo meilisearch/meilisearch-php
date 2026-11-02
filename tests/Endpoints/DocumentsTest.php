@@ -26,6 +26,19 @@ final class DocumentsTest extends TestCase
         self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
+    public function testAddDocumentsWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $task = $index->addDocuments(self::DOCUMENTS, customMetadata: 'add-documents-metadata');
+
+        self::assertSame('add-documents-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('add-documents-metadata', $completedTask->getCustomMetadata());
+    }
+
     public function testAddDocumentsInBatches(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
@@ -39,6 +52,23 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
         self::assertCount(\count(self::DOCUMENTS), $response);
+    }
+
+    public function testAddDocumentsInBatchesWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $tasks = $index->addDocumentsInBatches(self::DOCUMENTS, 2, customMetadata: 'add-documents-in-batches-metadata');
+
+        self::assertCount(4, $tasks);
+
+        foreach ($tasks as $task) {
+            self::assertSame('add-documents-in-batches-metadata', $task->getCustomMetadata());
+
+            $completedTask = $task->wait();
+
+            self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+            self::assertSame('add-documents-in-batches-metadata', $completedTask->getCustomMetadata());
+        }
     }
 
     public function testAddDocumentWithSpecialChars(): void
@@ -97,6 +127,24 @@ final class DocumentsTest extends TestCase
         self::assertSame('631152000', $documents[5]['released-timestamp']);
     }
 
+    public function testAddDocumentsCsvWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentCsvWithCustomMetadata');
+
+        $csv = file_get_contents('./tests/datasets/songs-custom-separator.csv');
+
+        $task = $index->addDocumentsCsv($csv, null, '|', 'add-documents-csv-metadata');
+
+        self::assertSame('add-documents-csv-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $details = $completedTask->getDetails());
+        self::assertSame(6, $details->receivedDocuments);
+        self::assertSame('add-documents-csv-metadata', $completedTask->getCustomMetadata());
+    }
+
     public function testAddDocumentsJson(): void
     {
         $index = $this->client->index('documentJson');
@@ -115,6 +163,22 @@ final class DocumentsTest extends TestCase
         self::assertCount(20, $response);
     }
 
+    public function testAddDocumentsJsonWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentJsonWithCustomMetadata');
+
+        $documentJson = file_get_contents('./tests/datasets/small_movies.json');
+
+        $task = $index->addDocumentsJson($documentJson, customMetadata: 'add-documents-json-metadata');
+
+        self::assertSame('add-documents-json-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('add-documents-json-metadata', $completedTask->getCustomMetadata());
+    }
+
     public function testAddDocumentsNdJson(): void
     {
         $index = $this->client->index('documentNdJson');
@@ -131,6 +195,22 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
         self::assertCount(20, $response);
+    }
+
+    public function testAddDocumentsNdjsonWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentNdJsonWithCustomMetadata');
+
+        $documentNdJson = file_get_contents('./tests/datasets/songs.ndjson');
+
+        $task = $index->addDocumentsNdjson($documentNdJson, customMetadata: 'add-documents-ndjson-metadata');
+
+        self::assertSame('add-documents-ndjson-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('add-documents-ndjson-metadata', $completedTask->getCustomMetadata());
     }
 
     public function testCannotAddDocumentWhenJsonEncodingFails(): void
@@ -243,6 +323,19 @@ final class DocumentsTest extends TestCase
         self::assertCount(\count(self::DOCUMENTS), $response);
     }
 
+    public function testUpdateDocumentsWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $task = $index->updateDocuments(self::DOCUMENTS, customMetadata: 'update-documents-metadata');
+
+        self::assertSame('update-documents-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('update-documents-metadata', $completedTask->getCustomMetadata());
+    }
+
     public function testUpdateDocumentsInBatches(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
@@ -273,6 +366,23 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
         self::assertCount(\count(self::DOCUMENTS), $response);
+    }
+
+    public function testUpdateDocumentsInBatchesWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $tasks = $index->updateDocumentsInBatches(self::DOCUMENTS, 2, customMetadata: 'update-documents-in-batches-metadata');
+
+        self::assertCount(4, $tasks);
+
+        foreach ($tasks as $task) {
+            self::assertSame('update-documents-in-batches-metadata', $task->getCustomMetadata());
+
+            $completedTask = $task->wait();
+
+            self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+            self::assertSame('update-documents-in-batches-metadata', $completedTask->getCustomMetadata());
+        }
     }
 
     public function testUpdateDocumentsByFunction(): void
@@ -328,6 +438,29 @@ final class DocumentsTest extends TestCase
         self::assertSame($replacements, $documents);
     }
 
+    public function testUpdateDocumentsByFunctionWithCustomMetadata(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $http->patch('/experimental-features', ['editDocumentsByFunction' => true]);
+
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->addDocuments(self::DOCUMENTS)->wait();
+
+        $task = $index->updateDocumentsByFunction(
+            'doc.title = `${context.prefix} ${doc.title}`;',
+            ['context' => ['prefix' => 'edited']],
+            customMetadata: 'update-documents-by-function-metadata',
+        );
+
+        self::assertSame('update-documents-by-function-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('update-documents-by-function-metadata', $completedTask->getCustomMetadata());
+        self::assertSame('edited Pride and Prejudice', $index->getDocument(123)['title']);
+    }
+
     public function testAddDocumentsCsvInBatches(): void
     {
         $index = $this->client->index('documentCsv');
@@ -365,11 +498,11 @@ final class DocumentsTest extends TestCase
                 switch (++$invocation) {
                     case 1:
                         self::assertSame("id;title\n888221515;Young folks", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
                         break;
                     case 2:
                         self::assertSame("id;title\n235115704;Mister Klein", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
                         break;
                 }
 
@@ -379,6 +512,26 @@ final class DocumentsTest extends TestCase
         $index = new Index($http, 'index');
         $tasks = $index->addDocumentsCsvInBatches($documentCsv, 1, null, ';');
         self::assertCount(2, $tasks);
+    }
+
+    public function testAddDocumentsCsvInBatchesWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentCsvInBatchesWithCustomMetadata');
+
+        $csv = file_get_contents('./tests/datasets/songs-custom-separator.csv');
+
+        $tasks = $index->addDocumentsCsvInBatches($csv, 3, null, '|', 'add-documents-csv-in-batches-metadata');
+
+        self::assertCount(2, $tasks);
+
+        foreach ($tasks as $task) {
+            self::assertSame('add-documents-csv-in-batches-metadata', $task->getCustomMetadata());
+
+            $completedTask = $task->wait();
+
+            self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+            self::assertSame('add-documents-csv-in-batches-metadata', $completedTask->getCustomMetadata());
+        }
     }
 
     public function testAddDocumentsNdjsonInBatches(): void
@@ -401,6 +554,26 @@ final class DocumentsTest extends TestCase
 
         $response = $index->getDocuments();
         self::assertSame($total, $response->getTotal());
+    }
+
+    public function testAddDocumentsNdjsonInBatchesWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentNdJsonInBatchesWithCustomMetadata');
+
+        $documentNdJson = file_get_contents('./tests/datasets/songs.ndjson');
+
+        $tasks = $index->addDocumentsNdjsonInBatches($documentNdJson, 150, customMetadata: 'add-documents-ndjson-in-batches-metadata');
+
+        self::assertCount(2, $tasks);
+
+        foreach ($tasks as $task) {
+            self::assertSame('add-documents-ndjson-in-batches-metadata', $task->getCustomMetadata());
+
+            $completedTask = $task->wait();
+
+            self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+            self::assertSame('add-documents-ndjson-in-batches-metadata', $completedTask->getCustomMetadata());
+        }
     }
 
     public function testAddWithUpdateDocuments(): void
@@ -472,6 +645,22 @@ final class DocumentsTest extends TestCase
         self::assertCount(0, $response);
     }
 
+    public function testDeleteDocumentWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->addDocuments(self::DOCUMENTS)->wait();
+
+        $task = $index->deleteDocument(123, customMetadata: 'delete-document-metadata');
+
+        self::assertSame('delete-document-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('delete-document-metadata', $completedTask->getCustomMetadata());
+        self::assertNull($this->findDocumentWithId($index->getDocuments(), 123));
+    }
+
     public function testDeleteMultipleDocumentsWithDocumentIdAsInteger(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
@@ -488,6 +677,22 @@ final class DocumentsTest extends TestCase
         self::assertNull($this->findDocumentWithId($response, $documentIds[1]));
     }
 
+    public function testDeleteDocumentsByIdsWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->addDocuments(self::DOCUMENTS)->wait();
+
+        $task = $index->deleteDocumentsByIds([1, 2], customMetadata: 'delete-documents-by-ids-metadata');
+
+        self::assertSame('delete-documents-by-ids-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('delete-documents-by-ids-metadata', $completedTask->getCustomMetadata());
+        self::assertCount(\count(self::DOCUMENTS) - 2, $index->getDocuments());
+    }
+
     public function testDeleteMultipleDocumentsWithFilter(): void
     {
         $index = $this->createEmptyIndex($this->safeIndexName('movies'));
@@ -499,6 +704,24 @@ final class DocumentsTest extends TestCase
         $response = $index->getDocuments();
 
         self::assertCount(0, $response);
+    }
+
+    public function testDeleteDocumentsByFilterWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->addDocuments(self::DOCUMENTS)->wait();
+        $index->updateFilterableAttributes(['id'])->wait();
+        self::assertCount(\count(self::DOCUMENTS), $index->getDocuments());
+
+        $task = $index->deleteDocumentsByFilter(['id > 0'], customMetadata: 'delete-documents-by-filter-metadata');
+
+        self::assertSame('delete-documents-by-filter-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('delete-documents-by-filter-metadata', $completedTask->getCustomMetadata());
+        self::assertCount(0, $index->getDocuments());
     }
 
     public function testMessageHintException(): void
@@ -552,6 +775,22 @@ final class DocumentsTest extends TestCase
         $response = $index->getDocuments();
 
         self::assertCount(0, $response);
+    }
+
+    public function testDeleteAllDocumentsWithCustomMetadata(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('movies'));
+        $index->addDocuments(self::DOCUMENTS)->wait();
+
+        $task = $index->deleteAllDocuments(customMetadata: 'delete-all-documents-metadata');
+
+        self::assertSame('delete-all-documents-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('delete-all-documents-metadata', $completedTask->getCustomMetadata());
+        self::assertCount(0, $index->getDocuments());
     }
 
     public function testExceptionIfNoDocumentIdWhenGetting(): void
@@ -726,6 +965,22 @@ final class DocumentsTest extends TestCase
         self::assertCount(20, $documents);
     }
 
+    public function testUpdateDocumentsJsonWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentJsonUpdateWithCustomMetadata');
+
+        $documentJson = file_get_contents('./tests/datasets/small_movies.json');
+
+        $task = $index->updateDocumentsJson($documentJson, customMetadata: 'update-documents-json-metadata');
+
+        self::assertSame('update-documents-json-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('update-documents-json-metadata', $completedTask->getCustomMetadata());
+    }
+
     public function testUpdateDocumentsCsv(): void
     {
         $index = $this->client->index('documentCsv');
@@ -770,6 +1025,24 @@ final class DocumentsTest extends TestCase
         self::assertSame('Young folks', $response['title']);
     }
 
+    public function testUpdateDocumentsCsvWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentCsvUpdateWithCustomMetadata');
+
+        $csv = file_get_contents('./tests/datasets/songs-custom-separator.csv');
+
+        $task = $index->updateDocumentsCsv($csv, null, '|', 'update-documents-csv-metadata');
+
+        self::assertSame('update-documents-csv-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertInstanceOf(DocumentAdditionOrUpdateDetails::class, $details = $completedTask->getDetails());
+        self::assertSame(6, $details->receivedDocuments);
+        self::assertSame('update-documents-csv-metadata', $completedTask->getCustomMetadata());
+    }
+
     public function testUpdateDocumentsNdjson(): void
     {
         $index = $this->client->index('documentNdJson');
@@ -796,6 +1069,22 @@ final class DocumentsTest extends TestCase
         $documents = $index->getDocuments();
 
         self::assertSame(225, $documents->getTotal());
+    }
+
+    public function testUpdateDocumentsNdjsonWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentNdJsonUpdateWithCustomMetadata');
+
+        $documentNdJson = file_get_contents('./tests/datasets/songs.ndjson');
+
+        $task = $index->updateDocumentsNdjson($documentNdJson, customMetadata: 'update-documents-ndjson-metadata');
+
+        self::assertSame('update-documents-ndjson-metadata', $task->getCustomMetadata());
+
+        $completedTask = $task->wait();
+
+        self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+        self::assertSame('update-documents-ndjson-metadata', $completedTask->getCustomMetadata());
     }
 
     public function testUpdateDocumentsCsvInBatches(): void
@@ -839,11 +1128,11 @@ final class DocumentsTest extends TestCase
                 switch (++$invocation) {
                     case 1:
                         self::assertSame("id;title\n888221515;Young folks", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
                         break;
                     case 2:
                         self::assertSame("id;title\n235115704;Mister Klein", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
                         break;
                 }
 
@@ -853,6 +1142,26 @@ final class DocumentsTest extends TestCase
         $index = new Index($http, 'index');
         $tasks = $index->updateDocumentsCsvInBatches($replacement, 1, null, ';');
         self::assertCount(2, $tasks);
+    }
+
+    public function testUpdateDocumentsCsvInBatchesWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentCsvUpdateInBatchesWithCustomMetadata');
+
+        $csv = file_get_contents('./tests/datasets/songs-custom-separator.csv');
+
+        $tasks = $index->updateDocumentsCsvInBatches($csv, 3, null, '|', 'update-documents-csv-in-batches-metadata');
+
+        self::assertCount(2, $tasks);
+
+        foreach ($tasks as $task) {
+            self::assertSame('update-documents-csv-in-batches-metadata', $task->getCustomMetadata());
+
+            $completedTask = $task->wait();
+
+            self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+            self::assertSame('update-documents-csv-in-batches-metadata', $completedTask->getCustomMetadata());
+        }
     }
 
     public function testUpdateDocumentsNdjsonInBatches(): void
@@ -881,6 +1190,26 @@ final class DocumentsTest extends TestCase
         $response = $index->getDocument(70764404);
         self::assertSame(70764404, (int) $response['id']);
         self::assertSame('Ailitp', $response['artist']);
+    }
+
+    public function testUpdateDocumentsNdjsonInBatchesWithCustomMetadata(): void
+    {
+        $index = $this->client->index('documentNdJsonUpdateInBatchesWithCustomMetadata');
+
+        $documentNdJson = file_get_contents('./tests/datasets/songs.ndjson');
+
+        $tasks = $index->updateDocumentsNdjsonInBatches($documentNdJson, 150, customMetadata: 'update-documents-ndjson-in-batches-metadata');
+
+        self::assertCount(2, $tasks);
+
+        foreach ($tasks as $task) {
+            self::assertSame('update-documents-ndjson-in-batches-metadata', $task->getCustomMetadata());
+
+            $completedTask = $task->wait();
+
+            self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
+            self::assertSame('update-documents-ndjson-in-batches-metadata', $completedTask->getCustomMetadata());
+        }
     }
 
     private function findDocumentWithId($documents, $documentId): ?array
