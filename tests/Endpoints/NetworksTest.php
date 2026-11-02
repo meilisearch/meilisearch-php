@@ -18,6 +18,23 @@ final class NetworksTest extends TestCase
         $http->patch('/experimental-features', ['network' => true]);
     }
 
+    protected function tearDown(): void
+    {
+        $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
+        $response = $http->patch('/network', [
+            'self' => null,
+            'leader' => null,
+            'remotes' => null,
+            'shards' => null,
+        ]);
+
+        if (\is_array($response) && isset($response['taskUid'])) {
+            $this->client->getTask($response['taskUid'])->wait();
+        }
+
+        parent::tearDown();
+    }
+
     public function testInitializeNetwork(): void
     {
         $apiKey = getenv('MEILISEARCH_API_KEY');
