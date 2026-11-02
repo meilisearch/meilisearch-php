@@ -20,6 +20,8 @@ final class CreateWebhookQuery
     }
 
     /**
+     * Builds the request body. `headers` is omitted when no header was given.
+     *
      * @return array{
      *     url: non-empty-string,
      *     headers?: array<non-empty-string, string>
