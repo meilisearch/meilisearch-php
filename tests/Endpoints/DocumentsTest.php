@@ -12,6 +12,7 @@ use Meilisearch\Endpoints\Index;
 use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\InvalidResponseBodyException;
 use Meilisearch\Http\Client;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
@@ -498,11 +499,11 @@ final class DocumentsTest extends TestCase
                 switch (++$invocation) {
                     case 1:
                         self::assertSame("id;title\n888221515;Young folks", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
                         break;
                     case 2:
                         self::assertSame("id;title\n235115704;Mister Klein", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
                         break;
                 }
 
@@ -532,6 +533,45 @@ final class DocumentsTest extends TestCase
             self::assertSame(TaskStatus::Succeeded, $completedTask->getStatus());
             self::assertSame('add-documents-csv-in-batches-metadata', $completedTask->getCustomMetadata());
         }
+    }
+
+    /**
+     * @param 'post'|'put'|'delete'  $httpMethod
+     * @param \Closure(Index): mixed $call
+     */
+    #[DataProvider('provideDocumentWritesWithoutCustomMetadata')]
+    public function testCustomMetadataIsOmittedFromQueryWhenNotProvided(string $httpMethod, int $queryArgumentPosition, \Closure $call): void
+    {
+        $http = $this->createMock(Http::class);
+        $http->expects(self::once())
+            ->method($httpMethod)
+            ->willReturnCallback(static function (mixed ...$arguments) use ($queryArgumentPosition): array {
+                self::assertArrayNotHasKey('customMetadata', $arguments[$queryArgumentPosition] ?? []);
+
+                return ['taskUid' => 1, 'indexUid' => 'index', 'status' => 'enqueued', 'type' => 'documentAdditionOrUpdate', 'enqueuedAt' => '2021-08-11T09:25:53.000000Z'];
+            });
+
+        $call(new Index($http, 'index'));
+    }
+
+    /**
+     * @return iterable<string, array{'post'|'put'|'delete', int, \Closure(Index): mixed}>
+     */
+    public static function provideDocumentWritesWithoutCustomMetadata(): iterable
+    {
+        yield 'addDocuments' => ['post', 2, static fn (Index $index) => $index->addDocuments([['id' => 1]])];
+        yield 'addDocumentsJson' => ['post', 2, static fn (Index $index) => $index->addDocumentsJson('[{"id":1}]')];
+        yield 'addDocumentsCsv' => ['post', 2, static fn (Index $index) => $index->addDocumentsCsv("id\n1")];
+        yield 'addDocumentsNdjson' => ['post', 2, static fn (Index $index) => $index->addDocumentsNdjson('{"id":1}')];
+        yield 'updateDocuments' => ['put', 2, static fn (Index $index) => $index->updateDocuments([['id' => 1]])];
+        yield 'updateDocumentsJson' => ['put', 2, static fn (Index $index) => $index->updateDocumentsJson('[{"id":1}]')];
+        yield 'updateDocumentsCsv' => ['put', 2, static fn (Index $index) => $index->updateDocumentsCsv("id\n1")];
+        yield 'updateDocumentsNdjson' => ['put', 2, static fn (Index $index) => $index->updateDocumentsNdjson('{"id":1}')];
+        yield 'updateDocumentsByFunction' => ['post', 2, static fn (Index $index) => $index->updateDocumentsByFunction('doc')];
+        yield 'deleteDocument' => ['delete', 1, static fn (Index $index) => $index->deleteDocument(1)];
+        yield 'deleteDocumentsByIds' => ['post', 2, static fn (Index $index) => $index->deleteDocumentsByIds([1])];
+        yield 'deleteDocumentsByFilter' => ['post', 2, static fn (Index $index) => $index->deleteDocumentsByFilter('id = 1')];
+        yield 'deleteAllDocuments' => ['delete', 1, static fn (Index $index) => $index->deleteAllDocuments()];
     }
 
     public function testAddDocumentsNdjsonInBatches(): void
@@ -1128,11 +1168,11 @@ final class DocumentsTest extends TestCase
                 switch (++$invocation) {
                     case 1:
                         self::assertSame("id;title\n888221515;Young folks", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
                         break;
                     case 2:
                         self::assertSame("id;title\n235115704;Mister Klein", $documents);
-                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';', 'customMetadata' => null], $query);
+                        self::assertSame(['primaryKey' => null, 'csvDelimiter' => ';'], $query);
                         break;
                 }
 
