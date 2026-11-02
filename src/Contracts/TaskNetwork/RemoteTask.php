@@ -27,6 +27,9 @@ final class RemoteTask
     }
 
     /**
+     * A remote task carries either the `taskUid` it was enqueued with on the remote,
+     * or the `error` that prevented it from being enqueued there.
+     *
      * @param RawRemoteTask $data
      */
     public static function fromArray(array $data): self
