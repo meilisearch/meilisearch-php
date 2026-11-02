@@ -17,6 +17,10 @@ use Meilisearch\Contracts\TaskDetails\SettingsUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\TaskCancelationDetails;
 use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
+use Meilisearch\Contracts\TaskNetwork\ImportNetwork;
+use Meilisearch\Contracts\TaskNetwork\OriginNetwork;
+use Meilisearch\Contracts\TaskNetwork\RemoteTasksNetwork;
+use Meilisearch\Contracts\TaskNetwork\UnknownTaskNetwork;
 use Meilisearch\Exceptions\LogicException;
 
 /**
@@ -39,7 +43,8 @@ use Meilisearch\Exceptions\LogicException;
  *     canceledBy?: non-negative-int,
  *     batchUid?: non-negative-int,
  *     details?: array<mixed>|null,
- *     error?: RawTaskError|null
+ *     error?: RawTaskError|null,
+ *     network?: array<mixed>|null
  * }
  *
  * Raw detail shapes are imported here so Task can choose the concrete detail
@@ -57,6 +62,9 @@ use Meilisearch\Exceptions\LogicException;
  * @phpstan-import-type RawSettingsUpdateDetails from SettingsUpdateDetails
  * @phpstan-import-type RawTaskCancelationDetails from TaskCancelationDetails
  * @phpstan-import-type RawTaskDeletionDetails from TaskDeletionDetails
+ * @phpstan-import-type RawRemoteTasksNetwork from RemoteTasksNetwork
+ * @phpstan-import-type RawOriginNetwork from OriginNetwork
+ * @phpstan-import-type RawImportNetwork from ImportNetwork
  */
 final class Task
 {
@@ -81,6 +89,7 @@ final class Task
         private readonly ?TaskError $error = null,
         private readonly array $raw = [],
         private readonly ?\Closure $await = null,
+        private readonly ?TaskNetwork $network = null,
     ) {
     }
 
@@ -153,6 +162,11 @@ final class Task
         return $this->error;
     }
 
+    public function getNetwork(): ?TaskNetwork
+    {
+        return $this->network;
+    }
+
     public function isFinished(): bool
     {
         return TaskStatus::Enqueued !== $this->status && TaskStatus::Processing !== $this->status;
@@ -210,7 +224,45 @@ final class Task
             $error,
             $data,
             $await,
+            network: self::networkFromArray($data['network'] ?? null),
         );
+    }
+
+    /**
+     * Selects the network variant by the fields it requires, testing their type rather than their
+     * truthiness because `remote_tasks` is often an empty JSON object that decodes to [].
+     * Shapes that match no known variant are preserved as UnknownTaskNetwork.
+     *
+     * @param array<mixed>|null $network
+     */
+    private static function networkFromArray(?array $network): ?TaskNetwork
+    {
+        if (null === $network) {
+            return null;
+        }
+
+        if (\is_array($network['remote_tasks'] ?? null)) {
+            /** @phpstan-var RawRemoteTasksNetwork $remoteTasksNetwork */
+            $remoteTasksNetwork = $network;
+
+            return RemoteTasksNetwork::fromArray($remoteTasksNetwork);
+        }
+
+        if (\is_array($network['origin'] ?? null)) {
+            /** @phpstan-var RawOriginNetwork $originNetwork */
+            $originNetwork = $network;
+
+            return OriginNetwork::fromArray($originNetwork);
+        }
+
+        if (\is_array($network['import_from'] ?? null) && \is_array($network['network_change'] ?? null)) {
+            /** @phpstan-var RawImportNetwork $importNetwork */
+            $importNetwork = $network;
+
+            return ImportNetwork::fromArray($importNetwork);
+        }
+
+        return UnknownTaskNetwork::fromArray($network);
     }
 
     /**

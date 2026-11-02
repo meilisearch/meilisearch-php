@@ -577,7 +577,7 @@ update_embedders_1: |-
 get_network_1: |-
   $client->getNetwork();
 update_network_1: |-
-  $client->updateNetwork([
+  $client->initializeNetwork([
     'self' => 'ms-00',
     'leader' => 'ms-00',
     'remotes' => [
@@ -591,6 +591,10 @@ update_network_1: |-
         'searchApiKey' => 'ANOTHER_INSTANCE_API_KEY',
         'writeApiKey' => 'ANOTHER_INSTANCE_WRITE_API_KEY'
       ]
+    ],
+    'shards' => [
+      'shard-a' => ['remotes' => ['ms-00']],
+      'shard-b' => ['remotes' => ['ms-01']]
     ]
   ]);
 list_dynamic_search_rules_1: |-
