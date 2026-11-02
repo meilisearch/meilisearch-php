@@ -6,6 +6,7 @@ namespace Tests\Contracts;
 
 use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
+use Meilisearch\Contracts\TaskDetails\ExportDetails;
 use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
 use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Contracts\TaskError;
@@ -160,6 +161,95 @@ final class TaskTest extends TestCase
         ]);
 
         self::assertEquals(new DocumentAdditionOrUpdateDetails(10, 8), $task->getDetails());
+    }
+
+    public function testFromArrayWithExportEnqueuedDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 6,
+            'status' => 'enqueued',
+            'type' => 'export',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => [
+                'url' => 'http://localhost:7700',
+                'indexes' => ['*' => ['filter' => null, 'overrideSettings' => false]],
+            ],
+        ]);
+
+        self::assertSame(TaskType::Export, $task->getType());
+        self::assertEquals(
+            new ExportDetails('http://localhost:7700', null, null, ['*' => ['filter' => null, 'overrideSettings' => false]]),
+            $task->getDetails(),
+        );
+    }
+
+    public function testFromArrayWithExportSucceededDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 7,
+            'status' => 'succeeded',
+            'type' => 'export',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => [
+                'url' => 'http://localhost:7700',
+                'apiKey' => 'XXX...',
+                'payloadSize' => '50 MiB',
+                'indexes' => [
+                    'movies' => ['filter' => 'genre = romance', 'overrideSettings' => true, 'matched_documents' => 3],
+                ],
+            ],
+        ]);
+
+        self::assertSame(TaskType::Export, $task->getType());
+        self::assertEquals(
+            new ExportDetails(
+                'http://localhost:7700',
+                'XXX...',
+                '50 MiB',
+                ['movies' => ['filter' => 'genre = romance', 'overrideSettings' => true, 'matched_documents' => 3]],
+            ),
+            $task->getDetails(),
+        );
+    }
+
+    public function testFromArrayWithExportArrayFilterDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 8,
+            'status' => 'succeeded',
+            'type' => 'export',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => [
+                'url' => 'http://localhost:7700',
+                'apiKey' => 'XXX...',
+                'payloadSize' => '1 MiB',
+                'indexes' => [
+                    'movies' => ['filter' => ['g = b'], 'overrideSettings' => false, 'matched_documents' => 1],
+                ],
+            ],
+        ]);
+
+        $details = $task->getDetails();
+
+        self::assertInstanceOf(ExportDetails::class, $details);
+        self::assertSame('1 MiB', $details->payloadSize);
+        self::assertSame(
+            ['movies' => ['filter' => ['g = b'], 'overrideSettings' => false, 'matched_documents' => 1]],
+            $details->indexes,
+        );
+    }
+
+    public function testFromArrayWithExportNothingMatchedDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 9,
+            'status' => 'succeeded',
+            'type' => 'export',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => ['url' => 'http://localhost:7700', 'indexes' => []],
+        ]);
+
+        self::assertEquals(new ExportDetails('http://localhost:7700', null, null, []), $task->getDetails());
     }
 
     #[TestWith([TaskType::SnapshotCreation, 'snapshotCreation'])]

@@ -8,6 +8,7 @@ use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\DocumentDeletionDetails;
 use Meilisearch\Contracts\TaskDetails\DocumentEditionDetails;
 use Meilisearch\Contracts\TaskDetails\DumpCreationDetails;
+use Meilisearch\Contracts\TaskDetails\ExportDetails;
 use Meilisearch\Contracts\TaskDetails\IndexCompactionDetails;
 use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
 use Meilisearch\Contracts\TaskDetails\IndexDeletionDetails;
@@ -49,6 +50,7 @@ use Meilisearch\Exceptions\LogicException;
  * @phpstan-import-type RawDocumentDeletionDetails from DocumentDeletionDetails
  * @phpstan-import-type RawDocumentEditionDetails from DocumentEditionDetails
  * @phpstan-import-type RawDumpCreationDetails from DumpCreationDetails
+ * @phpstan-import-type RawExportDetails from ExportDetails
  * @phpstan-import-type RawIndexCompactionDetails from IndexCompactionDetails
  * @phpstan-import-type RawIndexCreationDetails from IndexCreationDetails
  * @phpstan-import-type RawIndexDeletionDetails from IndexDeletionDetails
@@ -245,6 +247,7 @@ final class Task
             // (no SnapshotCreationDetails exists and tests don’t exercise any details)
             TaskType::SnapshotCreation, TaskType::NetworkTopologyChange, TaskType::DsrUpdate, TaskType::DsrClear => null,
             TaskType::IndexCompaction => self::detailFromArray($details, IndexCompactionDetails::fromArray(...)),
+            TaskType::Export => self::detailFromArray($details, ExportDetails::fromArray(...)),
         };
     }
 
