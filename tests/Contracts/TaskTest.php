@@ -7,6 +7,7 @@ namespace Tests\Contracts;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TaskDetails\DocumentAdditionOrUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\IndexCreationDetails;
+use Meilisearch\Contracts\TaskDetails\IndexUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\UnknownTaskDetails;
 use Meilisearch\Contracts\TaskError;
 use Meilisearch\Contracts\TaskStatus;
@@ -160,6 +161,44 @@ final class TaskTest extends TestCase
         ]);
 
         self::assertEquals(new DocumentAdditionOrUpdateDetails(10, 8), $task->getDetails());
+    }
+
+    public function testFromArrayWithIndexUpdateDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 3,
+            'indexUid' => 'movies',
+            'status' => 'succeeded',
+            'type' => 'indexUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => ['primaryKey' => 'id'],
+        ]);
+
+        $details = $task->getDetails();
+        self::assertEquals(new IndexUpdateDetails('id'), $details);
+        self::assertInstanceOf(IndexUpdateDetails::class, $details);
+        self::assertSame('id', $details->primaryKey);
+        self::assertNull($details->oldIndexUid);
+        self::assertNull($details->newIndexUid);
+    }
+
+    public function testFromArrayWithIndexUpdateRenameDetails(): void
+    {
+        $task = Task::fromArray([
+            'taskUid' => 4,
+            'indexUid' => 'indexA',
+            'status' => 'succeeded',
+            'type' => 'indexUpdate',
+            'enqueuedAt' => '2025-04-09T10:28:12.236789123Z',
+            'details' => ['primaryKey' => null, 'oldIndexUid' => 'indexA', 'newIndexUid' => 'indexB'],
+        ]);
+
+        $details = $task->getDetails();
+        self::assertEquals(new IndexUpdateDetails(null, 'indexA', 'indexB'), $details);
+        self::assertInstanceOf(IndexUpdateDetails::class, $details);
+        self::assertNull($details->primaryKey);
+        self::assertSame('indexA', $details->oldIndexUid);
+        self::assertSame('indexB', $details->newIndexUid);
     }
 
     #[TestWith([TaskType::SnapshotCreation, 'snapshotCreation'])]

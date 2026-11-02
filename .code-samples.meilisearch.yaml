@@ -72,6 +72,8 @@ create_an_index_1: |-
   $client->createIndex('movies', ['primaryKey' => 'id']);
 update_an_index_1: |-
   $client->updateIndex('movies', ['primaryKey' => 'id']);
+rename_an_index_1: |-
+  $client->updateIndex('INDEX_A', ['uid' => 'INDEX_B']);
 delete_an_index_1: |-
   $client->deleteIndex('movies');
 compact_index_1: |-

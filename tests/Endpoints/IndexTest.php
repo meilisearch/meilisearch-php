@@ -8,11 +8,13 @@ use Meilisearch\Contracts\DeleteTasksQuery;
 use Meilisearch\Contracts\Task;
 use Meilisearch\Contracts\TaskDetails\IndexCompactionDetails;
 use Meilisearch\Contracts\TaskDetails\IndexSwapDetails;
+use Meilisearch\Contracts\TaskDetails\IndexUpdateDetails;
 use Meilisearch\Contracts\TaskDetails\TaskDeletionDetails;
 use Meilisearch\Contracts\TasksQuery;
 use Meilisearch\Contracts\TaskStatus;
 use Meilisearch\Contracts\TaskType;
 use Meilisearch\Endpoints\Index;
+use Meilisearch\Exceptions\ApiException;
 use Meilisearch\Exceptions\TimeoutException;
 use Tests\TestCase;
 
@@ -212,6 +214,30 @@ final class IndexTest extends TestCase
         self::assertFalse($details->swaps[1]['rename']);
     }
 
+    public function testSwapIndexesWithRename(): void
+    {
+        $renameFromUid = $this->safeIndexName('swap-rename-from');
+        $renameToUid = $this->safeIndexName('swap-rename-to');
+        $swapLeftUid = $this->safeIndexName('swap-left');
+        $swapRightUid = $this->safeIndexName('swap-right');
+        $this->createEmptyIndex($renameFromUid);
+        $this->createEmptyIndex($swapLeftUid);
+        $this->createEmptyIndex($swapRightUid);
+
+        $task = $this->client->swapIndexes([
+            ['indexes' => [$renameFromUid, $renameToUid], 'rename' => true],
+            [$swapLeftUid, $swapRightUid],
+        ])->wait();
+
+        self::assertSame(TaskType::IndexSwap, $task->getType());
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+        self::assertInstanceOf(IndexSwapDetails::class, $details = $task->getDetails());
+        self::assertSame(['indexes' => [$renameFromUid, $renameToUid], 'rename' => true], $details->swaps[0]);
+        self::assertSame(['indexes' => [$swapLeftUid, $swapRightUid], 'rename' => false], $details->swaps[1]);
+        self::assertSame($renameToUid, $this->client->getRawIndex($renameToUid)['uid']);
+        $this->assertIndexNotFound($renameFromUid);
+    }
+
     public function testRenameIndex(): void
     {
         $fromUid = $this->safeIndexName('rename-from');
@@ -224,6 +250,44 @@ final class IndexTest extends TestCase
         self::assertInstanceOf(IndexSwapDetails::class, $details = $task->getDetails());
         self::assertSame([$fromUid, $toUid], $details->swaps[0]['indexes']);
         self::assertTrue($details->swaps[0]['rename']);
+    }
+
+    public function testRenameIndexViaUpdate(): void
+    {
+        $fromUid = $this->safeIndexName('update-rename-from');
+        $toUid = $this->safeIndexName('update-rename-to');
+        $this->createEmptyIndex($fromUid);
+
+        $task = $this->client->updateIndex($fromUid, ['uid' => $toUid])->wait();
+
+        self::assertSame(TaskType::IndexUpdate, $task->getType());
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+        self::assertInstanceOf(IndexUpdateDetails::class, $details = $task->getDetails());
+        self::assertNull($details->primaryKey);
+        self::assertSame($fromUid, $details->oldIndexUid);
+        self::assertSame($toUid, $details->newIndexUid);
+        self::assertSame($toUid, $this->client->getRawIndex($toUid)['uid']);
+        $this->assertIndexNotFound($fromUid);
+    }
+
+    public function testRenameIndexViaIndexUpdateWithPrimaryKey(): void
+    {
+        $toUid = $this->safeIndexName('index-update-rename-to');
+
+        $task = $this->index->update(['uid' => $toUid, 'primaryKey' => 'id'])->wait();
+
+        self::assertSame(TaskType::IndexUpdate, $task->getType());
+        self::assertSame(TaskStatus::Succeeded, $task->getStatus());
+        self::assertInstanceOf(IndexUpdateDetails::class, $details = $task->getDetails());
+        self::assertSame('id', $details->primaryKey);
+        self::assertSame($this->indexName, $details->oldIndexUid);
+        self::assertSame($toUid, $details->newIndexUid);
+        self::assertSame($this->indexName, $this->index->getUid());
+
+        $renamedIndex = $this->client->getRawIndex($toUid);
+        self::assertSame($toUid, $renamedIndex['uid']);
+        self::assertSame('id', $renamedIndex['primaryKey']);
+        $this->assertIndexNotFound($this->indexName);
     }
 
     public function testCompact(): void
@@ -243,5 +307,19 @@ final class IndexTest extends TestCase
 
         self::assertInstanceOf(TaskDeletionDetails::class, $details = $task->getDetails());
         self::assertSame('?uids=1%2C2', $details->originalFilter);
+    }
+
+    /**
+     * @param non-empty-string $uid
+     */
+    private function assertIndexNotFound(string $uid): void
+    {
+        try {
+            $this->client->getRawIndex($uid);
+            self::fail(\sprintf('Index "%s" should not exist.', $uid));
+        } catch (ApiException $e) {
+            self::assertSame(404, $e->httpStatus);
+            self::assertSame('index_not_found', $e->errorCode);
+        }
     }
 }

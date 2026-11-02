@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Endpoints;
 
 use Meilisearch\Client;
+use Meilisearch\Contracts\HybridSearchOptions;
 use Meilisearch\Contracts\MultiSearchFederation;
 use Meilisearch\Contracts\MultiSearchQuery;
 use Meilisearch\Endpoints\Index;
@@ -202,5 +203,49 @@ final class MultiSearchTest extends TestCase
         ],
             new MultiSearchFederation()
         );
+    }
+
+    public function testMultiSearchReturnsQueryVectorPerResult(): void
+    {
+        $vectorIndex = $this->createVectorIndex();
+
+        $response = $this->client->multiSearch($this->vectorAndKeywordQueries($vectorIndex));
+
+        self::assertSame([-0.5, 0.25, 1.0], $response['results'][0]['queryVector']);
+        self::assertArrayNotHasKey('queryVector', $response['results'][1]);
+    }
+
+    public function testFederatedMultiSearchReturnsQueryVectorsByQueryPosition(): void
+    {
+        $vectorIndex = $this->createVectorIndex();
+
+        $response = $this->client->multiSearch($this->vectorAndKeywordQueries($vectorIndex), new MultiSearchFederation());
+
+        self::assertSame([0 => [-0.5, 0.25, 1.0]], $response['queryVectors']);
+        self::assertArrayNotHasKey('queryVector', $response);
+    }
+
+    private function createVectorIndex(): Index
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName('vectors'));
+        $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]])->wait();
+        $index->updateDocuments(self::VECTOR_MOVIES)->wait();
+
+        return $index;
+    }
+
+    /**
+     * @return list<MultiSearchQuery>
+     */
+    private function vectorAndKeywordQueries(Index $index): array
+    {
+        return [
+            (new MultiSearchQuery())->setIndexUid($index->getUid())
+                ->setVector([-0.5, 0.25, 1.0])
+                ->setRetrieveVectors(true)
+                ->setHybrid((new HybridSearchOptions())->setSemanticRatio(1.0)->setEmbedder('manual')),
+            (new MultiSearchQuery())->setIndexUid($index->getUid())
+                ->setQuery('shazam'),
+        ];
     }
 }
