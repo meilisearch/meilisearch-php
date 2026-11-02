@@ -93,7 +93,11 @@ trait HandlesSystem
     }
 
     /**
-     * @param list<array{non-empty-string, non-empty-string}> $indexes
+     * Each entry is either a pair of index uids to swap, or an array with the pair under `indexes`
+     * and an optional `rename` flag (since Meilisearch v1.18.0) that renames the first index to the
+     * second uid instead of swapping them.
+     *
+     * @param list<array{non-empty-string, non-empty-string}|array{indexes: array{non-empty-string, non-empty-string}, rename?: bool}> $indexes
      *
      * @see https://www.meilisearch.com/docs/reference/api/indexes/swap-indexes
      */

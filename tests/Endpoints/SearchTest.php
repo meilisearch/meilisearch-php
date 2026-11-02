@@ -656,6 +656,31 @@ final class SearchTest extends TestCase
         self::assertArrayHasKey('_vectors', $response->getHit(0));
     }
 
+    public function testVectorSearchReturnsQueryVector(): void
+    {
+        $index = $this->createEmptyIndex($this->safeIndexName());
+
+        $index->updateEmbedders(['manual' => ['source' => 'userProvided', 'dimensions' => 3]])->wait();
+        $index->updateDocuments(self::VECTOR_MOVIES)->wait();
+
+        $response = $index->search(
+            (new SearchQuery())
+            ->setVector([-0.5, 0.25, 1.0])
+            ->setRetrieveVectors(true)
+            ->setHybrid((new HybridSearchOptions())->setSemanticRatio(1.0)->setEmbedder('manual'))
+        );
+
+        self::assertSame([-0.5, 0.25, 1.0], $response->getQueryVector());
+
+        $response = $index->search(
+            (new SearchQuery())
+            ->setVector([-0.5, 0.25, 1.0])
+            ->setHybrid((new HybridSearchOptions())->setSemanticRatio(1.0)->setEmbedder('manual'))
+        );
+
+        self::assertNull($response->getQueryVector());
+    }
+
     public function testShowRankingScoreDetails(): void
     {
         $response = $this->index->search((new SearchQuery())->setQuery('the')->setShowRankingScoreDetails(true));

@@ -44,7 +44,8 @@ use function Meilisearch\waitForTask;
  *     totalHits?: non-negative-int,
  *     estimatedTotalHits?: non-negative-int,
  *     hitsPerPage?: non-negative-int,
- *     metadata?: SearchMetadata
+ *     metadata?: SearchMetadata,
+ *     queryVector?: list<float>
  * }
  * @phpstan-type SearchResultOptions array{
  *     transformHits?: callable(array<int, array<string, mixed>>): array<int, array<string, mixed>>,
@@ -167,6 +168,10 @@ final class Index extends Endpoint
     }
 
     /**
+     * Passing `uid` renames the index (since Meilisearch v1.18.0). The rename is applied
+     * asynchronously, so this instance keeps the old uid: once the task has succeeded,
+     * use `$client->index($newUid)` to work with the renamed index.
+     *
      * @param array{
      *     primaryKey?: string|null,
      *     uid?: non-empty-string
