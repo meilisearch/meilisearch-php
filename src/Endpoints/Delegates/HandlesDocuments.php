@@ -50,24 +50,24 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-replace-documents
      */
-    public function addDocuments(array $documents, ?string $primaryKey = null): Task
+    public function addDocuments(array $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)]), partial(waitForTask(...), $this->http));
     }
 
-    public function addDocumentsJson(string $documents, ?string $primaryKey = null): Task
+    public function addDocumentsJson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/json'), partial(waitForTask(...), $this->http));
     }
 
-    public function addDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null): Task
+    public function addDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, ...self::customMetadataQuery($customMetadata)], 'text/csv'), partial(waitForTask(...), $this->http));
     }
 
-    public function addDocumentsNdjson(string $documents, ?string $primaryKey = null): Task
+    public function addDocumentsNdjson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -77,12 +77,12 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-replace-documents
      */
-    public function addDocumentsInBatches(array $documents, int $batchSize = 1000, ?string $primaryKey = null): array
+    public function addDocumentsInBatches(array $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $customMetadata = null): array
     {
         $promises = [];
 
         foreach (self::batch($documents, $batchSize) as $batch) {
-            $promises[] = $this->addDocuments($batch, $primaryKey);
+            $promises[] = $this->addDocuments($batch, $primaryKey, $customMetadata);
         }
 
         return $promises;
@@ -91,12 +91,12 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function addDocumentsCsvInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null): array
+    public function addDocumentsCsvInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null, ?string $customMetadata = null): array
     {
         $promises = [];
 
         foreach (self::batchCsvString($documents, $batchSize) as $batch) {
-            $promises[] = $this->addDocumentsCsv($batch, $primaryKey, $delimiter);
+            $promises[] = $this->addDocumentsCsv($batch, $primaryKey, $delimiter, $customMetadata);
         }
 
         return $promises;
@@ -105,12 +105,12 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function addDocumentsNdjsonInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null): array
+    public function addDocumentsNdjsonInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $customMetadata = null): array
     {
         $promises = [];
 
         foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
-            $promises[] = $this->addDocumentsNdjson($batch, $primaryKey);
+            $promises[] = $this->addDocumentsNdjson($batch, $primaryKey, $customMetadata);
         }
 
         return $promises;
@@ -121,24 +121,24 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-update-documents
      */
-    public function updateDocuments(array $documents, ?string $primaryKey = null): Task
+    public function updateDocuments(array $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey]), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)]), partial(waitForTask(...), $this->http));
     }
 
-    public function updateDocumentsJson(string $documents, ?string $primaryKey = null): Task
+    public function updateDocumentsJson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/json'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/json'), partial(waitForTask(...), $this->http));
     }
 
-    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null): Task
+    public function updateDocumentsCsv(string $documents, ?string $primaryKey = null, ?string $delimiter = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter], 'text/csv'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, 'csvDelimiter' => $delimiter, ...self::customMetadataQuery($customMetadata)], 'text/csv'), partial(waitForTask(...), $this->http));
     }
 
-    public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null): Task
+    public function updateDocumentsNdjson(string $documents, ?string $primaryKey = null, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->put(self::PATH.'/'.$this->uid.'/documents', $documents, ['primaryKey' => $primaryKey, ...self::customMetadataQuery($customMetadata)], 'application/x-ndjson'), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -148,12 +148,12 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/add-or-update-documents
      */
-    public function updateDocumentsInBatches(array $documents, int $batchSize = 1000, ?string $primaryKey = null): array
+    public function updateDocumentsInBatches(array $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $customMetadata = null): array
     {
         $promises = [];
 
         foreach (self::batch($documents, $batchSize) as $batch) {
-            $promises[] = $this->updateDocuments($batch, $primaryKey);
+            $promises[] = $this->updateDocuments($batch, $primaryKey, $customMetadata);
         }
 
         return $promises;
@@ -162,12 +162,12 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function updateDocumentsCsvInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null): array
+    public function updateDocumentsCsvInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $delimiter = null, ?string $customMetadata = null): array
     {
         $promises = [];
 
         foreach (self::batchCsvString($documents, $batchSize) as $batch) {
-            $promises[] = $this->updateDocumentsCsv($batch, $primaryKey, $delimiter);
+            $promises[] = $this->updateDocumentsCsv($batch, $primaryKey, $delimiter, $customMetadata);
         }
 
         return $promises;
@@ -176,12 +176,12 @@ trait HandlesDocuments
     /**
      * @return list<Task>
      */
-    public function updateDocumentsNdjsonInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null): array
+    public function updateDocumentsNdjsonInBatches(string $documents, int $batchSize = 1000, ?string $primaryKey = null, ?string $customMetadata = null): array
     {
         $promises = [];
 
         foreach (self::batchNdjsonString($documents, $batchSize) as $batch) {
-            $promises[] = $this->updateDocumentsNdjson($batch, $primaryKey);
+            $promises[] = $this->updateDocumentsNdjson($batch, $primaryKey, $customMetadata);
         }
 
         return $promises;
@@ -197,19 +197,19 @@ trait HandlesDocuments
      * @param non-empty-string                                                                                       $function
      * @param array{filter?: non-empty-string|list<non-empty-string>|null, context?: array<non-empty-string, mixed>} $options
      */
-    public function updateDocumentsByFunction(string $function, array $options = []): Task
+    public function updateDocumentsByFunction(string $function, array $options = [], ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', array_merge(['function' => $function], $options)), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/edit', array_merge(['function' => $function], $options), self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
     }
 
-    public function deleteAllDocuments(): Task
+    public function deleteAllDocuments(?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents'), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents', self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
     }
 
-    public function deleteDocument(string|int $documentId): Task
+    public function deleteDocument(string|int $documentId, ?string $customMetadata = null): Task
     {
-        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId), partial(waitForTask(...), $this->http));
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/documents/'.$documentId, self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
     }
 
     /**
@@ -217,10 +217,10 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/delete-documents-by-batch
      */
-    public function deleteDocumentsByIds(array $documentIds): Task
+    public function deleteDocumentsByIds(array $documentIds, ?string $customMetadata = null): Task
     {
         try {
-            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documentIds), partial(waitForTask(...), $this->http));
+            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete-batch', $documentIds, self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
         } catch (InvalidResponseBodyException $e) {
             throw ApiException::rethrowWithHint($e, __FUNCTION__);
         }
@@ -231,13 +231,21 @@ trait HandlesDocuments
      *
      * @see https://www.meilisearch.com/docs/reference/api/documents/delete-documents-by-filter
      */
-    public function deleteDocumentsByFilter(string|array $filter): Task
+    public function deleteDocumentsByFilter(string|array $filter, ?string $customMetadata = null): Task
     {
         try {
-            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', ['filter' => $filter]), partial(waitForTask(...), $this->http));
+            return Task::fromArray($this->http->post(self::PATH.'/'.$this->uid.'/documents/delete', ['filter' => $filter], self::customMetadataQuery($customMetadata)), partial(waitForTask(...), $this->http));
         } catch (InvalidResponseBodyException $e) {
             throw ApiException::rethrowWithHint($e, __FUNCTION__);
         }
+    }
+
+    /**
+     * @return array{customMetadata?: string}
+     */
+    private static function customMetadataQuery(?string $customMetadata): array
+    {
+        return null !== $customMetadata ? ['customMetadata' => $customMetadata] : [];
     }
 
     private static function batchCsvString(string $documents, int $batchSize): \Generator
