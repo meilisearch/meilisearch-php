@@ -242,10 +242,6 @@ final class Task
     }
 
     /**
-     * Selects the network variant by the fields it requires, testing their type rather than their
-     * truthiness because `remote_tasks` is often an empty JSON object that decodes to [].
-     * Shapes that match no known variant are preserved as UnknownTaskNetwork.
-     *
      * @param array<mixed>|null $network
      */
     private static function networkFromArray(?array $network): ?TaskNetwork
@@ -254,6 +250,7 @@ final class Task
             return null;
         }
 
+        // An empty JSON object decodes to [], so test the type rather than truthiness.
         if (\is_array($network['remote_tasks'] ?? null)) {
             /** @phpstan-var RawRemoteTasksNetwork $remoteTasksNetwork */
             $remoteTasksNetwork = $network;
