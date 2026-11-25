@@ -14,6 +14,8 @@ use Meilisearch\Contracts\TaskNetwork;
  * }
  *
  * @implements TaskNetwork<RawOriginNetwork>
+ *
+ * @since Meilisearch v1.19.0
  */
 final class OriginNetwork implements TaskNetwork
 {

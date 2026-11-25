@@ -21,6 +21,8 @@ final class NetworksTest extends TestCase
 
     protected function tearDown(): void
     {
+        // Reset the topology before parent::tearDown() deletes indexes. A leftover
+        // network makes later tasks carry a network field and breaks unrelated tests.
         $http = new Client($this->host, getenv('MEILISEARCH_API_KEY'));
         $response = $http->patch('/network', [
             'self' => null,

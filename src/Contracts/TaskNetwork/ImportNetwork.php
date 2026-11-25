@@ -16,6 +16,8 @@ use Meilisearch\Contracts\TaskNetwork;
  * }
  *
  * @implements TaskNetwork<RawImportNetwork>
+ *
+ * @since Meilisearch v1.19.0
  */
 final class ImportNetwork implements TaskNetwork
 {

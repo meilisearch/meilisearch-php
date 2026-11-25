@@ -12,8 +12,10 @@ use Meilisearch\Contracts\TaskError;
  *
  * @phpstan-type RawRemoteTask array{
  *     taskUid?: non-negative-int,
- *     error: RawTaskError|null
+ *     error?: RawTaskError|null
  * }
+ *
+ * @since Meilisearch v1.19.0
  */
 final class RemoteTask
 {
@@ -36,7 +38,7 @@ final class RemoteTask
     {
         return new self(
             taskUid: $data['taskUid'] ?? null,
-            error: null !== $data['error'] ? TaskError::fromArray($data['error']) : null,
+            error: null !== ($data['error'] ?? null) ? TaskError::fromArray($data['error']) : null,
         );
     }
 }

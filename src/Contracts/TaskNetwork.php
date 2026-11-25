@@ -6,6 +6,8 @@ namespace Meilisearch\Contracts;
 
 /**
  * @template T of array
+ *
+ * @since Meilisearch v1.19.0
  */
 interface TaskNetwork
 {

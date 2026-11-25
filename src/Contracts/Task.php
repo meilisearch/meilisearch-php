@@ -171,6 +171,9 @@ final class Task
         return $this->customMetadata;
     }
 
+    /**
+     * @since Meilisearch v1.19.0
+     */
     public function getNetwork(): ?TaskNetwork
     {
         return $this->network;
