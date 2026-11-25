@@ -10,6 +10,8 @@ namespace Meilisearch\Contracts\TaskNetwork;
  *     taskUid: non-negative-int,
  *     networkVersion?: non-empty-string
  * }
+ *
+ * @since Meilisearch v1.19.0
  */
 final class TaskOrigin
 {

@@ -10,6 +10,8 @@ namespace Meilisearch\Contracts\TaskNetwork;
  *     indexName?: non-empty-string|null,
  *     documentCount: non-negative-int
  * }
+ *
+ * @since Meilisearch v1.19.0
  */
 final class TaskImportData
 {

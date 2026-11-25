@@ -15,6 +15,8 @@ use Meilisearch\Contracts\TaskNetwork;
  * }
  *
  * @implements TaskNetwork<RawRemoteTasksNetwork>
+ *
+ * @since Meilisearch v1.19.0
  */
 final class RemoteTasksNetwork implements TaskNetwork
 {
