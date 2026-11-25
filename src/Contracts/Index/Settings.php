@@ -188,6 +188,7 @@ use Meilisearch\Contracts\ReadOnlyArrayAccess;
  *     stopWords?: list<string>,
  *     synonyms?: array<string, list<string>>|null,
  *     typoTolerance?: SettingsTypoTolerance|null,
+ *     wordPosition?: array{enabled?: bool|null}|null,
  *     chat?: array{
  *         description: string,
  *         documentTemplate: string,
@@ -232,6 +233,10 @@ class Settings extends Data implements \ArrayAccess, \JsonSerializable
                 $data['chat']['searchParameters'] = (object) $data['chat']['searchParameters'];
             }
             $data['chat'] = (object) $data['chat'];
+        }
+
+        if (\array_key_exists('wordPosition', $data) && \is_array($data['wordPosition'])) {
+            $data['wordPosition'] = (object) $data['wordPosition'];
         }
 
         return (object) $data;

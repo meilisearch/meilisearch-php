@@ -517,6 +517,36 @@ trait HandlesSettings
         return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/prefix-search'), partial(waitForTask(...), $this->http));
     }
 
+    // Settings - Word Position
+
+    /**
+     * @return array{enabled: bool}
+     *
+     * @since Meilisearch v1.58.0
+     */
+    public function getWordPosition(): array
+    {
+        return $this->http->get(self::PATH.'/'.$this->uid.'/settings/word-position');
+    }
+
+    /**
+     * @param array{enabled?: bool|null} $wordPosition
+     *
+     * @since Meilisearch v1.58.0
+     */
+    public function updateWordPosition(array $wordPosition): Task
+    {
+        return Task::fromArray($this->http->patch(self::PATH.'/'.$this->uid.'/settings/word-position', (object) $wordPosition), partial(waitForTask(...), $this->http));
+    }
+
+    /**
+     * @since Meilisearch v1.58.0
+     */
+    public function resetWordPosition(): Task
+    {
+        return Task::fromArray($this->http->delete(self::PATH.'/'.$this->uid.'/settings/word-position'), partial(waitForTask(...), $this->http));
+    }
+
     // Settings - Chat
 
     /**
