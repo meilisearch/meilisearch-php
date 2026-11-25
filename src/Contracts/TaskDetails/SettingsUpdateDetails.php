@@ -49,7 +49,8 @@ use Meilisearch\Contracts\TaskDetails;
  *         disableOnWords: list<string>,
  *         disableOnAttributes: list<string>,
  *         disableOnNumbers: bool
- *     }
+ *     },
+ *     wordPosition?: array{enabled?: bool|null}
  * }
  *
  * @implements TaskDetails<RawSettingsUpdateDetails>
@@ -97,6 +98,7 @@ final class SettingsUpdateDetails implements TaskDetails
      *     disableOnAttributes: list<string>,
      *     disableOnNumbers: bool
      * }|null $typoTolerance
+     * @param array{enabled?: bool|null}|null $wordPosition
      */
     public function __construct(
         public readonly ?array $dictionary,
@@ -119,6 +121,7 @@ final class SettingsUpdateDetails implements TaskDetails
         public readonly ?array $stopWords,
         public readonly ?array $synonyms,
         public readonly ?array $typoTolerance,
+        public readonly ?array $wordPosition = null,
     ) {
     }
 
@@ -145,6 +148,7 @@ final class SettingsUpdateDetails implements TaskDetails
             $data['stopWords'] ?? null,
             $data['synonyms'] ?? null,
             $data['typoTolerance'] ?? null,
+            $data['wordPosition'] ?? null,
         );
     }
 }

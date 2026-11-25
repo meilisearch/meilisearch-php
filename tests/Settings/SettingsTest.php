@@ -33,6 +33,7 @@ final class SettingsTest extends TestCase
     public const DEFAULT_DISPLAYED_ATTRIBUTES = ['*'];
     public const DEFAULT_FACET_SEARCH = true;
     public const DEFAULT_PREFIX_SEARCH = 'indexingTime';
+    public const DEFAULT_WORD_POSITION = ['enabled' => true];
 
     public function testGetDefaultSettings(): void
     {
@@ -61,6 +62,7 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settingA['typoTolerance']);
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settingA['facetSearch']);
         self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settingA['prefixSearch']);
+        self::assertSame(self::DEFAULT_WORD_POSITION, $settingA['wordPosition']);
         self::assertSame(self::DEFAULT_RANKING_RULES, $settingB['rankingRules']);
         self::assertNull($settingB['distinctAttribute']);
         self::assertSame(self::DEFAULT_SEARCHABLE_ATTRIBUTES, $settingB['searchableAttributes']);
@@ -75,6 +77,7 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settingB['typoTolerance']);
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settingB['facetSearch']);
         self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settingB['prefixSearch']);
+        self::assertSame(self::DEFAULT_WORD_POSITION, $settingB['wordPosition']);
     }
 
     public function testUpdateSettings(): void
@@ -87,6 +90,7 @@ final class SettingsTest extends TestCase
             'stopWords' => ['the'],
             'facetSearch' => false,
             'prefixSearch' => 'disabled',
+            'wordPosition' => ['enabled' => false],
         ])->wait();
 
         $settings = $index->getSettings()->toArray();
@@ -104,6 +108,7 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settings['typoTolerance']);
         self::assertFalse($settings['facetSearch']);
         self::assertSame('disabled', $settings['prefixSearch']);
+        self::assertSame(['enabled' => false], $settings['wordPosition']);
     }
 
     public function testUpdateSettingsWithoutOverwritingThem(): void
@@ -155,6 +160,7 @@ final class SettingsTest extends TestCase
             'distinctAttribute' => 'title',
             'rankingRules' => ['title:asc', 'typo'],
             'stopWords' => ['the'],
+            'wordPosition' => ['enabled' => false],
         ])->wait();
 
         $index->resetSettings()->wait();
@@ -174,6 +180,7 @@ final class SettingsTest extends TestCase
         self::assertSame(self::DEFAULT_TYPO_TOLERANCE, $settings['typoTolerance']);
         self::assertSame(self::DEFAULT_FACET_SEARCH, $settings['facetSearch']);
         self::assertSame(self::DEFAULT_PREFIX_SEARCH, $settings['prefixSearch']);
+        self::assertSame(self::DEFAULT_WORD_POSITION, $settings['wordPosition']);
     }
 
     public function testUpdateSettingsWithSettingsObject(): void
